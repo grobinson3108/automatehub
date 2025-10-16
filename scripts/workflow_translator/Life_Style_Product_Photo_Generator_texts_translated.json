@@ -1,0 +1,71 @@
+{
+  "source_file": "/var/www/automatehub/AutomationTribe/5 - Produits Prennent Vie/Life_Style_Product_Photo_Generator.json",
+  "total_texts": 7,
+  "texts": {
+    "text_0": {
+      "path": [
+        "name"
+      ],
+      "original": "Life Style Product Photo Generator",
+      "type": "workflow_name"
+    },
+    "text_1": {
+      "path": [
+        "nodes",
+        0,
+        "name"
+      ],
+      "original": "When clicking ‘Test workflow’",
+      "type": "node_name"
+    },
+    "text_2": {
+      "path": [
+        "nodes",
+        1,
+        "name"
+      ],
+      "original": "Wait",
+      "type": "node_name"
+    },
+    "text_3": {
+      "path": [
+        "nodes",
+        2,
+        "name"
+      ],
+      "original": "Get image",
+      "type": "node_name"
+    },
+    "text_4": {
+      "path": [
+        "nodes",
+        3,
+        "name"
+      ],
+      "original": "Send request",
+      "type": "node_name"
+    },
+    "text_5": {
+      "path": [
+        "nodes",
+        3,
+        "parameters",
+        "bodyParameters",
+        "parameters",
+        1,
+        "value"
+      ],
+      "original": "generate an image with a man in a red suite holding a bottle of vine",
+      "type": "body_prompt"
+    },
+    "text_6": {
+      "path": [
+        "nodes",
+        4,
+        "name"
+      ],
+      "original": "Get image link",
+      "type": "node_name"
+    }
+  }
+}

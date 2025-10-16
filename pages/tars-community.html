@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏆 TARS Academy - Communauté VIP</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            padding: 40px 0;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+
+        .vip-banner {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            text-align: center;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .vip-banner::before {
+            content: "👑";
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 3em;
+            opacity: 0.3;
+        }
+
+        .community-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .value-proposition {
+            background: #2ecc71;
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .pricing-section {
+            background: #ecf0f1;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .pricing-comparison {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .price-box {
+            margin: 10px;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 1.2em;
+        }
+
+        .new-price {
+            color: #e74c3c;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 20px 40px;
+            font-size: 1.3em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 20px 0;
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .cta-button.secondary {
+            background: #95a5a6;
+            font-size: 1em;
+            padding: 15px 30px;
+        }
+
+        .testimonials {
+            background: #34495e;
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .testimonial {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .bonus-list {
+            background: #f39c12;
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+        }
+
+        .bonus-list ul {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .bonus-list li {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .bonus-list li::before {
+            content: "🎁";
+            position: absolute;
+            left: 0;
+        }
+
+        .urgency-timer {
+            background: #e74c3c;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 25px 0;
+            font-size: 1.2em;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .community-preview {
+                grid-template-columns: 1fr;
+            }
+            .pricing-comparison {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="font-size: 4em;">🏆</div>
+            <h1>TARS ACADEMY</h1>
+            <p>La communauté exclusive des automatiseurs français</p>
+        </div>
+
+        <div class="main-content">
+            <div class="vip-banner">
+                <h2>🎊 FÉLICITATIONS ! Vous faites maintenant partie de l'élite TARS !</h2>
+                <p style="margin-top: 15px; font-size: 1.1em;">
+                    Mais l'aventure ne fait que commencer...
+                </p>
+            </div>
+
+            <h2 style="text-align: center; margin-bottom: 30px;">
+                Rejoignez la communauté TARS Academy sur Skool
+            </h2>
+
+            <p style="text-align: center; font-size: 1.1em; margin-bottom: 30px;">
+                Vous avez vos workflows. Parfait ! Mais comment rester à jour avec les dernières innovations ?
+                Comment optimiser vos automatisations ? Comment éviter les pièges ?
+            </p>
+
+            <div class="community-preview">
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Nouveaux Workflows</h3>
+                    <p>3-5 nouveaux workflows exclusifs chaque semaine</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>Communauté Active</h3>
+                    <p>Échangez avec 500+ automatiseurs passionnés</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎓</div>
+                    <h3>Formations Live</h3>
+                    <p>Sessions live exclusives chaque semaine</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🆘</div>
+                    <h3>Support Prioritaire</h3>
+                    <p>Aide personnalisée dans les 24h</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔥</div>
+                    <h3>Tendances & Nouveautés</h3>
+                    <p>Les dernières innovations avant tout le monde</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">💎</div>
+                    <h3>Ressources VIP</h3>
+                    <p>Templates, guides et outils exclusifs</p>
+                </div>
+            </div>
+
+            <div class="value-proposition">
+                <h3 style="margin-bottom: 20px;">💰 Pourquoi ça vaut LARGEMENT 67€/mois ?</h3>
+                <ul style="text-align: left; margin: 0 auto; max-width: 500px;">
+                    <li style="margin: 10px 0;">✅ 1 workflow/semaine = 52 workflows/an (valeur : 1500€)</li>
+                    <li style="margin: 10px 0;">✅ Formations = économie 20h/mois (valeur : 1000€)</li>
+                    <li style="margin: 10px 0;">✅ Support = éviter erreurs coûteuses (valeur : 500€)</li>
+                    <li style="margin: 10px 0;">✅ Communauté = networking business (inestimable)</li>
+                </ul>
+                <p style="margin-top: 20px; font-size: 1.2em;">
+                    <strong>Valeur totale : +3000€/an pour seulement 804€/an</strong>
+                </p>
+            </div>
+
+            <div class="pricing-section">
+                <h3 style="margin-bottom: 25px;">📋 Tarification TARS Academy</h3>
+
+                <div class="pricing-comparison">
+                    <div class="price-box">
+                        <h4>Prix Public Normal</h4>
+                        <div class="old-price">97€/mois</div>
+                    </div>
+
+                    <div style="font-size: 2em; margin: 0 20px;">→</div>
+
+                    <div class="price-box">
+                        <h4>Prix Client TARS</h4>
+                        <div class="new-price">67€/mois</div>
+                        <small style="color: #27ae60;">30€ d'économie/mois !</small>
+                    </div>
+                </div>
+
+                <p style="margin: 20px 0; font-weight: bold; color: #e74c3c;">
+                    Cette remise est PERMANENTE tant que vous restez membre !
+                </p>
+            </div>
+
+            <div class="bonus-list">
+                <h3 style="text-align: center; margin-bottom: 20px;">🎁 BONUS si vous rejoignez AUJOURD'HUI :</h3>
+                <ul>
+                    <li>Premier mois à 27€ au lieu de 67€</li>
+                    <li>Accès aux 200+ workflows d'archives</li>
+                    <li>Guide "Les 10 Erreurs à Éviter en Automatisation"</li>
+                    <li>Template de Business Plan automatisé</li>
+                    <li>Session 1-to-1 de 30min avec moi</li>
+                </ul>
+                <p style="text-align: center; margin-top: 20px; font-size: 1.1em;">
+                    <strong>Valeur bonus : +347€ - OFFERT !</strong>
+                </p>
+            </div>
+
+            <div class="urgency-timer">
+                ⏰ <strong>OFFRE SPÉCIALE</strong> - Premier mois à 27€ expire dans <span id="timer">23:59:45</span>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="#" class="cta-button" onclick="joinCommunity()">
+                    🏆 JE REJOINS TARS ACADEMY - 27€ (puis 67€/mois)
+                </a>
+            </div>
+
+            <div class="testimonials">
+                <h3 style="text-align: center; margin-bottom: 25px;">💬 Ce qu'en disent nos membres :</h3>
+
+                <div class="testimonial">
+                    <blockquote style="font-style: italic;">
+                        "Meilleur investissement de ma carrière ! En 2 mois, j'ai automatisé toute ma prospection et multiplié mes revenus par 3."
+                    </blockquote>
+                    <strong>- Alexandre, Coach Business</strong>
+                </div>
+
+                <div class="testimonial">
+                    <blockquote style="font-style: italic;">
+                        "La communauté est en or ! J'ai trouvé 2 partenaires business et économisé 30h/semaine grâce aux workflows partagés."
+                    </blockquote>
+                    <strong>- Camille, Consultante Marketing</strong>
+                </div>
+
+                <div class="testimonial">
+                    <blockquote style="font-style: italic;">
+                        "Support exceptionnel ! Problème résolu en 2h max. Impossible de trouver ça ailleurs."
+                    </blockquote>
+                    <strong>- Thomas, E-commerce</strong>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 40px 0;">
+                <p style="margin-bottom: 20px; font-size: 1.1em;">
+                    Rejoignez les 500+ entrepreneurs qui dominent l'automatisation !
+                </p>
+                <a href="#" class="cta-button" onclick="joinCommunity()">
+                    🚀 JE PRENDS MA PLACE DANS L'ÉLITE - 27€
+                </a>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="#" class="cta-button secondary" onclick="skipCommunity()">
+                    Non merci, j'accède juste à mes workflows
+                </a>
+                <p style="margin-top: 15px; color: #666; font-size: 0.9em;">
+                    Vous pourrez toujours rejoindre plus tard (mais au prix normal de 97€/mois)
+                </p>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <p style="color: #666; font-size: 0.9em;">
+                    ✅ Annulation possible à tout moment • 🔒 Paiement sécurisé • 👑 Accès immédiat VIP
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Countdown timer
+        let timeLeft = 24 * 60 * 60; // 24 hours in seconds
+
+        function updateTimer() {
+            const hours = Math.floor(timeLeft / 3600);
+            const minutes = Math.floor((timeLeft % 3600) / 60);
+            const seconds = timeLeft % 60;
+
+            document.getElementById('timer').textContent =
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            if (timeLeft > 0) {
+                timeLeft--;
+            }
+        }
+
+        setInterval(updateTimer, 1000);
+
+        function joinCommunity() {
+            // Track community conversion
+            console.log('Community - Skool subscription started');
+            // Redirect to Skool or payment
+            alert('Redirection vers le paiement Skool...');
+            // window.location.href = 'https://skool.com/tars-academy/about';
+        }
+
+        function skipCommunity() {
+            // Track community skip
+            console.log('Community - Declined');
+            // Redirect to final thank you page with download links
+            window.location.href = 'tars-thank-you.html';
+        }
+
+        // Track engagement
+        let startTime = Date.now();
+        let maxScroll = 0;
+
+        window.addEventListener('scroll', function() {
+            maxScroll = Math.max(maxScroll, window.scrollY);
+        });
+
+        window.addEventListener('beforeunload', function() {
+            let timeSpent = Math.round((Date.now() - startTime) / 1000);
+            console.log('Community page - Time spent:', timeSpent, 'seconds, Max scroll:', maxScroll);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+/* 
+ * OneUI Override Styles for AutomateHub
+ * This file should be loaded AFTER OneUI CSS
+ */
+
+/* Force light mode */
+html {
+    /* Remove dark mode classes */
+}
+
+html.page-header-dark #page-header,
+html.sidebar-dark #sidebar {
+    /* Force light mode colors */
+    background-color: #fff !important;
+}
+
+/* Ensure OneUI styles take precedence over Tailwind */
+body {
+    /* Force OneUI background color */
+    background-color: #f9f6f0 !important;
+    color: #495057 !important;
+}
+
+/* Force header to light mode */
+#page-header {
+    background-color: #fff !important;
+    color: #495057 !important;
+    box-shadow: 0 1px 0 rgba(0,0,0,.05) !important;
+}
+
+#page-header .content-header {
+    background-color: #fff !important;
+}
+
+#page-header .text-dual {
+    color: #495057 !important;
+}
+
+#page-header .nav-main-link {
+    color: #495057 !important;
+}
+
+/* Force all backgrounds to light mode */
+.bg-primary {
+    background-color: #0665d0 !important;
+}
+
+.bg-black-50 {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.bg-body-light {
+    background-color: #f9f6f0 !important;
+}
+
+.bg-body-extra-light {
+    background-color: #faf9f7 !important;
+}
+
+/* Ensure all text is visible */
+.text-white, .text-white-75, .text-white-50 {
+    color: #fff !important;
+}
+
+/* Fix gradient backgrounds */
+.bg-gradient-to-r {
+    background: linear-gradient(to right, #3b82f6, #9333ea) !important;
+}
+
+/* Fix for Tailwind utility conflicts */
+.text-white {
+    color: #fff !important;
+}
+
+.text-muted {
+    color: #6c757d !important;
+}
+
+/* Ensure OneUI buttons work properly */
+.btn {
+    display: inline-block !important;
+    font-weight: 400 !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+    cursor: pointer !important;
+    user-select: none !important;
+    border: 1px solid transparent !important;
+    padding: 0.375rem 0.75rem !important;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
+    border-radius: 0.25rem !important;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out !important;
+}
+
+/* Ensure blocks display correctly */
+.block {
+    display: block !important;
+    margin-bottom: 1.75rem !important;
+}
+
+/* Fix content containers */
+.content {
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 1rem !important;
+}
+
+@media (min-width: 1200px) {
+    .content {
+        max-width: 1140px !important;
+    }
+}
+
+/* Fix page structure */
+#page-container {
+    display: flex !important;
+    flex-direction: column !important;
+    min-height: 100vh !important;
+}
+
+#main-container {
+    flex: 1 0 auto !important;
+}
+
+#page-header {
+    position: relative !important;
+    z-index: 998 !important;
+}
+
+#page-footer {
+    flex-shrink: 0 !important;
+}

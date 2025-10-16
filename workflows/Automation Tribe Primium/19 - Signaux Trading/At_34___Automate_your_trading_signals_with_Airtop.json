@@ -1,0 +1,325 @@
+{
+  "name": "At 34 - Automate your trading signals with Airtop",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "5f344565-d74d-438f-8094-0e1663778460",
+      "name": "When clicking ‘Execute workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -1020,
+        -180
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "profileName": "automation-tribe",
+        "additionalFields": {}
+      },
+      "id": "8184d596-6c78-449d-a828-fb8e1387018d",
+      "name": "Session",
+      "type": "n8n-nodes-base.airtop",
+      "position": [
+        -800,
+        -180
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "airtopApi": {
+          "id": "CNtRlrKELyqojMdz",
+          "name": "Airtop account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "window",
+        "url": "https://www.tradingview.com/chart/5ogQPWSF/",
+        "additionalFields": {}
+      },
+      "id": "33db5e1a-02f8-4bb7-85b9-0cc364b2247b",
+      "name": "Window",
+      "type": "n8n-nodes-base.airtop",
+      "position": [
+        -580,
+        -180
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "airtopApi": {
+          "id": "CNtRlrKELyqojMdz",
+          "name": "Airtop account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "window",
+        "operation": "takeScreenshot",
+        "outputImageAsBinary": true
+      },
+      "id": "62bd0e33-6ed7-40e8-8efc-924232f7a70f",
+      "name": "Take screenshot",
+      "type": "n8n-nodes-base.airtop",
+      "position": [
+        -140,
+        -180
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "airtopApi": {
+          "id": "CNtRlrKELyqojMdz",
+          "name": "Airtop account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "terminate",
+        "sessionId": "={{ $('Session').item.json.sessionId }}"
+      },
+      "id": "1dd58266-3b83-4a78-a4c9-51d0e5bc8844",
+      "name": "Terminate",
+      "type": "n8n-nodes-base.airtop",
+      "position": [
+        960,
+        -180
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "airtopApi": {
+          "id": "CNtRlrKELyqojMdz",
+          "name": "Airtop account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -360,
+        -180
+      ],
+      "id": "f3be2428-7a33-4ebe-b67d-3336403d91d8",
+      "name": "Wait",
+      "webhookId": "3881cba1-0c9c-476a-955c-a49a813e75dd"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "text": "What's in this iYou are a professional technical analyst.  \nYou receive a screenshot of a TradingView chart and your task is to analyze it and give actionable trading recommendations.  \n\nFirst, determine the current trend direction: uptrend, downtrend, sideways, or uncertain.  \nThen, suggest one possible trade setup:  \n- trade type (buy or sell)  \n- entry price (or area)  \n- stop-loss level  \n- take-profit target  \n- risk/reward ratio  \n- confidence level (low/medium/high)  \n\nAlso explain briefly why you chose that setup, based on the visible indicators, candlestick patterns, and price action.  \n\nBe concise and clear.  mage?",
+        "inputType": "base64",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        80,
+        -180
+      ],
+      "id": "c90dc160-d704-4152-8229-d1b125b9b235",
+      "name": "Analyze image",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "contact@grafup.com",
+        "subject": "=Trading view chart {{ $now.toLocaleString() }}",
+        "emailType": "text",
+        "message": "={{ $('Analyze image').item.json.content }}",
+        "options": {
+          "appendAttribution": false,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        740,
+        -180
+      ],
+      "id": "7f242d00-c478-4a0b-b8b9-2350de1a7746",
+      "name": "Send a message",
+      "webhookId": "9824812b-79f1-47d6-af4e-7e73474a3e4b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QFPxPaMpeldVrA16",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "window",
+        "operation": "takeScreenshot",
+        "sessionId": "={{ $('Session').item.json.sessionId }}",
+        "windowId": "={{ $('Window').item.json.windowId }}",
+        "outputImageAsBinary": true
+      },
+      "id": "c9c5bf81-2199-499a-aa8c-5c1c7df3ff7f",
+      "name": "Take screenshot1",
+      "type": "n8n-nodes-base.airtop",
+      "position": [
+        300,
+        -180
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "airtopApi": {
+          "id": "CNtRlrKELyqojMdz",
+          "name": "Airtop account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 7
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        520,
+        -180
+      ],
+      "id": "bb6d1527-0d86-4879-984f-24f449ad579e",
+      "name": "Wait1",
+      "webhookId": "1b005a9e-3320-486d-be66-c290f83b9a3a"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Session",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Session": {
+      "main": [
+        [
+          {
+            "node": "Window",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Take screenshot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Take screenshot": {
+      "main": [
+        [
+          {
+            "node": "Analyze image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze image": {
+      "main": [
+        [
+          {
+            "node": "Take screenshot1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Terminate": {
+      "main": [
+        []
+      ]
+    },
+    "Take screenshot1": {
+      "main": [
+        [
+          {
+            "node": "Wait1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Terminate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait1": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "cf212e8c-b49a-491b-9266-fb47aa0fb90c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+  },
+  "id": "eS5pvVv9uhc5Uaky",
+  "tags": []
+}

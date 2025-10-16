@@ -1,0 +1,14 @@
+{
+  "name": "Pack 10 API Webhooks",
+  "description": "40 workflows pour int\u00e9grations API et webhooks",
+  "prix": 69,
+  "workflows_count": 40,
+  "keywords": [
+    "api",
+    "webhook",
+    "http",
+    "rest",
+    "integration",
+    "request"
+  ]
+}

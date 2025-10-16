@@ -1,0 +1,75 @@
+{
+  "name": "Module 5.4 - Créateur IA de Workflows (Preview)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "preview-trigger-creator",
+      "name": "When clicking \"Test workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "content": "## 🔒 Workflow Premium - Créateur IA de Workflows\n\n### 🤖 L'IA qui Crée vos Automatisations\n\n**🎨 Interface Révolutionnaire**\n\nImaginez simplement DÉCRIRE ce que vous voulez automatiser, et l'IA crée le workflow complet pour vous !\n\n**Exemple de Conversation :**\n```\nVous : \"J'aimerais un workflow qui surveille mes emails, \nextrait les factures PDF, les classe par fournisseur \net met à jour ma compta\"\n\nIA : \"Compris ! Je crée votre workflow avec :\n- Trigger Gmail\n- Filtre pièces jointes PDF\n- Vision IA pour extraction\n- Classification par fournisseur\n- Mise à jour Google Sheets\n- Notification Slack\n\nVoici votre workflow prêt à importer !\"\n```\n\n**🚀 Capacités Extraordinaires**\n\n1. **Compréhension Naturelle**\n   - Parlez normalement\n   - Multi-langues (FR, EN, ES...)\n   - Contexte métier compris\n\n2. **Génération Intelligente**\n   - Choix optimal des nodes\n   - Configuration automatique\n   - Gestion d'erreurs incluse\n   - Optimisation performance\n\n3. **Personnalisation IA**\n   - Adapté à votre secteur\n   - Respecte vos préférences\n   - Apprend de vos choix\n   - Suggestions proactives\n\n---\n\n[**Découvrir la démo vidéo →**](https://automatehub.fr/ai-creator-demo)",
+        "contentType": "markdown"
+      },
+      "id": "creator-preview-info",
+      "name": "Creator Preview",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "demo-creation",
+              "name": "exemple_creation",
+              "value": "={{ {\n  \"demande_utilisateur\": \"Créer un workflow qui analyse mes ventes Stripe chaque matin et m'envoie un rapport sur Telegram avec les top clients\",\n  \n  \"analyse_ia\": {\n    \"intention\": \"Rapport ventes automatisé\",\n    \"elements_detectes\": [\n      \"Source: Stripe API\",\n      \"Fréquence: Quotidienne matin\",\n      \"Analyse: Top clients\",\n      \"Destination: Telegram\"\n    ],\n    \"complexite\": \"Moyenne\",\n    \"temps_estime\": \"45 secondes\"\n  },\n  \n  \"workflow_genere\": {\n    \"nodes\": [\n      {\n        \"type\": \"Schedule Trigger\",\n        \"config\": \"Tous les jours à 8h\"\n      },\n      {\n        \"type\": \"Stripe API\",\n        \"config\": \"Get charges last 24h\"\n      },\n      {\n        \"type\": \"Code - Analyse\",\n        \"config\": \"Calcul top clients et stats\"\n      },\n      {\n        \"type\": \"Format Message\",\n        \"config\": \"Rapport formaté Markdown\"\n      },\n      {\n        \"type\": \"Telegram Send\",\n        \"config\": \"Envoi rapport\"\n      }\n    ],\n    \"optimisations\": [\n      \"Cache résultats Stripe\",\n      \"Gestion erreurs API\",\n      \"Format mobile-friendly\"\n    ]\n  },\n  \n  \"resultat\": \"✅ Workflow créé et prêt à l'emploi !\"\n} }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "creation-example",
+      "name": "Exemple Création",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "content": "## 🧠 Intelligence du Créateur\n\n### Processus de Création IA\n\n```mermaid\ngraph LR\n    T[💬 Votre Demande] -->|NLP| A[Analyse Intention]\n    A -->|Context| P[Plan Workflow]\n    P -->|Selection| N[Choix Nodes]\n    N -->|Config| C[Configuration Auto]\n    C -->|Optimize| O[Optimisation]\n    O -->|Export| W[🎯 Workflow JSON]\n```\n\n### 📊 Statistiques Réelles\n\n| Métrique | Valeur |\n|----------|--------|\n| Workflows créés | 12,847 |\n| Taux de succès | 94.3% |\n| Temps moyen | 38 sec |\n| Nodes supportés | 300+ |\n| Satisfaction | 4.8/5 |\n\n### 💎 Fonctionnalités Business\n\n**Business (97€/mois)**\n\n1. **Templates Sectoriels**\n   - E-commerce optimisé\n   - SaaS workflows\n   - Agency automation\n   - Finance & Legal\n\n2. **IA Sur-Mesure**\n   - Entrainée sur VOS workflows\n   - Vocabulaire métier\n   - Règles business\n   - Compliance intégrée\n\n3. **Collaboration**\n   - Partage équipe\n   - Versioning\n   - Commentaires\n   - Approval flow\n\n### 🎁 Le Futur est Maintenant\n\nNe codez plus jamais un workflow.\nDécrivez, et c'est créé.\n\n[**Commencer l'essai gratuit →**](https://automatehub.fr/start-trial)",
+        "contentType": "markdown"
+      },
+      "id": "creator-intelligence",
+      "name": "Creator Intelligence",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "When clicking \"Test workflow\"": {
+      "main": [[{"node": "Creator Preview", "type": "main", "index": 0}]]
+    },
+    "Creator Preview": {
+      "main": [[{"node": "Exemple Création", "type": "main", "index": 0}]]
+    },
+    "Exemple Création": {
+      "main": [[{"node": "Creator Intelligence", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "description": "Preview du Créateur IA de Workflows. Décrivez, l'IA crée votre automatisation."
+  },
+  "versionId": "1.0.0"
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Pack_Vente_CRM",
+  "type": "Metier",
+  "description": "Gestion commerciale compl\u00e8te : leads, CRM, suivi clients",
+  "prix": 129,
+  "workflow_count": 80,
+  "workflows": [
+    "HubSpot_Lead_Enrichment_from_Email_Analysis.json",
+    "Lead_Tracking_Google_Sheets_to_HubSpot_with_Email_Alerts.json",
+    "communicate_emailreadimap_hubspot_complex_13nodes.json",
+    "webhook_communicate_hubspot_googlesheets_complex_14nodes.json",
+    "Validate_HubSpot_Contact_Emails_and_Notify_via_Slack.json",
+    "Form_to_Discord_Email_Leads_and_Update_Sheets.json",
+    "AI-Powered_Leaderboard_for_Popular_n8n_Workflows.json",
+    "Sync_HubSpot_Contacts_to_Mailchimp_on_Schedule_1.json",
+    "Shopify_Order_Processing_with_CRM_and_Task_Updates.json",
+    "scheduled_automation_hubspot_pipedrive_7nodes.json"
+  ]
+}

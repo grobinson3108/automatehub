@@ -1,0 +1,24 @@
+How to Use This Airtable Base
+
+To make the Autonomous Blog + Social Media Automation work, you’ll need to copy this Airtable base into your own account. It acts as the central control hub for your entire content system.
+
+Step 1: Open the Base
+
+Click the link below to access the Airtable base:
+
+https://airtable.com/appYyrnkVTj5cAGwU/shrT7TOHOPsTSN8Rs
+
+⸻
+
+Step 2: Copy the Base to Your Account
+
+Once the base opens:
+	1.	Click the “Copy base” button in the top-right corner.
+	2.	Choose the workspace where you’d like to save it.
+	3.	Airtable will instantly create a duplicate of the base inside your own account.
+
+⸻
+
+You’re now ready to connect this base with the n8n workflow and start running your own autonomous content engine! 💥
+
+If you have any issues or questions, feel free to reach out inside the Skool community.

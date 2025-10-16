@@ -1,0 +1,136 @@
+{
+  "id": "110",
+  "name": "Obtenir un certificat SSL",
+  "nodes": [
+    {
+      "name": "En cliquant sur 'exécuter'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        240,
+        290
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "name": "Créer un élément de domaine",
+      "type": "n8n-nodes-base.functionItem",
+      "position": [
+        450,
+        290
+      ],
+      "parameters": {
+        "functionCode": "item.domain = \"n8n.io\";\nreturn item;"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Obtenir un certificat SSL",
+      "type": "n8n-nodes-base.uproc",
+      "position": [
+        650,
+        290
+      ],
+      "parameters": {
+        "tool": "getDomainCertificate",
+        "group": "internet",
+        "domain": "= {{$node[\"Create Domain Item\"].json[\"domain\"]}}",
+        "additionalOptions": {}
+      },
+      "credentials": {
+        "uprocApi": "miquel-uproc"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Envoyer une alarme d'expiration",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1070,
+        270
+      ],
+      "parameters": {
+        "text": "=Le certificat du domaine {{$node[\"Create Domain Item\"].json[\"domain\"]}} a expiré !",
+        "chatId": "-1415703867",
+        "additionalFields": {}
+      },
+      "credentials": {
+        "telegramApi": "test killia bot"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Le certificat a-t-il expiré ?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        840,
+        290
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Get SSL Certificate\"].json[\"message\"][\"valid\"]+\"\"}}",
+              "value2": "false"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": false,
+  "settings": {},
+  "connections": {
+    "Créer un élément de domaine": {
+      "main": [
+        [
+          {
+            "node": "Obtenir un certificat SSL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir un certificat SSL": {
+      "main": [
+        [
+          {
+            "node": "Le certificat a-t-il expiré ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "En cliquant sur 'exécuter'": {
+      "main": [
+        [
+          {
+            "node": "Créer un élément de domaine",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Le certificat a-t-il expiré ?": {
+      "main": [
+        [
+          {
+            "node": "Envoyer une alarme d'expiration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

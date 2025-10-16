@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="fr" class="remember-theme">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <title>🎯 TARS - Pack Complémentaire Exclusif | AutomateHub</title>
+
+    <meta name="description" content="Pack Intelligence Artificielle TARS - Rendez vos workflows intelligents">
+    <meta name="author" content="AutomateHub">
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Icons -->
+    <link rel="shortcut icon" href="../OneUI/01 OneUI Source (HTML)/src/assets/media/favicons/favicon.png">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" id="css-main" href="../OneUI/01 OneUI Source (HTML)/src/assets/css/oneui.min.css">
+
+    <!-- Custom TARS styles -->
+    <style>
+      .success-header {
+        background: linear-gradient(135deg, var(--bs-success) 0%, var(--bs-info) 100%);
+        color: white;
+        padding: 3rem 0;
+      }
+
+      .ai-offer {
+        background: linear-gradient(135deg, var(--bs-purple) 0%, var(--bs-indigo) 100%);
+        color: white;
+        border-radius: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .ai-offer::before {
+        content: '🤖';
+        position: absolute;
+        top: -30px;
+        right: -30px;
+        font-size: 8rem;
+        opacity: 0.1;
+        transform: rotate(-15deg);
+      }
+
+      .pack-preview-card {
+        background: white;
+        border-radius: 15px;
+        padding: 2rem;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        transition: transform 0.3s ease;
+        border: none;
+      }
+
+      .pack-preview-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+      }
+
+      .pack-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        display: block;
+      }
+
+      .why-section {
+        background: linear-gradient(45deg, var(--bs-warning), var(--bs-orange));
+        color: white;
+        border-radius: 20px;
+      }
+
+      .price-highlight {
+        background: linear-gradient(135deg, var(--bs-danger) 0%, var(--bs-warning) 100%);
+        color: white;
+        border-radius: 15px;
+        text-align: center;
+        position: relative;
+      }
+
+      .price-highlight::before {
+        content: '💰';
+        position: absolute;
+        top: -20px;
+        left: -20px;
+        font-size: 4rem;
+        opacity: 0.2;
+      }
+
+      .limited-time {
+        background: var(--bs-purple);
+        color: white;
+        border-radius: 15px;
+        animation: ai-glow 2s ease-in-out infinite alternate;
+      }
+
+      @keyframes ai-glow {
+        from { box-shadow: 0 0 10px var(--bs-purple); }
+        to { box-shadow: 0 0 30px var(--bs-purple), 0 0 40px var(--bs-indigo); }
+      }
+
+      .testimonial-ai {
+        background: var(--bs-info);
+        color: white;
+        border-radius: 15px;
+        border: none;
+      }
+
+      .feature-ai {
+        background: rgba(255,255,255,0.1);
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        backdrop-filter: blur(10px);
+      }
+
+      .ai-price {
+        font-size: 3.5rem;
+        font-weight: bold;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+      }
+
+      .old-price-ai {
+        text-decoration: line-through;
+        opacity: 0.7;
+        font-size: 0.6em;
+      }
+
+      .brain-animation {
+        animation: brain-pulse 2s ease-in-out infinite;
+      }
+
+      @keyframes brain-pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+      }
+    </style>
+
+    <!-- Load theme -->
+    <script src="../OneUI/01 OneUI Source (HTML)/src/assets/js/setTheme.js"></script>
+  </head>
+
+  <body>
+    <!-- Page Container -->
+    <div id="page-container" class="main-content-boxed">
+
+      <!-- Success Header -->
+      <div class="success-header">
+        <div class="content text-center">
+          <div class="brain-animation mb-3" style="font-size: 4rem;">🧠</div>
+          <h1 class="h2 fw-bold mb-3">Félicitations !</h1>
+          <p class="fs-lg mb-3">Votre arsenal TARS est presque complet...</p>
+          <div class="badge bg-light text-success fs-6 p-2">
+            ✅ Commande validée ! Vous allez recevoir vos workflows par email dans 2 minutes.
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <main id="main-container">
+        <div class="content">
+          <div class="row justify-content-center">
+            <div class="col-lg-10">
+
+              <!-- Hook Section -->
+              <div class="block block-rounded mb-5">
+                <div class="block-content text-center py-5">
+                  <h2 class="h3 fw-bold mb-4">Il vous manque UNE SEULE chose pour dominer l'automatisation...</h2>
+                </div>
+              </div>
+
+              <!-- AI Offer -->
+              <div class="ai-offer card p-5 text-center mb-5">
+                <h3 class="fw-bold mb-4">🚀 PACK TARS "INTELLIGENCE ARTIFICIELLE"</h3>
+                <p class="fs-lg mb-0">
+                  Les workflows que vous venez d'acheter automatisent vos tâches...<br>
+                  <strong>Mais que diriez-vous d'ajouter l'IA pour les rendre INTELLIGENTS ?</strong>
+                </p>
+              </div>
+
+              <!-- Pack Preview -->
+              <div class="row g-4 mb-5">
+                <div class="col-lg-4">
+                  <div class="pack-preview-card text-center h-100">
+                    <span class="pack-icon">🤖</span>
+                    <h4 class="fw-bold mb-3">Workflows IA</h4>
+                    <ul class="list-unstyled text-start">
+                      <li class="mb-2">⚡ Génération de contenu automatique</li>
+                      <li class="mb-2">⚡ Analyse de sentiment clients</li>
+                      <li class="mb-2">⚡ Réponses emails intelligentes</li>
+                      <li class="mb-2">⚡ Création d'images avec IA</li>
+                      <li class="mb-2">⚡ Transcription audio/vidéo</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="col-lg-4">
+                  <div class="pack-preview-card text-center h-100">
+                    <span class="pack-icon">📊</span>
+                    <h4 class="fw-bold mb-3">Analytics Avancés</h4>
+                    <ul class="list-unstyled text-start">
+                      <li class="mb-2">⚡ Rapports automatisés IA</li>
+                      <li class="mb-2">⚡ Prédictions de ventes</li>
+                      <li class="mb-2">⚡ Analyse de performance</li>
+                      <li class="mb-2">⚡ Alertes intelligentes</li>
+                      <li class="mb-2">⚡ Optimisation continue</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="col-lg-4">
+                  <div class="pack-preview-card text-center h-100">
+                    <span class="pack-icon">🎯</span>
+                    <h4 class="fw-bold mb-3">Personnalisation</h4>
+                    <ul class="list-unstyled text-start">
+                      <li class="mb-2">⚡ Segmentation client IA</li>
+                      <li class="mb-2">⚡ Messages personnalisés</li>
+                      <li class="mb-2">⚡ Recommandations produits</li>
+                      <li class="mb-2">⚡ Timing optimal d'envoi</li>
+                      <li class="mb-2">⚡ A/B testing automatique</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Why Section -->
+              <div class="why-section card p-5 text-center mb-5">
+                <h3 class="fw-bold mb-4">🤔 Pourquoi ce pack maintenant ?</h3>
+                <div class="row g-4">
+                  <div class="col-md-6">
+                    <div class="feature-ai">
+                      <h5>📈 Vous avez les workflows de base</h5>
+                      <p class="mb-0">Parfait ! Mais vos concurrents vont rattraper...</p>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="feature-ai">
+                      <h5>🚀 La différence ? L'IA !</h5>
+                      <p class="mb-0">Vous ne faites pas que automatiser... Vous automatisez INTELLIGEMMENT !</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Price Highlight -->
+              <div class="row justify-content-center mb-5">
+                <div class="col-lg-6">
+                  <div class="price-highlight card p-5">
+                    <div class="old-price-ai mb-3">Prix normal : 94€</div>
+                    <div class="ai-price mb-3">47€</div>
+                    <p class="mb-0"><strong>Seulement pour les clients TARS - AUJOURD'HUI UNIQUEMENT</strong></p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Limited Time -->
+              <div class="limited-time card p-4 text-center mb-5">
+                <h4 class="mb-3">⚡ DERNIÈRE CHANCE</h4>
+                <p class="mb-3">Cette offre expire à minuit !</p>
+                <p class="mb-0">Après, ce pack coûtera 94€ et ne sera plus en promotion.</p>
+              </div>
+
+              <!-- Main CTA -->
+              <div class="text-center mb-5">
+                <button class="btn btn-warning btn-xl fw-bold px-5 py-4 rounded-pill" onclick="purchaseAIPack()" style="font-size: 1.3rem;">
+                  🤖 OUI ! JE VEUX L'IA TARS - 47€
+                </button>
+              </div>
+
+              <!-- Testimonial -->
+              <div class="testimonial-ai card p-5 text-center mb-5">
+                <h4 class="mb-3">💬 Ce qu'en dit Marc (client Premium) :</h4>
+                <blockquote class="fs-lg mb-3">
+                  "J'ai d'abord pris le pack de base, puis Premium, puis IA. L'IA a été un game-changer total !
+                  Mes emails ont maintenant 45% de taux d'ouverture au lieu de 15%.
+                  C'est de la MAGIE pure !"
+                </blockquote>
+                <div class="badge bg-light text-dark p-2">⭐⭐⭐⭐⭐ Avis vérifié</div>
+              </div>
+
+              <!-- Final Section -->
+              <div class="text-center mb-5">
+                <h3 class="fw-bold mb-4">Transformez vos automatisations en INTELLIGENCE ARTIFICIELLE !</h3>
+                <button class="btn btn-success btn-lg px-5 py-3 rounded-pill fw-bold" onclick="purchaseAIPack()">
+                  🚀 J'UPGRADE VERS L'IA - 47€
+                </button>
+                <div class="mt-4">
+                  <button class="btn btn-outline-secondary" onclick="skipAIOffer()">
+                    Non merci, j'accède à mes workflows
+                  </button>
+                </div>
+                <div class="mt-3 small text-muted">
+                  ✅ Garantie 30 jours • 🔒 Paiement sécurisé • 📧 Livraison immédiate
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </main>
+
+    </div>
+    <!-- END Page Container -->
+
+    <!-- Tracking Script -->
+    <script src="../tracking/tars-tracker.js"></script>
+
+    <!-- OneUI Core JS -->
+    <script src="../OneUI/01 OneUI Source (HTML)/src/assets/js/oneui.app.min.js"></script>
+
+    <!-- Custom JS -->
+    <script>
+      // Initialize TARS Tracker
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.tarsTracker) {
+          window.tarsTracker.trackFunnelCrossSell();
+        }
+      });
+
+      function purchaseAIPack() {
+        // Track cross-sell conversion
+        if (window.tarsTracker) {
+          window.tarsTracker.trackCrossSellPurchase();
+          window.tarsTracker.trackButtonClick('purchase_ai_pack', { amount: 47 });
+        }
+
+        // Show loading state
+        event.target.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i>Finalisation IA...';
+        event.target.disabled = true;
+
+        // Redirect to community offer
+        setTimeout(() => {
+          window.location.href = 'tars-community-oneui.html';
+        }, 1500);
+      }
+
+      function skipAIOffer() {
+        // Track cross-sell skip
+        if (window.tarsTracker) {
+          window.tarsTracker.trackButtonClick('skip_ai_pack');
+        }
+
+        // Redirect to community offer
+        window.location.href = 'tars-community-oneui.html';
+      }
+
+      // Urgency timer
+      function updateUrgency() {
+        const now = new Date();
+        const midnight = new Date();
+        midnight.setHours(24, 0, 0, 0);
+
+        const timeLeft = midnight - now;
+        const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+
+        if (hours > 0 || minutes > 0) {
+          document.querySelector('.limited-time p').innerHTML =
+            `Cette offre expire dans <strong>${hours}h${minutes.toString().padStart(2, '0')}min</strong> !`;
+        }
+      }
+
+      setInterval(updateUrgency, 60000);
+      updateUrgency();
+
+      // TARS AI personality
+      console.log('🤖 TARS AI: "Upgrading humor protocols... Intelligence level: MAXIMUM"');
+      console.log('🤖 TARS AI: "This AI pack will make you 347% more efficient. Trust my calculations."');
+      console.log('🤖 TARS AI: "Warning: Not taking this offer may result in competitive disadvantage."');
+
+      // Add some AI animation effects
+      document.addEventListener('DOMContentLoaded', function() {
+        // Animate the brain icon
+        const brainIcon = document.querySelector('.brain-animation');
+        if (brainIcon) {
+          setInterval(() => {
+            brainIcon.style.filter = `hue-rotate(${Math.random() * 360}deg)`;
+          }, 2000);
+        }
+      });
+    </script>
+
+  </body>
+</html>

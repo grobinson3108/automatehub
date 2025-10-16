@@ -1,0 +1,47 @@
+// Get the HTML content from the previous HTTP Request node
+
+const htmlContent = $node["HTTP Request"].json.data;  // Adjust if the content is in a different field
+
+// Convert the content to a string (in case it isn't already)
+
+const htmlString = String(htmlContent);
+
+// Regular expression to match LinkedIn profile URLs in href attributes
+
+const regex = /https:\/\/www\.linkedin\.com\/in\/[a-zA-Z0-9\-_]+/g;
+
+let matches;
+
+const linkedinUrls = [];
+
+// Extract all LinkedIn URLs found in the HTML
+
+while ((matches = regex.exec(htmlString)) !== null) {
+
+  linkedinUrls.push(matches[0]);  // Add the LinkedIn URL to the array
+
+}
+
+// Remove duplicates by converting the array to a Set and back to an array
+
+const uniqueLinkedinUrls = [...new Set(linkedinUrls)];
+
+// Return the list of extracted LinkedIn URLs
+
+if (uniqueLinkedinUrls.length > 0) {
+
+  return uniqueLinkedinUrls.map(url => ({
+
+    json: {
+
+      linkedinUrl: url
+
+    }
+
+  }));
+
+} else {
+
+  return [{ json: { message: 'No LinkedIn profiles found' } }];
+
+}

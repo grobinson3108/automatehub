@@ -1,0 +1,15 @@
+{
+  "source_file": "/var/www/automatehub/Ventes_Workflows/Pack_Ultimate_Collection/027_communicate_emailreadimap.json",
+  "total_texts": 1,
+  "texts": {
+    "text_0": {
+      "path": [
+        "nodes",
+        0,
+        "name"
+      ],
+      "original": "IMAP Email",
+      "type": "node_name"
+    }
+  }
+}

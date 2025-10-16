@@ -1,0 +1,78 @@
+{
+  "source_file": "/var/www/automatehub/storage/app/tutorials/workflow-email-automation.json",
+  "total_texts": 8,
+  "texts": {
+    "text_0": {
+      "path": [
+        "nodes",
+        0,
+        "name"
+      ],
+      "original": "Déclencheur Hebdomadaire",
+      "type": "node_name"
+    },
+    "text_1": {
+      "path": [
+        "nodes",
+        1,
+        "name"
+      ],
+      "original": "Récupérer Abonnés",
+      "type": "node_name"
+    },
+    "text_2": {
+      "path": [
+        "nodes",
+        2,
+        "name"
+      ],
+      "original": "Segmentation Utilisateurs",
+      "type": "node_name"
+    },
+    "text_3": {
+      "path": [
+        "nodes",
+        3,
+        "name"
+      ],
+      "original": "Diviser par Segments",
+      "type": "node_name"
+    },
+    "text_4": {
+      "path": [
+        "nodes",
+        4,
+        "name"
+      ],
+      "original": "Filtrer Segments Vides",
+      "type": "node_name"
+    },
+    "text_5": {
+      "path": [
+        "nodes",
+        5,
+        "name"
+      ],
+      "original": "Générateur de Contenu",
+      "type": "node_name"
+    },
+    "text_6": {
+      "path": [
+        "nodes",
+        6,
+        "name"
+      ],
+      "original": "Envoi Email",
+      "type": "node_name"
+    },
+    "text_7": {
+      "path": [
+        "nodes",
+        7,
+        "name"
+      ],
+      "original": "Suivi Analytics",
+      "type": "node_name"
+    }
+  }
+}

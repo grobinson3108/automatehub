@@ -1,0 +1,59 @@
+{
+  "name": "Créer une tâche Onfleet lorsqu'un fichier dans Google Drive est mis à jour",
+  "nodes": [
+    {
+      "name": "Déclencheur Google Drive",
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "position": [
+        460,
+        300
+      ],
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFile",
+        "fileToWatch": "<some_id>"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Onfleet",
+      "type": "n8n-nodes-base.onfleet",
+      "position": [
+        680,
+        300
+      ],
+      "parameters": {
+        "operation": "create",
+        "additionalFields": {}
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": false,
+  "settings": {},
+  "connections": {
+    "Déclencheur Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Onfleet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

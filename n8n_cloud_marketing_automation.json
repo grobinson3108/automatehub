@@ -1,0 +1,946 @@
+{
+  "name": "🚀 Marketing Automation - n8n Cloud Edition",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 10,14,18 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "Marketing Posts Database"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": ["ID"],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Pack_Name",
+              "displayName": "Pack_Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Platform",
+              "displayName": "Platform",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Post_Idea_Number",
+              "displayName": "Post_Idea_Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Description",
+              "displayName": "Description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Hook_Angle",
+              "displayName": "Hook_Angle",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Benefits",
+              "displayName": "Benefits",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "CTA",
+              "displayName": "CTA",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Price",
+              "displayName": "Price",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Target_Use_Case",
+              "displayName": "Target_Use_Case",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Complexity",
+              "displayName": "Complexity",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Publication_Date",
+              "displayName": "Publication_Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "read-google-sheets",
+      "name": "Read Google Sheets Posts",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [480, 300],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "VOTRE_GOOGLE_SHEETS_CREDENTIAL_ID",
+          "name": "Google Sheets Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Filtrer les posts non publiés et sélectionner par rotation intelligente\nconst allPosts = $input.all();\n\n// Filtrer les posts non publiés\nconst unpublishedPosts = allPosts.filter(post => {\n  const published = post.json.Published;\n  return !published || published === '' || published.toLowerCase() === 'non';\n});\n\nif (unpublishedPosts.length === 0) {\n  throw new Error('❌ Aucun post non publié disponible!');\n}\n\n// Compter les posts par plateforme (non publiés)\nconst platformCounts = {\n  LinkedIn: 0,\n  Facebook: 0,\n  Instagram: 0,\n  TikTok: 0\n};\n\nunpublishedPosts.forEach(post => {\n  const platform = post.json.Platform;\n  if (platformCounts[platform] !== undefined) {\n    platformCounts[platform]++;\n  }\n});\n\n// Rotation intelligente basée sur le jour de l'année\nconst now = new Date();\nconst dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);\nconst platforms = ['LinkedIn', 'Facebook', 'Instagram', 'TikTok'];\nconst rotationIndex = dayOfYear % 4;\nconst targetPlatform = platforms[rotationIndex];\n\nconsole.log(`🎯 Plateforme cible aujourd'hui: ${targetPlatform}`);\nconsole.log(`📊 Posts disponibles par plateforme:`, platformCounts);\n\n// Sélectionner les posts de la plateforme cible\nconst targetPosts = unpublishedPosts.filter(post => post.json.Platform === targetPlatform);\n\nif (targetPosts.length === 0) {\n  // Si aucun post pour cette plateforme, prendre la première plateforme disponible\n  for (const platform of platforms) {\n    const availablePosts = unpublishedPosts.filter(p => p.json.Platform === platform);\n    if (availablePosts.length > 0) {\n      console.log(`⚠️ Pas de post ${targetPlatform}, basculement vers ${platform}`);\n      const selectedPost = availablePosts[0];\n      selectedPost.json.SelectedPlatform = platform;\n      return [selectedPost];\n    }\n  }\n  throw new Error(`❌ Aucun post disponible sur aucune plateforme!`);\n}\n\n// Prendre le premier post non publié de la plateforme cible\nconst selectedPost = targetPosts[0];\nselectedPost.json.SelectedPlatform = targetPlatform;\n\nconsole.log(`✅ Post sélectionné: ${selectedPost.json.Title} (${targetPlatform})`);\n\nreturn [selectedPost];"
+      },
+      "id": "smart-rotation",
+      "name": "Select Post (Smart Rotation)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [700, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "post_title",
+              "name": "post_title",
+              "value": "={{ $json.Title }}",
+              "type": "string"
+            },
+            {
+              "id": "post_description",
+              "name": "post_description",
+              "value": "={{ $json.Description }}",
+              "type": "string"
+            },
+            {
+              "id": "post_hook",
+              "name": "post_hook",
+              "value": "={{ $json.Hook_Angle }}",
+              "type": "string"
+            },
+            {
+              "id": "post_benefits",
+              "name": "post_benefits",
+              "value": "={{ $json.Benefits }}",
+              "type": "string"
+            },
+            {
+              "id": "post_cta",
+              "name": "post_cta",
+              "value": "={{ $json.CTA }}",
+              "type": "string"
+            },
+            {
+              "id": "pack_name",
+              "name": "pack_name",
+              "value": "={{ $json.Pack_Name }}",
+              "type": "string"
+            },
+            {
+              "id": "platform",
+              "name": "platform",
+              "value": "={{ $json.Platform }}",
+              "type": "string"
+            },
+            {
+              "id": "post_id",
+              "name": "post_id",
+              "value": "={{ $json.ID }}",
+              "type": "string"
+            },
+            {
+              "id": "price",
+              "name": "price",
+              "value": "={{ $json.Price }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "extract-data",
+      "name": "Extract Post Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [920, 300]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=# 🎨 GÉNÉRATEUR DE PROMPT IMAGE MARKETING n8n\n\n## 📋 DONNÉES DU POST :\n**Titre** : {{ $json.post_title }}\n**Description** : {{ $json.post_description }}\n**Hook** : {{ $json.post_hook }}\n**Produit** : {{ $json.pack_name }}\n**Plateforme** : {{ $json.platform }}\n\n## 🎯 TA MISSION :\nCrée un prompt DALL-E 3 pour générer une image marketing professionnelle et visuellement impactante.\n\n## 📐 CONTRAINTES VISUELLES :\n- **Format** : Carré 1024x1024 (adapté à tous les réseaux sociaux)\n- **Style** : Moderne, épuré, professionnel avec une touche tech\n- **Couleurs dominantes** : Bleu (#0055FF - couleur n8n), blanc, gris clair, accents oranges\n- **Éléments obligatoires** :\n  - Logo ou mention n8n stylisée\n  - Icônes tech/automation (engrenages, flux, connecteurs)\n  - Hiérarchie visuelle claire\n  - Espace pour texte overlay (si nécessaire)\n\n## 🚫 INTERDICTIONS :\n- ❌ Pas de texte complexe dans l'image (DALL-E gère mal le texte)\n- ❌ Pas de visages humains reconnaissables\n- ❌ Pas de logos de marques tierces (sauf n8n)\n- ❌ Pas de captures d'écran ou interfaces UI détaillées\n\n## ✅ BONNES PRATIQUES :\n- ✓ Métaphores visuelles (ex: flux connectés, automatisation visualisée)\n- ✓ Formes géométriques modernes\n- ✓ Gradients subtils\n- ✓ Icônes flat design\n- ✓ Composition équilibrée avec règle des tiers\n\n## 📤 FORMAT DE SORTIE :\nGénère UN SEUL prompt en anglais, optimisé pour DALL-E 3, de 150-300 caractères maximum.\n\n**Exemple de bon prompt** :\n\"Modern tech illustration showing interconnected workflow nodes in n8n blue (#0055FF), with abstract data streams flowing between automation icons, minimalist style, clean white background, professional digital marketing aesthetic, 3D elements, soft shadows\"\n\n## 🎨 ADAPTE LE PROMPT SELON LA PLATEFORME :\n- **LinkedIn** : Plus corporate, graphiques, data viz\n- **Facebook** : Plus coloré, émotionnel, lifestyle\n- **Instagram** : Très visuel, esthétique, trendy\n- **TikTok** : Dynamique, jeune, bold colors\n\n---\n**Génère maintenant le prompt image parfait pour ce post !**",
+        "options": {
+          "systemMessage": "Tu es un expert en création de prompts pour DALL-E 3, spécialisé dans les visuels marketing tech et automation. Tu connais parfaitement les contraintes de génération d'images IA et tu crées des prompts qui produisent des résultats professionnels et cohérents avec l'identité visuelle n8n."
+        }
+      },
+      "id": "image-prompt-agent",
+      "name": "Image Prompt Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [1140, 300]
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "generate",
+        "prompt": "={{ $json.output }}",
+        "options": {
+          "size": "1024x1024",
+          "quality": "hd"
+        }
+      },
+      "id": "generate-image",
+      "name": "Generate Image (DALL-E 3)",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.4,
+      "position": [1360, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "VOTRE_OPENAI_CREDENTIAL_ID",
+          "name": "OpenAI Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.data[0].url }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "download-image",
+      "name": "Download Generated Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1580, 300]
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "name": "=n8n_post_{{ $('Extract Post Data').item.json.post_id }}_{{ $('Extract Post Data').item.json.platform }}_{{ $now.format('yyyy-MM-dd') }}.png",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "options": {}
+      },
+      "id": "upload-drive",
+      "name": "Upload to Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [1800, 300],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "VOTRE_GOOGLE_DRIVE_CREDENTIAL_ID",
+          "name": "Google Drive Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": [
+            {
+              "role": "reader",
+              "type": "anyone"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "make-public",
+      "name": "Make Image Public",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [2020, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Construire l'URL publique de l'image\nconst fileId = $input.item.json.id;\nconst publicUrl = `https://drive.google.com/uc?export=view&id=${fileId}`;\n\n// Récupérer les données du post\nconst postData = $('Extract Post Data').item.json;\n\n// Construire le contenu final selon la plateforme\nlet finalContent = '';\nconst platform = postData.platform;\n\nif (platform === 'LinkedIn') {\n  finalContent = `${postData.post_hook}\\n\\n${postData.post_description}\\n\\n✨ Bénéfices clés :\\n${postData.post_benefits}\\n\\n💰 Prix : ${postData.price}€\\n\\n${postData.post_cta}\\n\\n#n8n #automation #nocode #productivity #workflow`;\n} else if (platform === 'Facebook') {\n  finalContent = `${postData.post_hook} 🎯\\n\\n${postData.post_description}\\n\\n${postData.post_benefits}\\n\\n💡 Seulement ${postData.price}€ !\\n\\n${postData.post_cta} 👇\\n\\n#automation #n8n #nocode #digitalmarketing #productivity`;\n} else if (platform === 'Instagram') {\n  finalContent = `${postData.post_hook} ✨\\n\\n${postData.post_description.substring(0, 150)}...\\n\\n${postData.post_cta} 🔗\\n\\n#n8n #automation #nocode #tech #productivity #workflow #digital #marketing #entrepreneur`;\n} else if (platform === 'TikTok') {\n  finalContent = `${postData.post_hook} 🔥\\n\\n${postData.post_description.substring(0, 100)}...\\n\\n${postData.post_cta} ⚡\\n\\n#n8n #automation #nocode #tech #viral #productivity #fyp`;\n}\n\nreturn {\n  json: {\n    imageUrl: publicUrl,\n    imageId: fileId,\n    platform: platform,\n    content: finalContent,\n    postId: postData.post_id,\n    packName: postData.pack_name,\n    title: postData.post_title\n  }\n};"
+      },
+      "id": "prepare-publication",
+      "name": "Prepare Publication Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [2240, 300]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.platform }}",
+                    "rightValue": "LinkedIn",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "linkedin"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.platform }}",
+                    "rightValue": "Facebook",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "facebook"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.platform }}",
+                    "rightValue": "Instagram",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "instagram"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.platform }}",
+                    "rightValue": "TikTok",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "tiktok"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "switch-platform",
+      "name": "Switch Platform",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [2460, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.blotato.com/v1/simple-publish",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $credentials.blotato.apiKey }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  accountId: $credentials.blotato.linkedinAccountId,\n  content: {\n    text: $json.content,\n    mediaUrls: [$json.imageUrl],\n    platform: 'linkedin'\n  },\n  target: {\n    targetType: 'linkedin',\n    privacyLevel: 'PUBLIC',\n    disabledComments: false\n  }\n}) }}",
+        "options": {}
+      },
+      "id": "publish-linkedin",
+      "name": "Publish to LinkedIn",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2680, 100]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.blotato.com/v1/simple-publish",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $credentials.blotato.apiKey }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  accountId: $credentials.blotato.facebookAccountId,\n  content: {\n    text: $json.content,\n    mediaUrls: [$json.imageUrl],\n    platform: 'facebook'\n  },\n  target: {\n    targetType: 'facebook',\n    privacyLevel: 'PUBLIC',\n    disabledComments: false\n  }\n}) }}",
+        "options": {}
+      },
+      "id": "publish-facebook",
+      "name": "Publish to Facebook",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2680, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.blotato.com/v1/simple-publish",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $credentials.blotato.apiKey }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  accountId: $credentials.blotato.instagramAccountId,\n  content: {\n    text: $json.content,\n    mediaUrls: [$json.imageUrl],\n    platform: 'instagram'\n  },\n  target: {\n    targetType: 'instagram',\n    privacyLevel: 'PUBLIC',\n    disabledComments: false,\n    isAiGenerated: true\n  }\n}) }}",
+        "options": {}
+      },
+      "id": "publish-instagram",
+      "name": "Publish to Instagram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2680, 500]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.blotato.com/v1/simple-publish",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $credentials.blotato.apiKey }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({\n  accountId: $credentials.blotato.tiktokAccountId,\n  content: {\n    text: $json.content,\n    mediaUrls: [$json.imageUrl],\n    platform: 'tiktok'\n  },\n  target: {\n    targetType: 'tiktok',\n    privacyLevel: 'PUBLIC_TO_EVERYONE',\n    disabledComments: false,\n    isAiGenerated: true\n  }\n}) }}",
+        "options": {}
+      },
+      "id": "publish-tiktok",
+      "name": "Publish to TikTok",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [2680, 700]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "Marketing Posts Database"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Published": "Oui",
+            "Publication_Date": "={{ $now.format('yyyy-MM-dd HH:mm:ss') }}"
+          },
+          "matchingColumns": ["ID"],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Published",
+              "displayName": "Published",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Publication_Date",
+              "displayName": "Publication_Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "update-sheets",
+      "name": "Update Google Sheets Status",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.4,
+      "position": [2900, 300]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "=INSERT INTO n8n_posts_history (post_id, pack_name, platform, title, publication_date, image_url, blotato_response, content) VALUES ('{{ $('Prepare Publication Data').item.json.postId }}', '{{ $('Prepare Publication Data').item.json.packName }}', '{{ $('Prepare Publication Data').item.json.platform }}', '{{ $('Prepare Publication Data').item.json.title }}', '{{ $now.format('yyyy-MM-dd HH:mm:ss') }}', '{{ $('Prepare Publication Data').item.json.imageUrl }}', '{{ JSON.stringify($json) }}', '{{ $('Prepare Publication Data').item.json.content }}')",
+        "options": {}
+      },
+      "id": "log-supabase",
+      "name": "Log to Supabase",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2.5,
+      "position": [3120, 300],
+      "credentials": {
+        "postgres": {
+          "id": "VOTRE_SUPABASE_CREDENTIAL_ID",
+          "name": "Supabase PostgreSQL"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "success",
+              "name": "success",
+              "value": "true",
+              "type": "boolean"
+            },
+            {
+              "id": "message",
+              "name": "message",
+              "value": "=✅ Post {{ $('Prepare Publication Data').item.json.postId }} publié avec succès sur {{ $('Prepare Publication Data').item.json.platform }} !",
+              "type": "string"
+            },
+            {
+              "id": "publication_date",
+              "name": "publication_date",
+              "value": "={{ $now.format('yyyy-MM-dd HH:mm:ss') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "success-notification",
+      "name": "Success Notification",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [3340, 300]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Read Google Sheets Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Google Sheets Posts": {
+      "main": [
+        [
+          {
+            "node": "Select Post (Smart Rotation)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Select Post (Smart Rotation)": {
+      "main": [
+        [
+          {
+            "node": "Extract Post Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Post Data": {
+      "main": [
+        [
+          {
+            "node": "Image Prompt Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Prompt Agent": {
+      "main": [
+        [
+          {
+            "node": "Generate Image (DALL-E 3)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image (DALL-E 3)": {
+      "main": [
+        [
+          {
+            "node": "Download Generated Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Generated Image": {
+      "main": [
+        [
+          {
+            "node": "Upload to Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload to Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Make Image Public",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Make Image Public": {
+      "main": [
+        [
+          {
+            "node": "Prepare Publication Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Publication Data": {
+      "main": [
+        [
+          {
+            "node": "Switch Platform",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Platform": {
+      "main": [
+        [
+          {
+            "node": "Publish to LinkedIn",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Publish to Facebook",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Publish to Instagram",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Publish to TikTok",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish to LinkedIn": {
+      "main": [
+        [
+          {
+            "node": "Update Google Sheets Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish to Facebook": {
+      "main": [
+        [
+          {
+            "node": "Update Google Sheets Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish to Instagram": {
+      "main": [
+        [
+          {
+            "node": "Update Google Sheets Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Publish to TikTok": {
+      "main": [
+        [
+          {
+            "node": "Update Google Sheets Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Google Sheets Status": {
+      "main": [
+        [
+          {
+            "node": "Log to Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log to Supabase": {
+      "main": [
+        [
+          {
+            "node": "Success Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-30T00:00:00.000Z",
+  "versionId": "1"
+}

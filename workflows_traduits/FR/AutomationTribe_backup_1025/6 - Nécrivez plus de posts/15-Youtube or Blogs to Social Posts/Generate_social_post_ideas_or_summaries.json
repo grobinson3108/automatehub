@@ -1,0 +1,696 @@
+{
+  "name": "Générer des idées de publications sociales ou des résumés",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appyicvXaO5b9dQ5A",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblPdvidblRqBLFrd",
+          "mode": "id"
+        },
+        "filterByFormula": "=",
+        "returnAll": false,
+        "limit": 1,
+        "options": {},
+        "sort": {
+          "property": [
+            {
+              "field": "Last modified time",
+              "direction": "desc"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -500,
+        -220
+      ],
+      "id": "38018968-d949-45db-8985-5f3709953b10",
+      "name": "Airtable",
+      "alwaysOutputData": false,
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        -220
+      ],
+      "id": "6d56f61e-5a79-4390-ba5e-db5f8ca4b2ee",
+      "name": "Lorsque vous cliquez sur 'Tester le workflow'"
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.URL }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "Youtube link",
+              "description": "Youtube link"
+            },
+            {
+              "category": "Blog post",
+              "description": "Blog post or any other link if it is not from youtube"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1,
+      "position": [
+        -280,
+        -220
+      ],
+      "id": "4b2c3bff-a1c2-4102-9476-483588186e4e",
+      "name": "Classificateur de texte"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -280,
+        0
+      ],
+      "id": "b56c66c1-f3e8-4b51-9204-9f714e04396e",
+      "name": "Modèle de chat OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://app.dumplingai.com/api/v1/get-youtube-transcript",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer ADD YOUR API HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "videoUrl",
+              "value": "={{ $json.URL }}"
+            },
+            {
+              "name": "includeTimestamps",
+              "value": "true"
+            },
+            {
+              "name": "timestampsToCombine",
+              "value": "5"
+            },
+            {
+              "name": "preferredLanguage",
+              "value": "en"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        140,
+        -360
+      ],
+      "id": "5e7ae06f-5cf3-49f3-87ab-f213d852e017",
+      "name": "Dumpling Youtube"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://app.dumplingai.com/api/v1/scrape",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer ADD YOUR API HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $json.URL }}"
+            },
+            {
+              "name": "format",
+              "value": "markdown"
+            },
+            {
+              "name": "cleaned",
+              "value": "true"
+            },
+            {
+              "name": "renderJs",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        140,
+        -80
+      ],
+      "id": "a6c6575f-4268-487f-9cc9-eea219de30e2",
+      "name": "Dumpling Blog"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Generate tailored social media posts for LinkedIn, Instagram, Twitter (X), and Facebook based on the given content, which could be either an article summary or a YouTube transcription.\n\t•\tLinkedIn: Write a professional, insightful post summarizing the key takeaways with a formal tone, positioning the content as a valuable resource.\n\t•\tInstagram: Craft a short, engaging caption with a compelling call to action and relevant hashtags to drive interaction.\n\t•\tTwitter (X): Create a concise post under 280 characters that highlights key points and includes a few impactful hashtags.\n\t•\tFacebook: Develop a conversational post that provides additional context and includes a link to the article or video to encourage engagement.\n\nThis should be written from a third-person perspective, positioning the content as an external source of information.\n\n**Or YouTube Transcription:**\n{{ $json?.transcript ?? 'Transcript not available' }}\n\nThe response must be structured in valid JSON format as follows:\n\n{\n  \"linkedin\": \"This content explores [key topic], offering insights into [main takeaways]. Professionals looking to [goal or impact] will find valuable strategies here. Read more: [URL]\",\n  \"instagram\": \"Discover how [key topic] can transform your [industry or field]! 🚀 Watch/read the latest insights now. #Innovation #Success #YourHashtag [URL]\",\n  \"twitter\": \"[Key topic] is changing the game! Discover the latest insights on [main takeaway]. #Trending #YourHashtag [URL]\",\n  \"facebook\": \"A must-read/watch on [key topic]! It breaks down [main takeaway] and offers valuable insights for those in [industry]. Dive in: [URL]\"\n}\n\nMake sure the output is always a properly formatted JSON object."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        420,
+        -360
+      ],
+      "id": "bf6a8fbb-ac30-43af-bba3-d44c1d22f94e",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentURL": "1uCsWoY62zjxN1wKyRBYpJHqVo5fmxYUUrYczSl4jLNY",
+        "actionsUi": {
+          "actionFields": [
+            {
+              "action": "insert",
+              "text": "=Current date: {{ $now.format('dd LLL yyyy') }}\n\nLinked in post:\n{{ $json.fields.LinkedIn }}\n\nInstagram:\n{{ $json.fields.Instagram }}\n\nTwitter:\n{{ $json.fields.X }}\n\nFacebook:\n{{ $json.fields.Facebook }}\n\n"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleDocs",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        -220
+      ],
+      "id": "9af3bd55-33fe-41c2-a688-c7e9d218d9a8",
+      "name": "Google Docs",
+      "credentials": {
+        "googleDocsOAuth2Api": {
+          "id": "FikZ42aM2PhAMZs4",
+          "name": "Google Docs account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Generate tailored social media posts for LinkedIn, Instagram, Twitter (X), and Facebook based on the following article summary:\n\t•\tLinkedIn: Write a professional, insightful post that summarizes the key takeaways in a formal tone, positioning the article as a valuable resource.\n\t•\tInstagram: Craft a short, engaging caption with a compelling call to action and relevant hashtags to drive interaction.\n\t•\tTwitter (X): Create a concise post under 280 characters that highlights key points and includes a few impactful hashtags.\n\t•\tFacebook: Develop a conversational post that provides additional context and includes a link to the article to encourage engagement.\n\nThis should be written as if referring to the article from a third-person perspective, positioning it as an external source of information.\n\n**Article Summary:**\n{{ $('Dumpling Blog')?.item?.json?.title ?? 'Title not available' }}\n{{ $('Dumpling Blog')?.item?.json?.metadata?.description ?? 'Description not available' }}\n{{ $('Dumpling Blog')?.item?.json?.content ?? 'Content not available' }}\n{{ $('Text Classifier')?.item?.json?.URL ?? 'URL not available' }}\n\nThe response should be formatted as valid JSON with the following structure:\n\n{\n  \"linkedin\": \"This article explores [key topic], providing insights into [main takeaways]. Professionals looking to [goal or impact] will find valuable strategies here. Read more: [URL]\",\n  \"instagram\": \"Discover how [key topic] can transform your [industry or field]! 🚀 Read the latest insights now. #Innovation #Success #YourHashtag [URL]\",\n  \"twitter\": \"[Key topic] is changing the game! Discover the latest insights on [main takeaway]. #Trending #YourHashtag [URL]\",\n  \"facebook\": \"A must-read article on [key topic]! It breaks down [main takeaway] and offers valuable insights for those in [industry]. Dive in: [URL]\"\n}\n\n"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        420,
+        -80
+      ],
+      "id": "05f2d1fe-5351-4d51-af9d-ee573eb1bacb",
+      "name": "OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appyicvXaO5b9dQ5A",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblPdvidblRqBLFrd",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Airtable').item.json.id }}",
+            "LinkedIn": "={{ $json.message.content.linkedin }}",
+            "Instagram": "={{ $json.message.content.instagram }}",
+            "X": "={{ $json.message.content.twitter }}",
+            "Facebook": "={{ $json.message.content.facebook }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "LinkedIn",
+              "displayName": "LinkedIn",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Instagram",
+              "displayName": "Instagram",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "X",
+              "displayName": "X",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Facebook",
+              "displayName": "Facebook",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Created time",
+              "displayName": "Created time",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Last modified time",
+              "displayName": "Last modified time",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        780,
+        -360
+      ],
+      "id": "553ba32e-099f-456f-934e-ca5265fbb8bb",
+      "name": "Airtable1",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appyicvXaO5b9dQ5A",
+          "mode": "id"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblPdvidblRqBLFrd",
+          "mode": "id"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Airtable').item.json.id }}",
+            "LinkedIn": "={{ $json.message.content.linkedin }}",
+            "Instagram": "={{ $json.message.content.instagram }}",
+            "X": "={{ $json.message.content.twitter }}",
+            "Facebook": "={{ $json.message.content.facebook }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "LinkedIn",
+              "displayName": "LinkedIn",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Instagram",
+              "displayName": "Instagram",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "X",
+              "displayName": "X",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Facebook",
+              "displayName": "Facebook",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Created time",
+              "displayName": "Created time",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Last modified time",
+              "displayName": "Last modified time",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        800,
+        -80
+      ],
+      "id": "6360ba28-7260-4b00-a2a7-5db05beae94d",
+      "name": "Airtable2",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [
+          {
+            "node": "Dumpling Youtube",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Dumpling Blog",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dumpling Youtube": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dumpling Blog": {
+      "main": [
+        [
+          {
+            "node": "OpenAI1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Airtable1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI1": {
+      "main": [
+        [
+          {
+            "node": "Airtable2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable1": {
+      "main": [
+        [
+          {
+            "node": "Google Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable2": {
+      "main": [
+        [
+          {
+            "node": "Google Docs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fccedb58-6ef9-4930-8267-98c5f68032be",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+  },
+  "id": "Fdvxhe6rNdzZCCzy",
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

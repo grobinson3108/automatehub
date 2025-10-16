@@ -1,0 +1,58 @@
+{
+  "source_file": "/var/www/automatehub/storage/app/tutorials/module-1-1-workflow.json",
+  "total_texts": 6,
+  "texts": {
+    "text_0": {
+      "path": [
+        "name"
+      ],
+      "original": "Module 1.1 - Introduction à l'automatisation",
+      "type": "workflow_name"
+    },
+    "text_1": {
+      "path": [
+        "nodes",
+        0,
+        "name"
+      ],
+      "original": "Démarrage quotidien",
+      "type": "node_name"
+    },
+    "text_2": {
+      "path": [
+        "nodes",
+        1,
+        "name"
+      ],
+      "original": "Définir les données",
+      "type": "node_name"
+    },
+    "text_3": {
+      "path": [
+        "nodes",
+        2,
+        "name"
+      ],
+      "original": "Vérifier plateforme",
+      "type": "node_name"
+    },
+    "text_4": {
+      "path": [
+        "nodes",
+        3,
+        "name"
+      ],
+      "original": "Envoyer confirmation",
+      "type": "node_name"
+    },
+    "text_5": {
+      "path": [
+        "nodes",
+        4,
+        "name"
+      ],
+      "original": "Gérer erreur",
+      "type": "node_name"
+    }
+  }
+}

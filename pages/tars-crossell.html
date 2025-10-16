@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎯 TARS - Pack Complémentaire Exclusif</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #8e44ad 0%, #3498db 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            padding: 30px 0;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+
+        .success-banner {
+            background: #27ae60;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .complementary-offer {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .pack-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .pack-item {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .pack-item h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .pack-item ul {
+            text-align: left;
+            margin: 15px 0;
+        }
+
+        .pack-item li {
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .pack-item li::before {
+            content: "⚡";
+            position: absolute;
+            left: 0;
+        }
+
+        .price-highlight {
+            background: #e74c3c;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .price-highlight .old-price {
+            text-decoration: line-through;
+            font-size: 1.2em;
+            opacity: 0.8;
+        }
+
+        .price-highlight .new-price {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 20px 40px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 20px 0;
+            transition: transform 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .cta-button.secondary {
+            background: #95a5a6;
+            font-size: 1em;
+            padding: 15px 30px;
+        }
+
+        .limited-time {
+            background: #8e44ad;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 5px #8e44ad; }
+            to { box-shadow: 0 0 20px #8e44ad, 0 0 30px #8e44ad; }
+        }
+
+        .why-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+        }
+
+        .testimonial {
+            background: #2ecc71;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div style="font-size: 3em;">🎯</div>
+            <h1>Félicitations !</h1>
+            <p>Votre arsenal TARS est presque complet...</p>
+        </div>
+
+        <div class="main-content">
+            <div class="success-banner">
+                ✅ <strong>Commande validée !</strong> Vous allez recevoir vos workflows par email dans 2 minutes.
+            </div>
+
+            <h2 style="text-align: center; margin-bottom: 30px;">
+                Il vous manque UNE SEULE chose pour dominer l'automatisation...
+            </h2>
+
+            <div class="complementary-offer">
+                <h3 style="margin-bottom: 20px;">🚀 PACK TARS "INTELLIGENCE ARTIFICIELLE"</h3>
+                <p style="font-size: 1.1em;">
+                    Les workflows que vous venez d'acheter automatisent vos tâches...<br>
+                    <strong>Mais que diriez-vous d'ajouter l'IA pour les rendre INTELLIGENTS ?</strong>
+                </p>
+            </div>
+
+            <div class="pack-preview">
+                <div class="pack-item">
+                    <h4>🤖 Workflows IA</h4>
+                    <ul>
+                        <li>Génération de contenu automatique</li>
+                        <li>Analyse de sentiment clients</li>
+                        <li>Réponses emails intelligentes</li>
+                        <li>Création d'images avec IA</li>
+                        <li>Transcription audio/vidéo</li>
+                    </ul>
+                </div>
+
+                <div class="pack-item">
+                    <h4>📊 Analytics Avancés</h4>
+                    <ul>
+                        <li>Rapports automatisés IA</li>
+                        <li>Prédictions de ventes</li>
+                        <li>Analyse de performance</li>
+                        <li>Alertes intelligentes</li>
+                        <li>Optimisation continue</li>
+                    </ul>
+                </div>
+
+                <div class="pack-item">
+                    <h4>🎯 Personnalisation</h4>
+                    <ul>
+                        <li>Segmentation client IA</li>
+                        <li>Messages personnalisés</li>
+                        <li>Recommandations produits</li>
+                        <li>Timing optimal d'envoi</li>
+                        <li>A/B testing automatique</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="why-section">
+                <h3 style="text-align: center; margin-bottom: 20px;">🤔 Pourquoi ce pack maintenant ?</h3>
+                <p style="text-align: center; font-size: 1.1em;">
+                    Vous avez maintenant les <strong>workflows de base</strong>. Parfait !<br><br>
+                    Mais vos concurrents vont rattraper. La différence ? <strong>L'INTELLIGENCE ARTIFICIELLE.</strong><br><br>
+                    Avec ces workflows IA, vous ne faites pas que automatiser...<br>
+                    <strong style="color: #e74c3c;">Vous automatisez INTELLIGEMMENT !</strong>
+                </p>
+            </div>
+
+            <div class="price-highlight">
+                <div class="old-price">Prix normal : 94€</div>
+                <div class="new-price">47€</div>
+                <p><strong>Seulement pour les clients TARS - AUJOURD'HUI UNIQUEMENT</strong></p>
+            </div>
+
+            <div class="limited-time">
+                ⚡ <strong>DERNIÈRE CHANCE</strong> - Cette offre expire à minuit !
+                <br>Après, ce pack coûtera 94€ et ne sera plus en promotion.
+            </div>
+
+            <div style="text-align: center;">
+                <a href="#" class="cta-button" onclick="purchaseAIPack()">
+                    🤖 OUI ! JE VEUX L'IA TARS - 47€
+                </a>
+            </div>
+
+            <div class="testimonial">
+                <h4>💬 Ce qu'en dit Marc (client Premium) :</h4>
+                <blockquote style="font-style: italic; margin: 15px 0;">
+                    "J'ai d'abord pris le pack de base, puis Premium, puis IA. L'IA a été un game-changer total !
+                    Mes emails ont maintenant 45% de taux d'ouverture au lieu de 15%.
+                    C'est de la MAGIE pure !"
+                </blockquote>
+            </div>
+
+            <div style="text-align: center; margin: 40px 0;">
+                <p style="margin-bottom: 20px; font-weight: bold;">
+                    Transformez vos automatisations en INTELLIGENCE ARTIFICIELLE !
+                </p>
+                <a href="#" class="cta-button" onclick="purchaseAIPack()">
+                    🚀 J'UPGRADE VERS L'IA - 47€
+                </a>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="#" class="cta-button secondary" onclick="skipAIOffer()">
+                    Non merci, j'accède à mes workflows
+                </a>
+            </div>
+
+            <div style="text-align: center; margin-top: 20px;">
+                <p style="color: #666; font-size: 0.9em;">
+                    ✅ Garantie 30 jours • 🔒 Paiement sécurisé • 📧 Livraison immédiate
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function purchaseAIPack() {
+            // Track cross-sell conversion
+            console.log('Cross-sell - AI Pack purchased');
+            // Redirect to payment or community offer
+            window.location.href = 'tars-community.html';
+        }
+
+        function skipAIOffer() {
+            // Track cross-sell skip
+            console.log('Cross-sell - AI Pack declined');
+            // Redirect to community offer or thank you
+            window.location.href = 'tars-community.html';
+        }
+
+        // Urgency timer
+        function updateUrgency() {
+            const now = new Date();
+            const midnight = new Date();
+            midnight.setHours(24, 0, 0, 0);
+
+            const timeLeft = midnight - now;
+            const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+
+            if (hours > 0 || minutes > 0) {
+                document.querySelector('.limited-time').innerHTML =
+                    `⚡ <strong>DERNIÈRE CHANCE</strong> - Plus que ${hours}h${minutes.toString().padStart(2, '0')}min !`;
+            }
+        }
+
+        setInterval(updateUrgency, 60000);
+        updateUrgency();
+
+        // Track time on page
+        let startTime = Date.now();
+        window.addEventListener('beforeunload', function() {
+            let timeSpent = Math.round((Date.now() - startTime) / 1000);
+            console.log('Cross-sell page - Time spent:', timeSpent, 'seconds');
+        });
+    </script>
+</body>
+</html>

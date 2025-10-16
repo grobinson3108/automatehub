@@ -1,0 +1,191 @@
+Create this amazing interface:
+---
+
+## **Master Prompt to Recreate the Automation Tribe Two-Step AI Interface**
+
+**Prompt:**
+
+````
+I want you to create a complete, production-ready HTML file with inline JavaScript and TailwindCSS that implements my **Automation Tribe Two-Step AI Workflow Interface**.  
+
+### 1) Overview & Workflow
+The application connects to a **single n8n webhook** via a constant named:
+
+```js
+const WEBHOOK_URL = "YOUR_N8N_WEBHOOK_URL_HERE";
+````
+
+**Important:**
+
+* This one webhook handles **two separate tasks**.
+* n8n uses a **Switch node** to route between them.
+* The Switch checks the value of `body.action` (or `body.task`) in the incoming JSON/form-data.
+* The two routes are:
+
+**Route 1: "Generate Prompts"**
+
+* Switch condition: `action` = `"generate_prompts"`.
+* The n8n workflow uses AI to return an array of prompts.
+* **Response format** from n8n:
+
+```json
+{
+  "prompts": [
+    "Prompt 1 full text here...",
+    "Prompt 2 full text here...",
+    "... up to 5 prompts ..."
+  ]
+}
+```
+
+**Route 2: "Generate Image"**
+
+* Switch condition: `action` = `"generate_images"`.
+* n8n takes a selected prompt + uploaded image and returns a **binary image file**.
+* The **Respond to Webhook** node is set to:
+
+  * Respond With: **Binary File**
+  * Binary Property: `data` (contains the generated image)
+  * MIME Type: `image/png` (or `image/jpeg`)
+  * File Name: `generated.png`
+
+---
+
+### 2) Frontend Requirements
+
+#### General
+
+* Use **TailwindCSS CDN** for styling (modern, responsive, clean).
+* All code in **one single .html file** (HTML + CSS + JS inline).
+* Fully responsive on desktop and mobile.
+* No external JS except Tailwind.
+* Accessibility: proper `aria` labels, alt text, focus states.
+
+---
+
+### 3) UI Structure
+
+#### Header
+
+* Small rounded pill tag: **Automation Tribe** (amber background, white text).
+* Title: **Generate Consistent Characters**.
+* Subtitle: Short sentence explaining the process.
+
+---
+
+#### Step 1: Idea & Prompt Generation
+
+* Large textarea with placeholder: *"Enter a simple idea..."*.
+* Live character counter under the textarea.
+* Buttons:
+
+  1. **Generate Ideas**:
+
+     * Enabled only when textarea has content.
+     * Sends JSON POST to `WEBHOOK_URL`:
+
+       ```json
+       {
+         "action": "generate_prompts",
+         "task": "generate_prompts",
+         "initial_prompt": "<textarea value>"
+       }
+       ```
+     * On success, expects `prompts[]` array (5 items).
+     * Moves to Step 2 with these prompts displayed.
+  2. **Use This Prompt**:
+
+     * Sends user directly to Step 2 using textarea content as the selected prompt.
+     * Skips prompt generation.
+     * Shows prompt text in Step 2 as "Selected Prompt".
+
+---
+
+#### Step 2: Prompt Selection, Size, and Image Upload
+
+* **Prompt Selection**:
+
+  * If prompts array from Step 1 exists: show them in a grid as selectable cards or radio inputs.
+  * If coming from "Use This Prompt": show only the chosen text.
+  * Show **full prompt text**, no truncation.
+* **Image Size Dropdown**:
+
+  * Label: "Select Output Size"
+  * Options (enum values from API):
+
+    * `square_hd` (default)
+    * `square`
+    * `portrait_4_3`
+    * `portrait_16_9`
+    * `landscape_4_3`
+    * `landscape_16_9`
+* **Image Upload**:
+
+  * Drag-and-drop or click-to-upload.
+  * Accept `.png, .jpg, .jpeg, .webp`.
+  * Show file name, size, and preview in a `<canvas>`.
+  * Remove button to clear file.
+* **Generate Image Button**:
+
+  * Enabled only if a prompt is selected (or prefilled) **and** an image is uploaded.
+  * Sends `multipart/form-data` to `WEBHOOK_URL` with:
+
+    * `action`: `"generate_images"`
+    * `task`: `"generate_images"`
+    * `final_prompt`: selected prompt text
+    * `size`: selected size enum
+    * `data`: binary image file (resized if needed before send)
+
+---
+
+#### Step 3: Final Output
+
+* **Canvas** displaying the returned image.
+* Support **two types of responses** from n8n:
+
+  1. Binary image: `content-type` starts with `image/` — handled as a Blob and drawn to canvas.
+  2. JSON with `image_url` or base64 in `image`: fetch or convert and draw to canvas.
+* **Download Button**:
+
+  * Downloads `lastImageBlob` if available.
+  * Fallback: downloads from canvas.
+
+---
+
+#### Footer
+
+* Text: *Made by Automation Tribe.*
+* Link: [https://www.automation-tribe.com/](https://www.automation-tribe.com/)
+
+---
+
+### 4) Behavior & States
+
+* All buttons have disabled states until conditions met.
+* Loading spinners during fetch.
+* Error alerts shown at top (red background, dismissible, auto-hide after 8s).
+* Smooth UI transitions.
+* Mobile-friendly layout with vertical stacking.
+
+---
+
+### 5) Deliverable
+
+* Output a **complete, ready-to-use HTML file** meeting all the above.
+* Include:
+
+  * Tailwind via CDN in `<head>`.
+  * `WEBHOOK_URL` constant at the top of the JS section for easy config.
+  * Inline comments for all key sections.
+* Must work locally by simply opening the HTML file in a browser.
+
+```
+
+---
+
+This version **locks in**:  
+- The webhook naming (`WEBHOOK_URL`)  
+- Both `action` and `task` values for the Switch node in n8n  
+- The exact request/response formats for **both routes**  
+- That route 1 returns JSON with `prompts[]` and route 2 returns **binary image**  
+- The UI flow, error handling, and styling  

@@ -1,0 +1,361 @@
+{
+  "meta": {
+    "instanceId": "82a17fa4a0b8e81bf77e5ab999d980f392150f2a9541fde626dc5f74857b1f54"
+  },
+  "nodes": [
+    {
+      "id": "814ab819-7a0d-4647-a8e2-56d90616b4b2",
+      "name": "Note autocollante",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        962,
+        306
+      ],
+      "parameters": {
+        "width": 307,
+        "height": 1003.1537835638735,
+        "content": "### Basculer en fonction du contenu\n0 = si la commande contient le mot \"marketing\"\n1 = si la commande contient le mot \"sales\""
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "0c263242-1369-4cd5-83b7-4e2e8ffe99bb",
+      "name": "Conserver uniquement les messages d'un identifiant de chat spécifique",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        480,
+        520
+      ],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.message.chat.id }}",
+              "value2": null,
+              "operation": "equal"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "8dd8b974-bfdc-4a80-bb94-3d5994872f70",
+      "name": "Note autocollante1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        660,
+        311
+      ],
+      "parameters": {
+        "height": 382,
+        "content": "### Basculer en fonction de la commande\n0 = /stop\n1 = /start"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "fd76d706-01df-453d-b8ad-d3ad1b379fb4",
+      "name": "Désactiver le workflow marketing",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        1380,
+        480
+      ],
+      "parameters": {
+        "operation": "deactivate",
+        "workflowId": {
+          "__rl": true,
+          "mode": "url",
+          "value": ""
+        }
+      },
+      "credentials": {
+        "n8nApi": {
+          "id": "hHsMs7R7sstUSWGD",
+          "name": "n8n account"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "b2c976ca-e78f-4b0a-8337-45c66939d30c",
+      "name": "Désactiver le workflow des ventes",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        1380,
+        680
+      ],
+      "parameters": {
+        "operation": "deactivate",
+        "workflowId": {
+          "__rl": true,
+          "mode": "url",
+          "value": ""
+        }
+      },
+      "credentials": {
+        "n8nApi": {
+          "id": "hHsMs7R7sstUSWGD",
+          "name": "n8n account"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "8187bb9d-685b-4955-b7e0-3375a9461bc8",
+      "name": "Activer le workflow marketing",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        1380,
+        940
+      ],
+      "parameters": {
+        "operation": "activate",
+        "workflowId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "",
+          "__regex": ".*/workflow/([0-9a-zA-Z]{1,})"
+        }
+      },
+      "credentials": {
+        "n8nApi": {
+          "id": "hHsMs7R7sstUSWGD",
+          "name": "n8n account"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "87d219be-77d0-4e29-9137-d55bdfae4aa7",
+      "name": "Basculer en fonction du contenu (activer)",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        1040,
+        960
+      ],
+      "parameters": {
+        "rules": {
+          "rules": [
+            {
+              "value2": "usdc",
+              "operation": "contains",
+              "outputKey": "0"
+            },
+            {
+              "value2": "hsuite",
+              "operation": "contains",
+              "outputKey": "1"
+            }
+          ]
+        },
+        "value1": "={{ $json.message.text }}",
+        "dataType": "string"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "fa5f346d-5ad2-4ef3-b715-e45ffb7dfd29",
+      "name": "Note autocollante2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        60,
+        740
+      ],
+      "parameters": {
+        "width": 846,
+        "height": 575.2554922701386,
+        "content": "# Workflow Telegram N8N (dé)activateur\n\n## Que fait-il ?\nCe workflow vous aide à activer ou désactiver rapidement un workflow via Telegram. Parfois, nous ne pouvons pas accéder à un PC pour résoudre un problème si quelque chose ne va pas avec un workflow. Si vous, comme moi, utilisez Telegram pour vous envoyer des rapports d'erreur, vous pouvez réagir rapidement en cas d'urgence. Il suffit d'envoyer '/stop' suivi du nom que vous utilisez pour un workflow, pour désactiver un workflow, ou le réactiver avec '/start'. Par exemple '/stop marketing'.\n\nTutoriel : https://watch.screencastify.com/v/uWQ88gZKj57WTGOOqSW2 (6min)\n\n## Instructions\n1. Créez une clé API Telegram via botfather (https://t.me/botfather). Ajoutez-la aux identifiants Telegram.\n2. Pour les nœuds N8N, allez dans les paramètres de votre instance n8n. Puis 'n8n API' et 'créer une clé API'.\n3. Pour s'assurer que nous sommes les seuls à pouvoir envoyer des commandes au bot, nous avons besoin de l'ID de chat de notre conversation privée avec notre bot nouvellement créé. Ouvrez le déclencheur Telegram et cliquez sur 'écouter les événements'.\n4. Allez sur Telegram et envoyez un message direct au bot, cela déclenchera le nœud Telegram.\n5. Allez au nœud filtre et remplissez l'ID de chat que vous souhaitez filtrer avec les données obtenues lors de l'événement test dans le nœud Telegram.\n6. Dans le premier nœud Switch, vous trouverez les commandes, dans ce cas il s'agit de '/start' et '/stop'. Lorsque vous envoyez un message à votre bot commençant par l'une de ces commandes, il passera aux nœuds switch suivants.\n7. Ensuite, il vérifiera quel autre mot il contient. Par exemple, j'ai utilisé les mots 'marketing' et 'sales', correspondant respectivement à un workflow marketing et un workflow commercial.\n8. Les derniers nœuds activeront ou désactiveront un workflow."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "d16753af-c1d7-4b60-89da-82432a0b06c1",
+      "name": "Recevoir des commandes depuis Telegram",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        260,
+        520
+      ],
+      "webhookId": "5fe48950-9a59-4b47-b568-6d2f4c624288",
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "Wn8jg2h69jw2f9Pu",
+          "name": "Telegram account 2"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "83a5dc1b-00c9-46b2-9941-78f42d2e06e5",
+      "name": "Activer le workflow des ventes",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        1380,
+        1160
+      ],
+      "parameters": {
+        "operation": "activate",
+        "workflowId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "",
+          "__regex": ".*/workflow/([0-9a-zA-Z]{1,})"
+        }
+      },
+      "credentials": {
+        "n8nApi": {
+          "id": "hHsMs7R7sstUSWGD",
+          "name": "n8n account"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "2bf6ebf2-f94e-4359-bea8-a041bf669644",
+      "name": "Basculer en fonction de la commande",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        720,
+        520
+      ],
+      "parameters": {
+        "rules": {
+          "rules": [
+            {
+              "value2": "/stop",
+              "operation": "startsWith",
+              "outputKey": "0"
+            },
+            {
+              "value2": "/start",
+              "operation": "startsWith",
+              "outputKey": "1"
+            }
+          ]
+        },
+        "value1": "={{ $json.message.text }}",
+        "dataType": "string"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "a6888317-39b5-4b3d-97a8-c9bf0e90eddb",
+      "name": "Basculer en fonction du contenu (désactiver)",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        1040,
+        500
+      ],
+      "parameters": {
+        "rules": {
+          "rules": [
+            {
+              "value2": "marketing",
+              "operation": "contains",
+              "outputKey": "0"
+            },
+            {
+              "value2": "sales",
+              "operation": "contains",
+              "outputKey": "1"
+            }
+          ]
+        },
+        "value1": "={{ $json.message.text }}",
+        "dataType": "string"
+      },
+      "typeVersion": 2
+    }
+  ],
+  "connections": {
+    "Basculer en fonction de la commande": {
+      "main": [
+        [
+          {
+            "node": "Basculer en fonction du contenu (désactiver)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Basculer en fonction du contenu (activer)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recevoir des commandes depuis Telegram": {
+      "main": [
+        [
+          {
+            "node": "Conserver uniquement les messages d'un identifiant de chat spécifique",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basculer en fonction du contenu (activer)": {
+      "main": [
+        [
+          {
+            "node": "Activer le workflow marketing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Activer le workflow des ventes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basculer en fonction du contenu (désactiver)": {
+      "main": [
+        [
+          {
+            "node": "Désactiver le workflow marketing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Désactiver le workflow des ventes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conserver uniquement les messages d'un identifiant de chat spécifique": {
+      "main": [
+        [
+          {
+            "node": "Basculer en fonction de la commande",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

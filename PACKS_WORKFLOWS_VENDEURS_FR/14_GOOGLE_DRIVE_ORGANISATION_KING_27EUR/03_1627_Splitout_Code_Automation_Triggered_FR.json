@@ -1,0 +1,462 @@
+{
+  "id": "VY4WBXuNDPxmOO5e",
+  "meta": {
+    "instanceId": "d16fb7d4b3eb9b9d4ad2ee6a7fbae593d73e9715e51f583c2a0e9acd1781c08e",
+    "templateCredsSetupCompleted": true
+  },
+  "name": "RAG : Découpage Contextuel | Google Drive vers Pinecone via OpenRouter & Gemini",
+  "tags": [
+    {
+      "id": "XZIQK6NdzGvgbZFd",
+      "name": "Sell",
+      "createdAt": "2025-01-15T12:28:48.424Z",
+      "updatedAt": "2025-01-15T12:28:48.424Z"
+    },
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "7abbfa6e-4b17-4656-9b82-377b1bacf539",
+      "name": "Lors du clic sur ‘Tester le workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "448ec137-bf64-46b4-bf15-c7a040faa306",
+      "name": "Boucle sur les éléments",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        1100,
+        0
+      ],
+      "parameters": {
+        "options": {}
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "f22557ee-7f37-40cd-9063-a9a759274663",
+      "name": "Modèle de Chat OpenRouter",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "position": [
+        20,
+        440
+      ],
+      "parameters": {
+        "options": {}
+      },
+      "credentials": {
+        "openRouterApi": {
+          "id": "ddH6iNlm09UxrXvu",
+          "name": "Auto: OpenRouter"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "57e8792e-25ae-43d5-b4e9-e87642365ee9",
+      "name": "Magasin Vectoriel Pinecone",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "position": [
+        780,
+        360
+      ],
+      "parameters": {
+        "mode": "insert",
+        "options": {},
+        "pineconeIndex": {
+          "__rl": true,
+          "mode": "list",
+          "value": "context-rag-test",
+          "cachedResultName": "context-rag-test"
+        }
+      },
+      "credentials": {
+        "pineconeApi": {
+          "id": "R3QGXSEIRTEAZttK",
+          "name": "Auto: PineconeApi"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "0a8c2426-0aaf-424a-b246-336a9034aba8",
+      "name": "Embeddings Google Gemini",
+      "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
+      "position": [
+        720,
+        540
+      ],
+      "parameters": {
+        "modelName": "models/text-embedding-004"
+      },
+      "credentials": {
+        "googlePalmApi": {
+          "id": "9idxGZRZ3BAKDoxq",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "edc587bd-494d-43e8-b6d6-26adab7af3dc",
+      "name": "Chargeur de Données Par Défaut",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "position": [
+        920,
+        540
+      ],
+      "parameters": {
+        "options": {}
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "a82d4e0b-248e-426d-9ef3-f25e7078ceb3",
+      "name": "Diviseur de Texte Récursif par Caractères",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "position": [
+        840,
+        680
+      ],
+      "parameters": {
+        "options": {},
+        "chunkSize": 100000
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "8571b92f-5587-454f-9700-ea04ca35311b",
+      "name": "Obtenir le Document depuis Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        220,
+        0
+      ],
+      "parameters": {
+        "fileId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1gm0jxFTLuiWB5u4esEjzoCPImrVqu0AEMIKBIesTf9M",
+          "cachedResultUrl": "https://docs.google.com/document/d/1gm0jxFTLuiWB5u4esEjzoCPImrVqu0AEMIKBIesTf9M/edit?usp=drivesdk",
+          "cachedResultName": "Udit Rawat - Details"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "text/plain"
+            }
+          }
+        },
+        "operation": "download"
+      },
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "SsiQguNA8w3Wwv4w",
+          "name": "Auto: Google Drive"
+        }
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "2bed3d0f-3d65-4394-87f1-e73320a43a4a",
+      "name": "Extraire les Données Textuelles du Document Google",
+      "type": "n8n-nodes-base.extractFromFile",
+      "position": [
+        440,
+        0
+      ],
+      "parameters": {
+        "options": {},
+        "operation": "text"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "837fa691-6c66-434b-ba82-d1cad9aecdf7",
+      "name": "Diviser le Texte du Document en Sections",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        660,
+        0
+      ],
+      "parameters": {
+        "jsCode": "let split_text = \"—---------------------------—-------------[SECTIONEND]—---------------------------—-------------\";\nfor (const item of $input.all()) {\n item.json.section = item.json.data.split(split_text);\n item.json.document = JSON.stringify(item.json.section)\n}\nreturn $input.all();"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "cc801e7e-e01b-421a-9211-08322ef8a0b2",
+      "name": "Préparer les Sections pour la Boucle",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        880,
+        0
+      ],
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "section"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "658cb8df-92e3-4b25-8f37-e5f959d913dc",
+      "name": "Note Autocollante",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -40,
+        -100
+      ],
+      "parameters": {
+        "width": 1300,
+        "height": 280,
+        "content": "## Préparer le Document. \nCette section est responsable du téléchargement du fichier depuis Google Drive, de la division du texte en sections en détectant les séparateurs, et de leur préparation pour la boucle."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "82ee9194-484a-46db-b75c-bec34201c7e2",
+      "name": "Note Autocollante1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -220,
+        220
+      ],
+      "parameters": {
+        "width": 780,
+        "height": 360,
+        "content": "## Préparer le contexte\nDans cette section, le \nnœud agent préparera \nle contexte pour une \nsection (morceau de texte), \nqui sera ensuite \ntransmise pour \nconversion en vecteurs \nainsi que la section elle-même."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "2f6950df-ead1-479a-aa51-7768121a4eb2",
+      "name": "Agent IA - Préparer le Contexte",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        40,
+        260
+      ],
+      "parameters": {
+        "text": "=<document> \n{{ $('Split Document Text Into Sections').item.json.document }}\n</document> \nVoici le morceau que nous voulons situer dans l’ensemble du document \n<chunk> \n{{ $json.section }}\n</chunk> \nMerci de fournir un contexte court et succinct pour situer ce morceau dans le document global afin d’améliorer la recherche et la récupération du morceau. Répondez uniquement avec ce contexte succinct et rien d’autre.",
+        "agent": "conversationalAgent",
+        "options": {},
+        "promptType": "define"
+      },
+      "typeVersion": 1.7
+    },
+    {
+      "id": "34a465fc-a505-445a-9211-bcd830381354",
+      "name": "Concaténer le contexte et le texte de la section",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        400,
+        260
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e5fb0381-5d23-46e2-a0d1-438240b80a3e",
+              "name": "=section_chunk",
+              "type": "string",
+              "value": "={{ $json.output }}. {{ $('Loop Over Items').item.json.section }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "4a7a788c-8e5b-453c-ae52-a4522048992d",
+      "name": "Note Autocollante2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        640,
+        220
+      ],
+      "parameters": {
+        "width": 580,
+        "height": 600,
+        "content": "## Convertir le texte en vecteurs\nÀ cette étape, le nœud Pinecone convertit le texte fourni en vecteurs en utilisant Google Gemini et les stocke dans la base de données vectorielle Pinecone."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "45798b49-fc78-417c-a752-4dd1a8882cd7",
+      "name": "Note Autocollante3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -460,
+        -120
+      ],
+      "parameters": {
+        "width": 400,
+        "height": 300,
+        "content": "## Démonstration vidéo\n[![Vignette vidéo](https://img.youtube.com/vi/qBeWP65I4hg/maxresdefault.jpg)](https://www.youtube.com/watch?v=qBeWP65I4hg)"
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": false,
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4f0e2203-5850-4a32-b1dd-5adc57fa43ff",
+  "connections": {
+    "Boucle sur les éléments": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Agent IA - Préparer le Contexte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chargeur de Données Par Défaut": {
+      "ai_document": [
+        [
+          {
+            "node": "Magasin Vectoriel Pinecone",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modèle de Chat OpenRouter": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent IA - Préparer le Contexte",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Magasin Vectoriel Pinecone": {
+      "main": [
+        [
+          {
+            "node": "Boucle sur les éléments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Google Gemini": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Magasin Vectoriel Pinecone",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent IA - Préparer le Contexte": {
+      "main": [
+        [
+          {
+            "node": "Concaténer le contexte et le texte de la section",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Préparer les Sections pour la Boucle": {
+      "main": [
+        [
+          {
+            "node": "Boucle sur les éléments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir le Document depuis Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Extraire les Données Textuelles du Document Google",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Diviseur de Texte Récursif par Caractères": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Chargeur de Données Par Défaut",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Diviser le Texte du Document en Sections": {
+      "main": [
+        [
+          {
+            "node": "Préparer les Sections pour la Boucle",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lors du clic sur ‘Tester le workflow’": {
+      "main": [
+        [
+          {
+            "node": "Obtenir le Document depuis Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraire les Données Textuelles du Document Google": {
+      "main": [
+        [
+          {
+            "node": "Diviser le Texte du Document en Sections",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Concaténer le contexte et le texte de la section": {
+      "main": [
+        [
+          {
+            "node": "Magasin Vectoriel Pinecone",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

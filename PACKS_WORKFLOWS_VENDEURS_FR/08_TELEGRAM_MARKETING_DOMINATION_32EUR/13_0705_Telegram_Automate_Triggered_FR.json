@@ -1,0 +1,111 @@
+{
+  "nodes": [
+    {
+      "name": "Déclencheur Telegram",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        450,
+        300
+      ],
+      "parameters": {
+        "updates": [
+          "message"
+        ]
+      },
+      "credentials": {
+        "telegramApi": ""
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Retourner l'autocollant",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        850,
+        200
+      ],
+      "parameters": {
+        "text": "=Salut {{$node[\"Look for Sticker\"].data[\"message\"][\"from\"][\"first_name\"]}} !\nL'ID de l'autocollant est : {{$node[\"Look for Sticker\"].data[\"message\"][\"sticker\"][\"file_id\"]}}\nIl fait partie du pack d'autocollants : {{$node[\"Look for Sticker\"].data[\"message\"][\"sticker\"][\"set_name\"]}}",
+        "chatId": "={{$node[\"Look for Sticker\"].data[\"message\"][\"chat\"][\"id\"]}}",
+        "additionalFields": {}
+      },
+      "credentials": {
+        "telegramApi": ""
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Aucun autocollant trouvé",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        850,
+        400
+      ],
+      "parameters": {
+        "text": "=Salut {{$node[\"Look for Sticker\"].data[\"message\"][\"from\"][\"first_name\"]}} !\nVotre message ne contenait aucun autocollant.",
+        "chatId": "={{$node[\"Look for Sticker\"].data[\"message\"][\"chat\"][\"id\"]}}",
+        "additionalFields": {}
+      },
+      "credentials": {
+        "telegramApi": "n8nTestBot"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Chercher un autocollant",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        650,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{!!$node[\"Telegram Trigger\"].data[\"message\"][\"sticker\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Chercher un autocollant": {
+      "main": [
+        [
+          {
+            "node": "Retourner l'autocollant",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Aucun autocollant trouvé",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déclencheur Telegram": {
+      "main": [
+        [
+          {
+            "node": "Chercher un autocollant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

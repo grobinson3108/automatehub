@@ -1,0 +1,17 @@
+🚀 Démarrage de l'API sur le port 5680...
+🔑 Clé API: 1ab54f24f0...
+🚀 Content Extractor API démarré sur le port 5680
+🔑 Clé API configurée: 1ab54f24...
+Traceback (most recent call last):
+  File "/var/www/automatehub/scripts/content-extractor/api-server-simple.py", line 190, in <module>
+    run_server()
+  File "/var/www/automatehub/scripts/content-extractor/api-server-simple.py", line 181, in run_server
+    httpd = HTTPServer(server_address, ContentExtractorHandler)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use

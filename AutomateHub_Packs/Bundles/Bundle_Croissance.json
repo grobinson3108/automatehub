@@ -1,0 +1,11 @@
+{
+  "name": "Bundle_Croissance",
+  "description": "\ud83d\udce6 BUNDLE CROISSANCE : Acquisition + Revenus + Visibilit\u00e9",
+  "prix": 449,
+  "included_packs": [
+    "Pack_Acquisition_Clients",
+    "Pack_Augmenter_Revenus",
+    "Pack_Visibilite_Maximum"
+  ],
+  "total_workflows": 330
+}

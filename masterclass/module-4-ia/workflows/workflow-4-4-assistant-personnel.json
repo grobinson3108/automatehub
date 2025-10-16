@@ -1,0 +1,477 @@
+{
+  "name": "Module 4.4 - Assistant Personnel IA Complet",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "id": "telegram-trigger",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [250, 300],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Telegram Bot"
+        }
+      },
+      "webhookId": "assistant-telegram"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "user-001",
+              "name": "user_context",
+              "value": "={{ {\n  \"user_id\": $json.message.from.id,\n  \"username\": $json.message.from.username || $json.message.from.first_name,\n  \"message\": $json.message.text,\n  \"chat_id\": $json.message.chat.id,\n  \"timestamp\": new Date($json.message.date * 1000).toISOString(),\n  \"message_id\": $json.message.message_id,\n  \"language\": $json.message.from.language_code || 'fr'\n} }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "extract-context",
+      "name": "Extraire contexte",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Tu es un assistant personnel intelligent. Tu peux:\n1. Gérer l'agenda et les rappels\n2. Rechercher des informations\n3. Automatiser des tâches\n4. Donner des conseils\n5. Analyser des données\n\nRéponds toujours de manière concise et actionnable. Si l'utilisateur demande une action spécifique, identifie-la clairement."
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.user_context.message }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7,
+          "functions": [
+            {
+              "name": "manage_calendar",
+              "description": "Gérer l'agenda (créer, modifier, consulter des événements)",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": ["create", "update", "delete", "list"],
+                    "description": "Action à effectuer"
+                  },
+                  "event": {
+                    "type": "object",
+                    "properties": {
+                      "title": {"type": "string"},
+                      "date": {"type": "string"},
+                      "time": {"type": "string"},
+                      "duration": {"type": "number"},
+                      "description": {"type": "string"}
+                    }
+                  }
+                },
+                "required": ["action"]
+              }
+            },
+            {
+              "name": "set_reminder",
+              "description": "Créer un rappel",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "description": "Message du rappel"
+                  },
+                  "datetime": {
+                    "type": "string",
+                    "description": "Date et heure du rappel"
+                  },
+                  "recurring": {
+                    "type": "boolean",
+                    "description": "Rappel récurrent"
+                  }
+                },
+                "required": ["message", "datetime"]
+              }
+            },
+            {
+              "name": "search_information",
+              "description": "Rechercher des informations sur internet",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "description": "Requête de recherche"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": ["general", "news", "weather", "stocks"],
+                    "description": "Type de recherche"
+                  }
+                },
+                "required": ["query"]
+              }
+            },
+            {
+              "name": "manage_tasks",
+              "description": "Gérer une todo list",
+              "parameters": {
+                "type": "object",
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": ["add", "complete", "list", "delete"],
+                    "description": "Action sur les tâches"
+                  },
+                  "task": {
+                    "type": "object",
+                    "properties": {
+                      "title": {"type": "string"},
+                      "priority": {"type": "string", "enum": ["high", "medium", "low"]},
+                      "due_date": {"type": "string"}
+                    }
+                  }
+                },
+                "required": ["action"]
+              }
+            }
+          ]
+        }
+      },
+      "id": "ai-processing",
+      "name": "Traitement IA",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.2,
+      "position": [650, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "1",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "check-function",
+              "leftValue": "={{ $json.choices[0].message.function_call }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "has-function-call",
+      "name": "Appel fonction ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.choices[0].message.function_call.name }}",
+        "rules": {
+          "rules": [
+            {
+              "operation": "equals",
+              "value2": "manage_calendar",
+              "output": 0
+            },
+            {
+              "operation": "equals",
+              "value2": "set_reminder",
+              "output": 1
+            },
+            {
+              "operation": "equals",
+              "value2": "search_information",
+              "output": 2
+            },
+            {
+              "operation": "equals",
+              "value2": "manage_tasks",
+              "output": 3
+            }
+          ]
+        },
+        "fallbackOutput": 4
+      },
+      "id": "route-function",
+      "name": "Router fonction",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [1050, 250]
+    },
+    {
+      "parameters": {
+        "calendarId": "primary",
+        "start": "={{ JSON.parse($json.choices[0].message.function_call.arguments).event.date }}T{{ JSON.parse($json.choices[0].message.function_call.arguments).event.time }}",
+        "end": "={{ $now.plus(JSON.parse($json.choices[0].message.function_call.arguments).event.duration || 60, 'minutes').toISO() }}",
+        "summary": "={{ JSON.parse($json.choices[0].message.function_call.arguments).event.title }}",
+        "options": {
+          "description": "={{ JSON.parse($json.choices[0].message.function_call.arguments).event.description || 'Créé par Assistant IA' }}"
+        }
+      },
+      "id": "create-calendar-event",
+      "name": "Créer événement",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 2,
+      "position": [1250, 100],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "1",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_REMINDERS_SHEET",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Rappels",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "user_id": "={{ $json.user_context.user_id }}",
+            "message": "={{ JSON.parse($json.choices[0].message.function_call.arguments).message }}",
+            "datetime": "={{ JSON.parse($json.choices[0].message.function_call.arguments).datetime }}",
+            "created_at": "={{ $now.toISO() }}",
+            "status": "active"
+          }
+        },
+        "options": {}
+      },
+      "id": "save-reminder",
+      "name": "Sauvegarder rappel",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1250, 250],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.duckduckgo.com/?q={{ encodeURIComponent(JSON.parse($json.choices[0].message.function_call.arguments).query) }}&format=json&no_html=1&skip_disambig=1",
+        "options": {}
+      },
+      "id": "search-web",
+      "name": "Recherche web",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1250, 400]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_TASKS_SHEET",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Tasks",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "user_id": "={{ $json.user_context.user_id }}",
+            "title": "={{ JSON.parse($json.choices[0].message.function_call.arguments).task.title }}",
+            "priority": "={{ JSON.parse($json.choices[0].message.function_call.arguments).task.priority || 'medium' }}",
+            "due_date": "={{ JSON.parse($json.choices[0].message.function_call.arguments).task.due_date }}",
+            "status": "pending",
+            "created_at": "={{ $now.toISO() }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "save-task",
+      "name": "Sauvegarder tâche",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1250, 550]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "response-001",
+              "name": "assistant_response",
+              "value": "={{ \n  let response = '';\n  const functionCall = $json.choices?.[0]?.message?.function_call;\n  \n  if (functionCall) {\n    const funcName = functionCall.name;\n    const args = JSON.parse(functionCall.arguments);\n    \n    switch(funcName) {\n      case 'manage_calendar':\n        response = `✅ J'ai créé l'événement \"${args.event?.title}\" pour le ${args.event?.date} à ${args.event?.time}.`;\n        break;\n      case 'set_reminder':\n        response = `⏰ Rappel programmé: \"${args.message}\" pour le ${args.datetime}.`;\n        break;\n      case 'search_information':\n        const searchResult = $node[\"Recherche web\"]?.json;\n        response = `🔍 Voici ce que j'ai trouvé:\\n\\n${searchResult?.Abstract || searchResult?.RelatedTopics?.[0]?.Text || 'Aucun résultat trouvé.'}`;\n        break;\n      case 'manage_tasks':\n        response = `📝 Tâche ajoutée: \"${args.task?.title}\" avec priorité ${args.task?.priority || 'normale'}.`;\n        break;\n      default:\n        response = '✅ Action effectuée avec succès.';\n    }\n  } else {\n    response = $json.choices[0].message.content;\n  }\n  \n  response;\n}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "format-response",
+      "name": "Formater réponse",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1450, 300]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.user_context.chat_id }}",
+        "text": "={{ $json.assistant_response }}",
+        "replyToMessageId": "={{ $json.user_context.message_id }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "telegram-reply",
+      "name": "Répondre Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [1650, 300],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_ASSISTANT_LOG_SHEET",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Conversations",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{ $json.user_context.timestamp }}",
+            "user_id": "={{ $json.user_context.user_id }}",
+            "username": "={{ $json.user_context.username }}",
+            "message": "={{ $json.user_context.message }}",
+            "response": "={{ $json.assistant_response }}",
+            "function_called": "={{ $json.choices[0]?.message?.function_call?.name || 'none' }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "log-conversation",
+      "name": "Logger conversation",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1650, 500],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 🤖 Fonction non reconnue\n\nL'assistant a tenté d'appeler une fonction inconnue.",
+        "contentType": "markdown"
+      },
+      "id": "unknown-function",
+      "name": "Fonction inconnue",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [1250, 700]
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [[{"node": "Extraire contexte", "type": "main", "index": 0}]]
+    },
+    "Extraire contexte": {
+      "main": [[{"node": "Traitement IA", "type": "main", "index": 0}]]
+    },
+    "Traitement IA": {
+      "main": [[{"node": "Appel fonction ?", "type": "main", "index": 0}]]
+    },
+    "Appel fonction ?": {
+      "main": [
+        [{"node": "Router fonction", "type": "main", "index": 0}],
+        [{"node": "Formater réponse", "type": "main", "index": 0}]
+      ]
+    },
+    "Router fonction": {
+      "main": [
+        [{"node": "Créer événement", "type": "main", "index": 0}],
+        [{"node": "Sauvegarder rappel", "type": "main", "index": 0}],
+        [{"node": "Recherche web", "type": "main", "index": 0}],
+        [{"node": "Sauvegarder tâche", "type": "main", "index": 0}],
+        [{"node": "Fonction inconnue", "type": "main", "index": 0}]
+      ]
+    },
+    "Créer événement": {
+      "main": [[{"node": "Formater réponse", "type": "main", "index": 0}]]
+    },
+    "Sauvegarder rappel": {
+      "main": [[{"node": "Formater réponse", "type": "main", "index": 0}]]
+    },
+    "Recherche web": {
+      "main": [[{"node": "Formater réponse", "type": "main", "index": 0}]]
+    },
+    "Sauvegarder tâche": {
+      "main": [[{"node": "Formater réponse", "type": "main", "index": 0}]]
+    },
+    "Formater réponse": {
+      "main": [[
+        {"node": "Répondre Telegram", "type": "main", "index": 0},
+        {"node": "Logger conversation", "type": "main", "index": 0}
+      ]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Assistant personnel IA sur Telegram avec gestion d'agenda, rappels, recherche web et todo list. Utilise les function calls d'OpenAI."
+  },
+  "versionId": "1.0.0"
+}

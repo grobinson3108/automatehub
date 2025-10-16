@@ -1,0 +1,19 @@
+{
+  "name": "Pack_Gain_de_Temps",
+  "type": "Benefice",
+  "description": "\ud83d\udd50 \u00c9conomisez 10h par semaine avec ces automatisations",
+  "prix": 119,
+  "workflow_count": 100,
+  "workflows": [
+    "Telegram-Triggered_AI_Chat_with_Gmail_Integration.json",
+    "webhook_communicate_slack_emailsend_1.json",
+    "Log_New_Gmail_Messages_to_Google_Sheets_Automatically.json",
+    "Automate_Your_RFP_Process_with_OpenAI_Assistants_complex_23nodes.json",
+    "webhook_automation_gmail_telegram_complex_17nodes.json",
+    "webhook_process_telegram_googlecalendartool_complex_15nodes.json",
+    "webhook_communicate_slack_emailsend.json",
+    "webhook_automation_googlesheets_gmail.json",
+    "AI_Chatbot_with_Google_Docs_Memory_Integration.json",
+    "Webhook_Triggers_Email_and_API_Call_with_Custom_Logic.json"
+  ]
+}

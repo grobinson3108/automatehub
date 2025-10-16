@@ -1,0 +1,311 @@
+{
+  "meta": {
+    "instanceId": "automatehub-telegram-bot",
+    "description": "Bot Telegram avancé avec IA et intégrations multiples"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ]
+      },
+      "id": "telegram-trigger-001",
+      "name": "Déclencheur Telegram",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        540,
+        460
+      ],
+      "webhookId": "automatehub-telegram-webhook"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Analyse et classification des messages entrants\nconst message = $json.message;\nconst text = message.text || '';\nconst chatId = message.chat.id;\nconst userId = message.from.id;\nconst userName = message.from.first_name || 'Utilisateur';\n\n// Classification des types de messages\nlet messageType = 'general';\nlet priority = 'normal';\nlet responseTemplate = 'default';\n\n// Détection des commandes\nif (text.startsWith('/')) {\n  messageType = 'command';\n  priority = 'high';\n} else if (text.toLowerCase().includes('aide') || text.toLowerCase().includes('help')) {\n  messageType = 'support';\n  priority = 'high';\n  responseTemplate = 'help';\n} else if (text.toLowerCase().includes('automatisation') || text.toLowerCase().includes('n8n')) {\n  messageType = 'automation';\n  priority = 'medium';\n  responseTemplate = 'automation';\n} else if (text.toLowerCase().includes('urgent') || text.toLowerCase().includes('problème')) {\n  messageType = 'urgent';\n  priority = 'critical';\n}\n\n// Extraction d'entités\nconst entities = {\n  hasQuestion: text.includes('?'),\n  hasEmail: /\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b/.test(text),\n  hasUrl: /(https?:\\/\\/[^\\s]+)/.test(text),\n  hasPhoneNumber: /\\b\\d{10}\\b/.test(text),\n  language: 'fr' // Détection basique de langue\n};\n\nreturn {\n  json: {\n    originalMessage: message,\n    analysis: {\n      messageType,\n      priority,\n      responseTemplate,\n      entities,\n      processingTime: new Date().toISOString()\n    },\n    user: {\n      id: userId,\n      name: userName,\n      chatId: chatId\n    },\n    text: text\n  }\n};"
+      },
+      "id": "message-analyzer-002",
+      "name": "Analyseur de Message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        760,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "command-condition",
+              "leftValue": "={{ $json.analysis.messageType }}",
+              "rightValue": "command",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "command-router-003",
+      "name": "Routeur de Commandes",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        980,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Traitement des commandes spéciales\nconst text = $json.text.toLowerCase();\nconst user = $json.user;\n\nlet response = '';\nlet actionType = 'text';\nlet additionalData = {};\n\nswitch (true) {\n  case text.startsWith('/start'):\n    response = `🚀 Bienvenue ${user.name} sur AutomateHub !\\n\\n` +\n               `Je suis votre assistant d'automatisation. Voici ce que je peux faire :\\n\\n` +\n               `🔧 /workflows - Voir vos workflows\\n` +\n               `📚 /tutoriels - Accéder aux tutoriels\\n` +\n               `💡 /aide - Obtenir de l'aide\\n` +\n               `⚙️ /config - Configuration\\n\\n` +\n               `Tapez simplement votre question pour commencer !`;\n    break;\n    \n  case text.startsWith('/workflows'):\n    response = `📋 Vos workflows n8n :\\n\\n` +\n               `• Telegram Bot (Actif) ✅\\n` +\n               `• Email Marketing (Pause) ⏸️\\n` +\n               `• Data Sync (Actif) ✅\\n\\n` +\n               `Voulez-vous voir les détails d'un workflow spécifique ?`;\n    actionType = 'workflow_list';\n    break;\n    \n  case text.startsWith('/tutoriels'):\n    response = `📚 Tutoriels AutomateHub disponibles :\\n\\n` +\n               `🤖 Créer un bot Telegram\\n` +\n               `📧 Automatisation email\\n` +\n               `🔄 Synchronisation de données\\n` +\n               `🧠 Intégration IA\\n\\n` +\n               `Quel tutoriel vous intéresse ?`;\n    actionType = 'tutorial_menu';\n    break;\n    \n  case text.startsWith('/aide'):\n    response = `🆘 Centre d'aide AutomateHub :\\n\\n` +\n               `• Tapez votre question en français\\n` +\n               `• Utilisez /workflows pour vos automations\\n` +\n               `• Consultez /tutoriels pour apprendre\\n` +\n               `• Contactez le support : support@automatehub.fr\\n\\n` +\n               `💬 Je suis là pour vous aider !`;\n    break;\n    \n  case text.startsWith('/config'):\n    response = `⚙️ Configuration de votre compte :\\n\\n` +\n               `👤 Utilisateur : ${user.name}\\n` +\n               `🆔 ID : ${user.id}\\n` +\n               `📊 Plan : Premium\\n` +\n               `🔔 Notifications : Activées\\n\\n` +\n               `Que souhaitez-vous modifier ?`;\n    actionType = 'config_menu';\n    break;\n    \n  default:\n    response = `❓ Commande non reconnue : ${text}\\n\\n` +\n               `Tapez /aide pour voir les commandes disponibles.`;\n}\n\nreturn {\n  json: {\n    user: user,\n    response: response,\n    actionType: actionType,\n    additionalData: additionalData,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "command-processor-004",
+      "name": "Processeur de Commandes",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Traitement intelligent des messages généraux avec IA\nconst analysis = $json.analysis;\nconst user = $json.user;\nconst text = $json.text;\n\nlet response = '';\nlet needsEscalation = false;\n\n// Réponses basées sur les mots-clés et l'analyse\nif (analysis.responseTemplate === 'help') {\n  response = `💡 Je suis là pour vous aider, ${user.name} !\\n\\n` +\n             `Voici comment je peux vous assister :\\n` +\n             `🔧 Questions sur l'automatisation\\n` +\n             `📚 Guidance sur nos tutoriels\\n` +\n             `⚙️ Support technique n8n\\n\\n` +\n             `Posez-moi votre question spécifique !`;\n} else if (analysis.responseTemplate === 'automation') {\n  response = `🤖 Parlons d'automatisation !\\n\\n` +\n             `AutomateHub propose :\\n` +\n             `• Tutoriels n8n complets\\n` +\n             `• Workflows prêts à l'emploi\\n` +\n             `• Support communautaire\\n` +\n             `• Intégrations avancées\\n\\n` +\n             `Quel type d'automatisation vous intéresse ?`;\n} else if (analysis.entities.hasQuestion) {\n  response = `🤔 Excellente question !\\n\\n` +\n             `Pour mieux vous aider, pouvez-vous me donner plus de contexte ?\\n` +\n             `• Quel est votre niveau avec n8n ?\\n` +\n             `• Quel type d'automatisation cherchez-vous ?\\n` +\n             `• Avez-vous consulté nos tutoriels ?\\n\\n` +\n             `Je suis là pour vous guider !`;\n} else if (analysis.priority === 'critical') {\n  response = `🚨 Message urgent détecté !\\n\\n` +\n             `Notre équipe support va vous contacter rapidement.\\n` +\n             `En attendant :\\n` +\n             `📧 support@automatehub.fr\\n` +\n             `📞 Support prioritaire disponible\\n\\n` +\n             `Décrivez votre problème en détail.`;\n  needsEscalation = true;\n} else {\n  // Réponse par défaut intelligente\n  response = `👋 Merci pour votre message, ${user.name} !\\n\\n` +\n             `Je traite votre demande... ⚡\\n\\n` +\n             `💡 Astuce : Utilisez /aide pour découvrir toutes mes fonctionnalités !`;\n}\n\n// Ajout d'informations contextuelles\nif (analysis.entities.hasEmail) {\n  response += `\\n\\n📧 J'ai détecté une adresse email dans votre message. Souhaitez-vous configurer une automatisation email ?`;\n}\n\nif (analysis.entities.hasUrl) {\n  response += `\\n\\n🔗 J'ai vu un lien dans votre message. Voulez-vous créer une automatisation de surveillance web ?`;\n}\n\nreturn {\n  json: {\n    user: user,\n    response: response,\n    needsEscalation: needsEscalation,\n    analysis: analysis,\n    timestamp: new Date().toISOString()\n  }\n};"
+      },
+      "id": "ai-processor-005",
+      "name": "Processeur IA",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.user.chatId }}",
+        "text": "={{ $json.response }}",
+        "additionalFields": {
+          "parse_mode": "HTML",
+          "disable_web_page_preview": true
+        }
+      },
+      "id": "telegram-response-006",
+      "name": "Réponse Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.1,
+      "position": [
+        1420,
+        460
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "escalation-condition",
+              "leftValue": "={{ $json.needsEscalation }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "escalation-check-007",
+      "name": "Vérification d'Escalade",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1640,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://automatehub.fr/api/support/escalate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  \"user_id\": $json.user.id,\n  \"user_name\": $json.user.name,\n  \"chat_id\": $json.user.chatId,\n  \"message\": $json.analysis.originalMessage.text,\n  \"priority\": \"critical\",\n  \"source\": \"telegram_bot\",\n  \"timestamp\": $json.timestamp\n} }}"
+      },
+      "id": "support-escalation-008",
+      "name": "Escalade Support",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1860,
+        560
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://automatehub.fr/api/analytics/telegram-interaction",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  \"user_id\": $json.user.id,\n  \"interaction_type\": $json.analysis.messageType,\n  \"message_length\": $json.text.length,\n  \"response_template\": $json.analysis.responseTemplate,\n  \"priority\": $json.analysis.priority,\n  \"timestamp\": $json.timestamp,\n  \"has_escalation\": $json.needsEscalation || false\n} }}"
+      },
+      "id": "analytics-tracking-009",
+      "name": "Suivi Analytics",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1640,
+        360
+      ]
+    }
+  ],
+  "connections": {
+    "Déclencheur Telegram": {
+      "main": [
+        [
+          {
+            "node": "Analyseur de Message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyseur de Message": {
+      "main": [
+        [
+          {
+            "node": "Routeur de Commandes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Routeur de Commandes": {
+      "main": [
+        [
+          {
+            "node": "Processeur de Commandes",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Processeur IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processeur de Commandes": {
+      "main": [
+        [
+          {
+            "node": "Réponse Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processeur IA": {
+      "main": [
+        [
+          {
+            "node": "Réponse Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Réponse Telegram": {
+      "main": [
+        [
+          {
+            "node": "Analytics Tracking",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Vérification d'Escalade",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vérification d'Escalade": {
+      "main": [
+        [
+          {
+            "node": "Escalade Support",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "errorWorkflow": "error-handler-workflow"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-07-05T10:30:00.000Z",
+      "updatedAt": "2025-07-05T10:30:00.000Z",
+      "id": "telegram",
+      "name": "telegram"
+    },
+    {
+      "createdAt": "2025-07-05T10:30:00.000Z",
+      "updatedAt": "2025-07-05T10:30:00.000Z",
+      "id": "bot",
+      "name": "bot"
+    },
+    {
+      "createdAt": "2025-07-05T10:30:00.000Z",
+      "updatedAt": "2025-07-05T10:30:00.000Z",
+      "id": "ai",
+      "name": "ai"
+    },
+    {
+      "createdAt": "2025-07-05T10:30:00.000Z",
+      "updatedAt": "2025-07-05T10:30:00.000Z",
+      "id": "automatehub",
+      "name": "automatehub"
+    },
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-07-05T10:30:00.000Z",
+  "versionId": "2"
+}

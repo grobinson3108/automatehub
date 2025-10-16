@@ -1,0 +1,1227 @@
+{
+  "name": "AT 35 - Ads",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -512,
+        0
+      ],
+      "id": "c26b2a9c-b11e-4110-9343-c843b0590eff",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appIWdrILtVf3SdMT",
+          "mode": "list",
+          "cachedResultName": "AT 35 - Ads",
+          "cachedResultUrl": "https://airtable.com/appIWdrILtVf3SdMT"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbldfHznMBXL6hCrN",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appIWdrILtVf3SdMT/tbldfHznMBXL6hCrN"
+        },
+        "filterByFormula": "NOT({Status} = 'Done')",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        176,
+        0
+      ],
+      "id": "65a530d4-b827-4433-bf1f-acf20139be5d",
+      "name": "Search records",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "35659353-d8e2-4677-876b-401b549605a0",
+              "name": "Fal.ai",
+              "type": "string",
+              "value": "4b88cfa9-af38-402b-887d-13550effef09:f524d832d9ab48271efe5d40d7306c23"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e89cba17-6a37-4e29-b079-f94f1d0e0183",
+      "name": "Set API Keys",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -176,
+        0
+      ],
+      "notesInFlow": true,
+      "typeVersion": 3.4,
+      "notes": "Set your API keys here"
+    },
+    {
+      "parameters": {
+        "content": "## Add your API keys here\n**Generate your video using the Kling 1.6. [Link](https://fal.ai/models/fal-ai/kling-video/v1.6/pro/image-to-video/playground)",
+        "height": 360,
+        "width": 300,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -256,
+        -144
+      ],
+      "typeVersion": 1,
+      "id": "0e104765-7e50-4017-a7a1-a7dc5966a97d",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appIWdrILtVf3SdMT",
+          "mode": "list",
+          "cachedResultName": "AT 35 - Ads",
+          "cachedResultUrl": "https://airtable.com/appIWdrILtVf3SdMT"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbldfHznMBXL6hCrN",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appIWdrILtVf3SdMT/tbldfHznMBXL6hCrN"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Search records').item.json.id }}",
+            "Sound": "=[\n  { \"url\": \"{{ $json.audio.url }}\" }\n]"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Prompt",
+              "displayName": "Prompt",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Negative prompts",
+              "displayName": "Negative prompts",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Duration ( seconds )",
+              "displayName": "Duration ( seconds )",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "5",
+                  "value": "5"
+                },
+                {
+                  "name": "10",
+                  "value": "10"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Aspect ratio",
+              "displayName": "Aspect ratio",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "16:9",
+                  "value": "16:9"
+                },
+                {
+                  "name": "1:1",
+                  "value": "1:1"
+                },
+                {
+                  "name": "9:16",
+                  "value": "9:16"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "First frame",
+              "displayName": "First frame",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Final frame",
+              "displayName": "Final frame",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Video without sound",
+              "displayName": "Video without sound",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Sound",
+              "displayName": "Sound",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Final video",
+              "displayName": "Final video",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1456,
+        272
+      ],
+      "id": "785d57b2-ff40-4682-b658-cb419ce5913d",
+      "name": "Update record2",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        992,
+        272
+      ],
+      "id": "ad393b2b-879d-4832-8f0f-630d85ee6378",
+      "name": "Wait 1 minute",
+      "webhookId": "6b285cb8-d5d4-41de-99bc-60d706a09a9e"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://queue.fal.run/fal-ai/ace-step/prompt-to-audio",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Key {{ $('Set API Keys').item.json.Fal.ai }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "prompt",
+              "value": "=card board transformation into furniture"
+            },
+            {
+              "name": "instrumental",
+              "value": "true"
+            },
+            {
+              "name": "duration",
+              "value": "5"
+            },
+            {
+              "name": "number_of_steps",
+              "value": "27"
+            },
+            {
+              "name": "seed",
+              "value": "-1"
+            },
+            {
+              "name": "scheduler",
+              "value": "euler"
+            },
+            {
+              "name": "guidance_type",
+              "value": "apg"
+            },
+            {
+              "name": "granularity_scale",
+              "value": "10"
+            },
+            {
+              "name": "guidance_interval",
+              "value": "0.5"
+            },
+            {
+              "name": "guidance_interval_decay",
+              "value": "0"
+            },
+            {
+              "name": "guidance_scale",
+              "value": "15"
+            },
+            {
+              "name": "minimum_guidance_scale",
+              "value": "3"
+            },
+            {
+              "name": "tag_guidance_scale",
+              "value": "5"
+            },
+            {
+              "name": "lyric_guidance_scale",
+              "value": "1.5"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        768,
+        272
+      ],
+      "id": "13df1d2f-f68d-4243-b243-c44d4dcb0107",
+      "name": "Generate Audio"
+    },
+    {
+      "parameters": {
+        "url": "=https://queue.fal.run/fal-ai/ace-step/requests/{{ $json.request_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Key {{ $('Set API Keys').item.json.Fal.ai }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1216,
+        272
+      ],
+      "id": "0c453cc5-0b39-4a70-ba6c-ff18e76ed64c",
+      "name": "Get Audio"
+    },
+    {
+      "parameters": {
+        "content": "## Generate Audio\n**Generate your Audio using Ace Step. [Link](https://fal.ai/models/fal-ai/ace-step/prompt-to-audio/playground)",
+        "height": 140,
+        "width": 540
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        144,
+        256
+      ],
+      "typeVersion": 1,
+      "id": "e2d63d78-0aa2-4584-9c25-5b8bf923ccb7",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appIWdrILtVf3SdMT",
+          "mode": "list",
+          "cachedResultName": "AT 35 - Ads",
+          "cachedResultUrl": "https://airtable.com/appIWdrILtVf3SdMT"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbldfHznMBXL6hCrN",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appIWdrILtVf3SdMT/tbldfHznMBXL6hCrN"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Search records').item.json.id }}",
+            "Video without sound": "=[\n  { \"url\": \"{{ $json.video.url }}\" }\n]"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Prompt",
+              "displayName": "Prompt",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Negative prompts",
+              "displayName": "Negative prompts",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Duration ( seconds )",
+              "displayName": "Duration ( seconds )",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "5",
+                  "value": "5"
+                },
+                {
+                  "name": "10",
+                  "value": "10"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Aspect ratio",
+              "displayName": "Aspect ratio",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "16:9",
+                  "value": "16:9"
+                },
+                {
+                  "name": "1:1",
+                  "value": "1:1"
+                },
+                {
+                  "name": "9:16",
+                  "value": "9:16"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "First frame",
+              "displayName": "First frame",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Final frame",
+              "displayName": "Final frame",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Video without sound",
+              "displayName": "Video without sound",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Sound",
+              "displayName": "Sound",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Final video",
+              "displayName": "Final video",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1136,
+        0
+      ],
+      "id": "a4f70695-23da-40d7-9881-a2eaf5c295e7",
+      "name": "Update record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appIWdrILtVf3SdMT",
+          "mode": "list",
+          "cachedResultName": "AT 35 - Ads",
+          "cachedResultUrl": "https://airtable.com/appIWdrILtVf3SdMT"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbldfHznMBXL6hCrN",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appIWdrILtVf3SdMT/tbldfHznMBXL6hCrN"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Search records').item.json.id }}",
+            "Final video": "=[\n  { \"url\": \"{{ $json.video_url }}\" }\n]",
+            "Status": "Todo"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Prompt",
+              "displayName": "Prompt",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Negative prompts",
+              "displayName": "Negative prompts",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Duration ( seconds )",
+              "displayName": "Duration ( seconds )",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "5",
+                  "value": "5"
+                },
+                {
+                  "name": "10",
+                  "value": "10"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Aspect ratio",
+              "displayName": "Aspect ratio",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "16:9",
+                  "value": "16:9"
+                },
+                {
+                  "name": "1:1",
+                  "value": "1:1"
+                },
+                {
+                  "name": "9:16",
+                  "value": "9:16"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "First frame",
+              "displayName": "First frame",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Final frame",
+              "displayName": "Final frame",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Video without sound",
+              "displayName": "Video without sound",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Sound",
+              "displayName": "Sound",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Final video",
+              "displayName": "Final video",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        2000,
+        528
+      ],
+      "id": "be984c04-b155-49f9-ac36-98f963f525d5",
+      "name": "Update record3",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://queue.fal.run/fal-ai/ffmpeg-api/compose",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Key {{ $('Set API Keys').item.json.Fal.ai }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"tracks\": [\n    {\n      \"id\": \"video-track-1\",\n      \"type\": \"video\",\n      \"keyframes\": [\n        {\n          \"url\": \"{{ $json.fields['Video without sound'][0].url }}\",\n          \"timestamp\": 0,\n          \"duration\": 5000\n        }\n      ]\n    },\n    {\n      \"id\": \"audio-track-1\",\n      \"type\": \"audio\",\n      \"keyframes\": [\n        {\n          \"url\": \"{{ $('Get Audio').item.json.audio.url }}\",\n          \"timestamp\": 0,\n          \"duration\": 5000\n        }\n      ]\n    }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1312,
+        528
+      ],
+      "id": "9ba2842b-6e4a-40cf-bbd2-235552ac178c",
+      "name": "Merge Video and Audio"
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1536,
+        528
+      ],
+      "id": "869e2c25-e0c2-43fd-a2c1-f4f9a92d182a",
+      "name": "Wait 2 minutes",
+      "webhookId": "ec2cfe5e-4b8e-4e17-a1ac-83b3b0e824c6"
+    },
+    {
+      "parameters": {
+        "url": "=https://queue.fal.run/fal-ai/ffmpeg-api/requests/{{ $json.request_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Key {{ $('Set API Keys').item.json.Fal.ai }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1760,
+        528
+      ],
+      "id": "2b0d4ce1-66ae-480b-b742-89f9908aac3f",
+      "name": "Get Final Video"
+    },
+    {
+      "parameters": {
+        "content": "## Merge Video and Audio\n**Merge the final video using FFMpeg API Compose. [Link](https://fal.ai/models/fal-ai/ffmpeg-api/compose)",
+        "height": 140,
+        "width": 540
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        688,
+        496
+      ],
+      "typeVersion": 1,
+      "id": "8b944083-73f1-452c-949f-7d4fb4ee1172",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Automation Tribe\n\n![Automation Tribe Logo](https://blog.automation-tribe.com/logo-AT-small.png)\n\n🎥 Check out our YouTube channel for automations, tutorials, and tools:  \n👉 [Automation Tribe on YouTube](https://www.youtube.com/@automation-tribe)\n\n👥 Join the communities:  \n\n🔗 [Premium Community](https://dub.sh/automation-tribe) \n\n🔗 [Free Community](https://dub.sh/free-community)\n\n",
+        "height": 392,
+        "width": 576
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -528,
+        272
+      ],
+      "typeVersion": 1,
+      "id": "ddab31dc-306e-422b-834a-1eec4bf3c848",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://queue.fal.run/fal-ai/kling-video/v1.6/pro/image-to-video",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Key {{ $('Set API Keys').item.json.Fal.ai }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "prompt",
+              "value": "={{ $json.Prompt }}"
+            },
+            {
+              "name": "image_url",
+              "value": "={{ $json['First frame'][0].url }}"
+            },
+            {
+              "name": "tail_image_url",
+              "value": "={{ $json['Final frame'][0].url }}"
+            },
+            {
+              "name": "duration",
+              "value": "={{ $json['Duration ( seconds )'] }}"
+            },
+            {
+              "name": "aspect_ratio",
+              "value": "={{ $json['Aspect ratio'] }}"
+            },
+            {
+              "name": "negative_prompt",
+              "value": "={{ $json['Negative prompts'] }}"
+            },
+            {
+              "name": "cfg_scale",
+              "value": "0.5"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        448,
+        0
+      ],
+      "id": "8ec0bc45-36db-46c8-9b02-63bf3cf7ed22",
+      "name": "Generate video"
+    },
+    {
+      "parameters": {
+        "url": "=https://queue.fal.run/fal-ai/kling-video/requests/{{ $json.request_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Key {{ $('Set API Keys').item.json.Fal.ai }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        928,
+        0
+      ],
+      "id": "656ef849-1129-4ec3-b66c-2e353f81f2c3",
+      "name": "Get video"
+    },
+    {
+      "parameters": {
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        688,
+        0
+      ],
+      "id": "577781b3-3f02-45be-98b6-c8332a881265",
+      "name": "Wait 5 min",
+      "webhookId": "0983792b-eea8-4215-921a-1deee377fc91"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Set API Keys",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records": {
+      "main": [
+        [
+          {
+            "node": "Generate video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set API Keys": {
+      "main": [
+        [
+          {
+            "node": "Search records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 1 minute": {
+      "main": [
+        [
+          {
+            "node": "Get Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Audio": {
+      "main": [
+        [
+          {
+            "node": "Wait 1 minute",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Audio": {
+      "main": [
+        [
+          {
+            "node": "Update record2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update record": {
+      "main": [
+        [
+          {
+            "node": "Generate Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Video and Audio": {
+      "main": [
+        [
+          {
+            "node": "Wait 2 minutes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 2 minutes": {
+      "main": [
+        [
+          {
+            "node": "Get Final Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Final Video": {
+      "main": [
+        [
+          {
+            "node": "Update record3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update record2": {
+      "main": [
+        [
+          {
+            "node": "Merge Video and Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate video": {
+      "main": [
+        [
+          {
+            "node": "Wait 5 min",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get video": {
+      "main": [
+        [
+          {
+            "node": "Update record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 5 min": {
+      "main": [
+        [
+          {
+            "node": "Get video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "80e1497d-d529-4fce-b1c1-9ebb4297d975",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+  },
+  "id": "hYuv7pPPgRnQf5tu",
+  "tags": []
+}

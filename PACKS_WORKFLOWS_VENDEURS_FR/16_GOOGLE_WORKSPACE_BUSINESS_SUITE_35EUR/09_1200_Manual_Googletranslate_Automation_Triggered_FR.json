@@ -1,0 +1,54 @@
+{
+  "id": "92",
+  "name": "Traduire le texte de l'anglais vers l'allemand",
+  "nodes": [
+    {
+      "name": "En cliquant sur 'exécuter'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        270,
+        300
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "name": "Google Traduction",
+      "type": "n8n-nodes-base.googleTranslate",
+      "position": [
+        470,
+        300
+      ],
+      "parameters": {
+        "text": "Bonjour de la part de n8n !",
+        "translateTo": "de",
+        "authentication": "oAuth2"
+      },
+      "credentials": {
+        "googleTranslateOAuth2Api": "google-translate"
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": false,
+  "settings": {},
+  "connections": {
+    "En cliquant sur 'exécuter'": {
+      "main": [
+        [
+          {
+            "node": "Google Traduction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

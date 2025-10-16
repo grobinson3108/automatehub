@@ -1,0 +1,708 @@
+2025-09-13 19:35:20,235 - INFO - Début de la traduction de 100 workflows
+2025-09-13 19:35:20,235 - INFO - Source: /var/www/automatehub/TOP_100_PRIORITAIRES
+2025-09-13 19:35:20,235 - INFO - Destination: /var/www/automatehub/TOP_100_FR
+2025-09-13 19:35:20,235 - INFO - [1/100] Traitement de Ecriture_Fichier_Binaire.json
+2025-09-13 19:35:20,235 - INFO - Traduction de Ecriture_Fichier_Binaire.json
+2025-09-13 19:35:20,236 - INFO - ✅ Ecriture_Fichier_Binaire.json traduit avec succès
+2025-09-13 19:35:20,236 - INFO - [2/100] Traitement de Generation_Images_OpenAI_Formulaire.json
+2025-09-13 19:35:20,236 - INFO - Traduction de Generation_Images_OpenAI_Formulaire.json
+2025-09-13 19:35:20,237 - INFO - Workflow name: 'Simple OpenAI Image Generator' -> 'Simple OpenAI Image Generator'
+2025-09-13 19:35:20,238 - INFO - ✅ Generation_Images_OpenAI_Formulaire.json traduit avec succès
+2025-09-13 19:35:20,238 - INFO - [3/100] Traitement de Requete_API_Transformation_Donnees.json
+2025-09-13 19:35:20,238 - INFO - Traduction de Requete_API_Transformation_Donnees.json
+2025-09-13 19:35:20,240 - INFO - ✅ Requete_API_Transformation_Donnees.json traduit avec succès
+2025-09-13 19:35:20,240 - INFO - [4/100] Traitement de Typeform_vers_Airtable_CFP.json
+2025-09-13 19:35:20,240 - INFO - Traduction de Typeform_vers_Airtable_CFP.json
+2025-09-13 19:35:20,240 - INFO - Workflow name: 'CFP Selection 1' -> 'CFP Selection 1'
+2025-09-13 19:35:20,240 - INFO - ✅ Typeform_vers_Airtable_CFP.json traduit avec succès
+2025-09-13 19:35:20,241 - INFO - [5/100] Traitement de Suivi_Heures_Pauses_Notion.json
+2025-09-13 19:35:20,241 - INFO - Traduction de Suivi_Heures_Pauses_Notion.json
+2025-09-13 19:35:20,241 - INFO - Workflow name: 'Track Working Time and Pauses' -> 'Track Working Time and Pauses'
+2025-09-13 19:35:20,246 - INFO - ✅ Suivi_Heures_Pauses_Notion.json traduit avec succès
+2025-09-13 19:35:20,246 - INFO - [6/100] Traitement de Lecture_PDF_Manuel.json
+2025-09-13 19:35:20,247 - INFO - Traduction de Lecture_PDF_Manuel.json
+2025-09-13 19:35:20,247 - INFO - ✅ Lecture_PDF_Manuel.json traduit avec succès
+2025-09-13 19:35:20,247 - INFO - [7/100] Traitement de Webhook_Slack_Email_V2.json
+2025-09-13 19:35:20,247 - INFO - Traduction de Webhook_Slack_Email_V2.json
+2025-09-13 19:35:20,248 - INFO - ✅ Webhook_Slack_Email_V2.json traduit avec succès
+2025-09-13 19:35:20,248 - INFO - [8/100] Traitement de Formulaire_vers_API.json
+2025-09-13 19:35:20,248 - INFO - Traduction de Formulaire_vers_API.json
+2025-09-13 19:35:20,249 - INFO - ✅ Formulaire_vers_API.json traduit avec succès
+2025-09-13 19:35:20,249 - INFO - [9/100] Traitement de Todoist_Traitement_Programme.json
+2025-09-13 19:35:20,249 - INFO - Traduction de Todoist_Traitement_Programme.json
+2025-09-13 19:35:20,251 - INFO - ✅ Todoist_Traitement_Programme.json traduit avec succès
+2025-09-13 19:35:20,251 - INFO - [10/100] Traitement de Tags_Auto_Images_Drive_IA.json
+2025-09-13 19:35:20,251 - INFO - Traduction de Tags_Auto_Images_Drive_IA.json
+2025-09-13 19:35:20,251 - INFO - Workflow name: 'Automated Image Metadata Tagging (Community Node)' -> 'Automated Image Metadata Tagging (Community Node)'
+2025-09-13 19:35:20,253 - INFO - ✅ Tags_Auto_Images_Drive_IA.json traduit avec succès
+2025-09-13 19:35:20,253 - INFO - [11/100] Traitement de Webhook_Google_Sheets_Gmail.json
+2025-09-13 19:35:20,253 - INFO - Traduction de Webhook_Google_Sheets_Gmail.json
+2025-09-13 19:35:20,253 - INFO - Workflow name: 'Add new incoming emails to a Google Sheets spreadsheet as a new row.' -> 'Add new incoming emails to a Google Sheets spreadsheet as a new row.'
+2025-09-13 19:35:20,254 - INFO - ✅ Webhook_Google_Sheets_Gmail.json traduit avec succès
+2025-09-13 19:35:20,254 - INFO - [12/100] Traitement de GitHub_Alertes_Slack.json
+2025-09-13 19:35:20,254 - INFO - Traduction de GitHub_Alertes_Slack.json
+2025-09-13 19:35:20,254 - INFO - ✅ GitHub_Alertes_Slack.json traduit avec succès
+2025-09-13 19:35:20,255 - INFO - [13/100] Traitement de NextCloud_Upload_Auto.json
+2025-09-13 19:35:20,255 - INFO - Traduction de NextCloud_Upload_Auto.json
+2025-09-13 19:35:20,255 - INFO - ✅ NextCloud_Upload_Auto.json traduit avec succès
+2025-09-13 19:35:20,255 - INFO - [14/100] Traitement de Classification_Emails_OpenAI.json
+2025-09-13 19:35:20,255 - INFO - Traduction de Classification_Emails_OpenAI.json
+2025-09-13 19:35:20,255 - INFO - Workflow name: 'OpenAI e-mail classification - application' -> 'OpenAI e-mail classification - application'
+2025-09-13 19:35:20,257 - INFO - ✅ Classification_Emails_OpenAI.json traduit avec succès
+2025-09-13 19:35:20,257 - INFO - [15/100] Traitement de Alerte_SMS_Bitcoin_9000_EUR.json
+2025-09-13 19:35:20,257 - INFO - Traduction de Alerte_SMS_Bitcoin_9000_EUR.json
+2025-09-13 19:35:20,257 - INFO - Workflow name: 'Get the price of BTC in EUR and send an SMS when the price is larger than EUR 9000' -> 'Get the price of BTC in EUR and send an SMS when the price is larger than EUR 9000'
+2025-09-13 19:35:20,258 - INFO - ✅ Alerte_SMS_Bitcoin_9000_EUR.json traduit avec succès
+2025-09-13 19:35:20,258 - INFO - [16/100] Traitement de Extraction_Texte_PDF.json
+2025-09-13 19:35:20,258 - INFO - Traduction de Extraction_Texte_PDF.json
+2025-09-13 19:35:20,259 - INFO - ✅ Extraction_Texte_PDF.json traduit avec succès
+2025-09-13 19:35:20,259 - INFO - [17/100] Traitement de Versets_Bible_Auto.json
+2025-09-13 19:35:20,259 - INFO - Traduction de Versets_Bible_Auto.json
+2025-09-13 19:35:20,259 - INFO - Workflow name: 'getBible Query v1.0' -> 'getBible Query v1.0'
+2025-09-13 19:35:20,260 - INFO - ✅ Versets_Bible_Auto.json traduit avec succès
+2025-09-13 19:35:20,260 - INFO - [18/100] Traitement de Texte_vers_Audio_OpenAI.json
+2025-09-13 19:35:20,260 - INFO - Traduction de Texte_vers_Audio_OpenAI.json
+2025-09-13 19:35:20,260 - INFO - Workflow name: 'Generate audio from text using OpenAI - text-to-speech Workflow' -> 'Generate audio from text using OpenAI - text-to-speech Workflow'
+2025-09-13 19:35:20,261 - INFO - ✅ Texte_vers_Audio_OpenAI.json traduit avec succès
+2025-09-13 19:35:20,261 - INFO - [19/100] Traitement de Workflow_Vide_Pret_Configurer.json
+2025-09-13 19:35:20,261 - INFO - Traduction de Workflow_Vide_Pret_Configurer.json
+2025-09-13 19:35:20,261 - INFO - ✅ Workflow_Vide_Pret_Configurer.json traduit avec succès
+2025-09-13 19:35:20,261 - INFO - [20/100] Traitement de Webhook_Slack_Email.json
+2025-09-13 19:35:20,261 - INFO - Traduction de Webhook_Slack_Email.json
+2025-09-13 19:35:20,262 - INFO - ✅ Webhook_Slack_Email.json traduit avec succès
+2025-09-13 19:35:20,262 - INFO - [21/100] Traitement de HubSpot_Programmation_Cron.json
+2025-09-13 19:35:20,262 - INFO - Traduction de HubSpot_Programmation_Cron.json
+2025-09-13 19:35:20,263 - INFO - ✅ HubSpot_Programmation_Cron.json traduit avec succès
+2025-09-13 19:35:20,263 - INFO - [22/100] Traitement de Monitoring_Kafka_SMS.json
+2025-09-13 19:35:20,263 - INFO - Traduction de Monitoring_Kafka_SMS.json
+2025-09-13 19:35:20,263 - INFO - Workflow name: 'Receive messages from a topic and send an SMS' -> 'Receive messages from a topic and send an SMS'
+2025-09-13 19:35:20,263 - INFO - ✅ Monitoring_Kafka_SMS.json traduit avec succès
+2025-09-13 19:35:20,263 - INFO - [23/100] Traitement de Twitter_vers_RocketChat_Auto.json
+2025-09-13 19:35:20,263 - INFO - Traduction de Twitter_vers_RocketChat_Auto.json
+2025-09-13 19:35:20,264 - INFO - Workflow name: 'TwitterWorkflow' -> 'TwitterWorkflow'
+2025-09-13 19:35:20,264 - INFO - ✅ Twitter_vers_RocketChat_Auto.json traduit avec succès
+2025-09-13 19:35:20,264 - INFO - [24/100] Traitement de Google_Drive_vers_WordPress.json
+2025-09-13 19:35:20,264 - INFO - Traduction de Google_Drive_vers_WordPress.json
+2025-09-13 19:35:20,266 - INFO - ✅ Google_Drive_vers_WordPress.json traduit avec succès
+2025-09-13 19:35:20,266 - INFO - [25/100] Traitement de Shopify_Commandes_CRM.json
+2025-09-13 19:35:20,266 - INFO - Traduction de Shopify_Commandes_CRM.json
+2025-09-13 19:35:20,267 - INFO - ✅ Shopify_Commandes_CRM.json traduit avec succès
+2025-09-13 19:35:20,267 - INFO - [26/100] Traitement de Gmail_vers_Google_Sheets_Auto.json
+2025-09-13 19:35:20,267 - INFO - Traduction de Gmail_vers_Google_Sheets_Auto.json
+2025-09-13 19:35:20,268 - INFO - Workflow name: 'Add new incoming emails to a Google Sheets spreadsheet as a new row.' -> 'Add new incoming emails to a Google Sheets spreadsheet as a new row.'
+2025-09-13 19:35:20,268 - INFO - ✅ Gmail_vers_Google_Sheets_Auto.json traduit avec succès
+2025-09-13 19:35:20,269 - INFO - [27/100] Traitement de Strava_vers_Beeminder.json
+2025-09-13 19:35:20,269 - INFO - Traduction de Strava_vers_Beeminder.json
+2025-09-13 19:35:20,269 - INFO - Workflow name: 'Add a datapoint to Beeminder when new activity is added to Strava' -> 'Add a datapoint to Beeminder when new activity is added to Strava'
+2025-09-13 19:35:20,269 - INFO - ✅ Strava_vers_Beeminder.json traduit avec succès
+2025-09-13 19:35:20,269 - INFO - [28/100] Traitement de Traitement_Fonction_Simple.json
+2025-09-13 19:35:20,269 - INFO - Traduction de Traitement_Fonction_Simple.json
+2025-09-13 19:35:20,269 - INFO - Workflow name: 'Verify phone numbers' -> 'Verify phone numbers'
+2025-09-13 19:35:20,270 - INFO - ✅ Traitement_Fonction_Simple.json traduit avec succès
+2025-09-13 19:35:20,270 - INFO - [29/100] Traitement de SMS_Notification_MSG91.json
+2025-09-13 19:35:20,270 - INFO - Traduction de SMS_Notification_MSG91.json
+2025-09-13 19:35:20,270 - INFO - Workflow name: 'Send an SMS using MSG91' -> 'Send an SMS using MSG91'
+2025-09-13 19:35:20,271 - INFO - ✅ SMS_Notification_MSG91.json traduit avec succès
+2025-09-13 19:35:20,271 - INFO - [30/100] Traitement de Bot_Telegram_Recettes_Cocktails.json
+2025-09-13 19:35:20,271 - INFO - Traduction de Bot_Telegram_Recettes_Cocktails.json
+2025-09-13 19:35:20,271 - INFO - Workflow name: 'Send a cocktail recipe every day via a Telegram' -> 'Send a cocktail recipe every day via a Telegram'
+2025-09-13 19:35:20,271 - INFO - ✅ Bot_Telegram_Recettes_Cocktails.json traduit avec succès
+2025-09-13 19:35:20,271 - INFO - [31/100] Traitement de Surveillance_Email_Alertes_Telegram.json
+2025-09-13 19:35:20,271 - INFO - Traduction de Surveillance_Email_Alertes_Telegram.json
+2025-09-13 19:35:20,273 - INFO - ✅ Surveillance_Email_Alertes_Telegram.json traduit avec succès
+2025-09-13 19:35:20,273 - INFO - [32/100] Traitement de Webhook_Requete_HTTP_Simple.json
+2025-09-13 19:35:20,273 - INFO - Traduction de Webhook_Requete_HTTP_Simple.json
+2025-09-13 19:35:20,273 - INFO - Workflow name: 'AccountCraft WhatsApp Automation - Infridet' -> 'AccountCraft WhatsApp Automation - Infridet'
+2025-09-13 19:35:20,274 - INFO - ✅ Webhook_Requete_HTTP_Simple.json traduit avec succès
+2025-09-13 19:35:20,274 - INFO - [33/100] Traitement de Site_Web_vers_PDF_Drive.json
+2025-09-13 19:35:20,274 - INFO - Traduction de Site_Web_vers_PDF_Drive.json
+2025-09-13 19:35:20,275 - INFO - ✅ Site_Web_vers_PDF_Drive.json traduit avec succès
+2025-09-13 19:35:20,275 - INFO - [34/100] Traitement de Reponses_Email_IA_Approbation.json
+2025-09-13 19:35:20,275 - INFO - Traduction de Reponses_Email_IA_Approbation.json
+2025-09-13 19:35:20,275 - INFO - Workflow name: 'AI Email processing autoresponder with approval (Yes/No)' -> 'AI Email processing autoresponder with approval (Yes/No)'
+2025-09-13 19:35:20,277 - INFO - ✅ Reponses_Email_IA_Approbation.json traduit avec succès
+2025-09-13 19:35:20,277 - INFO - [35/100] Traitement de Stripe_HubSpot_Slack.json
+2025-09-13 19:35:20,277 - INFO - Traduction de Stripe_HubSpot_Slack.json
+2025-09-13 19:35:20,277 - INFO - Workflow name: 'On new Stripe Invoice Payment update Hubspot and notify the team in Slack' -> 'On new Stripe Invoice Payment update Hubspot and notify the team in Slack'
+2025-09-13 19:35:20,279 - INFO - ✅ Stripe_HubSpot_Slack.json traduit avec succès
+2025-09-13 19:35:20,279 - INFO - [36/100] Traitement de Sheets_vers_Google_Calendar.json
+2025-09-13 19:35:20,279 - INFO - Traduction de Sheets_vers_Google_Calendar.json
+2025-09-13 19:35:20,279 - INFO - Workflow name: 'Automate Event Creation in Google Calendar from Google Sheets' -> 'Automate Event Creation in Google Calendar from Google Sheets'
+2025-09-13 19:35:20,280 - INFO - ✅ Sheets_vers_Google_Calendar.json traduit avec succès
+2025-09-13 19:35:20,280 - INFO - [37/100] Traitement de Gmail_Brouillons_Reponse_IA.json
+2025-09-13 19:35:20,280 - INFO - Traduction de Gmail_Brouillons_Reponse_IA.json
+2025-09-13 19:35:20,281 - INFO - Workflow name: 'Gmail AI auto-responder: create draft replies to incoming emails' -> 'Gmail AI auto-responder: create draft replies to incoming emails'
+2025-09-13 19:35:20,282 - INFO - ✅ Gmail_Brouillons_Reponse_IA.json traduit avec succès
+2025-09-13 19:35:20,282 - INFO - [38/100] Traitement de Meteo_Webhook_Declencheur.json
+2025-09-13 19:35:20,282 - INFO - Traduction de Meteo_Webhook_Declencheur.json
+2025-09-13 19:35:20,283 - INFO - ✅ Meteo_Webhook_Declencheur.json traduit avec succès
+2025-09-13 19:35:20,283 - INFO - [39/100] Traitement de Email_vers_Nextcloud_Deck.json
+2025-09-13 19:35:20,283 - INFO - Traduction de Email_vers_Nextcloud_Deck.json
+2025-09-13 19:35:20,283 - INFO - Workflow name: 'Create Nextcloud Deck card from email' -> 'Create Nextcloud Deck card from email'
+2025-09-13 19:35:20,284 - INFO - ✅ Email_vers_Nextcloud_Deck.json traduit avec succès
+2025-09-13 19:35:20,284 - INFO - [40/100] Traitement de Typeform_Multi_Notifications_V2.json
+2025-09-13 19:35:20,284 - INFO - Traduction de Typeform_Multi_Notifications_V2.json
+2025-09-13 19:35:20,285 - INFO - ✅ Typeform_Multi_Notifications_V2.json traduit avec succès
+2025-09-13 19:35:20,285 - INFO - [41/100] Traitement de Traitement_Date_Heure.json
+2025-09-13 19:35:20,285 - INFO - Traduction de Traitement_Date_Heure.json
+2025-09-13 19:35:20,286 - INFO - ✅ Traitement_Date_Heure.json traduit avec succès
+2025-09-13 19:35:20,286 - INFO - [42/100] Traitement de Conversion_Fichiers_Manuel.json
+2025-09-13 19:35:20,286 - INFO - Traduction de Conversion_Fichiers_Manuel.json
+2025-09-13 19:35:20,287 - INFO - ✅ Conversion_Fichiers_Manuel.json traduit avec succès
+2025-09-13 19:35:20,287 - INFO - [43/100] Traitement de Gumroad_Notifications_Ventes.json
+2025-09-13 19:35:20,287 - INFO - Traduction de Gumroad_Notifications_Ventes.json
+2025-09-13 19:35:20,287 - INFO - Workflow name: 'Receive updates when a sale is made in Gumroad' -> 'Receive updates when a sale is made in Gumroad'
+2025-09-13 19:35:20,287 - INFO - ✅ Gumroad_Notifications_Ventes.json traduit avec succès
+2025-09-13 19:35:20,287 - INFO - [44/100] Traitement de TheHive_Notifications_Events.json
+2025-09-13 19:35:20,287 - INFO - Traduction de TheHive_Notifications_Events.json
+2025-09-13 19:35:20,288 - INFO - Workflow name: 'Receive updates when an event occurs in TheHive' -> 'Receive updates when an event occurs in TheHive'
+2025-09-13 19:35:20,288 - INFO - ✅ TheHive_Notifications_Events.json traduit avec succès
+2025-09-13 19:35:20,288 - INFO - [45/100] Traitement de Bot_Telegram_Meteo.json
+2025-09-13 19:35:20,288 - INFO - Traduction de Bot_Telegram_Meteo.json
+2025-09-13 19:35:20,288 - INFO - Workflow name: 'Telegram Weather Workflow' -> 'Telegram Weather Workflow'
+2025-09-13 19:35:20,289 - INFO - ✅ Bot_Telegram_Meteo.json traduit avec succès
+2025-09-13 19:35:20,289 - INFO - [46/100] Traitement de Typeform_vers_Sheets_Notifications.json
+2025-09-13 19:35:20,289 - INFO - Traduction de Typeform_vers_Sheets_Notifications.json
+2025-09-13 19:35:20,290 - INFO - ✅ Typeform_vers_Sheets_Notifications.json traduit avec succès
+2025-09-13 19:35:20,290 - INFO - [47/100] Traitement de Stripe_Sync_Commandes.json
+2025-09-13 19:35:20,290 - INFO - Traduction de Stripe_Sync_Commandes.json
+2025-09-13 19:35:20,290 - INFO - Workflow name: 'Stripe Payment Order Sync – Auto Retrieve Customer & Product Purchased' -> 'Stripe Payment Order Sync – Auto Retrieve Customer & Product Purchased'
+2025-09-13 19:35:20,291 - INFO - ✅ Stripe_Sync_Commandes.json traduit avec succès
+2025-09-13 19:35:20,291 - INFO - [48/100] Traitement de Mailchimp_Gmail_Integration.json
+2025-09-13 19:35:20,291 - INFO - Traduction de Mailchimp_Gmail_Integration.json
+2025-09-13 19:35:20,292 - INFO - ✅ Mailchimp_Gmail_Integration.json traduit avec succès
+2025-09-13 19:35:20,293 - INFO - [49/100] Traitement de Bot_Telegram_Envoyer_Livres_Kindle.json
+2025-09-13 19:35:20,293 - INFO - Traduction de Bot_Telegram_Envoyer_Livres_Kindle.json
+2025-09-13 19:35:20,293 - INFO - Workflow name: 'send file to kindle through telegram bot' -> 'send file to kindle through telegram bot'
+2025-09-13 19:35:20,294 - INFO - ✅ Bot_Telegram_Envoyer_Livres_Kindle.json traduit avec succès
+2025-09-13 19:35:20,294 - INFO - [50/100] Traitement de Typeform_Multi_Notifications_V1.json
+2025-09-13 19:35:20,294 - INFO - Traduction de Typeform_Multi_Notifications_V1.json
+2025-09-13 19:35:20,295 - INFO - ✅ Typeform_Multi_Notifications_V1.json traduit avec succès
+2025-09-13 19:35:20,295 - INFO - [51/100] Traitement de Operations_Fichiers_HTTP.json
+2025-09-13 19:35:20,295 - INFO - Traduction de Operations_Fichiers_HTTP.json
+2025-09-13 19:35:20,296 - INFO - ✅ Operations_Fichiers_HTTP.json traduit avec succès
+2025-09-13 19:35:20,296 - INFO - [52/100] Traitement de Agregation_Donnees_Clients.json
+2025-09-13 19:35:20,296 - INFO - Traduction de Agregation_Donnees_Clients.json
+2025-09-13 19:35:20,297 - INFO - ✅ Agregation_Donnees_Clients.json traduit avec succès
+2025-09-13 19:35:20,297 - INFO - [53/100] Traitement de Gmail_Filtre_vers_Telegram.json
+2025-09-13 19:35:20,297 - INFO - Traduction de Gmail_Filtre_vers_Telegram.json
+2025-09-13 19:35:20,298 - INFO - Workflow name: 'Forward Filtered Gmail Notifications to Telegram Chat' -> 'Forward Filtered Gmail Notifications to Telegram Chat'
+2025-09-13 19:35:20,298 - INFO - ✅ Gmail_Filtre_vers_Telegram.json traduit avec succès
+2025-09-13 19:35:20,299 - INFO - [54/100] Traitement de Import_Donnees_Google_Sheets.json
+2025-09-13 19:35:20,299 - INFO - Traduction de Import_Donnees_Google_Sheets.json
+2025-09-13 19:35:20,299 - INFO - ✅ Import_Donnees_Google_Sheets.json traduit avec succès
+2025-09-13 19:35:20,299 - INFO - [55/100] Traitement de Gmail_Organisation_IA.json
+2025-09-13 19:35:20,299 - INFO - Traduction de Gmail_Organisation_IA.json
+2025-09-13 19:35:20,300 - INFO - Workflow name: '(G) - Email Classification' -> '(G) - Email Classification'
+2025-09-13 19:35:20,301 - INFO - ✅ Gmail_Organisation_IA.json traduit avec succès
+2025-09-13 19:35:20,302 - INFO - [56/100] Traitement de Communication_HTTP_Programmee.json
+2025-09-13 19:35:20,302 - INFO - Traduction de Communication_HTTP_Programmee.json
+2025-09-13 19:35:20,303 - INFO - ✅ Communication_HTTP_Programmee.json traduit avec succès
+2025-09-13 19:35:20,303 - INFO - [57/100] Traitement de Service_Resume_Email_IA.json
+2025-09-13 19:35:20,303 - INFO - Traduction de Service_Resume_Email_IA.json
+2025-09-13 19:35:20,303 - INFO - Workflow name: 'Summarize emails with A.I. then send to messenger' -> 'Summarize emails with A.I. then send to messenger'
+2025-09-13 19:35:20,304 - INFO - ✅ Service_Resume_Email_IA.json traduit avec succès
+2025-09-13 19:35:20,304 - INFO - [58/100] Traitement de Lecture_Emails_IMAP.json
+2025-09-13 19:35:20,304 - INFO - Traduction de Lecture_Emails_IMAP.json
+2025-09-13 19:35:20,305 - INFO - ✅ Lecture_Emails_IMAP.json traduit avec succès
+2025-09-13 19:35:20,305 - INFO - [59/100] Traitement de Extraction_Depenses_Email_Sheets.json
+2025-09-13 19:35:20,305 - INFO - Traduction de Extraction_Depenses_Email_Sheets.json
+2025-09-13 19:35:20,305 - INFO - Workflow name: 'Extract expenses from emails and add to Google Sheet' -> 'Extract expenses from emails and add to Google Sheet'
+2025-09-13 19:35:20,306 - INFO - ✅ Extraction_Depenses_Email_Sheets.json traduit avec succès
+2025-09-13 19:35:20,306 - INFO - [60/100] Traitement de Requete_HTTP_Programmee.json
+2025-09-13 19:35:20,306 - INFO - Traduction de Requete_HTTP_Programmee.json
+2025-09-13 19:35:20,307 - INFO - ✅ Requete_HTTP_Programmee.json traduit avec succès
+2025-09-13 19:35:20,307 - INFO - [61/100] Traitement de Calcul_Centre_Coordonnees.json
+2025-09-13 19:35:20,307 - INFO - Traduction de Calcul_Centre_Coordonnees.json
+2025-09-13 19:35:20,307 - INFO - Workflow name: 'Calculate the Centroid of a Set of Vectors' -> 'Calculate the Centroid of a Set of Vectors'
+2025-09-13 19:35:20,309 - INFO - ✅ Calcul_Centre_Coordonnees.json traduit avec succès
+2025-09-13 19:35:20,309 - INFO - [62/100] Traitement de Bot_Telegram_Kindle_Simple.json
+2025-09-13 19:35:20,309 - INFO - Traduction de Bot_Telegram_Kindle_Simple.json
+2025-09-13 19:35:20,309 - INFO - Workflow name: 'send file to kindle through telegram bot' -> 'send file to kindle through telegram bot'
+2025-09-13 19:35:20,310 - INFO - ✅ Bot_Telegram_Kindle_Simple.json traduit avec succès
+2025-09-13 19:35:20,310 - INFO - [63/100] Traitement de Bot_Telegram_Controle_Spotify.json
+2025-09-13 19:35:20,310 - INFO - Traduction de Bot_Telegram_Controle_Spotify.json
+2025-09-13 19:35:20,310 - INFO - Workflow name: 'Play with Spotify from Telegram' -> 'Play with Spotify from Telegram'
+2025-09-13 19:35:20,312 - INFO - ✅ Bot_Telegram_Controle_Spotify.json traduit avec succès
+2025-09-13 19:35:20,312 - INFO - [64/100] Traitement de Teams_Message_Manuel.json
+2025-09-13 19:35:20,312 - INFO - Traduction de Teams_Message_Manuel.json
+2025-09-13 19:35:20,313 - INFO - ✅ Teams_Message_Manuel.json traduit avec succès
+2025-09-13 19:35:20,313 - INFO - [65/100] Traitement de Upload_Drive_Integration_API.json
+2025-09-13 19:35:20,313 - INFO - Traduction de Upload_Drive_Integration_API.json
+2025-09-13 19:35:20,315 - INFO - ✅ Upload_Drive_Integration_API.json traduit avec succès
+2025-09-13 19:35:20,315 - INFO - [66/100] Traitement de Gmail_vers_Todoist_Auto.json
+2025-09-13 19:35:20,315 - INFO - Traduction de Gmail_vers_Todoist_Auto.json
+2025-09-13 19:35:20,315 - INFO - Workflow name: 'Email mailbox as Todoist tasks' -> 'Email mailbox as Todoist tasks'
+2025-09-13 19:35:20,318 - INFO - ✅ Gmail_vers_Todoist_Auto.json traduit avec succès
+2025-09-13 19:35:20,318 - INFO - [67/100] Traitement de HTTP_Ecriture_Fichier.json
+2025-09-13 19:35:20,318 - INFO - Traduction de HTTP_Ecriture_Fichier.json
+2025-09-13 19:35:20,318 - INFO - Workflow name: 'Write a file to the host machine' -> 'Write a file to the host machine'
+2025-09-13 19:35:20,319 - INFO - ✅ HTTP_Ecriture_Fichier.json traduit avec succès
+2025-09-13 19:35:20,319 - INFO - [68/100] Traitement de Shopify_Tags_Onfleet.json
+2025-09-13 19:35:20,319 - INFO - Traduction de Shopify_Tags_Onfleet.json
+2025-09-13 19:35:20,319 - INFO - Workflow name: 'Updating Shopify tags on Onfleet events' -> 'Updating Shopify tags on Onfleet events'
+2025-09-13 19:35:20,319 - INFO - ✅ Shopify_Tags_Onfleet.json traduit avec succès
+2025-09-13 19:35:20,319 - INFO - [69/100] Traitement de MySQL_Export_Fichier.json
+2025-09-13 19:35:20,319 - INFO - Traduction de MySQL_Export_Fichier.json
+2025-09-13 19:35:20,321 - INFO - ✅ MySQL_Export_Fichier.json traduit avec succès
+2025-09-13 19:35:20,321 - INFO - [70/100] Traitement de Box_Integration_Manuel.json
+2025-09-13 19:35:20,321 - INFO - Traduction de Box_Integration_Manuel.json
+2025-09-13 19:35:20,321 - INFO - ✅ Box_Integration_Manuel.json traduit avec succès
+2025-09-13 19:35:20,321 - INFO - [71/100] Traitement de Webhook_Slack_Manuel.json
+2025-09-13 19:35:20,321 - INFO - Traduction de Webhook_Slack_Manuel.json
+2025-09-13 19:35:20,321 - INFO - Workflow name: '外送記帳' -> '外送記帳'
+2025-09-13 19:35:20,323 - INFO - ✅ Webhook_Slack_Manuel.json traduit avec succès
+2025-09-13 19:35:20,323 - INFO - [72/100] Traitement de Webhook_Slack_Email_V1.json
+2025-09-13 19:35:20,323 - INFO - Traduction de Webhook_Slack_Email_V1.json
+2025-09-13 19:35:20,323 - INFO - ✅ Webhook_Slack_Email_V1.json traduit avec succès
+2025-09-13 19:35:20,324 - INFO - [73/100] Traitement de Webhook_vers_Google_Sheets.json
+2025-09-13 19:35:20,324 - INFO - Traduction de Webhook_vers_Google_Sheets.json
+2025-09-13 19:35:20,325 - INFO - ✅ Webhook_vers_Google_Sheets.json traduit avec succès
+2025-09-13 19:35:20,325 - INFO - [74/100] Traitement de PostgreSQL_vers_Spreadsheet.json
+2025-09-13 19:35:20,325 - INFO - Traduction de PostgreSQL_vers_Spreadsheet.json
+2025-09-13 19:35:20,325 - INFO - ✅ PostgreSQL_vers_Spreadsheet.json traduit avec succès
+2025-09-13 19:35:20,325 - INFO - [75/100] Traitement de Operations_Sheets_Gmail_Avance.json
+2025-09-13 19:35:20,325 - INFO - Traduction de Operations_Sheets_Gmail_Avance.json
+2025-09-13 19:35:20,326 - INFO - ✅ Operations_Sheets_Gmail_Avance.json traduit avec succès
+2025-09-13 19:35:20,326 - INFO - [76/100] Traitement de Traitement_HTTP_Manuel.json
+2025-09-13 19:35:20,327 - INFO - Traduction de Traitement_HTTP_Manuel.json
+2025-09-13 19:35:20,328 - INFO - ✅ Traitement_HTTP_Manuel.json traduit avec succès
+2025-09-13 19:35:20,328 - INFO - [77/100] Traitement de Gmail_vers_Google_Tasks.json
+2025-09-13 19:35:20,328 - INFO - Traduction de Gmail_vers_Google_Tasks.json
+2025-09-13 19:35:20,328 - INFO - Workflow name: '📦 New Email ➔ Create Google Task' -> '📦 New Email ➔ Create Google Task'
+2025-09-13 19:35:20,329 - INFO - ✅ Gmail_vers_Google_Tasks.json traduit avec succès
+2025-09-13 19:35:20,329 - INFO - [78/100] Traitement de Verif_Serveur_Rapport_Email.json
+2025-09-13 19:35:20,329 - INFO - Traduction de Verif_Serveur_Rapport_Email.json
+2025-09-13 19:35:20,330 - INFO - ✅ Verif_Serveur_Rapport_Email.json traduit avec succès
+2025-09-13 19:35:20,330 - INFO - [79/100] Traitement de Telegram_Liste_Reunions_Quotidienne.json
+2025-09-13 19:35:20,330 - INFO - Traduction de Telegram_Liste_Reunions_Quotidienne.json
+2025-09-13 19:35:20,330 - INFO - Workflow name: 'Automatically Send Daily Meeting List to Telegram' -> 'Automatically Send Daily Meeting List to Telegram'
+2025-09-13 19:35:20,331 - INFO - ✅ Telegram_Liste_Reunions_Quotidienne.json traduit avec succès
+2025-09-13 19:35:20,331 - INFO - [80/100] Traitement de Gmail_Reponse_Auto_IA.json
+2025-09-13 19:35:20,331 - INFO - Traduction de Gmail_Reponse_Auto_IA.json
+2025-09-13 19:35:20,332 - INFO - Workflow name: 'Gmail AI auto-responder: create draft replies to incoming emails' -> 'Gmail AI auto-responder: create draft replies to incoming emails'
+2025-09-13 19:35:20,333 - INFO - ✅ Gmail_Reponse_Auto_IA.json traduit avec succès
+2025-09-13 19:35:20,333 - INFO - [81/100] Traitement de Resume_Email_IA_Messenger.json
+2025-09-13 19:35:20,333 - INFO - Traduction de Resume_Email_IA_Messenger.json
+2025-09-13 19:35:20,333 - INFO - Workflow name: 'Summarize emails with A.I. then send to messenger' -> 'Summarize emails with A.I. then send to messenger'
+2025-09-13 19:35:20,334 - INFO - ✅ Resume_Email_IA_Messenger.json traduit avec succès
+2025-09-13 19:35:20,334 - INFO - [82/100] Traitement de Notion_ToDo_vers_Slack.json
+2025-09-13 19:35:20,334 - INFO - Traduction de Notion_ToDo_vers_Slack.json
+2025-09-13 19:35:20,334 - INFO - Workflow name: 'Check To Do on Notion and send message on Slack' -> 'Check To Do on Notion and send message on Slack'
+2025-09-13 19:35:20,335 - INFO - ✅ Notion_ToDo_vers_Slack.json traduit avec succès
+2025-09-13 19:35:20,335 - INFO - [83/100] Traitement de YouTube_vers_Telegram.json
+2025-09-13 19:35:20,335 - INFO - Traduction de YouTube_vers_Telegram.json
+2025-09-13 19:35:20,336 - INFO - ✅ YouTube_vers_Telegram.json traduit avec succès
+2025-09-13 19:35:20,336 - INFO - [84/100] Traitement de Twitter_Google_Sheets_Auto.json
+2025-09-13 19:35:20,336 - INFO - Traduction de Twitter_Google_Sheets_Auto.json
+2025-09-13 19:35:20,337 - INFO - ✅ Twitter_Google_Sheets_Auto.json traduit avec succès
+2025-09-13 19:35:20,337 - INFO - [85/100] Traitement de Pipedrive_Programmation_Cron.json
+2025-09-13 19:35:20,337 - INFO - Traduction de Pipedrive_Programmation_Cron.json
+2025-09-13 19:35:20,337 - INFO - ✅ Pipedrive_Programmation_Cron.json traduit avec succès
+2025-09-13 19:35:20,337 - INFO - [86/100] Traitement de Capture_Screenshots_Site_Web.json
+2025-09-13 19:35:20,338 - INFO - Traduction de Capture_Screenshots_Site_Web.json
+2025-09-13 19:35:20,338 - INFO - Workflow name: 'Capture Website Screenshots with Bright Data Web Unlocker and Save to Disk' -> 'Capture Website Screenshots with Bright Data Web Unlocker and Save to Disk'
+2025-09-13 19:35:20,339 - INFO - ✅ Capture_Screenshots_Site_Web.json traduit avec succès
+2025-09-13 19:35:20,339 - INFO - [87/100] Traitement de Shopify_vers_Zendesk.json
+2025-09-13 19:35:20,339 - INFO - Traduction de Shopify_vers_Zendesk.json
+2025-09-13 19:35:20,340 - INFO - ✅ Shopify_vers_Zendesk.json traduit avec succès
+2025-09-13 19:35:20,340 - INFO - [88/100] Traitement de YouTube_Notifications_Telegram.json
+2025-09-13 19:35:20,340 - INFO - Traduction de YouTube_Notifications_Telegram.json
+2025-09-13 19:35:20,341 - INFO - ✅ YouTube_Notifications_Telegram.json traduit avec succès
+2025-09-13 19:35:20,341 - INFO - [89/100] Traitement de WordPress_Post_Manuel.json
+2025-09-13 19:35:20,341 - INFO - Traduction de WordPress_Post_Manuel.json
+2025-09-13 19:35:20,342 - INFO - ✅ WordPress_Post_Manuel.json traduit avec succès
+2025-09-13 19:35:20,342 - INFO - [90/100] Traitement de Suivi_Leads_Sheets_HubSpot.json
+2025-09-13 19:35:20,342 - INFO - Traduction de Suivi_Leads_Sheets_HubSpot.json
+2025-09-13 19:35:20,342 - INFO - Workflow name: 'N_01_Simple_Lead_Tracker_Automation_v4' -> 'N_01_Simple_Lead_Tracker_Automation_v4'
+2025-09-13 19:35:20,344 - INFO - ✅ Suivi_Leads_Sheets_HubSpot.json traduit avec succès
+2025-09-13 19:35:20,344 - INFO - [91/100] Traitement de Meteo_Quotidienne_Line_Messaging.json
+2025-09-13 19:35:20,344 - INFO - Traduction de Meteo_Quotidienne_Line_Messaging.json
+2025-09-13 19:35:20,344 - INFO - Workflow name: 'Send daily weather updates via a message in Line' -> 'Send daily weather updates via a message in Line'
+2025-09-13 19:35:20,344 - INFO - ✅ Meteo_Quotidienne_Line_Messaging.json traduit avec succès
+2025-09-13 19:35:20,344 - INFO - [92/100] Traitement de Amelioration_Contenu_IA.json
+2025-09-13 19:35:20,344 - INFO - Traduction de Amelioration_Contenu_IA.json
+2025-09-13 19:35:20,346 - INFO - ✅ Amelioration_Contenu_IA.json traduit avec succès
+2025-09-13 19:35:20,346 - INFO - [93/100] Traitement de Bot_Telegram_Echo_Simple.json
+2025-09-13 19:35:20,346 - INFO - Traduction de Bot_Telegram_Echo_Simple.json
+2025-09-13 19:35:20,346 - INFO - Workflow name: 'Telegram echo-bot' -> 'Telegram echo-bot'
+2025-09-13 19:35:20,346 - INFO - ✅ Bot_Telegram_Echo_Simple.json traduit avec succès
+2025-09-13 19:35:20,346 - INFO - [94/100] Traitement de Facebook_Leads_Auto.json
+2025-09-13 19:35:20,346 - INFO - Traduction de Facebook_Leads_Auto.json
+2025-09-13 19:35:20,348 - INFO - ✅ Facebook_Leads_Auto.json traduit avec succès
+2025-09-13 19:35:20,348 - INFO - [95/100] Traitement de GitLab_Webhook_Conditionnel.json
+2025-09-13 19:35:20,348 - INFO - Traduction de GitLab_Webhook_Conditionnel.json
+2025-09-13 19:35:20,348 - INFO - ✅ GitLab_Webhook_Conditionnel.json traduit avec succès
+2025-09-13 19:35:20,348 - INFO - [96/100] Traitement de Netflix_Transfert_Emails_Multiple.json
+2025-09-13 19:35:20,348 - INFO - Traduction de Netflix_Transfert_Emails_Multiple.json
+2025-09-13 19:35:20,349 - INFO - Workflow name: 'Forward Netflix emails to multiple email addresses with GMail and Mailjet' -> 'Forward Netflix emails to multiple email addresses with GMail and Mailjet'
+2025-09-13 19:35:20,349 - INFO - ✅ Netflix_Transfert_Emails_Multiple.json traduit avec succès
+2025-09-13 19:35:20,349 - INFO - [97/100] Traitement de SMS_Notification_Mocean.json
+2025-09-13 19:35:20,350 - INFO - Traduction de SMS_Notification_Mocean.json
+2025-09-13 19:35:20,350 - INFO - Workflow name: 'Send an SMS using the Mocean node' -> 'Send an SMS using the Mocean node'
+2025-09-13 19:35:20,350 - INFO - ✅ SMS_Notification_Mocean.json traduit avec succès
+2025-09-13 19:35:20,350 - INFO - [98/100] Traitement de Analyse_Sentiment_Twitter.json
+2025-09-13 19:35:20,350 - INFO - Traduction de Analyse_Sentiment_Twitter.json
+2025-09-13 19:35:20,350 - INFO - Workflow name: 'ETL pipeline' -> 'ETL pipeline'
+2025-09-13 19:35:20,351 - INFO - ✅ Analyse_Sentiment_Twitter.json traduit avec succès
+2025-09-13 19:35:20,351 - INFO - [99/100] Traitement de Chatbot_IA_Webhook.json
+2025-09-13 19:35:20,351 - INFO - Traduction de Chatbot_IA_Webhook.json
+2025-09-13 19:35:20,352 - INFO - ✅ Chatbot_IA_Webhook.json traduit avec succès
+2025-09-13 19:35:20,352 - INFO - [100/100] Traitement de Notification_Email_Mindee.json
+2025-09-13 19:35:20,352 - INFO - Traduction de Notification_Email_Mindee.json
+2025-09-13 19:35:20,352 - INFO - Workflow name: 'New invoice email notification' -> 'New invoice email notification'
+2025-09-13 19:35:20,353 - INFO - ✅ Notification_Email_Mindee.json traduit avec succès
+2025-09-13 19:39:57,526 - INFO - Début de la traduction de 100 workflows
+2025-09-13 19:39:57,526 - INFO - Source: /var/www/automatehub/TOP_100_PRIORITAIRES
+2025-09-13 19:39:57,526 - INFO - Destination: /var/www/automatehub/TOP_100_FR
+2025-09-13 19:39:57,526 - INFO - [1/100] Traitement de Ecriture_Fichier_Binaire.json
+2025-09-13 19:39:57,527 - INFO - Traduction de Ecriture_Fichier_Binaire.json
+2025-09-13 19:39:57,528 - INFO - ✅ Ecriture_Fichier_Binaire.json traduit avec succès
+2025-09-13 19:39:57,528 - INFO - [2/100] Traitement de Generation_Images_OpenAI_Formulaire.json
+2025-09-13 19:39:57,528 - INFO - Traduction de Generation_Images_OpenAI_Formulaire.json
+2025-09-13 19:39:57,528 - INFO - Workflow name: 'Simple OpenAI Image Generator' -> 'Simple OpenAI Image Generator'
+2025-09-13 19:39:57,529 - INFO - ✅ Generation_Images_OpenAI_Formulaire.json traduit avec succès
+2025-09-13 19:39:57,530 - INFO - [3/100] Traitement de Requete_API_Transformation_Donnees.json
+2025-09-13 19:39:57,530 - INFO - Traduction de Requete_API_Transformation_Donnees.json
+2025-09-13 19:39:57,531 - INFO - ✅ Requete_API_Transformation_Donnees.json traduit avec succès
+2025-09-13 19:39:57,531 - INFO - [4/100] Traitement de Typeform_vers_Airtable_CFP.json
+2025-09-13 19:39:57,531 - INFO - Traduction de Typeform_vers_Airtable_CFP.json
+2025-09-13 19:39:57,531 - INFO - Workflow name: 'CFP Selection 1' -> 'CFP Selection 1'
+2025-09-13 19:39:57,532 - INFO - ✅ Typeform_vers_Airtable_CFP.json traduit avec succès
+2025-09-13 19:39:57,532 - INFO - [5/100] Traitement de Suivi_Heures_Pauses_Notion.json
+2025-09-13 19:39:57,532 - INFO - Traduction de Suivi_Heures_Pauses_Notion.json
+2025-09-13 19:39:57,533 - INFO - Workflow name: 'Track Working Time and Pauses' -> 'Track Working Time and Pauses'
+2025-09-13 19:39:57,539 - INFO - ✅ Suivi_Heures_Pauses_Notion.json traduit avec succès
+2025-09-13 19:39:57,539 - INFO - [6/100] Traitement de Lecture_PDF_Manuel.json
+2025-09-13 19:39:57,539 - INFO - Traduction de Lecture_PDF_Manuel.json
+2025-09-13 19:39:57,539 - INFO - ✅ Lecture_PDF_Manuel.json traduit avec succès
+2025-09-13 19:39:57,540 - INFO - [7/100] Traitement de Webhook_Slack_Email_V2.json
+2025-09-13 19:39:57,540 - INFO - Traduction de Webhook_Slack_Email_V2.json
+2025-09-13 19:39:57,540 - INFO - ✅ Webhook_Slack_Email_V2.json traduit avec succès
+2025-09-13 19:39:57,540 - INFO - [8/100] Traitement de Formulaire_vers_API.json
+2025-09-13 19:39:57,541 - INFO - Traduction de Formulaire_vers_API.json
+2025-09-13 19:39:57,543 - INFO - ✅ Formulaire_vers_API.json traduit avec succès
+2025-09-13 19:39:57,543 - INFO - [9/100] Traitement de Todoist_Traitement_Programme.json
+2025-09-13 19:39:57,543 - INFO - Traduction de Todoist_Traitement_Programme.json
+2025-09-13 19:39:57,545 - INFO - ✅ Todoist_Traitement_Programme.json traduit avec succès
+2025-09-13 19:39:57,545 - INFO - [10/100] Traitement de Tags_Auto_Images_Drive_IA.json
+2025-09-13 19:39:57,545 - INFO - Traduction de Tags_Auto_Images_Drive_IA.json
+2025-09-13 19:39:57,545 - INFO - Workflow name: 'Automated Image Metadata Tagging (Community Node)' -> 'Automated Image Metadata Tagging (Community Node)'
+2025-09-13 19:39:57,546 - INFO - ✅ Tags_Auto_Images_Drive_IA.json traduit avec succès
+2025-09-13 19:39:57,546 - INFO - [11/100] Traitement de Webhook_Google_Sheets_Gmail.json
+2025-09-13 19:39:57,546 - INFO - Traduction de Webhook_Google_Sheets_Gmail.json
+2025-09-13 19:39:57,547 - INFO - Workflow name: 'Add new incoming emails to a Google Sheets spreadsheet as a new row.' -> 'Add new incoming emails to a Google Sheets spreadsheet as a new row.'
+2025-09-13 19:39:57,547 - INFO - ✅ Webhook_Google_Sheets_Gmail.json traduit avec succès
+2025-09-13 19:39:57,548 - INFO - [12/100] Traitement de GitHub_Alertes_Slack.json
+2025-09-13 19:39:57,548 - INFO - Traduction de GitHub_Alertes_Slack.json
+2025-09-13 19:39:57,548 - INFO - ✅ GitHub_Alertes_Slack.json traduit avec succès
+2025-09-13 19:39:57,549 - INFO - [13/100] Traitement de NextCloud_Upload_Auto.json
+2025-09-13 19:39:57,549 - INFO - Traduction de NextCloud_Upload_Auto.json
+2025-09-13 19:39:57,549 - INFO - ✅ NextCloud_Upload_Auto.json traduit avec succès
+2025-09-13 19:39:57,550 - INFO - [14/100] Traitement de Classification_Emails_OpenAI.json
+2025-09-13 19:39:57,550 - INFO - Traduction de Classification_Emails_OpenAI.json
+2025-09-13 19:39:57,550 - INFO - Workflow name: 'OpenAI e-mail classification - application' -> 'OpenAI e-mail classification - application'
+2025-09-13 19:39:57,552 - INFO - ✅ Classification_Emails_OpenAI.json traduit avec succès
+2025-09-13 19:39:57,552 - INFO - [15/100] Traitement de Alerte_SMS_Bitcoin_9000_EUR.json
+2025-09-13 19:39:57,552 - INFO - Traduction de Alerte_SMS_Bitcoin_9000_EUR.json
+2025-09-13 19:39:57,552 - INFO - Workflow name: 'Get the price of BTC in EUR and send an SMS when the price is larger than EUR 9000' -> 'Get the price of BTC in EUR and send an SMS when the price is larger than EUR 9000'
+2025-09-13 19:39:57,553 - INFO - ✅ Alerte_SMS_Bitcoin_9000_EUR.json traduit avec succès
+2025-09-13 19:39:57,553 - INFO - [16/100] Traitement de Extraction_Texte_PDF.json
+2025-09-13 19:39:57,553 - INFO - Traduction de Extraction_Texte_PDF.json
+2025-09-13 19:39:57,554 - INFO - ✅ Extraction_Texte_PDF.json traduit avec succès
+2025-09-13 19:39:57,554 - INFO - [17/100] Traitement de Versets_Bible_Auto.json
+2025-09-13 19:39:57,554 - INFO - Traduction de Versets_Bible_Auto.json
+2025-09-13 19:39:57,554 - INFO - Workflow name: 'getBible Query v1.0' -> 'getBible Query v1.0'
+2025-09-13 19:39:57,555 - INFO - ✅ Versets_Bible_Auto.json traduit avec succès
+2025-09-13 19:39:57,555 - INFO - [18/100] Traitement de Texte_vers_Audio_OpenAI.json
+2025-09-13 19:39:57,555 - INFO - Traduction de Texte_vers_Audio_OpenAI.json
+2025-09-13 19:39:57,555 - INFO - Workflow name: 'Generate audio from text using OpenAI - text-to-speech Workflow' -> 'Generate audio from text using OpenAI - text-to-speech Workflow'
+2025-09-13 19:39:57,556 - INFO - ✅ Texte_vers_Audio_OpenAI.json traduit avec succès
+2025-09-13 19:39:57,556 - INFO - [19/100] Traitement de Workflow_Vide_Pret_Configurer.json
+2025-09-13 19:39:57,556 - INFO - Traduction de Workflow_Vide_Pret_Configurer.json
+2025-09-13 19:39:57,557 - INFO - ✅ Workflow_Vide_Pret_Configurer.json traduit avec succès
+2025-09-13 19:39:57,557 - INFO - [20/100] Traitement de Webhook_Slack_Email.json
+2025-09-13 19:39:57,557 - INFO - Traduction de Webhook_Slack_Email.json
+2025-09-13 19:39:57,557 - INFO - ✅ Webhook_Slack_Email.json traduit avec succès
+2025-09-13 19:39:57,557 - INFO - [21/100] Traitement de HubSpot_Programmation_Cron.json
+2025-09-13 19:39:57,557 - INFO - Traduction de HubSpot_Programmation_Cron.json
+2025-09-13 19:39:57,558 - INFO - ✅ HubSpot_Programmation_Cron.json traduit avec succès
+2025-09-13 19:39:57,558 - INFO - [22/100] Traitement de Monitoring_Kafka_SMS.json
+2025-09-13 19:39:57,559 - INFO - Traduction de Monitoring_Kafka_SMS.json
+2025-09-13 19:39:57,559 - INFO - Workflow name: 'Receive messages from a topic and send an SMS' -> 'Receive messages from a topic and send an SMS'
+2025-09-13 19:39:57,559 - INFO - ✅ Monitoring_Kafka_SMS.json traduit avec succès
+2025-09-13 19:39:57,559 - INFO - [23/100] Traitement de Twitter_vers_RocketChat_Auto.json
+2025-09-13 19:39:57,559 - INFO - Traduction de Twitter_vers_RocketChat_Auto.json
+2025-09-13 19:39:57,560 - INFO - Workflow name: 'TwitterWorkflow' -> 'TwitterWorkflow'
+2025-09-13 19:39:57,560 - INFO - ✅ Twitter_vers_RocketChat_Auto.json traduit avec succès
+2025-09-13 19:39:57,560 - INFO - [24/100] Traitement de Google_Drive_vers_WordPress.json
+2025-09-13 19:39:57,560 - INFO - Traduction de Google_Drive_vers_WordPress.json
+2025-09-13 19:39:57,562 - INFO - ✅ Google_Drive_vers_WordPress.json traduit avec succès
+2025-09-13 19:39:57,562 - INFO - [25/100] Traitement de Shopify_Commandes_CRM.json
+2025-09-13 19:39:57,562 - INFO - Traduction de Shopify_Commandes_CRM.json
+2025-09-13 19:39:57,564 - INFO - ✅ Shopify_Commandes_CRM.json traduit avec succès
+2025-09-13 19:39:57,564 - INFO - [26/100] Traitement de Gmail_vers_Google_Sheets_Auto.json
+2025-09-13 19:39:57,564 - INFO - Traduction de Gmail_vers_Google_Sheets_Auto.json
+2025-09-13 19:39:57,564 - INFO - Workflow name: 'Add new incoming emails to a Google Sheets spreadsheet as a new row.' -> 'Add new incoming emails to a Google Sheets spreadsheet as a new row.'
+2025-09-13 19:39:57,565 - INFO - ✅ Gmail_vers_Google_Sheets_Auto.json traduit avec succès
+2025-09-13 19:39:57,565 - INFO - [27/100] Traitement de Strava_vers_Beeminder.json
+2025-09-13 19:39:57,565 - INFO - Traduction de Strava_vers_Beeminder.json
+2025-09-13 19:39:57,566 - INFO - Workflow name: 'Add a datapoint to Beeminder when new activity is added to Strava' -> 'Add a datapoint to Beeminder when new activity is added to Strava'
+2025-09-13 19:39:57,566 - INFO - ✅ Strava_vers_Beeminder.json traduit avec succès
+2025-09-13 19:39:57,566 - INFO - [28/100] Traitement de Traitement_Fonction_Simple.json
+2025-09-13 19:39:57,566 - INFO - Traduction de Traitement_Fonction_Simple.json
+2025-09-13 19:39:57,567 - INFO - Workflow name: 'Verify phone numbers' -> 'Verify phone numbers'
+2025-09-13 19:39:57,567 - INFO - ✅ Traitement_Fonction_Simple.json traduit avec succès
+2025-09-13 19:39:57,567 - INFO - [29/100] Traitement de SMS_Notification_MSG91.json
+2025-09-13 19:39:57,567 - INFO - Traduction de SMS_Notification_MSG91.json
+2025-09-13 19:39:57,567 - INFO - Workflow name: 'Send an SMS using MSG91' -> 'Send an SMS using MSG91'
+2025-09-13 19:39:57,568 - INFO - ✅ SMS_Notification_MSG91.json traduit avec succès
+2025-09-13 19:39:57,568 - INFO - [30/100] Traitement de Bot_Telegram_Recettes_Cocktails.json
+2025-09-13 19:39:57,568 - INFO - Traduction de Bot_Telegram_Recettes_Cocktails.json
+2025-09-13 19:39:57,568 - INFO - Workflow name: 'Send a cocktail recipe every day via a Telegram' -> 'Send a cocktail recipe every day via a Telegram'
+2025-09-13 19:39:57,568 - INFO - ✅ Bot_Telegram_Recettes_Cocktails.json traduit avec succès
+2025-09-13 19:39:57,568 - INFO - [31/100] Traitement de Surveillance_Email_Alertes_Telegram.json
+2025-09-13 19:39:57,568 - INFO - Traduction de Surveillance_Email_Alertes_Telegram.json
+2025-09-13 19:39:57,570 - INFO - ✅ Surveillance_Email_Alertes_Telegram.json traduit avec succès
+2025-09-13 19:39:57,570 - INFO - [32/100] Traitement de Webhook_Requete_HTTP_Simple.json
+2025-09-13 19:39:57,570 - INFO - Traduction de Webhook_Requete_HTTP_Simple.json
+2025-09-13 19:39:57,570 - INFO - Workflow name: 'AccountCraft WhatsApp Automation - Infridet' -> 'AccountCraft WhatsApp Automation - Infridet'
+2025-09-13 19:39:57,571 - INFO - ✅ Webhook_Requete_HTTP_Simple.json traduit avec succès
+2025-09-13 19:39:57,571 - INFO - [33/100] Traitement de Site_Web_vers_PDF_Drive.json
+2025-09-13 19:39:57,571 - INFO - Traduction de Site_Web_vers_PDF_Drive.json
+2025-09-13 19:39:57,574 - INFO - ✅ Site_Web_vers_PDF_Drive.json traduit avec succès
+2025-09-13 19:39:57,574 - INFO - [34/100] Traitement de Reponses_Email_IA_Approbation.json
+2025-09-13 19:39:57,574 - INFO - Traduction de Reponses_Email_IA_Approbation.json
+2025-09-13 19:39:57,574 - INFO - Workflow name: 'AI Email processing autoresponder with approval (Yes/No)' -> 'AI Email processing autoresponder with approval (Yes/No)'
+2025-09-13 19:39:57,576 - INFO - ✅ Reponses_Email_IA_Approbation.json traduit avec succès
+2025-09-13 19:39:57,576 - INFO - [35/100] Traitement de Stripe_HubSpot_Slack.json
+2025-09-13 19:39:57,576 - INFO - Traduction de Stripe_HubSpot_Slack.json
+2025-09-13 19:39:57,576 - INFO - Workflow name: 'On new Stripe Invoice Payment update Hubspot and notify the team in Slack' -> 'On new Stripe Invoice Payment update Hubspot and notify the team in Slack'
+2025-09-13 19:39:57,578 - INFO - ✅ Stripe_HubSpot_Slack.json traduit avec succès
+2025-09-13 19:39:57,578 - INFO - [36/100] Traitement de Sheets_vers_Google_Calendar.json
+2025-09-13 19:39:57,578 - INFO - Traduction de Sheets_vers_Google_Calendar.json
+2025-09-13 19:39:57,579 - INFO - Workflow name: 'Automate Event Creation in Google Calendar from Google Sheets' -> 'Automate Event Creation in Google Calendar from Google Sheets'
+2025-09-13 19:39:57,579 - INFO - ✅ Sheets_vers_Google_Calendar.json traduit avec succès
+2025-09-13 19:39:57,580 - INFO - [37/100] Traitement de Gmail_Brouillons_Reponse_IA.json
+2025-09-13 19:39:57,580 - INFO - Traduction de Gmail_Brouillons_Reponse_IA.json
+2025-09-13 19:39:57,580 - INFO - Workflow name: 'Gmail AI auto-responder: create draft replies to incoming emails' -> 'Gmail AI auto-responder: create draft replies to incoming emails'
+2025-09-13 19:39:57,581 - INFO - ✅ Gmail_Brouillons_Reponse_IA.json traduit avec succès
+2025-09-13 19:39:57,581 - INFO - [38/100] Traitement de Meteo_Webhook_Declencheur.json
+2025-09-13 19:39:57,582 - INFO - Traduction de Meteo_Webhook_Declencheur.json
+2025-09-13 19:39:57,582 - INFO - ✅ Meteo_Webhook_Declencheur.json traduit avec succès
+2025-09-13 19:39:57,582 - INFO - [39/100] Traitement de Email_vers_Nextcloud_Deck.json
+2025-09-13 19:39:57,582 - INFO - Traduction de Email_vers_Nextcloud_Deck.json
+2025-09-13 19:39:57,583 - INFO - Workflow name: 'Create Nextcloud Deck card from email' -> 'Create Nextcloud Deck card from email'
+2025-09-13 19:39:57,583 - INFO - ✅ Email_vers_Nextcloud_Deck.json traduit avec succès
+2025-09-13 19:39:57,583 - INFO - [40/100] Traitement de Typeform_Multi_Notifications_V2.json
+2025-09-13 19:39:57,583 - INFO - Traduction de Typeform_Multi_Notifications_V2.json
+2025-09-13 19:39:57,584 - INFO - ✅ Typeform_Multi_Notifications_V2.json traduit avec succès
+2025-09-13 19:39:57,584 - INFO - [41/100] Traitement de Traitement_Date_Heure.json
+2025-09-13 19:39:57,584 - INFO - Traduction de Traitement_Date_Heure.json
+2025-09-13 19:39:57,586 - INFO - ✅ Traitement_Date_Heure.json traduit avec succès
+2025-09-13 19:39:57,586 - INFO - [42/100] Traitement de Conversion_Fichiers_Manuel.json
+2025-09-13 19:39:57,586 - INFO - Traduction de Conversion_Fichiers_Manuel.json
+2025-09-13 19:39:57,587 - INFO - ✅ Conversion_Fichiers_Manuel.json traduit avec succès
+2025-09-13 19:39:57,587 - INFO - [43/100] Traitement de Gumroad_Notifications_Ventes.json
+2025-09-13 19:39:57,587 - INFO - Traduction de Gumroad_Notifications_Ventes.json
+2025-09-13 19:39:57,587 - INFO - Workflow name: 'Receive updates when a sale is made in Gumroad' -> 'Receive updates when a sale is made in Gumroad'
+2025-09-13 19:39:57,588 - INFO - ✅ Gumroad_Notifications_Ventes.json traduit avec succès
+2025-09-13 19:39:57,588 - INFO - [44/100] Traitement de TheHive_Notifications_Events.json
+2025-09-13 19:39:57,588 - INFO - Traduction de TheHive_Notifications_Events.json
+2025-09-13 19:39:57,588 - INFO - Workflow name: 'Receive updates when an event occurs in TheHive' -> 'Receive updates when an event occurs in TheHive'
+2025-09-13 19:39:57,588 - INFO - ✅ TheHive_Notifications_Events.json traduit avec succès
+2025-09-13 19:39:57,588 - INFO - [45/100] Traitement de Bot_Telegram_Meteo.json
+2025-09-13 19:39:57,588 - INFO - Traduction de Bot_Telegram_Meteo.json
+2025-09-13 19:39:57,589 - INFO - Workflow name: 'Telegram Weather Workflow' -> 'Telegram Weather Workflow'
+2025-09-13 19:39:57,589 - INFO - ✅ Bot_Telegram_Meteo.json traduit avec succès
+2025-09-13 19:39:57,589 - INFO - [46/100] Traitement de Typeform_vers_Sheets_Notifications.json
+2025-09-13 19:39:57,589 - INFO - Traduction de Typeform_vers_Sheets_Notifications.json
+2025-09-13 19:39:57,590 - INFO - ✅ Typeform_vers_Sheets_Notifications.json traduit avec succès
+2025-09-13 19:39:57,590 - INFO - [47/100] Traitement de Stripe_Sync_Commandes.json
+2025-09-13 19:39:57,590 - INFO - Traduction de Stripe_Sync_Commandes.json
+2025-09-13 19:39:57,590 - INFO - Workflow name: 'Stripe Payment Order Sync – Auto Retrieve Customer & Product Purchased' -> 'Stripe Payment Order Sync – Auto Retrieve Customer & Product Purchased'
+2025-09-13 19:39:57,591 - INFO - ✅ Stripe_Sync_Commandes.json traduit avec succès
+2025-09-13 19:39:57,591 - INFO - [48/100] Traitement de Mailchimp_Gmail_Integration.json
+2025-09-13 19:39:57,591 - INFO - Traduction de Mailchimp_Gmail_Integration.json
+2025-09-13 19:39:57,593 - INFO - ✅ Mailchimp_Gmail_Integration.json traduit avec succès
+2025-09-13 19:39:57,593 - INFO - [49/100] Traitement de Bot_Telegram_Envoyer_Livres_Kindle.json
+2025-09-13 19:39:57,593 - INFO - Traduction de Bot_Telegram_Envoyer_Livres_Kindle.json
+2025-09-13 19:39:57,593 - INFO - Workflow name: 'send file to kindle through telegram bot' -> 'send file to kindle through telegram bot'
+2025-09-13 19:39:57,594 - INFO - ✅ Bot_Telegram_Envoyer_Livres_Kindle.json traduit avec succès
+2025-09-13 19:39:57,594 - INFO - [50/100] Traitement de Typeform_Multi_Notifications_V1.json
+2025-09-13 19:39:57,594 - INFO - Traduction de Typeform_Multi_Notifications_V1.json
+2025-09-13 19:39:57,595 - INFO - ✅ Typeform_Multi_Notifications_V1.json traduit avec succès
+2025-09-13 19:39:57,595 - INFO - [51/100] Traitement de Operations_Fichiers_HTTP.json
+2025-09-13 19:39:57,595 - INFO - Traduction de Operations_Fichiers_HTTP.json
+2025-09-13 19:39:57,596 - INFO - ✅ Operations_Fichiers_HTTP.json traduit avec succès
+2025-09-13 19:39:57,597 - INFO - [52/100] Traitement de Agregation_Donnees_Clients.json
+2025-09-13 19:39:57,597 - INFO - Traduction de Agregation_Donnees_Clients.json
+2025-09-13 19:39:57,598 - INFO - ✅ Agregation_Donnees_Clients.json traduit avec succès
+2025-09-13 19:39:57,598 - INFO - [53/100] Traitement de Gmail_Filtre_vers_Telegram.json
+2025-09-13 19:39:57,598 - INFO - Traduction de Gmail_Filtre_vers_Telegram.json
+2025-09-13 19:39:57,598 - INFO - Workflow name: 'Forward Filtered Gmail Notifications to Telegram Chat' -> 'Forward Filtered Gmail Notifications to Telegram Chat'
+2025-09-13 19:39:57,599 - INFO - ✅ Gmail_Filtre_vers_Telegram.json traduit avec succès
+2025-09-13 19:39:57,599 - INFO - [54/100] Traitement de Import_Donnees_Google_Sheets.json
+2025-09-13 19:39:57,599 - INFO - Traduction de Import_Donnees_Google_Sheets.json
+2025-09-13 19:39:57,600 - INFO - ✅ Import_Donnees_Google_Sheets.json traduit avec succès
+2025-09-13 19:39:57,600 - INFO - [55/100] Traitement de Gmail_Organisation_IA.json
+2025-09-13 19:39:57,600 - INFO - Traduction de Gmail_Organisation_IA.json
+2025-09-13 19:39:57,600 - INFO - Workflow name: '(G) - Email Classification' -> '(G) - Email Classification'
+2025-09-13 19:39:57,602 - INFO - ✅ Gmail_Organisation_IA.json traduit avec succès
+2025-09-13 19:39:57,602 - INFO - [56/100] Traitement de Communication_HTTP_Programmee.json
+2025-09-13 19:39:57,602 - INFO - Traduction de Communication_HTTP_Programmee.json
+2025-09-13 19:39:57,604 - INFO - ✅ Communication_HTTP_Programmee.json traduit avec succès
+2025-09-13 19:39:57,605 - INFO - [57/100] Traitement de Service_Resume_Email_IA.json
+2025-09-13 19:39:57,605 - INFO - Traduction de Service_Resume_Email_IA.json
+2025-09-13 19:39:57,605 - INFO - Workflow name: 'Summarize emails with A.I. then send to messenger' -> 'Summarize emails with A.I. then send to messenger'
+2025-09-13 19:39:57,606 - INFO - ✅ Service_Resume_Email_IA.json traduit avec succès
+2025-09-13 19:39:57,606 - INFO - [58/100] Traitement de Lecture_Emails_IMAP.json
+2025-09-13 19:39:57,606 - INFO - Traduction de Lecture_Emails_IMAP.json
+2025-09-13 19:39:57,607 - INFO - ✅ Lecture_Emails_IMAP.json traduit avec succès
+2025-09-13 19:39:57,607 - INFO - [59/100] Traitement de Extraction_Depenses_Email_Sheets.json
+2025-09-13 19:39:57,607 - INFO - Traduction de Extraction_Depenses_Email_Sheets.json
+2025-09-13 19:39:57,607 - INFO - Workflow name: 'Extract expenses from emails and add to Google Sheet' -> 'Extract expenses from emails and add to Google Sheet'
+2025-09-13 19:39:57,608 - INFO - ✅ Extraction_Depenses_Email_Sheets.json traduit avec succès
+2025-09-13 19:39:57,608 - INFO - [60/100] Traitement de Requete_HTTP_Programmee.json
+2025-09-13 19:39:57,608 - INFO - Traduction de Requete_HTTP_Programmee.json
+2025-09-13 19:39:57,609 - INFO - ✅ Requete_HTTP_Programmee.json traduit avec succès
+2025-09-13 19:39:57,609 - INFO - [61/100] Traitement de Calcul_Centre_Coordonnees.json
+2025-09-13 19:39:57,609 - INFO - Traduction de Calcul_Centre_Coordonnees.json
+2025-09-13 19:39:57,610 - INFO - Workflow name: 'Calculate the Centroid of a Set of Vectors' -> 'Calculate the Centroid of a Set of Vectors'
+2025-09-13 19:39:57,612 - INFO - ✅ Calcul_Centre_Coordonnees.json traduit avec succès
+2025-09-13 19:39:57,612 - INFO - [62/100] Traitement de Bot_Telegram_Kindle_Simple.json
+2025-09-13 19:39:57,612 - INFO - Traduction de Bot_Telegram_Kindle_Simple.json
+2025-09-13 19:39:57,612 - INFO - Workflow name: 'send file to kindle through telegram bot' -> 'send file to kindle through telegram bot'
+2025-09-13 19:39:57,613 - INFO - ✅ Bot_Telegram_Kindle_Simple.json traduit avec succès
+2025-09-13 19:39:57,614 - INFO - [63/100] Traitement de Bot_Telegram_Controle_Spotify.json
+2025-09-13 19:39:57,614 - INFO - Traduction de Bot_Telegram_Controle_Spotify.json
+2025-09-13 19:39:57,614 - INFO - Workflow name: 'Play with Spotify from Telegram' -> 'Play with Spotify from Telegram'
+2025-09-13 19:39:57,616 - INFO - ✅ Bot_Telegram_Controle_Spotify.json traduit avec succès
+2025-09-13 19:39:57,616 - INFO - [64/100] Traitement de Teams_Message_Manuel.json
+2025-09-13 19:39:57,616 - INFO - Traduction de Teams_Message_Manuel.json
+2025-09-13 19:39:57,617 - INFO - ✅ Teams_Message_Manuel.json traduit avec succès
+2025-09-13 19:39:57,617 - INFO - [65/100] Traitement de Upload_Drive_Integration_API.json
+2025-09-13 19:39:57,617 - INFO - Traduction de Upload_Drive_Integration_API.json
+2025-09-13 19:39:57,619 - INFO - ✅ Upload_Drive_Integration_API.json traduit avec succès
+2025-09-13 19:39:57,619 - INFO - [66/100] Traitement de Gmail_vers_Todoist_Auto.json
+2025-09-13 19:39:57,619 - INFO - Traduction de Gmail_vers_Todoist_Auto.json
+2025-09-13 19:39:57,620 - INFO - Workflow name: 'Email mailbox as Todoist tasks' -> 'Email mailbox as Todoist tasks'
+2025-09-13 19:39:57,623 - INFO - ✅ Gmail_vers_Todoist_Auto.json traduit avec succès
+2025-09-13 19:39:57,623 - INFO - [67/100] Traitement de HTTP_Ecriture_Fichier.json
+2025-09-13 19:39:57,623 - INFO - Traduction de HTTP_Ecriture_Fichier.json
+2025-09-13 19:39:57,623 - INFO - Workflow name: 'Write a file to the host machine' -> 'Write a file to the host machine'
+2025-09-13 19:39:57,624 - INFO - ✅ HTTP_Ecriture_Fichier.json traduit avec succès
+2025-09-13 19:39:57,624 - INFO - [68/100] Traitement de Shopify_Tags_Onfleet.json
+2025-09-13 19:39:57,624 - INFO - Traduction de Shopify_Tags_Onfleet.json
+2025-09-13 19:39:57,624 - INFO - Workflow name: 'Updating Shopify tags on Onfleet events' -> 'Updating Shopify tags on Onfleet events'
+2025-09-13 19:39:57,624 - INFO - ✅ Shopify_Tags_Onfleet.json traduit avec succès
+2025-09-13 19:39:57,625 - INFO - [69/100] Traitement de MySQL_Export_Fichier.json
+2025-09-13 19:39:57,625 - INFO - Traduction de MySQL_Export_Fichier.json
+2025-09-13 19:39:57,626 - INFO - ✅ MySQL_Export_Fichier.json traduit avec succès
+2025-09-13 19:39:57,627 - INFO - [70/100] Traitement de Box_Integration_Manuel.json
+2025-09-13 19:39:57,627 - INFO - Traduction de Box_Integration_Manuel.json
+2025-09-13 19:39:57,627 - INFO - ✅ Box_Integration_Manuel.json traduit avec succès
+2025-09-13 19:39:57,627 - INFO - [71/100] Traitement de Webhook_Slack_Manuel.json
+2025-09-13 19:39:57,627 - INFO - Traduction de Webhook_Slack_Manuel.json
+2025-09-13 19:39:57,628 - INFO - Workflow name: '外送記帳' -> '外送記帳'
+2025-09-13 19:39:57,629 - INFO - ✅ Webhook_Slack_Manuel.json traduit avec succès
+2025-09-13 19:39:57,629 - INFO - [72/100] Traitement de Webhook_Slack_Email_V1.json
+2025-09-13 19:39:57,629 - INFO - Traduction de Webhook_Slack_Email_V1.json
+2025-09-13 19:39:57,630 - INFO - ✅ Webhook_Slack_Email_V1.json traduit avec succès
+2025-09-13 19:39:57,630 - INFO - [73/100] Traitement de Webhook_vers_Google_Sheets.json
+2025-09-13 19:39:57,630 - INFO - Traduction de Webhook_vers_Google_Sheets.json
+2025-09-13 19:39:57,631 - INFO - ✅ Webhook_vers_Google_Sheets.json traduit avec succès
+2025-09-13 19:39:57,631 - INFO - [74/100] Traitement de PostgreSQL_vers_Spreadsheet.json
+2025-09-13 19:39:57,631 - INFO - Traduction de PostgreSQL_vers_Spreadsheet.json
+2025-09-13 19:39:57,632 - INFO - ✅ PostgreSQL_vers_Spreadsheet.json traduit avec succès
+2025-09-13 19:39:57,632 - INFO - [75/100] Traitement de Operations_Sheets_Gmail_Avance.json
+2025-09-13 19:39:57,632 - INFO - Traduction de Operations_Sheets_Gmail_Avance.json
+2025-09-13 19:39:57,633 - INFO - ✅ Operations_Sheets_Gmail_Avance.json traduit avec succès
+2025-09-13 19:39:57,633 - INFO - [76/100] Traitement de Traitement_HTTP_Manuel.json
+2025-09-13 19:39:57,633 - INFO - Traduction de Traitement_HTTP_Manuel.json
+2025-09-13 19:39:57,635 - INFO - ✅ Traitement_HTTP_Manuel.json traduit avec succès
+2025-09-13 19:39:57,635 - INFO - [77/100] Traitement de Gmail_vers_Google_Tasks.json
+2025-09-13 19:39:57,635 - INFO - Traduction de Gmail_vers_Google_Tasks.json
+2025-09-13 19:39:57,635 - INFO - Workflow name: '📦 New Email ➔ Create Google Task' -> '📦 New Email ➔ Create Google Task'
+2025-09-13 19:39:57,636 - INFO - ✅ Gmail_vers_Google_Tasks.json traduit avec succès
+2025-09-13 19:39:57,636 - INFO - [78/100] Traitement de Verif_Serveur_Rapport_Email.json
+2025-09-13 19:39:57,636 - INFO - Traduction de Verif_Serveur_Rapport_Email.json
+2025-09-13 19:39:57,637 - INFO - ✅ Verif_Serveur_Rapport_Email.json traduit avec succès
+2025-09-13 19:39:57,637 - INFO - [79/100] Traitement de Telegram_Liste_Reunions_Quotidienne.json
+2025-09-13 19:39:57,637 - INFO - Traduction de Telegram_Liste_Reunions_Quotidienne.json
+2025-09-13 19:39:57,638 - INFO - Workflow name: 'Automatically Send Daily Meeting List to Telegram' -> 'Automatically Send Daily Meeting List to Telegram'
+2025-09-13 19:39:57,639 - INFO - ✅ Telegram_Liste_Reunions_Quotidienne.json traduit avec succès
+2025-09-13 19:39:57,639 - INFO - [80/100] Traitement de Gmail_Reponse_Auto_IA.json
+2025-09-13 19:39:57,639 - INFO - Traduction de Gmail_Reponse_Auto_IA.json
+2025-09-13 19:39:57,639 - INFO - Workflow name: 'Gmail AI auto-responder: create draft replies to incoming emails' -> 'Gmail AI auto-responder: create draft replies to incoming emails'
+2025-09-13 19:39:57,641 - INFO - ✅ Gmail_Reponse_Auto_IA.json traduit avec succès
+2025-09-13 19:39:57,641 - INFO - [81/100] Traitement de Resume_Email_IA_Messenger.json
+2025-09-13 19:39:57,641 - INFO - Traduction de Resume_Email_IA_Messenger.json
+2025-09-13 19:39:57,641 - INFO - Workflow name: 'Summarize emails with A.I. then send to messenger' -> 'Summarize emails with A.I. then send to messenger'
+2025-09-13 19:39:57,642 - INFO - ✅ Resume_Email_IA_Messenger.json traduit avec succès
+2025-09-13 19:39:57,642 - INFO - [82/100] Traitement de Notion_ToDo_vers_Slack.json
+2025-09-13 19:39:57,642 - INFO - Traduction de Notion_ToDo_vers_Slack.json
+2025-09-13 19:39:57,642 - INFO - Workflow name: 'Check To Do on Notion and send message on Slack' -> 'Check To Do on Notion and send message on Slack'
+2025-09-13 19:39:57,643 - INFO - ✅ Notion_ToDo_vers_Slack.json traduit avec succès
+2025-09-13 19:39:57,643 - INFO - [83/100] Traitement de YouTube_vers_Telegram.json
+2025-09-13 19:39:57,643 - INFO - Traduction de YouTube_vers_Telegram.json
+2025-09-13 19:39:57,644 - INFO - ✅ YouTube_vers_Telegram.json traduit avec succès
+2025-09-13 19:39:57,644 - INFO - [84/100] Traitement de Twitter_Google_Sheets_Auto.json
+2025-09-13 19:39:57,644 - INFO - Traduction de Twitter_Google_Sheets_Auto.json
+2025-09-13 19:39:57,645 - INFO - ✅ Twitter_Google_Sheets_Auto.json traduit avec succès
+2025-09-13 19:39:57,645 - INFO - [85/100] Traitement de Pipedrive_Programmation_Cron.json
+2025-09-13 19:39:57,645 - INFO - Traduction de Pipedrive_Programmation_Cron.json
+2025-09-13 19:39:57,646 - INFO - ✅ Pipedrive_Programmation_Cron.json traduit avec succès
+2025-09-13 19:39:57,646 - INFO - [86/100] Traitement de Capture_Screenshots_Site_Web.json
+2025-09-13 19:39:57,646 - INFO - Traduction de Capture_Screenshots_Site_Web.json
+2025-09-13 19:39:57,646 - INFO - Workflow name: 'Capture Website Screenshots with Bright Data Web Unlocker and Save to Disk' -> 'Capture Website Screenshots with Bright Data Web Unlocker and Save to Disk'
+2025-09-13 19:39:57,648 - INFO - ✅ Capture_Screenshots_Site_Web.json traduit avec succès
+2025-09-13 19:39:57,648 - INFO - [87/100] Traitement de Shopify_vers_Zendesk.json
+2025-09-13 19:39:57,648 - INFO - Traduction de Shopify_vers_Zendesk.json
+2025-09-13 19:39:57,649 - INFO - ✅ Shopify_vers_Zendesk.json traduit avec succès
+2025-09-13 19:39:57,649 - INFO - [88/100] Traitement de YouTube_Notifications_Telegram.json
+2025-09-13 19:39:57,649 - INFO - Traduction de YouTube_Notifications_Telegram.json
+2025-09-13 19:39:57,650 - INFO - ✅ YouTube_Notifications_Telegram.json traduit avec succès
+2025-09-13 19:39:57,650 - INFO - [89/100] Traitement de WordPress_Post_Manuel.json
+2025-09-13 19:39:57,650 - INFO - Traduction de WordPress_Post_Manuel.json
+2025-09-13 19:39:57,651 - INFO - ✅ WordPress_Post_Manuel.json traduit avec succès
+2025-09-13 19:39:57,651 - INFO - [90/100] Traitement de Suivi_Leads_Sheets_HubSpot.json
+2025-09-13 19:39:57,651 - INFO - Traduction de Suivi_Leads_Sheets_HubSpot.json
+2025-09-13 19:39:57,651 - INFO - Workflow name: 'N_01_Simple_Lead_Tracker_Automation_v4' -> 'N_01_Simple_Lead_Tracker_Automation_v4'
+2025-09-13 19:39:57,653 - INFO - ✅ Suivi_Leads_Sheets_HubSpot.json traduit avec succès
+2025-09-13 19:39:57,653 - INFO - [91/100] Traitement de Meteo_Quotidienne_Line_Messaging.json
+2025-09-13 19:39:57,653 - INFO - Traduction de Meteo_Quotidienne_Line_Messaging.json
+2025-09-13 19:39:57,653 - INFO - Workflow name: 'Send daily weather updates via a message in Line' -> 'Send daily weather updates via a message in Line'
+2025-09-13 19:39:57,653 - INFO - ✅ Meteo_Quotidienne_Line_Messaging.json traduit avec succès
+2025-09-13 19:39:57,653 - INFO - [92/100] Traitement de Amelioration_Contenu_IA.json
+2025-09-13 19:39:57,654 - INFO - Traduction de Amelioration_Contenu_IA.json
+2025-09-13 19:39:57,655 - INFO - ✅ Amelioration_Contenu_IA.json traduit avec succès
+2025-09-13 19:39:57,655 - INFO - [93/100] Traitement de Bot_Telegram_Echo_Simple.json
+2025-09-13 19:39:57,655 - INFO - Traduction de Bot_Telegram_Echo_Simple.json
+2025-09-13 19:39:57,655 - INFO - Workflow name: 'Telegram echo-bot' -> 'Telegram echo-bot'
+2025-09-13 19:39:57,656 - INFO - ✅ Bot_Telegram_Echo_Simple.json traduit avec succès
+2025-09-13 19:39:57,656 - INFO - [94/100] Traitement de Facebook_Leads_Auto.json
+2025-09-13 19:39:57,656 - INFO - Traduction de Facebook_Leads_Auto.json
+2025-09-13 19:39:57,657 - INFO - ✅ Facebook_Leads_Auto.json traduit avec succès
+2025-09-13 19:39:57,657 - INFO - [95/100] Traitement de GitLab_Webhook_Conditionnel.json
+2025-09-13 19:39:57,657 - INFO - Traduction de GitLab_Webhook_Conditionnel.json
+2025-09-13 19:39:57,659 - INFO - ✅ GitLab_Webhook_Conditionnel.json traduit avec succès
+2025-09-13 19:39:57,659 - INFO - [96/100] Traitement de Netflix_Transfert_Emails_Multiple.json
+2025-09-13 19:39:57,659 - INFO - Traduction de Netflix_Transfert_Emails_Multiple.json
+2025-09-13 19:39:57,659 - INFO - Workflow name: 'Forward Netflix emails to multiple email addresses with GMail and Mailjet' -> 'Forward Netflix emails to multiple email addresses with GMail and Mailjet'
+2025-09-13 19:39:57,660 - INFO - ✅ Netflix_Transfert_Emails_Multiple.json traduit avec succès
+2025-09-13 19:39:57,660 - INFO - [97/100] Traitement de SMS_Notification_Mocean.json
+2025-09-13 19:39:57,660 - INFO - Traduction de SMS_Notification_Mocean.json
+2025-09-13 19:39:57,660 - INFO - Workflow name: 'Send an SMS using the Mocean node' -> 'Send an SMS using the Mocean node'
+2025-09-13 19:39:57,660 - INFO - ✅ SMS_Notification_Mocean.json traduit avec succès
+2025-09-13 19:39:57,661 - INFO - [98/100] Traitement de Analyse_Sentiment_Twitter.json
+2025-09-13 19:39:57,661 - INFO - Traduction de Analyse_Sentiment_Twitter.json
+2025-09-13 19:39:57,661 - INFO - Workflow name: 'ETL pipeline' -> 'ETL pipeline'
+2025-09-13 19:39:57,662 - INFO - ✅ Analyse_Sentiment_Twitter.json traduit avec succès
+2025-09-13 19:39:57,662 - INFO - [99/100] Traitement de Chatbot_IA_Webhook.json
+2025-09-13 19:39:57,662 - INFO - Traduction de Chatbot_IA_Webhook.json
+2025-09-13 19:39:57,663 - INFO - ✅ Chatbot_IA_Webhook.json traduit avec succès
+2025-09-13 19:39:57,663 - INFO - [100/100] Traitement de Notification_Email_Mindee.json
+2025-09-13 19:39:57,663 - INFO - Traduction de Notification_Email_Mindee.json
+2025-09-13 19:39:57,663 - INFO - Workflow name: 'New invoice email notification' -> 'New invoice email notification'
+2025-09-13 19:39:57,664 - INFO - ✅ Notification_Email_Mindee.json traduit avec succès

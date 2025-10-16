@@ -1,0 +1,2016 @@
+{
+  "name": "AT30 - Cloner n'importe quelle vidéo Tiktok et la réutiliser",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -380,
+        -840
+      ],
+      "id": "06aecc43-ddeb-4f97-bfda-789573bc7bd1",
+      "name": "Lors de l'exécution du workflow"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appZuuFuNljWirQWI",
+          "mode": "list",
+          "cachedResultName": "AT30 - Tiktok Clone Videos",
+          "cachedResultUrl": "https://airtable.com/appZuuFuNljWirQWI"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblh9vc46HHcKSCWs",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appZuuFuNljWirQWI/tblh9vc46HHcKSCWs"
+        },
+        "filterByFormula": "NOT({Status} = 'Done')",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -140,
+        -840
+      ],
+      "id": "290d99e4-f50d-490a-80d8-2df3ac686835",
+      "name": "Airtable",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "id": "2df05682-c60e-4dc3-a20a-b83ad7d64e7b",
+      "name": "Transcrire l'audio",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        100,
+        -580
+      ],
+      "typeVersion": 1.8,
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.play }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        320,
+        -840
+      ],
+      "id": "c35b4eef-a89a-4d84-919f-73274c579d61",
+      "name": "Télécharger la vidéo"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appZuuFuNljWirQWI",
+          "mode": "list",
+          "cachedResultName": "AT30 - Tiktok Clone Videos",
+          "cachedResultUrl": "https://airtable.com/appZuuFuNljWirQWI"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblh9vc46HHcKSCWs",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appZuuFuNljWirQWI/tblh9vc46HHcKSCWs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Airtable').item.json.id }}",
+            "Original Video": "=[\n  {\n    \"url\": \"{{ $json.play }}\"\n  }\n]"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Tiktok URL",
+              "displayName": "Tiktok URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Original Video",
+              "displayName": "Original Video",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Assignee",
+              "displayName": "Assignee",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "In progress",
+                  "value": "In progress"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Attachments",
+              "displayName": "Attachments",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        540,
+        -840
+      ],
+      "id": "8df0f6ad-5226-4364-9145-290866b7f60e",
+      "name": "Airtable1",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://tiktok-api23.p.rapidapi.com/api/download/music",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $('Airtable').item.json['Tiktok URL'] }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "tiktok-api23.p.rapidapi.com"
+            },
+            {
+              "name": "x-rapidapi-key",
+              "value": "4c419aadcbmsh16fff4dd816f862p10ea67jsnea7c19dbec58"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -360,
+        -580
+      ],
+      "id": "1cb95b02-6391-476f-bad1-e5ff2d2e3b77",
+      "name": "Télécharger le son"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appZuuFuNljWirQWI",
+          "mode": "list",
+          "cachedResultName": "AT30 - Tiktok Clone Videos",
+          "cachedResultUrl": "https://airtable.com/appZuuFuNljWirQWI"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblh9vc46HHcKSCWs",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appZuuFuNljWirQWI/tblh9vc46HHcKSCWs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Airtable').item.json.id }}",
+            "Original sound": "=[\n  {\n    \"url\": \"{{ $('Download sound1').item.json.play }}\"\n  }\n]",
+            "Original transcript": "={{ $json.text }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Tiktok URL",
+              "displayName": "Tiktok URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Original Video",
+              "displayName": "Original Video",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Original sound",
+              "displayName": "Original sound",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Original transcript",
+              "displayName": "Original transcript",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Assignee",
+              "displayName": "Assignee",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "In progress",
+                  "value": "In progress"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Attachments",
+              "displayName": "Attachments",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        320,
+        -580
+      ],
+      "id": "b4e8e535-af13-4e6d-92f7-b1f5fa5cdc0b",
+      "name": "Airtable2",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Rewrite this original transcript:\n{{ $json.fields['Original transcript'] }}\n"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        540,
+        -580
+      ],
+      "id": "a502dea5-8b8a-492a-a3da-e55e4f0c49c3",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appZuuFuNljWirQWI",
+          "mode": "list",
+          "cachedResultName": "AT30 - Tiktok Clone Videos",
+          "cachedResultUrl": "https://airtable.com/appZuuFuNljWirQWI"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblh9vc46HHcKSCWs",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appZuuFuNljWirQWI/tblh9vc46HHcKSCWs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Airtable').item.json.id }}",
+            "Modified transcript": "={{ $json.message.content }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Tiktok URL",
+              "displayName": "Tiktok URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Original Video",
+              "displayName": "Original Video",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Original sound",
+              "displayName": "Original sound",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Original transcript",
+              "displayName": "Original transcript",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Modified transcript",
+              "displayName": "Modified transcript",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Assignee",
+              "displayName": "Assignee",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "In progress",
+                  "value": "In progress"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Attachments",
+              "displayName": "Attachments",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        900,
+        -580
+      ],
+      "id": "be3ede5d-f8a5-4e17-aa50-57c70f400d6f",
+      "name": "Airtable3",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.captions.ai/api/creator/list",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-api-key",
+              "value": "995a84d1-3d88-48a1-aa04-942c5b880caa"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "952d51d8-dd53-4e16-8fa3-b54681a6a11a",
+      "name": "Récupérer les avatars",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -360,
+        -300
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.captions.ai/api/creator/submit",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-api-key",
+              "value": "995a84d1-3d88-48a1-aa04-942c5b880caa"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n\"script\": \"{{ $('Airtable3').item.json.fields['Modified transcript'] }}\",\n\"creatorName\": \"{{ $json.supportedCreators[33] }}\",\n\"resolution\": \"fhd\"\n}",
+        "options": {}
+      },
+      "id": "e51b9528-383e-4534-8032-90664f3c4304",
+      "name": "Générer la vidéo",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -140,
+        -300
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        100,
+        -300
+      ],
+      "id": "62a44e23-d90c-432f-ad09-6f41f8df8bdb",
+      "name": "Attendre",
+      "webhookId": "97d1c76d-ad6a-430d-b565-2abbae9a552c"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.captions.ai/api/creator/poll",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-api-key",
+              "value": "995a84d1-3d88-48a1-aa04-942c5b880caa"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n \"operationId\": \"{{ $json[\"operationId\"] }}\"\n}",
+        "options": {}
+      },
+      "id": "901986ec-27f9-40d6-800a-51eed34f3e08",
+      "name": "Obtenir l'URL de la vidéo de l'avatar",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        320,
+        -300
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"Blotato-API\": \"ENTER API KEY HERE\",\n  \"Instagram\": \"1238\",\n  \"Pinterest\": \"258\",\n  \"Pinterest-Board-id\": \"914864180493348767\",\n  \"X\": \"993\",\n  \"LinkedIN\": \"1180\",\n  \"LinkedIn-page-ID\": \"6399836\",\n  \"Threads\": \"404\",\n  \"FB-Account\": \"1343\",\n  \"FB-Page-Stock-Graphics\": \"1493652624208458\",\n  \"FB-Page-Bundlestorm\": \"1082239155235205\",\n  \"FB-Page-Webmaster-Deals\": \"234802546593504\",\n  \"FB-Page-Sumobundle\": \"121593267596142\",\n  \"Fb-Page-Mimozastudio\": \"103680835963722\",\n  \"Youtube\": \"486\",\n  \"tiktok\": 1529\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1220,
+        -220
+      ],
+      "id": "2ff8026a-43e6-43fc-b04f-5502170c136e",
+      "name": "Définir l'ID"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Instagram }}\",\n    \"content\": {\n      \"text\": \"{{ $('OpenAI1').item.json.message.content }}\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ],\n      \"platform\": \"instagram\"\n    },\n    \"target\": {\n      \"targetType\": \"instagram\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2600,
+        -1660
+      ],
+      "id": "9bd0501a-471e-4bf1-94a5-da39cde65319",
+      "name": "Instagram"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Pinterest }}\",\n    \"content\": {\n      \"text\": \"{{ $('OpenAI1').item.json.message.content }}\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ],\n      \"platform\": \"pinterest\"\n    },\n    \"target\": {\n      \"targetType\": \"pinterest\",\n      \"boardId\": \"{{ $('Set ID').item.json['Pinterest-Board-id'] }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2600,
+        420
+      ],
+      "id": "223370a3-300a-4ec2-b507-9d8e9eaec6eb",
+      "name": "Pinterest",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.X }}\",\n    \"content\": {\n      \"text\": \"{{ $('OpenAI1').item.json.message.content }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"twitter\"\n    },\n    \"target\": {\n      \"targetType\": \"twitter\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2600,
+        -1400
+      ],
+      "id": "f300fd7c-83a7-4d42-b963-d272e149394b",
+      "name": "Twitter",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.LinkedIN }}\",\n    \"content\": {\n      \"text\": \"{{ $('OpenAI1').item.json.message.content }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"linkedin\"\n    },\n    \"target\": {\n      \"targetType\": \"linkedin\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2600,
+        -1140
+      ],
+      "id": "e856cf49-47e1-407a-8201-2ccd0af8726b",
+      "name": "LinkedIn",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.LinkedIN }}\",\n    \"content\": {\n      \"text\": \"{{ $('OpenAI1').item.json.message.content }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"linkedin\"\n    },\n    \"target\": {\n      \"targetType\": \"linkedin\",\n      \"pageId\": \"{{ $('Set ID').item.json['LinkedIn-page-ID'] }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2600,
+        -880
+      ],
+      "id": "302e9f49-a675-4525-96f5-6ed168b051c9",
+      "name": "Page LinkedIn",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json['FB-Account'] }}\",\n    \"content\": {\n      \"text\": \"{{ $('OpenAI1').item.json.message.content }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"facebook\"\n    },\n    \"target\": {\n        \"targetType\": \"facebook\",\n        \"pageId\": \"{{ $('Set ID').item.json['FB-Page-Sumobundle'] }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2600,
+        -620
+      ],
+      "id": "77e6e57b-b68f-4d44-9922-37bf7342b523",
+      "name": "Compte Fb",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.tiktok }}\",\n    \"content\": {\n      \"text\": \"{{ $('OpenAI1').item.json.message.content }}\",\n      \"mediaUrls\": [\n        \"{{ $('Upload media').item.json.url }}\"\n      ],\n      \"platform\": \"tiktok\"\n    },\n    \"target\": {\n      \"targetType\": \"tiktok\",\n      \"privacyLevel\": \"PUBLIC_TO_EVERYONE\",\n      \"disabledComments\": false,\n      \"disabledDuet\": false,\n      \"disabledStitch\": false,\n      \"isBrandedContent\": false,\n      \"isYourBrand\": false,\n      \"isAiGenerated\": true\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2600,
+        -360
+      ],
+      "id": "f3c7cd71-603a-448a-8f5e-78b78fb04b84",
+      "name": "Tiktok",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Threads }}\",\n    \"content\": {\n      \"text\": \"{{ $('OpenAI1').item.json.message.content }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"threads\"\n    },\n    \"target\": {\n      \"targetType\": \"threads\",\n      \"replyControl\": \"everyone\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2600,
+        160
+      ],
+      "id": "7a98b76a-01fd-40f1-8bf2-071cef738aa8",
+      "name": "Threads",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"acc_12345\",\n    \"content\": {\n      \"text\": \"{{ $('OpenAI1').item.json.message.content }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"bluesky\"\n    },\n    \"target\": {\n      \"targetType\": \"bluesky\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2600,
+        680
+      ],
+      "id": "51756f8b-e291-460c-a74d-003b533b7caa",
+      "name": "Bluesky",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Youtube }}\",\n    \"content\": {\n      \"text\": \"{{ $('OpenAI1').item.json.message.content }}\",\n      \"mediaUrls\": [\n        \"{{ $('Upload media').item.json.url }}\"\n      ],\n      \"platform\": \"youtube\"\n    },\n    \"target\": {\n      \"targetType\": \"youtube\",\n      \"title\": \"\",\n      \"privacyStatus\": \"private\",\n      \"shouldNotifySubscribers\": false\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2600,
+        -100
+      ],
+      "id": "c303fd0a-a486-46b0-b50e-5d3beb144b2f",
+      "name": "Youtube",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/tiktok.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2840,
+        -380
+      ],
+      "typeVersion": 1,
+      "id": "4a834bd8-7dc0-4474-9674-37013640bfc1",
+      "name": "Note collante6"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/threads.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2840,
+        160
+      ],
+      "typeVersion": 1,
+      "id": "97b8bf4b-1138-4a0f-b778-3c50dd76b7e9",
+      "name": "Note collante8"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/pinterest.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2840,
+        420
+      ],
+      "typeVersion": 1,
+      "id": "2f5d3e92-b972-45e6-841c-b21296f59db8",
+      "name": "Note collante9"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/bluesky.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2840,
+        680
+      ],
+      "typeVersion": 1,
+      "id": "b520711c-f1d8-445f-8822-e79efec8984d",
+      "name": "Note collante10"
+    },
+    {
+      "parameters": {
+        "content": "## Images only\n**You can upload only images on Pinterest and Bluesky",
+        "height": 400,
+        "width": 220,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3020,
+        420
+      ],
+      "typeVersion": 1,
+      "id": "b8a06455-8065-4776-8b00-83a0395f7379",
+      "name": "Note collante11"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/x.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2840,
+        -1420
+      ],
+      "typeVersion": 1,
+      "id": "85bb7347-3264-4eff-b9ca-9cf59148e63e",
+      "name": "Note collante13"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/linkedin.png?v=1742473318)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2840,
+        -1160
+      ],
+      "typeVersion": 1,
+      "id": "cf14041a-d36a-4b4e-b5f9-c48dea88b064",
+      "name": "Note collante14"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/linkedin.png?v=1742473318)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2840,
+        -900
+      ],
+      "typeVersion": 1,
+      "id": "3c21444b-9aae-4421-ae0c-62b5599961c8",
+      "name": "Note collante15"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/facebook.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2840,
+        -640
+      ],
+      "typeVersion": 1,
+      "id": "6ca0a194-7b98-4781-82b6-0dad9b8bcef4",
+      "name": "Note collante16"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/media",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $('Update final video').item.json.fields['FInal video'][0].url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1860,
+        -520
+      ],
+      "id": "bacfb081-5e48-44ba-a223-a87b076798de",
+      "name": "Télécharger les médias"
+    },
+    {
+      "parameters": {
+        "content": "## Blotato Setup Guide\n\nTo use this automation, you'll need a Blotato account.  \n👉 [Register here](https://dub.sh/blotato)\n\nAfter registering, watch this short video to see how everything works:  \n📺 [Watch on YouTube](https://youtu.be/ZJ8I9N-JwXQ?si=ZIpyFLLgmi74HQeD)",
+        "height": 340,
+        "width": 540,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1140,
+        -420
+      ],
+      "typeVersion": 1,
+      "id": "48c1248c-022a-42d4-b108-d0f4b20acede",
+      "name": "Note collante17",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## JSON2Video\n**If you have an account with credits you can use JSON2Video\n** Please make sure you bind the node Airtable 6 with the Set ID Node\n\nTo customize my template:\n1) Go to https://json2video.com/tools/visual-editor/?template=AQtlyegCrVPAMh8SXvVY\n2) A pop-up will tell you that the template is not yours and that you can save it to your account\n3) Go to the \"Template\" menu on the top bar and click on \"Save template as...\". This will save it to your account and it will create a new template ID\n4) Edit the template as needed. I recommend you editing the JSON manually from \"Edit template's JSON\" option in the \"Template\" menu\n5) Once edited, use the new template ID in your automation",
+        "height": 500,
+        "width": 2140
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -460,
+        -60
+      ],
+      "typeVersion": 1,
+      "id": "0c630a7b-e859-46dc-a425-80ca504774c6",
+      "name": "Note collante4"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/instagram.png?v=1742473316)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2840,
+        -1680
+      ],
+      "typeVersion": 1,
+      "id": "4ab13003-4fe1-4aab-90d0-6a2276ecd6a4",
+      "name": "Note collante12"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/youtube.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2840,
+        -120
+      ],
+      "typeVersion": 1,
+      "id": "02405298-eccd-475f-852e-ce6f45d6d553",
+      "name": "Note collante18"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appZuuFuNljWirQWI",
+          "mode": "list",
+          "cachedResultName": "AT30 - Tiktok Clone Videos",
+          "cachedResultUrl": "https://airtable.com/appZuuFuNljWirQWI"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblh9vc46HHcKSCWs",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appZuuFuNljWirQWI/tblh9vc46HHcKSCWs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Airtable').item.json.id }}",
+            "Avatar video": "=[\n  {\n    \"url\": \"{{ $json.url }}\"\n  }\n]"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Tiktok URL",
+              "displayName": "Tiktok URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Original Video",
+              "displayName": "Original Video",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Original sound",
+              "displayName": "Original sound",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Original transcript",
+              "displayName": "Original transcript",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Modified transcript",
+              "displayName": "Modified transcript",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Avatar video",
+              "displayName": "Avatar video",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Attachments",
+              "displayName": "Attachments",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        560,
+        -300
+      ],
+      "id": "c8b45087-4199-4207-9515-20775d3fc9e6",
+      "name": "Airtable9",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.json2video.com/v2/movies?id={{ $json.project }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "e82c96ef-0ca9-4598-b2d7-05f1fddafa6d",
+      "name": "Récupérer la vidéo finale depuis JSON2Video1",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1040,
+        60
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "7ZINaiK8pcRiOkr4",
+          "name": "Json2Video"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.json2video.com/v2/movies",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"id\": \"qoywxyy8\",\n  \"comment\": \"Empty movie\",\n  \"resolution\": \"custom\",\n  \"quality\": \"high\",\n  \"scenes\": [\n    {\n      \"id\": \"q7sv8ukf\",\n      \"comment\": \"Scene 1\",\n      \"elements\": [\n        {\n          \"id\": \"qpz04c1s\",\n          \"type\": \"video\",\n          \"src\": \"{{ $json.fields['Original Video'][0].url }}\",\n          \"width\": 1080,\n          \"height\": 1920,\n          \"x\": 0,\n          \"y\": 0,\n          \"muted\": true,\n          \"comment\": \"Main-video\"\n        },\n        {\n          \"id\": \"qujwkx0k\",\n          \"type\": \"video\",\n          \"comment\": \"Overlay\",\n          \"src\": \"{{ $json.fields['Avatar video'][0].url }}\",\n          \"x\": 550,\n          \"y\": 1200,\n          \"position\": \"bottom-left\",\n          \"width\": 540,\n          \"height\": 960\n        }\n      ]\n    }\n  ],\n  \"elements\": [],\n  \"width\": 1080,\n  \"height\": 1920\n}",
+        "options": {}
+      },
+      "id": "83ad651f-3a09-4440-9155-246aea143b25",
+      "name": "Créer des vidéos avec Json2Video",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        620,
+        60
+      ],
+      "typeVersion": 4.2,
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "7ZINaiK8pcRiOkr4",
+          "name": "Header Auth account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        840,
+        60
+      ],
+      "id": "f743068d-a41b-400a-82bb-5a1b8e834281",
+      "name": "Attendre2",
+      "webhookId": "53c2424e-4f77-45f5-9642-40562b86fe08"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appZuuFuNljWirQWI",
+          "mode": "list",
+          "cachedResultName": "AT30 - Tiktok Clone Videos",
+          "cachedResultUrl": "https://airtable.com/appZuuFuNljWirQWI"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblh9vc46HHcKSCWs",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appZuuFuNljWirQWI/tblh9vc46HHcKSCWs"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Airtable').item.json.id }}",
+            "FInal video": "=[\n  {\n    \"url\": \"{{ $json.movie.url }}\"\n  }\n]",
+            "Status": "Done"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Tiktok URL",
+              "displayName": "Tiktok URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Original Video",
+              "displayName": "Original Video",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Original sound",
+              "displayName": "Original sound",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Original transcript",
+              "displayName": "Original transcript",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Modified transcript",
+              "displayName": "Modified transcript",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Avatar video",
+              "displayName": "Avatar video",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "FInal video",
+              "displayName": "FInal video",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1240,
+        60
+      ],
+      "id": "326c1f4a-1af6-45e6-8e42-86f255d7e0b1",
+      "name": "Mettre à jour la vidéo finale",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Write me a short caption based on this voice-over. It shoudl be short. Only a few words\n\n{{ $('Update final video').item.json.fields['Modified transcript'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1840,
+        -220
+      ],
+      "id": "ac614074-2d6a-40cb-9c2e-259b50c17803",
+      "name": "OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "https://tiktok-api23.p.rapidapi.com/api/download/video",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $json['Tiktok URL'] }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-rapidapi-host",
+              "value": "tiktok-api23.p.rapidapi.com"
+            },
+            {
+              "name": "x-rapidapi-key",
+              "value": "4c419aadcbmsh16fff4dd816f862p10ea67jsnea7c19dbec58"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        100,
+        -840
+      ],
+      "id": "a6c835ec-aa9a-459d-9591-e46488d71fe7",
+      "name": "Demander la vidéo tiktok"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.play }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -140,
+        -580
+      ],
+      "id": "8a2f42bd-47fb-4321-b5a7-74c36d96998d",
+      "name": "Télécharger le son1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable": {
+      "main": [
+        [
+          {
+            "node": "Request tiktok video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Video": {
+      "main": [
+        [
+          {
+            "node": "Airtable1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable1": {
+      "main": [
+        [
+          {
+            "node": "Download sound",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download sound": {
+      "main": [
+        [
+          {
+            "node": "Download sound1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe Audio": {
+      "main": [
+        [
+          {
+            "node": "Airtable2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable2": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Airtable3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable3": {
+      "main": [
+        [
+          {
+            "node": "Fetch Avatars",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Avatars": {
+      "main": [
+        [
+          {
+            "node": "Generate Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Video": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get Avatar Video URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set ID": {
+      "main": [
+        [
+          {
+            "node": "OpenAI1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Instagram": {
+      "main": [
+        []
+      ]
+    },
+    "Upload media": {
+      "main": [
+        [
+          {
+            "node": "Instagram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Pinterest",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Twitter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LinkedIn",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LinkedIn Page",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fb Account",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Tiktok",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Threads",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Bluesky",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Youtube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Avatar Video URL": {
+      "main": [
+        [
+          {
+            "node": "Airtable9",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable9": {
+      "main": [
+        [
+          {
+            "node": "Create videos with Json2Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create videos with Json2Video": {
+      "main": [
+        [
+          {
+            "node": "Wait2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait2": {
+      "main": [
+        [
+          {
+            "node": "Fetch Final Video from JSON2Video1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Final Video from JSON2Video1": {
+      "main": [
+        [
+          {
+            "node": "Update final video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update final video": {
+      "main": [
+        [
+          {
+            "node": "Set ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI1": {
+      "main": [
+        [
+          {
+            "node": "Upload media",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Request tiktok video": {
+      "main": [
+        [
+          {
+            "node": "Download Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download sound1": {
+      "main": [
+        [
+          {
+            "node": "Transcribe Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b1748a10-424b-4250-ab04-6e8ef4247348",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+  },
+  "id": "08sBJ0YnRxYEY6zZ",
+  "tags": [
+    {
+      "createdAt": "2025-04-21T20:09:06.554Z",
+      "updatedAt": "2025-04-21T20:09:06.554Z",
+      "id": "3dOSqJMqC8FlNnE3",
+      "name": "Automation-Tribe"
+    },
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

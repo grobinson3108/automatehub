@@ -1,0 +1,127 @@
+{
+  "name": "Module 2.1 - Connexion Google Suite Complète",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "trigger-google-suite",
+      "name": "When clicking \"Test workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "list",
+        "queryString": "mimeType='application/vnd.google-apps.spreadsheet'",
+        "options": {
+          "fields": [
+            "files(id,name,mimeType,modifiedTime)"
+          ]
+        }
+      },
+      "id": "google-drive-list",
+      "name": "Lister fichiers Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [450, 200],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "={{ $json.files[0].id }}",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 0,
+          "mode": "index"
+        },
+        "options": {}
+      },
+      "id": "google-sheets-read",
+      "name": "Lire première feuille",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [650, 200],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "Données de votre feuille Google",
+        "message": "=Bonjour {{ $json.nom }},\n\nVoici un résumé de vos données extraites automatiquement de Google Sheets.\n\nCordialement,\nVotre assistant n8n",
+        "options": {}
+      },
+      "id": "gmail-send",
+      "name": "Envoyer par Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [850, 200],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "1",
+          "name": "Gmail account"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "calendarId": "primary",
+        "start": "={{ $now.plus(1, 'day').toISO() }}",
+        "end": "={{ $now.plus(1, 'day').plus(1, 'hour').toISO() }}",
+        "summary": "Revue des données Google Sheets",
+        "options": {
+          "description": "Revue automatique générée par n8n"
+        }
+      },
+      "id": "google-calendar",
+      "name": "Créer événement",
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 2,
+      "position": [650, 400],
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "1",
+          "name": "Google Calendar account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When clicking \"Test workflow\"": {
+      "main": [[{"node": "Lister fichiers Drive", "type": "main", "index": 0}]]
+    },
+    "Lister fichiers Drive": {
+      "main": [[
+        {"node": "Lire première feuille", "type": "main", "index": 0},
+        {"node": "Créer événement", "type": "main", "index": 0}
+      ]]
+    },
+    "Lire première feuille": {
+      "main": [[{"node": "Envoyer par Gmail", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Workflow complet montrant l'intégration de Google Drive, Sheets, Gmail et Calendar en une seule automatisation."
+  },
+  "versionId": "1.0.0"
+}

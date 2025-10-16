@@ -1,0 +1,53 @@
+{
+  "id": "2",
+  "name": "Ajouter une tâche à la liste de tâches",
+  "nodes": [
+    {
+      "name": "Lors du clic sur 'exécuter'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        500,
+        310
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "name": "Google Tasks",
+      "type": "n8n-nodes-base.googleTasks",
+      "position": [
+        920,
+        310
+      ],
+      "parameters": {
+        "task": "MDY3OTAyNjUyMDk5NDY5ODIzMzM6MDow",
+        "additionalFields": {}
+      },
+      "credentials": {
+        "googleTasksOAuth2Api": "shraddha"
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": false,
+  "settings": {},
+  "connections": {
+    "Lors du clic sur 'exécuter'": {
+      "main": [
+        [
+          {
+            "node": "Google Tasks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

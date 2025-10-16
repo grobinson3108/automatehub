@@ -1,0 +1,35 @@
+#!/bin/bash
+# Script unifié pour accéder aux fonctionnalités MCP dans Claude Terminal
+
+case "$1" in
+    mysql)
+        shift
+        /var/www/automatehub/mcp-wrappers/mysql-query.sh "$@"
+        ;;
+    
+    n8n-create)
+        shift
+        /var/www/automatehub/mcp-wrappers/n8n-workflow-create.sh "$@"
+        ;;
+    
+    n8n-list)
+        /var/www/automatehub/mcp-wrappers/n8n-workflows-list.sh
+        ;;
+    
+    help|*)
+        echo "🔧 MCP Wrapper pour Claude Terminal"
+        echo "==================================="
+        echo ""
+        echo "Usage: mcp <command> [arguments]"
+        echo ""
+        echo "Commandes disponibles :"
+        echo "  mysql <query>              - Exécuter une requête MySQL"
+        echo "  n8n-create <name> [file]   - Créer un workflow n8n"
+        echo "  n8n-list                   - Lister les workflows n8n"
+        echo ""
+        echo "Exemples :"
+        echo "  mcp mysql \"SELECT * FROM users LIMIT 5\""
+        echo "  mcp n8n-create \"Mon Workflow\""
+        echo "  mcp n8n-list"
+        ;;
+esac

@@ -1,0 +1,16 @@
+🚀 Content Extractor API v2.0 - Port 5682
+🎯 Support YouTube Shorts: OUI
+🔑 Clé API: 1ab54f24f0...
+▶️  Démarrage...
+Traceback (most recent call 127.0.0.1 - - [23/Sep/2025 13:47:08] "GET /health HTTP/1.1" 200 -
+127.0.0.1 - - [23/Sep/2025 13:47:17] "POST /api/v1/get-youtube-transcript HTTP/1.1" 200 -
+ontent-extractor/api-working.py", line 165, in run_server
+    httpd = HTTPServer(server_address, ContentExtractorHandler)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/socketserver.py", line 457, in __init__
+    self.server_bind()
+  File "/usr/lib/python3.12/http/server.py", line 136, in server_bind
+    socketserver.TCPServer.server_bind(self)
+  File "/usr/lib/python3.12/socketserver.py", line 473, in server_bind
+    self.socket.bind(self.server_address)
+OSError: [Errno 98] Address already in use

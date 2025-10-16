@@ -1,0 +1,734 @@
+{
+  "meta": {
+    "instanceId": "cb484ba7b742928a2048bf8829668bed5b5ad9787579adea888f05980292a4a7",
+    "templateCredsSetupCompleted": true
+  },
+  "nodes": [
+    {
+      "id": "3af140c3-03eb-4eeb-ad31-71f94bc37790",
+      "name": "Passer à l'appel suivant",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        4820,
+        120
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "8904df21-c993-4c3d-84e6-4418990cb52f",
+      "name": "Exécuter le déclencheur du workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        700,
+        -40
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "d85f05bd-c680-4b41-b67a-8126b3ed29b0",
+      "name": "Créer une page de base de données Notion",
+      "type": "n8n-nodes-base.notion",
+      "position": [
+        3240,
+        60
+      ],
+      "parameters": {
+        "title": "={{ $json.metaData.title }}",
+        "options": {
+          "icon": "📞"
+        },
+        "resource": "databasePage",
+        "databaseId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1a85b6e0-c94f-81a3-aa21-e3ccf8296d72",
+          "cachedResultUrl": "https://www.notion.so/1a85b6e0c94f81a3aa21e3ccf8296d72",
+          "cachedResultName": "Sales Call Summaries Demo"
+        },
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Call Date|date",
+              "date": "={{ $json.metaData.started }}"
+            },
+            {
+              "key": "Recording URL|url",
+              "urlValue": "={{ $json.metaData.url }}"
+            },
+            {
+              "key": "Company|rich_text",
+              "textContent": "={{ $json.metaData.CompanyName }}"
+            },
+            {
+              "key": "Call Name|title",
+              "title": "={{ $json.metaData.title }}"
+            },
+            {
+              "key": "Gong Call ID|rich_text",
+              "textContent": "={{ $json.metaData.GongCallID }}"
+            },
+            {
+              "key": "SF Opp ID|rich_text",
+              "textContent": "={{ $json.sfOpp[0].SFOppId }}"
+            },
+            {
+              "key": "SF Opp Stage|select",
+              "selectValue": "={{ $json.sfOpp[0].sfStage }}"
+            },
+            {
+              "key": "SF Company ID|rich_text",
+              "textContent": "={{ $json.sfOpp[0].companyAccountId }}"
+            },
+            {
+              "key": "SF Opp Won|checkbox",
+              "checkboxValue": "={{ $json.sfOpp[0].IsWon }}"
+            },
+            {
+              "key": "SF Opp Closed|checkbox",
+              "checkboxValue": "={{ $json.sfOpp[0].IsClosed }}"
+            },
+            {
+              "key": "Company Size|select",
+              "selectValue": "={{ $json.sfOpp[0].Employees }}"
+            },
+            {
+              "key": "Sales Rep|multi_select",
+              "multiSelectValue": "={{ $json.Attendees.internalNames }}"
+            },
+            {
+              "key": "SF Opp Link|url",
+              "urlValue": "=https://data-drive-1632.lightning.force.com/lightning/r/Opportunity/{{ $json.sfOpp[0].SFOppId }}/view"
+            },
+            {
+              "key": "SF Company Link|url",
+              "urlValue": "=https://data-drive-1632.lightning.force.com/lightning/r/Account/{{ $json.sfOpp[0].companyAccountId }}/view"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "notionApi": {
+          "id": "2B3YIiD4FMsF9Rjn",
+          "name": "Angelbot Notion"
+        }
+      },
+      "retryOnFail": true,
+      "typeVersion": 2.2,
+      "waitBetweenTries": 3000
+    },
+    {
+      "id": "739aaf26-6807-4f09-a7a5-50b9605e76cb",
+      "name": "Note autocollante",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        620,
+        -280
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 1240,
+        "height": 600,
+        "content": "## Logique de traitement de la file d'attente\nSi l'exécution échoue pour une raison quelconque, elle peut être relancée uniquement sur les appels restants, permettant une plus grande résilience dans les appels API. Le principal problème rencontré était la limitation de débit de Notion."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "cb8ecb7b-6e90-4394-8161-5b327c17d9c5",
+      "name": "Note autocollante1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2700,
+        -280
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 1360,
+        "height": 600,
+        "content": "## Boucle sur les appels pour analyse et création de l'objet parent \n## de la base de données pour relier les autres objets de la base de données\nLa sortie est un objet JSON structuré qui est ensuite \ntransmis à un sous-workflow pour un traitement linéaire."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "49b472b7-d47e-4057-9c43-4b471605059f",
+      "name": "Note autocollante2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4080,
+        -340
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 420,
+        "height": 660,
+        "content": "## Transmettre l'ID parent Notion et les données d'appel dans le sous-workflow IA pour le traitement final de l'invite\nCela permet à plusieurs agents de traiter et de générer des données structurées à partir des appels."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "b1c39cf4-b101-4e7f-9c74-da43e09769fd",
+      "name": "Note autocollante3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4520,
+        -340
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 520,
+        "height": 660,
+        "content": "## Alerte sur la progression\nDans Slack, une alerte de progression est générée et mise à jour en temps réel pour tenir l'entreprise informée de l'avancement du traitement des appels."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "0ed6b796-8817-461f-958f-49ad2b4157cb",
+      "name": "Note adhésive5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3460,
+        -600
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 600,
+        "height": 300,
+        "content": "## Alerte Slack Travail Terminé\nComme cela s'exécute en arrière-plan, cela alerte l'équipe que le travail s'est terminé avec succès."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "e537ba92-c909-4da6-b1b0-d5d1fb643bd3",
+      "name": "Note adhésive6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        260,
+        -500
+      ],
+      "parameters": {
+        "color": 5,
+        "width": 340,
+        "height": 820,
+        "content": "![Callforge](https://uploads.n8n.io/templates/callforgeshadow.png)\n## CallForge - Le processeur d'appels de vente Gong IA\nCallForge vous permet d'extraire des informations importantes pour différents départements à partir de vos appels de vente Gong.\n\n### Processeur d'appels\nC'est ici que l'objet parent dans Notion est généré pour stocker les données d'appel IA une fois qu'elles sont générées. Cela est fait en premier afin qu'il puisse être transmis à plusieurs sous-objets pour le stockage. Une fois cela fait, il est transmis au Processeur IA."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "af52e980-56a5-4875-878a-495898b345ec",
+      "name": "Note adhésive7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1880,
+        -360
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 800,
+        "height": 300,
+        "content": "## Alerte Slack Travail Commencé\nComme cela s'exécute en arrière-plan, cela alerte l'équipe que le travail a commencé avec succès."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "67d4605b-f6d5-41ff-bbe1-90e002456fc1",
+      "name": "Réception Post Slack",
+      "type": "n8n-nodes-base.slack",
+      "position": [
+        2260,
+        -220
+      ],
+      "webhookId": "11dd0884-adc7-40f4-a8a3-f3082a0324fc",
+      "parameters": {
+        "text": "=File d'attente démarrée, traitement de {{ $json.data.length }} appels.",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "C080KBCK1TL",
+          "cachedResultName": "project-call-forge-alerts"
+        },
+        "otherOptions": {}
+      },
+      "credentials": {
+        "slackApi": {
+          "id": "OfRxDxHFIqk1q44a",
+          "name": "Knowledge Ninja n8n labs auth"
+        }
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "6d779b87-ce83-40bd-b068-9082f6849429",
+      "name": "Processeur Équipe IA",
+      "type": "n8n-nodes-base.executeWorkflow",
+      "position": [
+        4160,
+        -40
+      ],
+      "parameters": {
+        "options": {},
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "4Uol9xlNKyNH213f",
+          "cachedResultName": "AI Team Processor Demo"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "59848476-c4ec-47ec-9b1c-f206c0749b1e",
+      "name": "Mise à jour de la progression Slack",
+      "type": "n8n-nodes-base.slack",
+      "position": [
+        4580,
+        -40
+      ],
+      "webhookId": "d69dcd59-add1-4fd1-99c0-eee5c6a7fc4f",
+      "parameters": {
+        "ts": "={{ $('Loop Over Calls').item.json.slackdata[0].message.ts }}",
+        "text": "=File d'attente démarrée, traitement des appels.\nProgression : {{$node[\"Loop Over Calls\"].context[\"currentRunIndex\"]+1;}}/{{ $('Reduce down to One object').item.json.data.length }}",
+        "channelId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "C080KBCK1TL"
+        },
+        "operation": "update",
+        "otherOptions": {},
+        "updateFields": {}
+      },
+      "credentials": {
+        "slackApi": {
+          "id": "OfRxDxHFIqk1q44a",
+          "name": "Knowledge Ninja n8n labs auth"
+        }
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "32a2235e-cbdd-45e2-9cb4-991ea1397274",
+      "name": "Fusionner les données d'appel et l'identifiant parent Notion",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        3720,
+        -40
+      ],
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combineBy": "combineByPosition"
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "6f91bc31-3249-45f6-9114-7e1d8347cf89",
+      "name": "Réduire à un seul objet",
+      "type": "n8n-nodes-base.aggregate",
+      "position": [
+        980,
+        100
+      ],
+      "parameters": {
+        "options": {},
+        "aggregate": "aggregateAllItemData"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "1d23b540-696c-4d3e-8c23-fac6a84bc6f3",
+      "name": "Récupérer tous les appels plus anciens",
+      "type": "n8n-nodes-base.notion",
+      "position": [
+        1220,
+        100
+      ],
+      "parameters": {
+        "options": {},
+        "resource": "databasePage",
+        "operation": "getAll",
+        "returnAll": true,
+        "databaseId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1a85b6e0-c94f-81a3-aa21-e3ccf8296d72",
+          "cachedResultUrl": "https://www.notion.so/1a85b6e0c94f81a3aa21e3ccf8296d72",
+          "cachedResultName": "Sales Call Summaries Demo"
+        }
+      },
+      "credentials": {
+        "notionApi": {
+          "id": "2B3YIiD4FMsF9Rjn",
+          "name": "Angelbot Notion"
+        }
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "50a3f35e-7637-4eb2-ae9e-11f214307dc0",
+      "name": "Isoler uniquement les identifiants d'appel",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1440,
+        100
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "328e6ac8-88f3-4c2f-b8e8-d4a0756efd24",
+              "name": "Call ID",
+              "type": "string",
+              "value": "={{ $json.property_gong_call_id ? $json.property_gong_call_id : \"none\" }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "fb5c0970-3a05-4c38-8568-6ed175520db5",
+      "name": "Traiter uniquement les nouveaux appels",
+      "type": "n8n-nodes-base.compareDatasets",
+      "position": [
+        1680,
+        -40
+      ],
+      "parameters": {
+        "options": {},
+        "resolve": "preferInput1",
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "metaData.GongCallID",
+              "field2": "Call ID"
+            }
+          ]
+        }
+      },
+      "typeVersion": 2.3
+    },
+    {
+      "id": "e4c8d925-af53-4855-a002-cbc02c45a9c8",
+      "name": "Réduire à un seul objet",
+      "type": "n8n-nodes-base.aggregate",
+      "position": [
+        2020,
+        -220
+      ],
+      "parameters": {
+        "options": {},
+        "aggregate": "aggregateAllItemData"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "b6fb9553-42f3-46ca-a0b5-a97288e99e17",
+      "name": "Regrouper les données du message Slack",
+      "type": "n8n-nodes-base.aggregate",
+      "position": [
+        2480,
+        -220
+      ],
+      "parameters": {
+        "options": {},
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "slackdata"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "ba121e87-d25f-4867-848d-37b353db7ddb",
+      "name": "Fusionner les données Slack et d'appel",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        2800,
+        -80
+      ],
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combineBy": "combineAll"
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "bfd969e7-87a1-42cd-b23a-2b550772e171",
+      "name": "Boucler sur les appels",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        3020,
+        -80
+      ],
+      "parameters": {
+        "options": {}
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "1f7dea30-dffe-4cc2-a912-c73ed1c8db50",
+      "name": "Regrouper les données de l'objet parent Notion",
+      "type": "n8n-nodes-base.aggregate",
+      "position": [
+        3440,
+        60
+      ],
+      "parameters": {
+        "options": {},
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "notionData"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "e2e2108c-00e0-48c8-8c5c-ef86edc93481",
+      "name": "Regrouper les appels traités",
+      "type": "n8n-nodes-base.aggregate",
+      "position": [
+        3540,
+        -480
+      ],
+      "parameters": {
+        "options": {},
+        "aggregate": "aggregateAllItemData"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "21884d73-45fd-4bb0-b3b6-e225383b5f62",
+      "name": "Publier le message des appels terminés",
+      "type": "n8n-nodes-base.slack",
+      "position": [
+        3840,
+        -480
+      ],
+      "webhookId": "9d4f5a56-5be9-4373-8961-3627498713dd",
+      "parameters": {
+        "text": "=File d'attente traitée, {{ $json.data.length }} appels ajoutés avec succès à la base de données.",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "C080KBCK1TL",
+          "cachedResultName": "project-call-forge-alerts"
+        },
+        "otherOptions": {}
+      },
+      "credentials": {
+        "slackApi": {
+          "id": "OfRxDxHFIqk1q44a",
+          "name": "Knowledge Ninja n8n labs auth"
+        }
+      },
+      "typeVersion": 2.2
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Boucler sur les appels": {
+      "main": [
+        [
+          {
+            "node": "Regrouper les appels traités",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fusionner les données d'appel et l'identifiant parent Notion",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Créer une page de base de données Notion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Processeur Équipe IA": {
+      "main": [
+        [
+          {
+            "node": "Mise à jour de la progression Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Passer à l'appel suivant": {
+      "main": [
+        [
+          {
+            "node": "Boucler sur les appels",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Réception Post Slack": {
+      "main": [
+        [
+          {
+            "node": "Regrouper les données du message Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Récupérer tous les appels plus anciens": {
+      "main": [
+        [
+          {
+            "node": "Isoler uniquement les identifiants d'appel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Créer une page de base de données Notion": {
+      "main": [
+        [
+          {
+            "node": "Regrouper les données de l'objet parent Notion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Isoler uniquement les identifiants d'appel": {
+      "main": [
+        [
+          {
+            "node": "Traiter uniquement les nouveaux appels",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Mise à jour de la progression Slack": {
+      "main": [
+        [
+          {
+            "node": "Passer à l'appel suivant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Regrouper les appels traités": {
+      "main": [
+        [
+          {
+            "node": "Publier le message des appels terminés",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Traiter uniquement les nouveaux appels": {
+      "main": [
+        [
+          {
+            "node": "Réduire à un seul objet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fusionner les données Slack et d'appel",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Réduire à un seul objet": {
+      "main": [
+        [
+          {
+            "node": "Réception Post Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exécuter le déclencheur du workflow": {
+      "main": [
+        [
+          {
+            "node": "Traiter uniquement les nouveaux appels",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Réduire à un seul objet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Regrouper les données du message Slack": {
+      "main": [
+        [
+          {
+            "node": "Fusionner les données Slack et d'appel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fusionner les données Slack et d'appel": {
+      "main": [
+        [
+          {
+            "node": "Boucler sur les appels",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Regrouper les données de l'objet parent Notion": {
+      "main": [
+        [
+          {
+            "node": "Fusionner les données d'appel et l'identifiant parent Notion",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Fusionner les données d'appel et l'identifiant parent Notion": {
+      "main": [
+        [
+          {
+            "node": "Processeur Équipe IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

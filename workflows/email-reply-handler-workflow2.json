@@ -1,0 +1,112 @@
+{
+  "name": "Email Reply Handler - Workflow 2",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": ["callback_query"]
+      },
+      "id": "telegram-trigger",
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "email-reply-handler"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst callbackData = items[0].json.callback_query.data;\nconst mailId = callbackData.replace('reply_', '');\nconst chatId = items[0].json.callback_query.message.chat.id;\nconst queryId = items[0].json.callback_query.id;\nconst firstName = items[0].json.callback_query.from.first_name || 'Utilisateur';\n\nreturn [{\n  json: {\n    mailId,\n    chatId,\n    queryId,\n    firstName,\n    messageId: items[0].json.callback_query.message.message_id\n  }\n}];"
+      },
+      "id": "extract-callback-data",
+      "name": "Extraire données callback",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{$json.chatId}}",
+        "text": "📧 Répondre au mail [{{$json.mailId}}]\n\n{{$json.firstName}}, tapez ou dictez votre réponse ci-dessous :",
+        "replyMarkup": "forceReply",
+        "additionalFields": {
+          "force_reply": true,
+          "input_field_placeholder": "Tapez votre réponse..."
+        }
+      },
+      "id": "force-reply-keyboard",
+      "name": "Forcer ouverture clavier",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [650, 300],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "callback",
+        "operation": "answerQuery",
+        "queryId": "={{$json.queryId}}",
+        "text": "✅ Tapez votre réponse",
+        "additionalFields": {
+          "show_alert": false
+        }
+      },
+      "id": "answer-callback",
+      "name": "Confirmer callback",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [850, 300],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Telegram Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extraire données callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraire données callback": {
+      "main": [
+        [
+          {
+            "node": "Forcer ouverture clavier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Forcer ouverture clavier": {
+      "main": [
+        [
+          {
+            "node": "Confirmer callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionTimeout": 60
+  },
+  "tags": ["email", "telegram", "automation"]
+}

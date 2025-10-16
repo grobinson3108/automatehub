@@ -1,0 +1,29 @@
+{
+    "name": "Publication Multi-Plateformes AutomateHub",
+    "nodes": [
+        {
+            "parameters": {},
+            "id": "manual-trigger",
+            "name": "Déclencheur Manuel",
+            "type": "n8n-nodes-base.manualTrigger",
+            "typeVersion": 1,
+            "position": [250, 300]
+        },
+        {
+            "parameters": {
+                "content": "## 🎬 Publication Multi-Plateformes\n\nCe workflow:\n1. Détecte les nouvelles vidéos\n2. Génère des posts pour LinkedIn, Facebook, Instagram, TikTok\n3. Ajoute CTA vers Skool\n4. Sauvegarde les résultats",
+                "height": 200,
+                "width": 400
+            },
+            "id": "note-1",
+            "name": "Documentation",
+            "type": "n8n-nodes-base.stickyNote",
+            "typeVersion": 1,
+            "position": [250, 100]
+        }
+    ],
+    "connections": {},
+    "settings": {
+        "executionOrder": "v1"
+    }
+}

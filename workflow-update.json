@@ -1,0 +1,179 @@
+{
+  "name": "Publication Multi-Plateformes Vidéos",
+  "nodes": [
+    {
+      "parameters": {
+        "triggerOn": "fileCreated",
+        "path": "/var/www/automatehub/videos",
+        "includeSubfolders": false,
+        "fileExtensions": ".mp4"
+      },
+      "id": "file-trigger",
+      "name": "Nouvelle Vidéo MP4",
+      "type": "n8n-nodes-base.localFileTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "videoTitle",
+              "value": "={{ $json.fileName.replace('.mp4', '') }}"
+            },
+            {
+              "name": "videoPath",
+              "value": "={{ $json.path }}"
+            },
+            {
+              "name": "transcriptionPath",
+              "value": "={{ $json.path.replace('.mp4', '_transcription.txt') }}"
+            }
+          ]
+        }
+      },
+      "id": "prepare-data",
+      "name": "Préparer Données",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "filePath": "={{ $json.transcriptionPath }}",
+        "dataPropertyName": "transcription"
+      },
+      "id": "read-transcription",
+      "name": "Lire Transcription",
+      "type": "n8n-nodes-base.readBinaryFiles",
+      "typeVersion": 1,
+      "position": [650, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "method": "POST",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_OPENAI_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"model\": \"gpt-4\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"Tu es un expert en marketing digital pour AutomateHub. Crée des posts engageants qui donnent envie de rejoindre https://skool.com/automatehub. Utilise des emojis pertinents.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Vidéo: {{ $node['prepare-data'].json.videoTitle }}\\n\\nTranscription: {{ $node['read-transcription'].json.transcription || 'Pas de transcription' }}\\n\\nCrée 4 posts:\\n\\n1. LINKEDIN (150-300 mots, ton pro)\\n2. FACEBOOK (100-200 mots, convivial)\\n3. INSTAGRAM (50-150 mots + 15 hashtags)\\n4. TIKTOK (50-100 mots, viral + hashtags trends)\\n\\nChaque post doit:\\n- Mettre en avant 1 bénéfice concret\\n- Inclure CTA vers https://skool.com/automatehub\\n- Mentionner: 100 workflows gratuits\"\n    }\n  ],\n  \"temperature\": 0.7,\n  \"max_tokens\": 2000\n}"
+      },
+      "id": "generate-posts",
+      "name": "Générer Posts IA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "posts",
+              "value": "={{ $json.choices[0].message.content }}"
+            },
+            {
+              "name": "generatedAt",
+              "value": "={{ $now.format('yyyy-MM-dd HH:mm:ss') }}"
+            }
+          ]
+        }
+      },
+      "id": "extract-posts",
+      "name": "Extraire Posts",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "fileName": "={{ '/var/www/automatehub/posts/' + $node['prepare-data'].json.videoTitle + '_posts_' + $now.format('yyyy-MM-dd') + '.txt' }}",
+        "options": {
+          "append": false
+        },
+        "fileContent": "=== POSTS RÉSEAUX SOCIAUX AUTOMATEHUB ===\\n\\nVidéo: {{ $node['prepare-data'].json.videoTitle }}\\nGénéré le: {{ $json.generatedAt }}\\n\\n----------------------------------------\\n\\n{{ $json.posts }}\\n\\n----------------------------------------\\n\\n🔗 Communauté Skool: https://skool.com/automatehub\\n📧 Contact: contact@automatehub.fr\\n\\n=== FIN DES POSTS ==="
+      },
+      "id": "save-posts",
+      "name": "Sauvegarder Posts",
+      "type": "n8n-nodes-base.writeFile",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "content": "## 📱 Guide Publication Multi-Plateformes\\n\\n### 🎯 Stratégie par plateforme\\n\\n**LinkedIn**\\n- Publier: Mar/Jeu 8h ou 17h\\n- Format: Vidéo native ou lien YouTube\\n- Focus: ROI et productivité\\n\\n**Facebook**\\n- Publier: Mer/Ven 14h\\n- Format: Vidéo carrée 1:1\\n- Focus: Communauté et entraide\\n\\n**Instagram**\\n- Publier: Lun/Mer/Ven 19h\\n- Format: Reels 9:16 (60s max)\\n- Focus: Avant/Après visuel\\n\\n**TikTok**\\n- Publier: Tous les jours 19h-21h\\n- Format: Vertical 9:16 (30-60s)\\n- Focus: Hook fort + musique trend",
+        "height": 400,
+        "width": 350
+      },
+      "id": "strategy-note",
+      "name": "Stratégie Publication",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [900, 50]
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Configuration Requise\\n\\n1. **Créer les dossiers:**\\n   ```\\n   mkdir -p /var/www/automatehub/videos\\n   mkdir -p /var/www/automatehub/posts\\n   ```\\n\\n2. **API OpenAI:**\\n   - Remplacer YOUR_OPENAI_API_KEY\\n   - Ou utiliser Claude API\\n\\n3. **Format transcription:**\\n   - Fichier: video_transcription.txt\\n   - Même nom que la vidéo\\n\\n4. **Test:**\\n   - Copier un .mp4 dans /videos\\n   - Vérifier /posts pour résultat",
+        "height": 350,
+        "width": 350
+      },
+      "id": "config-note",
+      "name": "Configuration",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [250, 50]
+    }
+  ],
+  "connections": {
+    "Nouvelle Vidéo MP4": {
+      "main": [[{
+        "node": "Préparer Données",
+        "type": "main",
+        "index": 0
+      }]]
+    },
+    "Préparer Données": {
+      "main": [[{
+        "node": "Lire Transcription",
+        "type": "main",
+        "index": 0
+      }]]
+    },
+    "Lire Transcription": {
+      "main": [[{
+        "node": "Générer Posts IA",
+        "type": "main",
+        "index": 0
+      }]]
+    },
+    "Générer Posts IA": {
+      "main": [[{
+        "node": "Extraire Posts",
+        "type": "main",
+        "index": 0
+      }]]
+    },
+    "Extraire Posts": {
+      "main": [[{
+        "node": "Sauvegarder Posts",
+        "type": "main",
+        "index": 0
+      }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

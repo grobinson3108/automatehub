@@ -1,0 +1,213 @@
+{
+  "name": "Module 3.1 - CRM Simple et Efficace",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nouveau-contact",
+        "options": {}
+      },
+      "id": "webhook-contact",
+      "name": "Webhook nouveau contact",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookId": "crm-contact-webhook"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "email-check",
+              "leftValue": "={{ $json.body.email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "validate-email",
+      "name": "Valider email",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "enrich-001",
+              "name": "contact_enrichi",
+              "value": "={{ {\n  \"id\": $now.toMillis(),\n  \"nom\": $json.body.nom,\n  \"email\": $json.body.email,\n  \"entreprise\": $json.body.entreprise || 'Non spécifiée',\n  \"source\": $json.body.source || 'Site web',\n  \"date_creation\": $now.toISO(),\n  \"score_lead\": 0,\n  \"statut\": 'nouveau',\n  \"tags\": []\n} }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "enrich-contact",
+      "name": "Enrichir contact",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [650, 250]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_CRM_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Contacts",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.contact_enrichi.id }}",
+            "nom": "={{ $json.contact_enrichi.nom }}",
+            "email": "={{ $json.contact_enrichi.email }}",
+            "entreprise": "={{ $json.contact_enrichi.entreprise }}",
+            "source": "={{ $json.contact_enrichi.source }}",
+            "date_creation": "={{ $json.contact_enrichi.date_creation }}",
+            "statut": "={{ $json.contact_enrichi.statut }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "save-to-sheets",
+      "name": "Sauvegarder dans Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [850, 250],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "score-001",
+              "name": "score_lead",
+              "value": "={{ \n  let score = 0;\n  \n  // Points pour email d'entreprise\n  if (!$json.contact_enrichi.email.includes('@gmail') && \n      !$json.contact_enrichi.email.includes('@hotmail')) {\n    score += 20;\n  }\n  \n  // Points pour entreprise renseignée\n  if ($json.contact_enrichi.entreprise !== 'Non spécifiée') {\n    score += 30;\n  }\n  \n  // Points selon la source\n  if ($json.contact_enrichi.source === 'Demo request') {\n    score += 50;\n  } else if ($json.contact_enrichi.source === 'Contact form') {\n    score += 25;\n  }\n  \n  score;\n}}",
+              "type": "number"
+            },
+            {
+              "id": "priority-001",
+              "name": "priorite",
+              "value": "={{ $json.score_lead >= 70 ? 'haute' : $json.score_lead >= 40 ? 'moyenne' : 'basse' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "calculate-score",
+      "name": "Calculer score lead",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1050, 250]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.contact_enrichi.email }}",
+        "subject": "Bienvenue chez AutomateHub, {{ $json.contact_enrichi.nom }} !",
+        "emailType": "html",
+        "message": "=<h2>Bienvenue {{ $json.contact_enrichi.nom }} !</h2>\n\n<p>Merci de votre intérêt pour AutomateHub.</p>\n\n<p>Nous avons bien reçu votre demande et un membre de notre équipe vous contactera dans les 24h.</p>\n\n<p>En attendant, découvrez nos ressources :</p>\n<ul>\n  <li><a href='#'>Guide de démarrage n8n</a></li>\n  <li><a href='#'>Cas d'usage populaires</a></li>\n  <li><a href='#'>FAQ</a></li>\n</ul>\n\n<p>À très bientôt !<br>\nL'équipe AutomateHub</p>",
+        "options": {}
+      },
+      "id": "welcome-email",
+      "name": "Email de bienvenue",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.2,
+      "position": [850, 400],
+      "credentials": {
+        "smtp": {
+          "id": "1",
+          "name": "SMTP Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "channel": "#sales",
+        "text": ":sparkles: *Nouveau lead!*\n\n*Nom:* {{ $json.contact_enrichi.nom }}\n*Email:* {{ $json.contact_enrichi.email }}\n*Entreprise:* {{ $json.contact_enrichi.entreprise }}\n*Score:* {{ $json.score_lead }}/100\n*Priorité:* {{ $json.priorite }}\n\n{{ $json.priorite === 'haute' ? ':fire: Lead chaud - À contacter rapidement!' : '' }}",
+        "otherOptions": {}
+      },
+      "id": "slack-notify",
+      "name": "Notifier équipe Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1250, 250],
+      "credentials": {
+        "slackApi": {
+          "id": "1",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## ❌ Email invalide\n\nLe contact n'a pas fourni d'email valide.\n\nDonnées reçues:\n```json\n{{ JSON.stringify($json.body, null, 2) }}\n```",
+        "contentType": "markdown"
+      },
+      "id": "error-response",
+      "name": "Erreur email",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [650, 450]
+    }
+  ],
+  "connections": {
+    "Webhook nouveau contact": {
+      "main": [[{"node": "Valider email", "type": "main", "index": 0}]]
+    },
+    "Valider email": {
+      "main": [
+        [{"node": "Enrichir contact", "type": "main", "index": 0}],
+        [{"node": "Erreur email", "type": "main", "index": 0}]
+      ]
+    },
+    "Enrichir contact": {
+      "main": [[
+        {"node": "Sauvegarder dans Sheets", "type": "main", "index": 0},
+        {"node": "Email de bienvenue", "type": "main", "index": 0}
+      ]]
+    },
+    "Sauvegarder dans Sheets": {
+      "main": [[{"node": "Calculer score lead", "type": "main", "index": 0}]]
+    },
+    "Calculer score lead": {
+      "main": [[{"node": "Notifier équipe Slack", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "CRM simple mais puissant : capture de leads, scoring automatique, notifications et suivi dans Google Sheets."
+  },
+  "versionId": "1.0.0"
+}

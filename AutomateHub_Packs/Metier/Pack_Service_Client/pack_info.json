@@ -1,0 +1,19 @@
+{
+  "name": "Pack_Service_Client",
+  "type": "Metier",
+  "description": "Support client automatis\u00e9 : tickets, r\u00e9ponses, satisfaction",
+  "prix": 99,
+  "workflow_count": 60,
+  "workflows": [
+    "Email_Trigger_to_AI-Enhanced_Web_Request_and_Response.json",
+    "Email-Triggered_Task_Creation_and_AI_Response.json",
+    "Email-Triggered_Task_Creation_and_AI_Response_1.json",
+    "AI_Email_Assistant_for_Gmail_Responses.json",
+    "Email_Classifier_and_Response_System.json",
+    "AI-Powered_Email_Sorting_and_Response_Assistant.json",
+    "Automated_Email_Analysis_and_Response_with_AI.json",
+    "create_e-mail_responses_with_fastmail_and_OpenAI_complex_11nodes.json",
+    "AI-Powered_Email_Response_with_Approval_System.json",
+    "Gmail_and_Telegram_Alerts_with_AI_Response.json"
+  ]
+}

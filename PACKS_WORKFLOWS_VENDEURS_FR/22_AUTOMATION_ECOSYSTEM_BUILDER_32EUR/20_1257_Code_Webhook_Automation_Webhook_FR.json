@@ -1,0 +1,1629 @@
+{
+  "nodes": [
+    {
+      "id": "36816ae7-414a-482e-8a50-021885237273",
+      "name": "Type d'événement",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        -220,
+        -140
+      ],
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "row.updated",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "2162daf8-d23d-4b8f-8257-bdfc5400a3a8",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $json.event_type }}",
+                    "rightValue": "row.updated"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "field.created",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "48e112f6-afe8-40bf-b673-b37446934a62",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $json.event_type }}",
+                    "rightValue": "field.created"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "field.updated",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "5aa258cd-15c2-4156-a32d-afeed662a38e",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $json.event_type }}",
+                    "rightValue": "field.updated"
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "typeVersion": 3.2
+    },
+    {
+      "id": "920ca6d8-7a6e-4482-b003-fa643f550a85",
+      "name": "Obtenir les champs de l'invite",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -900,
+        -140
+      ],
+      "parameters": {
+        "jsCode": "const fields = $input.first().json.fields\n .filter(item => item.description)\n .map((item, idx) => ({\n id: item.id,\n order: idx,\n name: item.name,\n type: item.type,\n description: item.description,\n }));\n\nreturn { json: { fields } };"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "3b73b2f5-9081-4633-911f-ef3041600a00",
+      "name": "Obtenir les données du fichier",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1220,
+        320
+      ],
+      "parameters": {
+        "url": "={{ $json.File[0].url }}",
+        "options": {}
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "e96edca8-9e8b-4ca4-bef9-dae673d3aba4",
+      "name": "Extraire du fichier",
+      "type": "n8n-nodes-base.extractFromFile",
+      "position": [
+        1380,
+        320
+      ],
+      "parameters": {
+        "options": {},
+        "operation": "pdf"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "b5c2b87b-5756-4810-84c9-34ea420bdcef",
+      "name": "Obtenir le résultat",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2000,
+        380
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "63d7c52e-d5bf-4f4c-9e37-1d5feaea20f4",
+              "name": "id",
+              "type": "string",
+              "value": "={{ $('Row Reference').item.json.id }}"
+            },
+            {
+              "id": "3ad72567-1d17-4910-b916-4c34a43b1060",
+              "name": "={{ $('Event Ref').first().json.field.name }}",
+              "type": "string",
+              "value": "={{ $json.text.trim() }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "a5cb0510-620b-469d-bf66-26ab64d6f88f",
+      "name": "Boucler sur les éléments",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        800,
+        220
+      ],
+      "parameters": {
+        "options": {}
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "20e24946-59d8-4b19-bfab-eebb02f7e46d",
+      "name": "Référence de ligne",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        980,
+        320
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "4090c53e-e635-4421-ab2b-475bfc62cea4",
+      "name": "Générer la valeur du champ",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        1540,
+        320
+      ],
+      "parameters": {
+        "text": "=<file>\n{{ $json.text }}\n</file>\n\nDonnées à extraire : {{ $('Event Ref').first().json.field.description }}\nle format de sortie est : {{ $('Event Ref').first().json.field.type }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Vous assistez l'utilisateur pour extraire les données requises du fichier donné.\n* Gardez votre réponse courte.\n* Si vous ne pouvez pas extraire les données demandées, répondez par \"n/a\"."
+            }
+          ]
+        },
+        "promptType": "define"
+      },
+      "typeVersion": 1.5
+    },
+    {
+      "id": "582d4008-4871-4798-bc24-abf774ad29b5",
+      "name": "Champs à mettre à jour",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        1560,
+        -300
+      ],
+      "parameters": {
+        "jsCode": "const row = $('Row Ref').first().json;\nconst fields = $('Get Prompt Fields').first().json.fields;\nconst missingFields = fields\n .filter(field => field.description && !row[field.name]);\n\nreturn missingFields;"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "051c6a99-cec3-42df-9de7-47cb69b51682",
+      "name": "Boucler sur les éléments1",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        820,
+        -420
+      ],
+      "parameters": {
+        "options": {}
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "f559c8ff-2ee5-478d-84ee-6b0ca2fe2050",
+      "name": "Réf. de ligne",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        1000,
+        -300
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "7b82cc73-67cb-46d7-a1d4-19712c86890a",
+      "name": "Obtenir les données du fichier1",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1240,
+        -300
+      ],
+      "parameters": {
+        "url": "={{ $('Row Ref').item.json.File[0].url }}",
+        "options": {}
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "7ef1556c-96a3-4988-982d-ec8c5fba4601",
+      "name": "Extraire de File1",
+      "type": "n8n-nodes-base.extractFromFile",
+      "position": [
+        1400,
+        -300
+      ],
+      "parameters": {
+        "options": {},
+        "operation": "pdf"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "9916f1c1-f413-4996-ad45-380a899b4a88",
+      "name": "Obtenir Résultat1",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2120,
+        -260
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e376ba60-8692-4962-9af7-466b6a3f44a2",
+              "name": "={{ $('Fields to Update').item.json.name }}",
+              "type": "string",
+              "value": "={{ $json.text.trim() }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "f62f612d-c288-4062-ab3c-dbc24c9b4b38",
+      "name": "Générer Valeur de Champ1",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        1720,
+        -300
+      ],
+      "parameters": {
+        "text": "=<file>\n{{ $('Extract from File1').first().json.text }}\n</file>\n\nDonnées à extraire : {{ $json.description }}\nle format de sortie est : {{ $json.type }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Vous assistez l'utilisateur pour extraire les données requises du fichier donné.\n* Gardez votre réponse courte.\n* Si vous ne pouvez pas extraire les données demandées, donnez votre réponse sous la forme \"n/a\" suivie de \"(raison)\" où raison est remplacée par la raison pour laquelle les données n'ont pas pu être extraites."
+            }
+          ]
+        },
+        "promptType": "define"
+      },
+      "typeVersion": 1.5
+    },
+    {
+      "id": "615f7436-f280-4033-8ec8-a34f1bd78075",
+      "name": "Filtrer les Lignes Valides",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        520,
+        -420
+      ],
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "7ad58f0b-0354-49a9-ab2f-557652d7b416",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.File[0].url }}",
+              "rightValue": ""
+            }
+          ]
+        }
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "281b9fb0-305c-4a0c-b73b-82b6ba876d12",
+      "name": "Filtrer les Champs Valides",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        340,
+        220
+      ],
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "5b4a7393-788c-42dc-ac1f-e76f833f8534",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.field.description }}",
+              "rightValue": ""
+            }
+          ]
+        }
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "dd0fa792-791f-4d31-a7e8-9b72a25b6a07",
+      "name": "Réf Événement",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        160,
+        220
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "ca1174b3-da18-4d3c-86ef-3028cd5b12a7",
+      "name": "Réf Événement1",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        160,
+        -420
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "8800b355-0fa8-4297-b13b-d3da8a01c3b7",
+      "name": "Note Autocollante",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1180,
+        -340
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 480,
+        "height": 440,
+        "content": "### 1. Obtenir le Schéma de la Table\n[En savoir plus sur le nœud Airtable](https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.airtable/)\n\nPour cette opération, nous utiliserons le pratique nœud Airtable. Je recommande de vous familiariser avec ce nœud pour tous vos besoins Airtable !"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "a90876d3-8a93-4d90-9e2a-f23de452259d",
+      "name": "Note Autocollante1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -260,
+        -440
+      ],
+      "parameters": {
+        "color": 5,
+        "width": 330,
+        "height": 80,
+        "content": "### 2a. Mise à jour du nombre minimal de lignes\nCette branche met à jour uniquement les lignes impactées."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "319adf97-8b14-4069-b4cc-594a6ea479c1",
+      "name": "Note adhésive2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -320,
+        140
+      ],
+      "parameters": {
+        "color": 5,
+        "width": 390,
+        "height": 120,
+        "content": "### 2b. Mettre à jour chaque ligne sous le champ\nCette branche met à jour toutes les lignes applicables sous le champ lorsque le champ/colonne est créé ou modifié. Attention - si vous avez des milliers de lignes, cela peut prendre un certain temps !"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "42a60c8c-476f-4930-bac5-4d36a7185f4f",
+      "name": "Note adhésive3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2240,
+        -1000
+      ],
+      "parameters": {
+        "width": 520,
+        "height": 1120,
+        "content": "## Essayez-le !\n### Ce modèle n8n alimente un modèle de workflow avec des invites « dynamiques » ou « définies par l'utilisateur » avec PDF pour une table [Airtable](https://airtable.com/invite/r/cKzxFYVc). En termes simples, il permet aux utilisateurs de remplir une feuille de calcul en utilisant des invites sans toucher au modèle sous-jacent.\n\n**Découvrez la démo vidéo que j'ai réalisée pour n8n Studio** : https://www.youtube.com/watch?v=_fNAD1u8BZw\n\n**Découvrez l'exemple Airtable ici :** https://airtable.com/appAyH3GCBJ56cfXl/shrXzR1Tj99kuQbyL\n\nCe modèle est destiné à être utilisé comme source webhook pour Airtable. **Vous cherchez une version Baserow ? [Cliquez ici](https://n8n.io/workflows/2780-ai-data-extraction-with-dynamic-prompts-and-baserow)**\n\n## Comment ça fonctionne\n* Chaque table Airtable.io offre une fonctionnalité d'intégration permettant d'envoyer les modifications de la table sous forme d'événements à n'importe quel webhook accessible. Cela permet un modèle de déclenchement réactif qui rend ce type de workflow possible. Pour notre cas d'utilisation, nous capturons les événements `row_updated`, `field_created` et `field_updated`.\n* Ensuite, nous aurons besoin d'une colonne \"input\" dans notre table Airtable.io. Cette colonne contiendra notre contexte pour évaluer les prompts. Dans cet exemple, le nom de notre colonne \"input\" est \"file\" et c'est là que nous téléchargeons nos PDFs. Notez que ce champ \"input\" est contrôlé par un humain et n'est jamais mis à jour depuis ce modèle.\n* Passons maintenant aux colonnes (également appelées \"fields\" dans Airtable). Chaque champ nous permet de définir un nom, un type et une description et forme ensemble le schéma. Les deux premiers sont explicites, mais la \"description\" est destinée aux utilisateurs pour fournir leurs prompts, c’est-à-dire quelles données le champ doit contenir.\n* Dans ce modèle, un déclencheur webhook attend qu'une ligne ou une colonne soit mise à jour. L'événement entrant contient de nombreux détails tels que les identifiants de la table, de la ligne et/ou de la colonne impactées.\n* Nous utilisons ces informations pour récupérer le schéma de la table afin d'obtenir les descriptions des colonnes (également appelées prompts dynamiques).\n* Pour chaque événement déclenché, nous téléchargeons notre entrée, c’est-à-dire le PDF, et le préparons pour notre IA/LLM. En parcourant les colonnes disponibles et en alimentant les prompts dynamiques, notre LLM peut exécuter ces prompts sur le PDF et ainsi générer une réponse de valeur pour chaque cellule.\n* Ces valeurs sont ensuite collectées et utilisées pour mettre à jour l'enregistrement Airtable.\n\n## Comment utiliser\n* Vous devrez publier ce workflow et le rendre accessible à notre instance Airtable.\n* vous devez exécuter le mini-flux \"Create Airtable Webhooks\" pour le lier à votre Airtable.\n* Ce modèle est réutilisable pour d'autres Airtables mais les webhooks doivent être créés à chaque fois pour chaque table.\n\n### Besoin d'aide ?\nRejoignez le [Discord](https://discord.com/invite/XPKeKXeB7d) ou posez votre question sur le [Forum](https://community.n8n.io/) !\n\nBon Flowgramming !"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "c6d037e9-1bf7-47a7-9c46-940220e0786b",
+      "name": "Note adhésive4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -680,
+        -340
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 760,
+        "height": 440,
+        "content": "### 2. Modèle de routeur d'événements\n[En savoir plus sur le nœud Switch](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.switch/)\n\nUn simple nœud switch peut être utilisé pour déterminer quel événement gérer. La différence entre nos événements de ligne et de champ est que l'événement de ligne affecte une seule ligne tandis que les événements de champ affectent toutes les lignes."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "897cec32-3a4c-4a76-bffe-b1456c287b44",
+      "name": "Note adhésive5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        100,
+        -620
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 620,
+        "height": 400,
+        "content": "### 3. Filtrer uniquement les lignes avec une entrée valide\n[En savoir plus sur le nœud Split Out](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.splitout/)\n\nCette étape traite une ou plusieurs lignes mises à jour où « mis à jour » signifie que la colonne « input » (c’est-à-dire « file » dans notre exemple) pour ces lignes a été modifiée. Pour chaque ligne affectée, nous récupérerons la ligne complète pour déterminer uniquement les colonnes que nous devons mettre à jour - c’est une optimisation pour éviter un travail redondant, c’est-à-dire générer des valeurs pour des colonnes qui ont déjà une valeur."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "a5999ca3-4418-42c5-aa1c-fbdfb1c04fef",
+      "name": "Note adhésive7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2060,
+        -480
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 600,
+        "height": 440,
+        "content": "### 6. Mettre à jour l’enregistrement Airtable\n[En savoir plus sur le nœud Edit Fields](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.set/)\n\nEnfin, nous pouvons collecter les réponses du LLM et les combiner pour construire une requête API afin de mettre à jour notre enregistrement Airtable - dont nous avons obtenu l’Id via le webhook initial. Une fois cela fait, nous pouvons passer à la ligne suivante et répéter le processus."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "38192929-a387-4240-8373-290499b40e5a",
+      "name": "Note adhésive8",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1180,
+        -580
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 860,
+        "height": 580,
+        "content": "### 5. PDFs, LLMs et invites dynamiques ? Oh là là !\n[En savoir plus sur le nœud Basic LLM](https://docs.n8n.io/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.chainllm/)\n\nC’est à cette étape que tout se rejoint ! En résumé, nous donnons à notre LLM le contenu du PDF comme contexte et parcourons nos invites dynamiques (issues du schéma que nous avons extrait précédemment) pour notre ligne. À la fin, notre LLM devrait avoir produit une valeur pour chaque colonne demandée.\n\n**Note** : Il existe certainement une optimisation possible pour la mise en cache des PDFs, mais cela dépasse le cadre de cette démonstration.\n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "19a9b93a-d18f-4ffd-ae93-ed41cf398e90",
+      "name": "Note adhésive9",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        740,
+        -580
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 420,
+        "height": 460,
+        "content": "### 4. Utilisation d’une boucle d’éléments\n[En savoir plus sur le nœud Split in Batches](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.splitinbatches/)\n\nUn nœud Split in Batches est utilisé ici pour mettre à jour une ligne à la fois, cependant, c’est un choix pour l’expérience utilisateur - les modifications sont visibles plus rapidement dans Airtable.\n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "5407fead-ee7c-47c8-94ed-5b89e74e50e8",
+      "name": "Note adhésive10",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        100,
+        40
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 600,
+        "height": 360,
+        "content": "### 7. Lister toutes les lignes applicables sous la colonne\n[En savoir plus sur le nœud Filter](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.filter)\n\nPour maintenir les performances, nous pouvons décider de ne récupérer que les lignes dont le champ inputfield est rempli car cela est nécessaire pour effectuer l’extraction. Cela peut facilement être réalisé avec les filtres Airtable."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "43b0e330-b79a-4577-b4fc-314e8b790cf7",
+      "name": "Note adhésive11",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1160,
+        140
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 700,
+        "height": 500,
+        "content": "### 9. Génération de valeur avec LLM\n[En savoir plus sur le nœud Extract From File](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.extractfromfile/)\n\nPratiquement identique à l’étape 5 mais au lieu de mettre à jour chaque champ/colonne, nous devons seulement générer une valeur pour un seul.\n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "0665fe56-48d2-4215-8d95-d4c01f9266ed",
+      "name": "Modèle de chat OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1720,
+        -140
+      ],
+      "parameters": {
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "8gccIjcuf3gvaoEr",
+          "name": "OpenAi account"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "1997fb8b-73eb-4016-bab6-eb8f02fee368",
+      "name": "Note adhésive12",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        720,
+        40
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 420,
+        "height": 460,
+        "content": "### 8. Utilisation d’une boucle d’éléments\n[En savoir plus sur le nœud Split in Batches](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.splitinbatches/)\n\nSimilaire à l’étape 4, le nœud Split in Batches est un choix pour l’expérience utilisateur - les modifications sont visibles plus rapidement dans Airtable.\n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "c2799ded-b742-43a2-80ce-7a0c8f1df96e",
+      "name": "Modèle de Chat OpenAI1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1540,
+        500
+      ],
+      "parameters": {
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "8gccIjcuf3gvaoEr",
+          "name": "OpenAi account"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "e5b42790-fc86-4134-9d04-e6bcad4a5f20",
+      "name": "Note Autocollante13",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1880,
+        140
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 500,
+        "height": 440,
+        "content": "### 10. Mettre à jour l'enregistrement Airtable\n[En savoir plus sur le nœud Modifier les champs](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.set/)\n\nComme à l'étape 6, la réponse du LLM est utilisée pour mettre à jour la ligne, mais uniquement dans le champ qui a été créé/modifié. Une fois terminé, la boucle continue et la ligne suivante est traitée.\n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "b1e98631-a440-4c66-b2d2-8236f6889b65",
+      "name": "Note Autocollante6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2240,
+        -1140
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 300,
+        "height": 120,
+        "content": "[![airtable.io](https://res.cloudinary.com/daglih2g8/image/upload/f_auto,q_auto/v1/n8n-workflows/airtable_logo)](https://airtable.com/invite/r/cKzxFYVc)"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "9d293b3a-954d-4e3b-8773-b6c3dded9520",
+      "name": "Obtenir la charge utile du Webhook",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -580,
+        -140
+      ],
+      "parameters": {
+        "url": "=https://api.airtable.com/v0/bases/{{ $('Airtable Webhook').first().json.body.base.id }}/webhooks/{{ $('Airtable Webhook').first().json.body.webhook.id }}/payloads",
+        "options": {},
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "airtableTokenApi"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Und0frCQ6SNVX3VV",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "5f8d919b-14cd-4cb4-8604-731e56cc9402",
+      "name": "Analyser l'événement",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -400,
+        -140
+      ],
+      "parameters": {
+        "jsCode": "const webhook = $('Airtable Webhook').first().json;\nconst schema = $('Get Prompt Fields').first().json;\nconst { payloads } = $input.first().json;\nif (!payloads.length) return [];\n\nconst event = payloads[payloads.length - 1];\nconst baseId = webhook.body.base.id;\nconst tableId = Object.keys(event.changedTablesById)[0];\nconst table = event.changedTablesById[tableId];\n\nreturn {\n baseId,\n tableId,\n event_type: getEventType(table),\n fieldId: getFieldId(table),\n field: getField(getFieldId(table)),\n rowId: getRecordId(table),\n}\n\nfunction getEventType(changedTableByIdObject) {\n if (changedTableByIdObject['createdFieldsById']) return 'field.created';\n if (changedTableByIdObject['changedFieldsById']) return 'field.updated'\n if (changedTableByIdObject['changedRecordsById']) return 'row.updated';\n return 'unknown';\n}\n\nfunction getFieldId(changedTableByIdObject) {\n const field = changedTableByIdObject.createdFieldsById\n || changedTableByIdObject.changedFieldsById\n || null;\n\n return field ? Object.keys(field)[0] : null;\n}\n\nfunction getField(id) {\n return schema.fields.find(field => field.id === id);\n}\n\nfunction getRecordId(changedTableByIdObject) {\n const record = changedTableByIdObject.changedRecordsById\n || null;\n\n return record ? Object.keys(record)[0] : null;\n}"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "9b99d939-94d6-4fef-8b73-58c702503221",
+      "name": "Obtenir le schéma de la table",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        -1080,
+        -140
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Airtable Webhook').item.json.body.base.id }}"
+        },
+        "resource": "base",
+        "operation": "getSchema"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Und0frCQ6SNVX3VV",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "c29fc911-a852-46f2-bbb1-5092cc1aaa9d",
+      "name": "Récupérer les enregistrements",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        520,
+        220
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.baseId }}"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.tableId }}"
+        },
+        "options": {},
+        "operation": "search",
+        "filterByFormula": "NOT({File} = \"\")"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Und0frCQ6SNVX3VV",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "86d3c8d8-709f-4d9d-99bc-5d1b4aeb8603",
+      "name": "Mettre à jour la ligne",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        2180,
+        380
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Event Ref').first().json.baseId }}"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Event Ref').first().json.tableId }}"
+        },
+        "columns": {
+          "value": {},
+          "schema": [
+            {
+              "id": "id",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "id": "Name",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "File",
+              "type": "array",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "File",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Full Name",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Full Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Created",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Modified",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Last Modified",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Address",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Address",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "autoMapInputData",
+          "matchingColumns": [
+            "id"
+          ]
+        },
+        "options": {},
+        "operation": "update"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Und0frCQ6SNVX3VV",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "95d08439-59a2-4e74-bd5a-b71cf079b621",
+      "name": "Obtenir la ligne",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        340,
+        -420
+      ],
+      "parameters": {
+        "id": "={{ $json.rowId }}",
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.baseId }}"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.tableId }}"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Und0frCQ6SNVX3VV",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "50888ac5-30c9-4036-aade-6ccfdf605c3b",
+      "name": "Ajouter l'ID de la ligne à la charge utile",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2300,
+        -260
+      ],
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": "={{\n{\n id: $('Row Ref').item.json.id,\n ...$input.all()\n .map(item => item.json)\n .reduce((acc, item) => ({\n ...acc,\n ...item,\n }), {})\n}\n}}"
+      },
+      "executeOnce": true,
+      "typeVersion": 3.4
+    },
+    {
+      "id": "e3ebeb45-45d9-44a4-a2e6-bde89f5da125",
+      "name": "Mettre à jour l'enregistrement",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        2480,
+        -260
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Event Ref1').first().json.baseId }}"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Event Ref1').first().json.tableId }}"
+        },
+        "columns": {
+          "value": {},
+          "schema": [
+            {
+              "id": "id",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "id": "Name",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "File",
+              "type": "array",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "File",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Full Name",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Full Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Address",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Address",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Created",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Modified",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Last Modified",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "autoMapInputData",
+          "matchingColumns": [
+            "id"
+          ]
+        },
+        "options": {},
+        "operation": "update"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Und0frCQ6SNVX3VV",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "ac01ec4b-e030-4608-af38-64558408832f",
+      "name": "Webhook Airtable",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        -1400,
+        -140
+      ],
+      "webhookId": "a82f0ae7-678e-49d9-8219-7281e8a2a1b2",
+      "parameters": {
+        "path": "a82f0ae7-678e-49d9-8219-7281e8a2a1b2",
+        "options": {},
+        "httpMethod": "POST"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "90178da9-2000-474e-ba93-a02d03ec6a1d",
+      "name": "Lors du clic sur ‘Tester le workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -1600,
+        -640
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "b8b887ce-f891-4a3c-993b-0aaccadf1b52",
+      "name": "Définir les variables Airtable",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -1420,
+        -640
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "012cb420-1455-4796-a2ac-a31e6abf59ba",
+              "name": "appId",
+              "type": "string",
+              "value": "<MY_BASE_ID>"
+            },
+            {
+              "id": "e863b66c-420f-43c6-aee2-43aa5087a0a5",
+              "name": "tableId",
+              "type": "string",
+              "value": "<MY_TABLE_ID>"
+            },
+            {
+              "id": "e470be1a-5833-47ed-9e2f-988ef5479738",
+              "name": "notificationUrl",
+              "type": "string",
+              "value": "<MY_WEBHOOK_URL>"
+            },
+            {
+              "id": "e4b3213b-e3bd-479b-99ec-d1aa31eaa4c8",
+              "name": "inputField",
+              "type": "string",
+              "value": "File"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "a3ef1a4a-fd22-4a37-8edb-48037f44fa4b",
+      "name": "Obtenir le schéma de la table1",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        -1240,
+        -820
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.appId }}"
+        },
+        "resource": "base",
+        "operation": "getSchema"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Und0frCQ6SNVX3VV",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "2490bbc6-2ea1-4146-b0b8-5a406e89ea2c",
+      "name": "Obtenir le champ \"Input\"",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -1060,
+        -820
+      ],
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": "={{\n$input.all()\n .map(item => item.json)\n .find(item => item.id === $('Set Airtable Vars').first().json.tableId)\n .fields\n .find(field => field.name === $('Set Airtable Vars').first().json.inputField)\n}}"
+      },
+      "executeOnce": true,
+      "typeVersion": 3.4
+    },
+    {
+      "id": "a3de141f-0ce8-4f8e-ae8e-f10f635d14ec",
+      "name": "Webhook RecordsChanged",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -880,
+        -820
+      ],
+      "parameters": {
+        "url": "=https://api.airtable.com/v0/bases/{{ $('Set Airtable Vars').first().json.appId }}/webhooks",
+        "method": "POST",
+        "options": {},
+        "jsonBody": "={{\n{\n \"notificationUrl\": $('Set Airtable Vars').first().json.notificationUrl,\n \"specification\": {\n \"options\": {\n \"filters\": {\n \"fromSources\": [ \"client\" ],\n \"dataTypes\": [ \"tableData\" ],\n \"changeTypes\": [ \"update\" ],\n \"recordChangeScope\": $('Set Airtable Vars').first().json.tableId,\n \"watchDataInFieldIds\": [$json.id]\n }\n }\n }\n}\n}}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "airtableTokenApi"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Und0frCQ6SNVX3VV",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "21b0fae8-2046-4647-83c4-132d1d63503a",
+      "name": "Webhook FieldsChanged",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -880,
+        -640
+      ],
+      "parameters": {
+        "url": "=https://api.airtable.com/v0/bases/{{ $('Set Airtable Vars').first().json.appId }}/webhooks",
+        "method": "POST",
+        "options": {},
+        "jsonBody": "={{\n{\n \"notificationUrl\": $('Set Airtable Vars').first().json.notificationUrl,\n \"specification\": {\n \"options\": {\n \"filters\": {\n \"fromSources\": [ \"client\" ],\n \"dataTypes\": [ \"tableFields\" ],\n \"changeTypes\": [ \"add\", \"update\" ],\n \"recordChangeScope\": $('Set Airtable Vars').first().json.tableId\n }\n }\n }\n}\n}}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "airtableTokenApi"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Und0frCQ6SNVX3VV",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "f31c36cb-98da-4688-a83a-f06e46d2b8a2",
+      "name": "Note autocollante14",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1680,
+        -1000
+      ],
+      "parameters": {
+        "color": 5,
+        "width": 1020,
+        "height": 580,
+        "content": "## ⭐️ Création des webhooks Airtable\nPour connecter ce workflow avec Airtable, vous devrez créer des webhooks pour la Base.\nVous n'aurez vraiment besoin de le faire qu'une seule fois, mais si ces webhooks sont inactifs après 7 jours, vous devrez les recréer.\n\nConsultez la documentation développeur d'Airtable pour plus d'informations : [https://airtable.com/developers/web/api/webhooks-overview](https://airtable.com/developers/web/api/webhooks-overview)"
+      },
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Obtenir la ligne": {
+      "main": [
+        [
+          {
+            "node": "Filtrer les Lignes Valides",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Réf. de ligne": {
+      "main": [
+        [
+          {
+            "node": "Obtenir les données du fichier1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Réf Événement": {
+      "main": [
+        [
+          {
+            "node": "Filtrer les Champs Valides",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Réf Événement1": {
+      "main": [
+        [
+          {
+            "node": "Obtenir la ligne",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Type d'événement": {
+      "main": [
+        [
+          {
+            "node": "Réf Événement1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Réf Événement",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Réf Événement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir le résultat": {
+      "main": [
+        [
+          {
+            "node": "Mettre à jour la ligne",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mettre à jour la ligne": {
+      "main": [
+        [
+          {
+            "node": "Boucler sur les éléments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir Résultat1": {
+      "main": [
+        [
+          {
+            "node": "Ajouter l'ID de la ligne à la charge utile",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyser l'événement": {
+      "main": [
+        [
+          {
+            "node": "Type d'événement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Récupérer les enregistrements": {
+      "main": [
+        [
+          {
+            "node": "Boucler sur les éléments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir les données du fichier": {
+      "main": [
+        [
+          {
+            "node": "Extraire du fichier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Référence de ligne": {
+      "main": [
+        [
+          {
+            "node": "Obtenir les données du fichier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mettre à jour l'enregistrement": {
+      "main": [
+        [
+          {
+            "node": "Boucler sur les éléments1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir les données du fichier1": {
+      "main": [
+        [
+          {
+            "node": "Extraire de File1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Boucler sur les éléments": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Référence de ligne",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Airtable": {
+      "main": [
+        [
+          {
+            "node": "Obtenir le schéma de la table",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Champs à mettre à jour": {
+      "main": [
+        [
+          {
+            "node": "Générer Valeur de Champ1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir le schéma de la table": {
+      "main": [
+        [
+          {
+            "node": "Obtenir les champs de l'invite",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Boucler sur les éléments1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Réf. de ligne",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraire du fichier": {
+      "main": [
+        [
+          {
+            "node": "Générer la valeur du champ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrer les Lignes Valides": {
+      "main": [
+        [
+          {
+            "node": "Boucler sur les éléments1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir le champ \"Input\"": {
+      "main": [
+        [
+          {
+            "node": "Webhook RecordsChanged",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir les champs de l'invite": {
+      "main": [
+        [
+          {
+            "node": "Obtenir la charge utile du Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir le schéma de la table1": {
+      "main": [
+        [
+          {
+            "node": "Obtenir le champ \"Input\"",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modèle de chat OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Générer Valeur de Champ1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Définir les variables Airtable": {
+      "main": [
+        [
+          {
+            "node": "Obtenir le schéma de la table1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Webhook FieldsChanged",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraire de File1": {
+      "main": [
+        [
+          {
+            "node": "Champs à mettre à jour",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modèle de Chat OpenAI1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Générer la valeur du champ",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrer les Champs Valides": {
+      "main": [
+        [
+          {
+            "node": "Récupérer les enregistrements",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir la charge utile du Webhook": {
+      "main": [
+        [
+          {
+            "node": "Analyser l'événement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Générer la valeur du champ": {
+      "main": [
+        [
+          {
+            "node": "Obtenir le résultat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ajouter l'ID de la ligne à la charge utile": {
+      "main": [
+        [
+          {
+            "node": "Mettre à jour l'enregistrement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook FieldsChanged": {
+      "main": [
+        []
+      ]
+    },
+    "Générer Valeur de Champ1": {
+      "main": [
+        [
+          {
+            "node": "Obtenir Résultat1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook RecordsChanged": {
+      "main": [
+        []
+      ]
+    },
+    "Lors du clic sur ‘Tester le workflow’": {
+      "main": [
+        [
+          {
+            "node": "Définir les variables Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

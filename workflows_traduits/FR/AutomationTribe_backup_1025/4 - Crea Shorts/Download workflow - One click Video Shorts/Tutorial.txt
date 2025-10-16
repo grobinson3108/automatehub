@@ -1,0 +1,34 @@
+How to Use This Automation
+
+This guide will walk you through setting up your one-click short video creation workflow using n8n, Airtable, and AI-powered tools. Follow these steps to get started and automate everything from generating image prompts and voiceovers to merging scenes and uploading directly to YouTube.
+
+Step 1: Import the Airtable Base
+	1.	Visit the Airtable link:
+https://airtable.com/appn1iN0lfU12MlsC/shrU7b15K0gI0gbXZ
+	2.	Click the “Copy Base” button in the top-left corner to import the base into your Airtable account.
+
+This base will help you store and manage video ideas, scene counts, style preferences, voice selections, and final output links.
+
+Step 2: Import the Workflow into n8n
+	1.	Log into your n8n account and create a new workflow.
+	2.	Click on the three dots in the top-right corner and select “Import from File.”
+	3.	Upload the JSON file provided in this tutorial.
+
+This workflow is the heart of the automation. It connects to Airtable, generates AI prompts, creates short video scenes with JSON2video, stores the final output in Google Drive, and automatically uploads your finished video to YouTube.
+
+Step 3: Configure Your n8n Workflow
+	1.	Set up Credentials
+	•	Connect your Airtable account so the workflow can read and update your video records.
+	•	Integrate with Google Drive to save and manage your rendered videos.
+	•	Add your JSON2video API key to enable video generation (remember to add credits to your account to avoid watermarks).
+	•	Set up your YouTube credentials if you want the automation to auto-upload videos.
+	2.	Adjust Wait Times (if needed)
+	•	If you have many scenes or use more complex render settings, increase the wait time in the workflow to ensure the video can be fully processed.
+	3.	Customize Prompts & Voiceovers
+	•	In n8n, you can modify the AI prompts, voice styles, and other settings to fit your creative needs.
+
+Enjoy Your One-Click Short Video Automation!
+
+Once everything is set up, simply add a new record in Airtable with your video idea, select your desired style, voice, and scene count, then run the workflow in n8n. In just a few minutes, you’ll have a fully produced short video uploaded to your YouTube channel—completely hands-free!
+
+Start automating your short video creation today!

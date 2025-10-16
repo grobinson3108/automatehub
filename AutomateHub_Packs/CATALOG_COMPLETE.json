@@ -1,0 +1,336 @@
+{
+  "total_workflows_available": 6394,
+  "total_packs": 17,
+  "total_bundles": 3,
+  "categories": {
+    "metier": 5,
+    "benefice": 5,
+    "usage": 4,
+    "special": 3
+  },
+  "packs": {
+    "Pack_Marketing_Complet": {
+      "name": "Pack_Marketing_Complet",
+      "type": "Metier",
+      "description": "Suite compl\u00e8te marketing digital : r\u00e9seaux sociaux, email, contenu, SEO",
+      "prix": 149,
+      "workflow_count": 100,
+      "workflows": [
+        "Scheduled_YouTube_Video_Posting_to_Twitter.json",
+        "Extract_PDF_Content_and_Publish_as_Blog_Post.json",
+        "Upload_and_Process_Images_for_Social_Media_Posts.json",
+        "AI-Powered_PostgreSQL_Database_Query_Assistant.json",
+        "Scheduled_Twitter_Posts_with_Manual_Override_Option.json",
+        "Weekly_Marketing_Performance_Report_Generator.json",
+        "Social_Media_Post_Scheduler_with_Form_Submission.json",
+        "AI-Powered_Social_Media_Post_Creator_for_Telegram.json",
+        "AI-Powered_WordPress_Post_Summaries_with_Slack_Alerts.json",
+        "AI-Powered_Video_Creation_and_Social_Media_Distribution.json"
+      ]
+    },
+    "Pack_Vente_CRM": {
+      "name": "Pack_Vente_CRM",
+      "type": "Metier",
+      "description": "Gestion commerciale compl\u00e8te : leads, CRM, suivi clients",
+      "prix": 129,
+      "workflow_count": 80,
+      "workflows": [
+        "HubSpot_Lead_Enrichment_from_Email_Analysis.json",
+        "Lead_Tracking_Google_Sheets_to_HubSpot_with_Email_Alerts.json",
+        "communicate_emailreadimap_hubspot_complex_13nodes.json",
+        "webhook_communicate_hubspot_googlesheets_complex_14nodes.json",
+        "Validate_HubSpot_Contact_Emails_and_Notify_via_Slack.json",
+        "Form_to_Discord_Email_Leads_and_Update_Sheets.json",
+        "AI-Powered_Leaderboard_for_Popular_n8n_Workflows.json",
+        "Sync_HubSpot_Contacts_to_Mailchimp_on_Schedule_1.json",
+        "Shopify_Order_Processing_with_CRM_and_Task_Updates.json",
+        "scheduled_automation_hubspot_pipedrive_7nodes.json"
+      ]
+    },
+    "Pack_Ecommerce_Pro": {
+      "name": "Pack_Ecommerce_Pro",
+      "type": "Metier",
+      "description": "Solution e-commerce compl\u00e8te : boutique, commandes, clients",
+      "prix": 159,
+      "workflow_count": 90,
+      "workflows": [
+        "Shopify_Order_Processing_with_CRM_and_Task_Updates.json",
+        "Stripe_Payment_Order_Sync_\u2013_Auto_Retrieve_Customer_&_Product_Purchased.json",
+        "Shopify_Order_to_Zendesk_Ticket_Creation.json",
+        "Update_HubSpot_and_Notify_Slack_on_Stripe_Invoice_Payment.json",
+        "Linear_Project_Status_and_End_Date_to_Productboard_feature_Sync_complex_17nodes.json",
+        "AI-Driven_WooCommerce_Product_Importer_with_SEO_complex_16nodes.json",
+        "AI-Powered_Personal_Shopper_with_WooCommerce_Integration.json",
+        "Create,_update_and_get_a_product_from_WooCommerce.json",
+        "Daily_Shopify_Sales_Update_to_Sheets_and_Slack.json",
+        "New_WooCommerce_Customer_to_Mautic.json"
+      ]
+    },
+    "Pack_Service_Client": {
+      "name": "Pack_Service_Client",
+      "type": "Metier",
+      "description": "Support client automatis\u00e9 : tickets, r\u00e9ponses, satisfaction",
+      "prix": 99,
+      "workflow_count": 60,
+      "workflows": [
+        "Email_Trigger_to_AI-Enhanced_Web_Request_and_Response.json",
+        "Email-Triggered_Task_Creation_and_AI_Response.json",
+        "Email-Triggered_Task_Creation_and_AI_Response_1.json",
+        "AI_Email_Assistant_for_Gmail_Responses.json",
+        "Email_Classifier_and_Response_System.json",
+        "AI-Powered_Email_Sorting_and_Response_Assistant.json",
+        "Automated_Email_Analysis_and_Response_with_AI.json",
+        "create_e-mail_responses_with_fastmail_and_OpenAI_complex_11nodes.json",
+        "AI-Powered_Email_Response_with_Approval_System.json",
+        "Gmail_and_Telegram_Alerts_with_AI_Response.json"
+      ]
+    },
+    "Pack_Productivite_Entreprise": {
+      "name": "Pack_Productivite_Entreprise",
+      "type": "Metier",
+      "description": "Outils de productivit\u00e9 pour \u00e9quipes",
+      "prix": 89,
+      "workflow_count": 70,
+      "workflows": [
+        "webhook_process_telegram_googlecalendartool_complex_15nodes.json",
+        "Create_Google_Task_from_New_Gmail_Message.json",
+        "Email-Triggered_Task_Creation_and_AI_Response.json",
+        "Email-Triggered_Task_Creation_and_AI_Response_1.json",
+        "Telegram_AI_Assistant_for_Calendar_and_Email_Management.json",
+        "\ud83d\udce6_New_Email_\u2794_Create_Google_Task.json",
+        "Telegram_AI_Assistant_for_Calendar_and_Email_Management_1.json",
+        "Create_Delivery_Tasks_from_Spreadsheet_Data.json",
+        "Optimize_Images_Uploaded_to_Google_Drive.json",
+        "Create_Onfleet_tasks_from_Spreadsheets.json"
+      ]
+    },
+    "Pack_Gain_de_Temps": {
+      "name": "Pack_Gain_de_Temps",
+      "type": "Benefice",
+      "description": "\ud83d\udd50 \u00c9conomisez 10h par semaine avec ces automatisations",
+      "prix": 119,
+      "workflow_count": 100,
+      "workflows": [
+        "Telegram-Triggered_AI_Chat_with_Gmail_Integration.json",
+        "webhook_communicate_slack_emailsend_1.json",
+        "Log_New_Gmail_Messages_to_Google_Sheets_Automatically.json",
+        "Automate_Your_RFP_Process_with_OpenAI_Assistants_complex_23nodes.json",
+        "webhook_automation_gmail_telegram_complex_17nodes.json",
+        "webhook_process_telegram_googlecalendartool_complex_15nodes.json",
+        "webhook_communicate_slack_emailsend.json",
+        "webhook_automation_googlesheets_gmail.json",
+        "AI_Chatbot_with_Google_Docs_Memory_Integration.json",
+        "Webhook_Triggers_Email_and_API_Call_with_Custom_Logic.json"
+      ]
+    },
+    "Pack_Acquisition_Clients": {
+      "name": "Pack_Acquisition_Clients",
+      "type": "Benefice",
+      "description": "\ud83c\udfaf Attirez et convertissez plus de clients automatiquement",
+      "prix": 179,
+      "workflow_count": 120,
+      "workflows": [
+        "HubSpot_Lead_Enrichment_from_Email_Analysis.json",
+        "Lead_Tracking_Google_Sheets_to_HubSpot_with_Email_Alerts.json",
+        "Form_to_Discord_Email_Leads_and_Update_Sheets.json",
+        "AI-Powered_Leaderboard_for_Popular_n8n_Workflows.json",
+        "Stripe_Payment_Order_Sync_\u2013_Auto_Retrieve_Customer_&_Product_Purchased.json",
+        "Enrich_Pipedrive_Leads_with_Clearbit_and_Filter.json",
+        "Aggregate_Customer_Data_and_Generate_Response_Report.json",
+        "Extract_Google_Maps_Business_Leads_to_Google_Sheets.json",
+        "webhook_automation_facebookleadads.json",
+        "Receive_updates_when_a_customer_is_created_in_HelpScout.json"
+      ]
+    },
+    "Pack_Augmenter_Revenus": {
+      "name": "Pack_Augmenter_Revenus",
+      "type": "Benefice",
+      "description": "\ud83d\udcb0 Boostez votre CA avec l'automatisation intelligente",
+      "prix": 199,
+      "workflow_count": 100,
+      "workflows": [
+        "HubSpot_Lead_Enrichment_from_Email_Analysis.json",
+        "Lead_Tracking_Google_Sheets_to_HubSpot_with_Email_Alerts.json",
+        "Process_Invoices_and_Send_Notifications_via_Email_and_Slack.json",
+        "Form_to_Discord_Email_Leads_and_Update_Sheets.json",
+        "Image_Conversion_and_Google_Drive_Update_Automation.json",
+        "Email_Analysis_Question_to_SQL_Query_Conversion.json",
+        "AI-Powered_Leaderboard_for_Popular_n8n_Workflows.json",
+        "Shopify_Order_Processing_with_CRM_and_Task_Updates.json",
+        "Stripe_Payment_Order_Sync_\u2013_Auto_Retrieve_Customer_&_Product_Purchased.json",
+        "Enrich_Pipedrive_Leads_with_Clearbit_and_Filter.json"
+      ]
+    },
+    "Pack_Visibilite_Maximum": {
+      "name": "Pack_Visibilite_Maximum",
+      "type": "Benefice",
+      "description": "\ud83d\udce2 Faites-vous conna\u00eetre sur tous les canaux",
+      "prix": 139,
+      "workflow_count": 110,
+      "workflows": [
+        "Extract,_Split_and_Process_File_Content_with_AI.json",
+        "YouTube_Video_Updates_to_Telegram_Channel.json",
+        "Email_Processing_and_AI-Powered_Content_Analysis_1.json",
+        "Scheduled_YouTube_Video_Posting_to_Twitter.json",
+        "Analyze_Suspicious_Email_Contents_with_ChatGPT_Vision_complex_18nodes.json",
+        "PDF_to_WordPress_Automated_Content_with_Approval.json",
+        "process_youtube_telegram.json",
+        "Analyze_&_Sort_Suspicious_Email_Contents_with_ChatGPT_complex_25nodes.json",
+        "Email_Processing_and_AI-Powered_Content_Analysis.json",
+        "Extract_and_Process_File_Content_with_AI_Assistance.json"
+      ]
+    },
+    "Pack_Satisfaction_Client": {
+      "name": "Pack_Satisfaction_Client",
+      "type": "Benefice",
+      "description": "\u2b50 Clients heureux = Business florissant",
+      "prix": 109,
+      "workflow_count": 80,
+      "workflows": [
+        "Email_Trigger_to_AI-Enhanced_Web_Request_and_Response.json",
+        "Email-Triggered_Task_Creation_and_AI_Response.json",
+        "Email-Triggered_Task_Creation_and_AI_Response_1.json",
+        "AI_Email_Assistant_for_Gmail_Responses.json",
+        "Email_Classifier_and_Response_System.json",
+        "AI-Powered_Email_Sorting_and_Response_Assistant.json",
+        "Automated_Email_Analysis_and_Response_with_AI.json",
+        "create_e-mail_responses_with_fastmail_and_OpenAI_complex_11nodes.json",
+        "AI-Powered_Email_Response_with_Approval_System.json",
+        "Gmail_and_Telegram_Alerts_with_AI_Response.json"
+      ]
+    },
+    "Pack_Startup_Essential": {
+      "name": "Pack_Startup_Essential",
+      "type": "Usage",
+      "description": "\ud83d\ude80 L'essentiel pour lancer votre startup",
+      "prix": 89,
+      "workflow_count": 60,
+      "workflows": [
+        "Telegram-Triggered_AI_Chat_with_Gmail_Integration.json",
+        "Typeform_to_Sheets_with_Slack_and_Email_Notifications_1.json",
+        "webhook_communicate_slack_emailsend_1.json",
+        "Log_New_Gmail_Messages_to_Google_Sheets_Automatically.json",
+        "Analyze_Incoming_Emails_and_Apply_Security_Rules.json",
+        "HubSpot_Lead_Enrichment_from_Email_Analysis.json",
+        "Email_Trigger_to_AI-Enhanced_Web_Request_and_Response.json",
+        "AI-Powered_Email_Summary_to_Messenger_Service.json",
+        "Typeform_to_Sheets_with_Slack_and_Email_Notifications.json",
+        "Email-Triggered_Slack_Notifications_for_Delivery_Accounting.json"
+      ]
+    },
+    "Pack_Freelance_Pro": {
+      "name": "Pack_Freelance_Pro",
+      "type": "Usage",
+      "description": "\ud83d\udcbc Kit complet du freelance productif",
+      "prix": 79,
+      "workflow_count": 50,
+      "workflows": [
+        "Daily_Calendar_Summary_and_Event_Reminders.json",
+        "scheduled_process_todoist_complex_12nodes.json",
+        "Email-Triggered_Calendar_Updates_and_Airtable_Sync.json",
+        "Sync_Notion_Tasks_with_Clockify_Time_Tracking.json",
+        "Scheduled_Notion_Updates_to_LinkedIn_Posts.json",
+        "Automate_Your_Customer_Service_With_WhatsApp_Business_Cloud_&_Asana_7nodes.json",
+        "Scheduled_Google_Calendar_Events_to_API_Notifications.json",
+        "Scheduled_Notion_Database_Update_with_Conditional_Logic.json",
+        "Automated_Task_Routing_and_Data_Processing_Pipeline.json",
+        "Scheduled_AI_Text_Analysis_and_Notion_Database_Update.json"
+      ]
+    },
+    "Pack_PME_Digital": {
+      "name": "Pack_PME_Digital",
+      "type": "Usage",
+      "description": "\ud83c\udfe2 Transformation digitale pour PME",
+      "prix": 169,
+      "workflow_count": 130,
+      "workflows": [
+        "Telegram-Triggered_AI_Chat_with_Gmail_Integration.json",
+        "Typeform_to_Sheets_with_Slack_and_Email_Notifications_1.json",
+        "webhook_communicate_slack_emailsend_1.json",
+        "Log_New_Gmail_Messages_to_Google_Sheets_Automatically.json",
+        "Analyze_Incoming_Emails_and_Apply_Security_Rules.json",
+        "HubSpot_Lead_Enrichment_from_Email_Analysis.json",
+        "Email_Trigger_to_AI-Enhanced_Web_Request_and_Response.json",
+        "AI-Powered_Email_Summary_to_Messenger_Service.json",
+        "Angie,_Personal_AI_Assistant_with_Telegram_Voice_and_Text_complex_15nodes.json",
+        "Typeform_to_Sheets_with_Slack_and_Email_Notifications.json"
+      ]
+    },
+    "Pack_Agency_Tools": {
+      "name": "Pack_Agency_Tools",
+      "type": "Usage",
+      "description": "\ud83c\udfa8 Outils pro pour agences digitales",
+      "prix": 249,
+      "workflow_count": 150,
+      "workflows": [
+        "Telegram-Triggered_AI_Chat_with_Gmail_Integration.json",
+        "Typeform_to_Sheets_with_Slack_and_Email_Notifications_1.json",
+        "webhook_communicate_slack_emailsend_1.json",
+        "Log_New_Gmail_Messages_to_Google_Sheets_Automatically.json",
+        "HubSpot_Lead_Enrichment_from_Email_Analysis.json",
+        "Angie,_Personal_AI_Assistant_with_Telegram_Voice_and_Text_complex_15nodes.json",
+        "Typeform_to_Sheets_with_Slack_and_Email_Notifications.json",
+        "Email-Triggered_Slack_Notifications_for_Delivery_Accounting.json",
+        "webhook_automation_gmail_telegram_complex_17nodes.json",
+        "YouTube_Video_Updates_to_Telegram_Channel.json"
+      ]
+    },
+    "Pack_IA_Revolution": {
+      "name": "Pack_IA_Revolution",
+      "type": "Special",
+      "description": "\ud83e\udd16 La r\u00e9volution IA pour votre business",
+      "prix": 199,
+      "workflow_count": 150,
+      "workflows": [
+        "Telegram-Triggered_AI_Chat_with_Gmail_Integration.json",
+        "Typeform_to_Sheets_with_Slack_and_Email_Notifications_1.json",
+        "webhook_communicate_slack_emailsend_1.json",
+        "Log_New_Gmail_Messages_to_Google_Sheets_Automatically.json",
+        "Analyze_Incoming_Emails_and_Apply_Security_Rules.json",
+        "HubSpot_Lead_Enrichment_from_Email_Analysis.json",
+        "Email_Trigger_to_AI-Enhanced_Web_Request_and_Response.json",
+        "AI-Powered_Email_Summary_to_Messenger_Service.json",
+        "Angie,_Personal_AI_Assistant_with_Telegram_Voice_and_Text_complex_15nodes.json",
+        "Typeform_to_Sheets_with_Slack_and_Email_Notifications.json"
+      ]
+    },
+    "Pack_NoCode_Master": {
+      "name": "Pack_NoCode_Master",
+      "type": "Special",
+      "description": "\ud83d\udd25 MEGA PACK - 300 automations sans coder",
+      "prix": 299,
+      "workflow_count": 300,
+      "workflows": [
+        "automation.json",
+        "Telegram-Triggered_AI_Chat_with_Gmail_Integration.json",
+        "Typeform_to_Sheets_with_Slack_and_Email_Notifications_1.json",
+        "webhook_communicate_slack_emailsend_1.json",
+        "Log_New_Gmail_Messages_to_Google_Sheets_Automatically.json",
+        "Analyze_Incoming_Emails_and_Apply_Security_Rules.json",
+        "HubSpot_Lead_Enrichment_from_Email_Analysis.json",
+        "Email_Trigger_to_AI-Enhanced_Web_Request_and_Response.json",
+        "AI-Powered_Email_Summary_to_Messenger_Service.json",
+        "Angie,_Personal_AI_Assistant_with_Telegram_Voice_and_Text_complex_15nodes.json"
+      ]
+    },
+    "Pack_Integration_Pro": {
+      "name": "Pack_Integration_Pro",
+      "type": "Special",
+      "description": "\ud83d\udd17 Connectez tous vos outils ensemble",
+      "prix": 149,
+      "workflow_count": 100,
+      "workflows": [
+        "Telegram-Triggered_AI_Chat_with_Gmail_Integration.json",
+        "Typeform_to_Sheets_with_Slack_and_Email_Notifications_1.json",
+        "webhook_communicate_slack_emailsend_1.json",
+        "Log_New_Gmail_Messages_to_Google_Sheets_Automatically.json",
+        "HubSpot_Lead_Enrichment_from_Email_Analysis.json",
+        "Angie,_Personal_AI_Assistant_with_Telegram_Voice_and_Text_complex_15nodes.json",
+        "Typeform_to_Sheets_with_Slack_and_Email_Notifications.json",
+        "Email-Triggered_Slack_Notifications_for_Delivery_Accounting.json",
+        "webhook_automation_gmail_telegram_complex_17nodes.json",
+        "webhook_process_telegram_googlecalendartool_complex_15nodes.json"
+      ]
+    }
+  }
+}

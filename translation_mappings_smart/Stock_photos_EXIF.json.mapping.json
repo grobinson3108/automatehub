@@ -1,0 +1,406 @@
+{
+  "workflow_path": "/var/www/automatehub/workflows_traduits/FR/AutomationTribe/3 - 2500€ revenu passif/Download workflow - Stock Photo Metadata/Stock_photos_EXIF.json",
+  "texts_map": {
+    "$text_1": {
+      "original": "Photos de stock EXIF",
+      "path": "name",
+      "context": "workflow_name",
+      "has_prefix": false
+    },
+    "$text_2": {
+      "original": "Générez des métadonnées pour une image au format JSON valide. La sortie doit être un tableau d'objets, où chaque objet contient :\n- \"Title\" : Un titre court et descriptif pour l'image\n- \"Description\" : Une description captivante de l'image pour la photographie de stock\n- \"Keywords\" : Un tableau de exactement 25 mots-clés pertinents. Les mots-clés doivent avoir un maximum de 30 caractères.",
+      "path": "nodes[0].parameters.text",
+      "context": "prompt",
+      "has_prefix": true
+    },
+    "$text_3": {
+      "original": "// Get the raw response from the previous node\nconst rawJson = $input.first().json.content;\n\n// Remove potential Markdown code block wrappers\nconst cleanedJson = rawJson.replace(/```json\\n|\\n```/g, '');\n\ntry {\n    // Parse the cleaned JSON\n    const parsedData = JSON.parse(cleanedJson);\n\n    // Convert the \"Keywords\" array into a comma-separated string for each object\n    const formattedData = parsedData.map(item => ({\n        json: {\n            Title: item.Title,\n            Description: item.Description,\n            Keywords: item.Keywords.join(\", \")  // Convert array to comma-separated string\n        }\n    }));\n\n    return formattedData;\n} catch (error) {\n    throw new Error(\"Invalid JSON format: \" + error.message);\n}",
+      "path": "nodes[1].parameters.jsCode",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_4": {
+      "original": "Lors du clic sur ‘Tester le workflow’",
+      "path": "nodes[2].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_5": {
+      "original": "Boucler sur les éléments",
+      "path": "nodes[3].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_6": {
+      "original": "download",
+      "path": "nodes[4].parameters.operation",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_7": {
+      "original": "Télécharger les images",
+      "path": "nodes[4].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_8": {
+      "original": "Rechercher dans Google Drive",
+      "path": "nodes[5].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_9": {
+      "original": "Ajouter des lignes",
+      "path": "nodes[6].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_10": {
+      "original": "Add rows",
+      "path": "connections.Code.main[0][0].node",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_11": {
+      "original": "Search Google Drive",
+      "path": "connections.When clicking ‘Test workflow’.main[0][0].node",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_12": {
+      "original": "Loop Over Items",
+      "path": "connections.Download Images.main[0][0].node",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_13": {
+      "original": "Download Images",
+      "path": "connections.Search Google Drive.main[0][0].node",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_14": {
+      "original": "Loop Over Items",
+      "path": "connections.Add rows.main[0][0].node",
+      "context": "user_text",
+      "has_prefix": false
+    }
+  },
+  "modified_workflow": {
+    "name": "$text_1",
+    "nodes": [
+      {
+        "parameters": {
+          "resource": "image",
+          "operation": "analyze",
+          "modelId": {
+            "__rl": true,
+            "value": "gpt-4o-mini",
+            "mode": "list",
+            "cachedResultName": "GPT-4O-MINI"
+          },
+          "text": "=$text_2",
+          "inputType": "base64",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.openAi",
+        "typeVersion": 1.8,
+        "position": [
+          680,
+          -180
+        ],
+        "id": "a3aa0946-a094-4089-8e18-c35d92293f3a",
+        "name": "OpenAI",
+        "alwaysOutputData": false,
+        "credentials": {
+          "openAiApi": {
+            "id": "wMKWK2pxtmnFBWY4",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "$text_3"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          840,
+          -180
+        ],
+        "id": "2a6bf00c-4293-4eeb-9c4b-b98984de30fe",
+        "name": "Code"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          -220,
+          -220
+        ],
+        "id": "d9e74f92-1f3b-4d01-9952-2256faa2bde1",
+        "name": "$text_4"
+      },
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3,
+        "position": [
+          440,
+          -220
+        ],
+        "id": "440bdcf3-a001-4609-b376-5e415b507a85",
+        "name": "$text_5"
+      },
+      {
+        "parameters": {
+          "operation": "$text_6",
+          "fileId": {
+            "__rl": true,
+            "value": "={{ $json.id }}",
+            "mode": "id"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 3,
+        "position": [
+          220,
+          -300
+        ],
+        "id": "1cbd83c8-00ff-49b8-8c99-2facc404e0e1",
+        "name": "$text_7",
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "GP2Td0vsw7OxPZcD",
+            "name": "Google Drive account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "fileFolder",
+          "returnAll": true,
+          "filter": {
+            "folderId": {
+              "__rl": true,
+              "value": "13yTlpnzzfWXSoHpU1Lg_cjAvF2IEUFi3",
+              "mode": "list",
+              "cachedResultName": "Upload here",
+              "cachedResultUrl": "https://drive.google.com/drive/folders/13yTlpnzzfWXSoHpU1Lg_cjAvF2IEUFi3"
+            }
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 3,
+        "position": [
+          0,
+          -220
+        ],
+        "id": "1e8acaef-4ac9-420b-841a-6314e8f1413e",
+        "name": "$text_8",
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "GP2Td0vsw7OxPZcD",
+            "name": "Google Drive account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "1stDZcwkDOcxD-SK-Rj7T5zWQ8htClV-8wR_ZMfMS-f8",
+            "mode": "list",
+            "cachedResultName": "Stock Photos",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1stDZcwkDOcxD-SK-Rj7T5zWQ8htClV-8wR_ZMfMS-f8/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Sheet1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1stDZcwkDOcxD-SK-Rj7T5zWQ8htClV-8wR_ZMfMS-f8/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Filename": "={{ $('Loop Over Items').item.json.name }}",
+              "Title": "={{ $json.Title }}",
+              "Keywords": "={{ $json.Keywords }}",
+              "Category": "1"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "Filename",
+                "displayName": "Filename",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Title",
+                "displayName": "Title",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Keywords",
+                "displayName": "Keywords",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Category",
+                "displayName": "Category",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Releases",
+                "displayName": "Releases",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.5,
+        "position": [
+          1020,
+          -180
+        ],
+        "id": "bd1c5bb5-1302-4740-8a16-0f1510526379",
+        "name": "$text_9",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "2Ue8X6F4BpkhEAk6",
+            "name": "Google Sheets account"
+          }
+        }
+      }
+    ],
+    "pinData": {},
+    "connections": {
+      "OpenAI": {
+        "main": [
+          [
+            {
+              "node": "Code",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code": {
+        "main": [
+          [
+            {
+              "node": "$text_10",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When clicking ‘Test workflow’": {
+        "main": [
+          [
+            {
+              "node": "$text_11",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Loop Over Items": {
+        "main": [
+          [],
+          [
+            {
+              "node": "OpenAI",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Download Images": {
+        "main": [
+          [
+            {
+              "node": "$text_12",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Search Google Drive": {
+        "main": [
+          [
+            {
+              "node": "$text_13",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Add rows": {
+        "main": [
+          [
+            {
+              "node": "$text_14",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "active": false,
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "versionId": "1e2a0256-5057-4ae7-879a-b3a4c6f4b672",
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+    },
+    "id": "9y7JPnmwUQ0X6eUe",
+    "tags": [
+      {
+        "id": "1",
+        "name": "Audelalia"
+      }
+    ]
+  }
+}

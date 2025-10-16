@@ -1,0 +1,5245 @@
+{
+  "workflow_path": "/var/www/automatehub/workflows_traduits/FR/AutomationTribe/9 - Blog + Réseaux/Download-Workflow/Autonomous_Content_Engine___Blog_Post.json",
+  "texts_map": {
+    "$text_1": {
+      "original": "Moteur de contenu autonome - Article de blog",
+      "path": "name",
+      "context": "workflow_name",
+      "has_prefix": false
+    },
+    "$text_2": {
+      "original": "Déclencheur de planification",
+      "path": "nodes[0].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_3": {
+      "original": "Lors de l'appui sur ‘Tester le workflow’",
+      "path": "nodes[2].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_4": {
+      "original": "Create an image for this blog post: {{ $json.fields['Blog title'] }} \nWiuth this excerpt: {{ $json.fields['Blog Excerpt'] }}\nThe image ratio must be: {{ $('Airtable').item.json['Image ratio'] }}\n\n",
+      "path": "nodes[3].parameters.prompt",
+      "context": "user_text",
+      "has_prefix": true
+    },
+    "$text_5": {
+      "original": "Définir le SEO de l'image",
+      "path": "nodes[4].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_6": {
+      "original": "Définir l'image à la une",
+      "path": "nodes[6].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_7": {
+      "original": "{Status} = \"In progress\"",
+      "path": "nodes[7].parameters.filterByFormula",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_8": {
+      "original": "Promo/Affiliate URL 1",
+      "path": "nodes[8].parameters.columns.schema[8].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_9": {
+      "original": "Promo/Affiliate URL 2",
+      "path": "nodes[8].parameters.columns.schema[9].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_10": {
+      "original": "Promo Image 1",
+      "path": "nodes[8].parameters.columns.schema[10].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_11": {
+      "original": "Promo Image 2",
+      "path": "nodes[8].parameters.columns.schema[11].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_12": {
+      "original": "SEO Image Title",
+      "path": "nodes[8].parameters.columns.schema[17].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_13": {
+      "original": "SEO Image Alt Text",
+      "path": "nodes[8].parameters.columns.schema[18].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_14": {
+      "original": "SEO Image Caption",
+      "path": "nodes[8].parameters.columns.schema[19].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_15": {
+      "original": "SEO Image Description",
+      "path": "nodes[8].parameters.columns.schema[20].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_16": {
+      "original": "LinkedIn Page Post",
+      "path": "nodes[8].parameters.columns.schema[26].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_17": {
+      "original": "Listez 10 mots-clés liés à l'intention d'achat ou axés sur le produit concernant : ”{{ $json['Search phrase'] }}”. Incluez 5 mots-clés normaux et 5 mots-clés de longue traîne. Séparez-les tous en utilisant uniquement des virgules.",
+      "path": "nodes[9].parameters.messages.values[0].content",
+      "context": "message",
+      "has_prefix": true
+    },
+    "$text_18": {
+      "original": "# Génération de contenu de blog SEO pour un workflow autonome\n\n## 🎯 Objectif\nGénérer un package complet d'article de blog optimisé pour le SEO en utilisant les paramètres d'entrée ci-dessous. Suivez les directives de rédaction professionnelles et assurez-vous que le résultat est engageant, précieux et prêt pour WordPress.\n\n---\n\n## 📥 Paramètres d'entrée\n\n- **Phrase de recherche principale** : {{ $('Airtable').item.json['Search phrase'] }}\n- **Mots-clés associés** : {{ $json.message.content }}\n- **Nombre de mots** : {{ $('Airtable').item.json['Word Count'] }}\n- **Promo Im...",
+      "path": "nodes[10].parameters.text",
+      "context": "prompt",
+      "has_prefix": true
+    },
+    "$text_19": {
+      "original": "Modèle de chat OpenAI",
+      "path": "nodes[11].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_20": {
+      "original": "{\n  \"blogTitle\": \"Top 10 AI Automation Tools to Streamline Your Workflow\",\n  \"metaDescription\": \"Explore the best AI automation tools to improve efficiency and productivity. Learn how to automate tasks and optimize your business processes.\",\n  \"blogSlug\": \"ai-automation-tools-workflow\",\n  \"blogExcerpt\": \"Discover powerful AI automation tools to streamline your business workflow, save time, and boost productivity. A must-read guide for professionals.\",\n  \"blogContent\": \"<p>In today’s digital world, automation is the future...</p><p><a href='https://promo1.com'><img src='https://image1.com/promo.jpg' alt='Promo 1'></a></p><p>Midway content continues here...</p><p><a href='https://promo2.com'><img src='https://image2.com/promo.jpg' alt='Promo 2'></a></p><p>Conclusion and CTA...</p>\",\n  \"seoImages\": [\n    {\n      \"url\": \"https://image1.com/promo.jpg\",\n      \"link\": \"https://promo1.com\",\n      \"title\": \"AI Tool Promo 1\",\n      \"altText\": \"Visual of AI Tool Promo 1\",\n      \"caption\": \"AI-Powered Productivity Tool\",\n      \"description\": \"A promotional visual highlighting the benefits of this AI automation software.\"\n    },\n    {\n      \"url\": \"https://image2.com/promo.jpg\",\n      \"link\": \"https://promo2.com\",\n      \"title\": \"AI Tool Promo 2\",\n      \"altText\": \"Visual of AI Tool Promo 2\",\n      \"caption\": \"Streamline Workflows with AI\",\n      \"description\": \"A second promotional image to illustrate workflow optimization through automation.\"\n    }\n  ],\n  \"faqSection\": [\n    {\n      \"question\": \"What is AI automation?\",\n      \"answer\": \"AI automation uses artificial intelligence to perform repetitive tasks, saving time and increasing accuracy.\"\n    },\n    {\n      \"question\": \"How do AI tools help with workflow?\",\n      \"answer\": \"They automate steps in your process, reducing manual effort and improving consistency.\"\n    },\n    {\n      \"question\": \"Are these tools easy to integrate?\",\n      \"answer\": \"Most modern tools like n8n and Make offer no-code interfaces, making integration simple.\"\n    },\n    {\n      \"question\": \"Can I use AI tools for content creation?\",\n      \"answer\": \"Yes, tools like ChatGPT, Claude, and others are widely used to automate writing and ideation.\"\n    },\n    {\n      \"question\": \"Do AI tools require coding skills?\",\n      \"answer\": \"Not always — many tools are designed for non-technical users with drag-and-drop interfaces.\"\n    }\n  ]\n}",
+      "path": "nodes[12].parameters.inputSchema",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_21": {
+      "original": "Analyseur de sortie structurée",
+      "path": "nodes[12].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_22": {
+      "original": "Promo/Affiliate URL 1",
+      "path": "nodes[13].parameters.columns.schema[8].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_23": {
+      "original": "Promo/Affiliate URL 2",
+      "path": "nodes[13].parameters.columns.schema[9].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_24": {
+      "original": "Promo Image 1",
+      "path": "nodes[13].parameters.columns.schema[10].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_25": {
+      "original": "Promo Image 2",
+      "path": "nodes[13].parameters.columns.schema[11].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_26": {
+      "original": "SEO Image Title",
+      "path": "nodes[13].parameters.columns.schema[18].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_27": {
+      "original": "SEO Image Alt Text",
+      "path": "nodes[13].parameters.columns.schema[19].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_28": {
+      "original": "SEO Image Caption",
+      "path": "nodes[13].parameters.columns.schema[20].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_29": {
+      "original": "SEO Image Description",
+      "path": "nodes[13].parameters.columns.schema[21].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_30": {
+      "original": "LinkedIn Page Post",
+      "path": "nodes[13].parameters.columns.schema[27].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_31": {
+      "original": "and",
+      "path": "nodes[14].parameters.rules.values[0].conditions.combinator",
+      "context": "parameter_value",
+      "has_prefix": false
+    },
+    "$text_32": {
+      "original": "and",
+      "path": "nodes[14].parameters.rules.values[1].conditions.combinator",
+      "context": "parameter_value",
+      "has_prefix": false
+    },
+    "$text_33": {
+      "original": "Promo/Affiliate URL 1",
+      "path": "nodes[18].parameters.columns.schema[8].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_34": {
+      "original": "Promo/Affiliate URL 2",
+      "path": "nodes[18].parameters.columns.schema[9].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_35": {
+      "original": "Promo Image 1",
+      "path": "nodes[18].parameters.columns.schema[10].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_36": {
+      "original": "Promo Image 2",
+      "path": "nodes[18].parameters.columns.schema[11].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_37": {
+      "original": "SEO Image Title",
+      "path": "nodes[18].parameters.columns.schema[18].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_38": {
+      "original": "SEO Image Alt Text",
+      "path": "nodes[18].parameters.columns.schema[19].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_39": {
+      "original": "SEO Image Caption",
+      "path": "nodes[18].parameters.columns.schema[20].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_40": {
+      "original": "SEO Image Description",
+      "path": "nodes[18].parameters.columns.schema[21].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_41": {
+      "original": "LinkedIn Page Post",
+      "path": "nodes[18].parameters.columns.schema[28].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_42": {
+      "original": "{\n  \"Featured thumbnail\": [\n    {\n      \"url\": \"https://drive.google.com/uc?export=view&id={{ $('Google Drive').item.json.id }}\"\n    }\n  ]\n}",
+      "path": "nodes[19].parameters.jsonOutput",
+      "context": "user_text",
+      "has_prefix": true
+    },
+    "$text_43": {
+      "original": "Modifier les champs",
+      "path": "nodes[19].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_44": {
+      "original": "{{ $('Airtable').item.json['Blog url'] }}wp-json/wp/v2/media",
+      "path": "nodes[20].parameters.url",
+      "context": "user_text",
+      "has_prefix": true
+    },
+    "$text_45": {
+      "original": "attachment; filename={{ $binary.data.fileName }}.{{ $binary.data.fileExtension }}",
+      "path": "nodes[20].parameters.headerParameters.parameters[0].value",
+      "context": "parameter_value",
+      "has_prefix": true
+    },
+    "$text_46": {
+      "original": "Télécharger des médias sur WP3",
+      "path": "nodes[20].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_47": {
+      "original": "{\n  \"input\": {\n    \"prompt\": \"{{ $json.message.content }}\",\n    \"aspect_ratio\": \"{{ $('Airtable').item.json['Image ratio'] }}\"\n  }\n}",
+      "path": "nodes[21].parameters.jsonBody",
+      "context": "user_text",
+      "has_prefix": true
+    },
+    "$text_48": {
+      "original": "Définir le SEO de l'image2",
+      "path": "nodes[26].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_49": {
+      "original": "Définir l'image à la une2",
+      "path": "nodes[28].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_50": {
+      "original": "Promo/Affiliate URL 1",
+      "path": "nodes[29].parameters.columns.schema[8].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_51": {
+      "original": "Promo/Affiliate URL 2",
+      "path": "nodes[29].parameters.columns.schema[9].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_52": {
+      "original": "Promo Image 1",
+      "path": "nodes[29].parameters.columns.schema[10].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_53": {
+      "original": "Promo Image 2",
+      "path": "nodes[29].parameters.columns.schema[11].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_54": {
+      "original": "SEO Image Title",
+      "path": "nodes[29].parameters.columns.schema[18].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_55": {
+      "original": "SEO Image Alt Text",
+      "path": "nodes[29].parameters.columns.schema[19].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_56": {
+      "original": "SEO Image Caption",
+      "path": "nodes[29].parameters.columns.schema[20].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_57": {
+      "original": "SEO Image Description",
+      "path": "nodes[29].parameters.columns.schema[21].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_58": {
+      "original": "LinkedIn Page Post",
+      "path": "nodes[29].parameters.columns.schema[28].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_59": {
+      "original": "{{ $('Airtable').item.json['Blog url'] }}wp-json/wp/v2/media",
+      "path": "nodes[30].parameters.url",
+      "context": "user_text",
+      "has_prefix": true
+    },
+    "$text_60": {
+      "original": "attachment; filename={{ $binary.data.fileName }}.{{ $binary.data.fileExtension }}",
+      "path": "nodes[30].parameters.headerParameters.parameters[0].value",
+      "context": "parameter_value",
+      "has_prefix": true
+    },
+    "$text_61": {
+      "original": "Télécharger des médias sur WP",
+      "path": "nodes[30].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_62": {
+      "original": "Promo/Affiliate URL 1",
+      "path": "nodes[33].parameters.columns.schema[8].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_63": {
+      "original": "Promo/Affiliate URL 2",
+      "path": "nodes[33].parameters.columns.schema[9].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_64": {
+      "original": "Promo Image 1",
+      "path": "nodes[33].parameters.columns.schema[10].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_65": {
+      "original": "Promo Image 2",
+      "path": "nodes[33].parameters.columns.schema[11].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_66": {
+      "original": "SEO Image Title",
+      "path": "nodes[33].parameters.columns.schema[18].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_67": {
+      "original": "SEO Image Alt Text",
+      "path": "nodes[33].parameters.columns.schema[19].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_68": {
+      "original": "SEO Image Caption",
+      "path": "nodes[33].parameters.columns.schema[20].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_69": {
+      "original": "SEO Image Description",
+      "path": "nodes[33].parameters.columns.schema[21].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_70": {
+      "original": "LinkedIn Page Post",
+      "path": "nodes[33].parameters.columns.schema[28].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_71": {
+      "original": "{\n  \"Featured thumbnail\": [\n    {\n      \"url\": \"https://drive.google.com/uc?export=view&id={{ $('Google Drive2').item.json.id }}\"\n    }\n  ]\n}",
+      "path": "nodes[34].parameters.jsonOutput",
+      "context": "user_text",
+      "has_prefix": true
+    },
+    "$text_72": {
+      "original": "Modifier les champs1",
+      "path": "nodes[34].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_73": {
+      "original": "Créez une scène visuellement captivante qui représente le blog intitulé : \"{{ $('Airtable2').item.json.fields['Blog title'] }}\". L'image doit capturer l'essence de l'extrait suivant :\n\n\"{{ $('Airtable2').item.json.fields['Blog Excerpt'] }}\"\n\nUtilisez un style cinématographique, haute résolution avec un éclairage riche et une composition dynamique. Évitez le texte dans l'image. Concentrez-vous sur une narration visuelle forte qui s'aligne avec l'humeur et le sujet de l'extrait.\n\nFormatez la sortie comme un texte sans aucun autre caractère...",
+      "path": "nodes[35].parameters.messages.values[0].content",
+      "context": "message",
+      "has_prefix": true
+    },
+    "$text_74": {
+      "original": "{\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Instagram }}\",\n    \"content\": {\n      \"text\": \"{{ $('Create social posts').item.json.message.content.instagram }}\\n{{ $('Airtable4').item.json['Final URL'] }}\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ],\n      \"platform\": \"instagram\"\n    },\n    \"target\": {\n      \"targetType\": \"instagram\"\n    }\n  }\n}",
+      "path": "nodes[36].parameters.jsonBody",
+      "context": "user_text",
+      "has_prefix": true
+    },
+    "$text_75": {
+      "original": "{\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Pinterest }}\",\n    \"content\": {\n      \"text\": \"{{ $('Create social posts').item.json.message.content.pinterest }} {{ $('Airtable4').item.json['Final URL'] }}\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ],\n      \"platform\": \"pinterest\"\n    },\n    \"target\": {\n      \"targetType\": \"pinterest\",\n      \"boardId\": \"{{ $('Set ID').item.json['Pinterest-Board-id'] }}\"\n    }\n  }\n}",
+      "path": "nodes[37].parameters.jsonBody",
+      "context": "user_text",
+      "has_prefix": true
+    },
+    "$text_76": {
+      "original": "{\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.X }}\",\n    \"content\": {\n      \"text\": \"{{ $('Create social posts').item.json.message.content.twitter }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"twitter\"\n    },\n    \"target\": {\n      \"targetType\": \"twitter\"\n    }\n  }\n}",
+      "path": "nodes[38].parameters.jsonBody",
+      "context": "user_text",
+      "has_prefix": true
+    },
+    "$text_77": {
+      "original": "{\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.LinkedIN }}\",\n    \"content\": {\n      \"text\": \"{{ $('Create social posts').item.json.message.content.linkedin }} {{ $('Airtable4').item.json['Final URL'] }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"linkedin\"\n    },\n    \"target\": {\n      \"targetType\": \"linkedin\"\n    }\n  }\n}",
+      "path": "nodes[39].parameters.jsonBody",
+      "context": "user_text",
+      "has_prefix": true
+    },
+    "$text_78": {
+      "original": "{\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.LinkedIN }}\",\n    \"content\": {\n      \"text\": \"{{ $('Create social posts').item.json.message.content.linkedin }} {{ $('Airtable4').item.json['Final URL'] }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"linkedin\"\n    },\n    \"target\": {\n      \"targetType\": \"linkedin\",\n      \"pageId\": \"{{ $('Set ID').item.json['LinkedIn-page-ID'] }}\"\n    }\n  }\n}",
+      "path": "nodes[40].parameters.jsonBody",
+      "context": "user_text",
+      "has_prefix": true
+    },
+    "$text_79": {
+      "original": "{\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json['FB-Account'] }}\",\n    \"content\": {\n      \"text\": \"{{ $('Create social posts').item.json.message.content.facebook }} {{ $('Airtable4').item.json['Final URL'] }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"facebook\"\n    },\n    \"target\": {\n        \"targetType\": \"facebook\",\n        \"pageId\": \"{{ $('Set ID').item.json['FB-Page-Sumobundle'] }}\"\n    }\n  }\n}",
+      "path": "nodes[41].parameters.jsonBody",
+      "context": "user_text",
+      "has_prefix": true
+    },
+    "$text_80": {
+      "original": "{\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Threads }}\",\n    \"content\": {\n      \"text\": \"{{ $('Create social posts').item.json.message.content.threads }} {{ $('Airtable4').item.json['Final URL'] }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"threads\"\n    },\n    \"target\": {\n      \"targetType\": \"threads\",\n      \"replyControl\": \"everyone\"\n    }\n  }\n}",
+      "path": "nodes[42].parameters.jsonBody",
+      "context": "user_text",
+      "has_prefix": true
+    },
+    "$text_81": {
+      "original": "{\n  \"Blotato-API\": \"blt_add your own api here\",\n  \"Instagram\": \"1238\",\n  \"Pinterest\": \"258\",\n  \"Pinterest-Board-id\": \"914864180493348767\",\n  \"X\": \"993\",\n  \"LinkedIN\": \"1180\",\n  \"LinkedIn-page-ID\": \"6399836\",\n  \"Threads\": \"404\",\n  \"FB-Account\": \"1343\",\n  \"FB-Page-Stock-Graphics\": \"1493652624208458\",\n  \"FB-Page-Bundlestorm\": \"1082239155235205\",\n  \"FB-Page-Webmaster-Deals\": \"234802546593504\",\n  \"FB-Page-Sumobundle\": \"121593267596142\",\n  \"Fb-Page-Mimozastudio\": \"103680835963722\",\n  \"Youtube\": \"486\",\n  \"tiktok\": 1529\n}",
+      "path": "nodes[50].parameters.jsonOutput",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_82": {
+      "original": "Vous êtes un stratège professionnel des médias sociaux.\n\nVotre tâche est d'écrire des publications engageantes et appropriées pour les plateformes de médias sociaux basées sur le contenu du blog suivant :\n\n---\n\n**Titre :** {{ $('Merge1').item.json.fields['Blog title'] }}\n\n**Extrait :** {{ $('Merge1').item.json.fields['Blog Excerpt'] }}\n\n**Contenu du blog :** {{ $('Merge1').item.json.fields['Blog content'] }}\n\n---\n\nGénérez un post unique pour chacune des plateformes suivantes :\n- Instagram\n- Twitter (X) Maximum 200 caractères\n- LinkedIn\n- Facebook P...",
+      "path": "nodes[52].parameters.messages.values[0].content",
+      "context": "message",
+      "has_prefix": true
+    },
+    "$text_83": {
+      "original": "Créer des publications sociales",
+      "path": "nodes[52].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_84": {
+      "original": "Promo/Affiliate URL 1",
+      "path": "nodes[55].parameters.columns.schema[8].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_85": {
+      "original": "Promo/Affiliate URL 2",
+      "path": "nodes[55].parameters.columns.schema[9].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_86": {
+      "original": "Promo Image 1",
+      "path": "nodes[55].parameters.columns.schema[10].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_87": {
+      "original": "Promo Image 2",
+      "path": "nodes[55].parameters.columns.schema[11].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_88": {
+      "original": "SEO Image Title",
+      "path": "nodes[55].parameters.columns.schema[18].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_89": {
+      "original": "SEO Image Alt Text",
+      "path": "nodes[55].parameters.columns.schema[19].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_90": {
+      "original": "SEO Image Caption",
+      "path": "nodes[55].parameters.columns.schema[20].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_91": {
+      "original": "SEO Image Description",
+      "path": "nodes[55].parameters.columns.schema[21].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_92": {
+      "original": "LinkedIn Page Post",
+      "path": "nodes[55].parameters.columns.schema[28].displayName",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_93": {
+      "original": "Set Featured Image",
+      "path": "connections.Wp Excerpt.main[0][0].node",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_94": {
+      "original": "Upload media on WP3",
+      "path": "connections.Merge.main[0][0].node",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_95": {
+      "original": "Set image SEO",
+      "path": "connections.Upload media on WP3.main[0][0].node",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_96": {
+      "original": "Set Featured Image2",
+      "path": "connections.Wp Excerpt2.main[0][0].node",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_97": {
+      "original": "Set image SEO2",
+      "path": "connections.Upload media on WP.main[0][0].node",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_98": {
+      "original": "Upload media on WP",
+      "path": "connections.HTTP Request2.main[0][0].node",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_99": {
+      "original": "Create social posts",
+      "path": "connections.Set ID.main[0][0].node",
+      "context": "user_text",
+      "has_prefix": false
+    }
+  },
+  "modified_workflow": {
+    "name": "$text_1",
+    "nodes": [
+      {
+        "parameters": {
+          "rule": {
+            "interval": [
+              {}
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          -100,
+          -520
+        ],
+        "id": "ab038d05-5026-4757-951a-8226a2c57530",
+        "name": "$text_2"
+      },
+      {
+        "parameters": {
+          "title": "={{ $('Airtable2').item.json.fields['Blog title'] }}",
+          "additionalFields": {
+            "authorId": 2,
+            "content": "={{ $('Airtable2').item.json.fields['Blog content'] }}",
+            "status": "publish",
+            "categories": [
+              1
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.wordpress",
+        "typeVersion": 1,
+        "position": [
+          2420,
+          -340
+        ],
+        "id": "934bc35c-7498-4d51-86a5-d028c9769a40",
+        "name": "Wordpress",
+        "credentials": {
+          "wordpressApi": {
+            "id": "n8nsFnR5bNZ96duC",
+            "name": "Wordpress account"
+          }
+        }
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          -100,
+          -720
+        ],
+        "id": "3968c1f8-41dd-4862-9669-f7736a674f9a",
+        "name": "$text_3"
+      },
+      {
+        "parameters": {
+          "resource": "image",
+          "prompt": "=$text_4",
+          "options": {
+            "size": "1792x1024"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.openAi",
+        "typeVersion": 1.8,
+        "position": [
+          1540,
+          -240
+        ],
+        "id": "17dad7cf-3141-4818-b6b3-1a3940c68f2e",
+        "name": "OpenAI",
+        "credentials": {
+          "openAiApi": {
+            "id": "wMKWK2pxtmnFBWY4",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "={{ $('Airtable').item.json['Blog url'] }}wp-json/wp/v2/media/{{ $json.id }}",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "wordpressApi",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "title",
+                "value": "={{ $('AI Agent').item.json.output.seoImages[0].title }}"
+              },
+              {
+                "name": "slug",
+                "value": "={{ $('AI Agent').item.json.output.blogSlug }}"
+              },
+              {
+                "name": "alt_text",
+                "value": "={{ $('AI Agent').item.json.output.seoImages[0].altText }}"
+              },
+              {
+                "name": "caption",
+                "value": "={{ $('AI Agent').item.json.output.seoImages[0].caption }}"
+              },
+              {
+                "name": "description",
+                "value": "={{ $('AI Agent').item.json.output.seoImages[0].description }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          2200,
+          -340
+        ],
+        "id": "10b01710-9ac7-45aa-90a9-e86643316935",
+        "name": "$text_5",
+        "credentials": {
+          "wordpressApi": {
+            "id": "n8nsFnR5bNZ96duC",
+            "name": "Wordpress account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "={{ $('Airtable').item.json['Blog url'] }}wp-json/wp/v2/posts/{{ $json.id }}",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "wordpressApi",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "excerpt",
+                "value": "Excerpt text"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          2640,
+          -340
+        ],
+        "id": "50634a3d-2558-4762-8d04-70d609362c5a",
+        "name": "Extrait Wp",
+        "credentials": {
+          "wordpressApi": {
+            "id": "n8nsFnR5bNZ96duC",
+            "name": "Wordpress account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "={{ $('Airtable').item.json['Blog url'] }}wp-json/wp/v2/posts/{{ $json.id }}",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "wordpressApi",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "featured_media",
+                "value": "={{ $('Upload media on WP3').item.json.id }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          2860,
+          -340
+        ],
+        "id": "150b0c8c-a746-4ac0-901c-8ec6e14936ad",
+        "name": "$text_6",
+        "credentials": {
+          "wordpressApi": {
+            "id": "n8nsFnR5bNZ96duC",
+            "name": "Wordpress account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "search",
+          "base": {
+            "__rl": true,
+            "value": "appYyrnkVTj5cAGwU",
+            "mode": "list",
+            "cachedResultName": "Autonomous Content Engine",
+            "cachedResultUrl": "https://airtable.com/appYyrnkVTj5cAGwU"
+          },
+          "table": {
+            "__rl": true,
+            "value": "tblluud1PKQoE1skA",
+            "mode": "list",
+            "cachedResultName": "Table 1",
+            "cachedResultUrl": "https://airtable.com/appYyrnkVTj5cAGwU/tblluud1PKQoE1skA"
+          },
+          "filterByFormula": "$text_7",
+          "returnAll": false,
+          "limit": 1,
+          "options": {
+            "view": {
+              "__rl": true,
+              "value": "viwNHyfomC0JtjSM3",
+              "mode": "list",
+              "cachedResultName": "Grid view",
+              "cachedResultUrl": "https://airtable.com/appYyrnkVTj5cAGwU/tblluud1PKQoE1skA/viwNHyfomC0JtjSM3"
+            }
+          }
+        },
+        "type": "n8n-nodes-base.airtable",
+        "typeVersion": 2.1,
+        "position": [
+          120,
+          -620
+        ],
+        "id": "bee22eee-21f6-449f-beb8-40dc0365a212",
+        "name": "Airtable",
+        "credentials": {
+          "airtableTokenApi": {
+            "id": "bayZlSl5jp9utzQ6",
+            "name": "Airtable account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "base": {
+            "__rl": true,
+            "value": "appYyrnkVTj5cAGwU",
+            "mode": "list",
+            "cachedResultName": "Autonomous Content Engine",
+            "cachedResultUrl": "https://airtable.com/appYyrnkVTj5cAGwU"
+          },
+          "table": {
+            "__rl": true,
+            "value": "tblluud1PKQoE1skA",
+            "mode": "list",
+            "cachedResultName": "Table 1",
+            "cachedResultUrl": "https://airtable.com/appYyrnkVTj5cAGwU/tblluud1PKQoE1skA"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Status": "Published",
+              "id": "={{ $('Airtable').item.json.id }}",
+              "Final URL": "={{ $('Wordpress').item.json.guid.rendered }}",
+              "Blog Posted": "Yes"
+            },
+            "matchingColumns": [
+              "id"
+            ],
+            "schema": [
+              {
+                "id": "id",
+                "displayName": "id",
+                "required": false,
+                "defaultMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": true,
+                "removed": false
+              },
+              {
+                "id": "Search phrase",
+                "displayName": "Search phrase",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog url",
+                "displayName": "Blog url",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog category",
+                "displayName": "Blog category",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Author ID",
+                "displayName": "Author ID",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Word Count",
+                "displayName": "Word Count",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Image ratio",
+                "displayName": "Image ratio",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "16:9",
+                    "value": "16:9"
+                  },
+                  {
+                    "name": "1:1",
+                    "value": "1:1"
+                  },
+                  {
+                    "name": "9:16",
+                    "value": "9:16"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Image procesator",
+                "displayName": "Image procesator",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "Replicate",
+                    "value": "Replicate"
+                  },
+                  {
+                    "name": "Open AI",
+                    "value": "Open AI"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo/Affiliate URL 1",
+                "displayName": "$text_8",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo/Affiliate URL 2",
+                "displayName": "$text_9",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo Image 1",
+                "displayName": "$text_10",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo Image 2",
+                "displayName": "$text_11",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Related searches",
+                "displayName": "Related searches",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog title",
+                "displayName": "Blog title",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Meta Description",
+                "displayName": "Meta Description",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog slug",
+                "displayName": "Blog slug",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog Excerpt",
+                "displayName": "Blog Excerpt",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Title",
+                "displayName": "$text_12",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Alt Text",
+                "displayName": "$text_13",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Caption",
+                "displayName": "$text_14",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Description",
+                "displayName": "$text_15",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Final URL",
+                "displayName": "Final URL",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog Posted",
+                "displayName": "Blog Posted",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "No",
+                    "value": "No"
+                  },
+                  {
+                    "name": "Yes",
+                    "value": "Yes"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Instagram Post",
+                "displayName": "Instagram Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "X Post",
+                "displayName": "X Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "LinkedIn Post",
+                "displayName": "LinkedIn Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "LinkedIn Page Post",
+                "displayName": "$text_16",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Facebook Post",
+                "displayName": "Facebook Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Threads Post",
+                "displayName": "Threads Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Pinterest Post",
+                "displayName": "Pinterest Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Created time",
+                "displayName": "Created time",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": true,
+                "removed": true
+              },
+              {
+                "id": "Status",
+                "displayName": "Status",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "In progress",
+                    "value": "In progress"
+                  },
+                  {
+                    "name": "Published",
+                    "value": "Published"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.airtable",
+        "typeVersion": 2.1,
+        "position": [
+          3920,
+          -340
+        ],
+        "id": "09e4f6ce-6ffc-4058-8ecb-4f558115a0f3",
+        "name": "Airtable1",
+        "credentials": {
+          "airtableTokenApi": {
+            "id": "bayZlSl5jp9utzQ6",
+            "name": "Airtable account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "modelId": {
+            "__rl": true,
+            "value": "gpt-4o-mini-search-preview",
+            "mode": "list",
+            "cachedResultName": "GPT-4O-MINI-SEARCH-PREVIEW"
+          },
+          "messages": {
+            "values": [
+              {
+                "content": "=$text_17"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.openAi",
+        "typeVersion": 1.8,
+        "position": [
+          340,
+          -620
+        ],
+        "id": "2892da27-709e-4a2e-aeb4-cc2621868757",
+        "name": "Recherches associées",
+        "credentials": {
+          "openAiApi": {
+            "id": "wMKWK2pxtmnFBWY4",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=$text_18",
+          "hasOutputParser": true,
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 1.8,
+        "position": [
+          716,
+          -620
+        ],
+        "id": "22002bc8-4499-40ab-b12b-ec183d922957",
+        "name": "Agent IA"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "o3-mini",
+            "mode": "list",
+            "cachedResultName": "o3-mini"
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          700,
+          -400
+        ],
+        "id": "f747ad8d-57df-4262-adac-001ed7dde4b9",
+        "name": "$text_19",
+        "credentials": {
+          "openAiApi": {
+            "id": "wMKWK2pxtmnFBWY4",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "schemaType": "manual",
+          "inputSchema": "$text_20"
+        },
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.2,
+        "position": [
+          900,
+          -400
+        ],
+        "id": "63447ad3-976d-4144-a0dc-0b256dadeda3",
+        "name": "$text_21"
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "base": {
+            "__rl": true,
+            "value": "appYyrnkVTj5cAGwU",
+            "mode": "list",
+            "cachedResultName": "Autonomous Content Engine",
+            "cachedResultUrl": "https://airtable.com/appYyrnkVTj5cAGwU"
+          },
+          "table": {
+            "__rl": true,
+            "value": "tblluud1PKQoE1skA",
+            "mode": "list",
+            "cachedResultName": "Table 1",
+            "cachedResultUrl": "https://airtable.com/appYyrnkVTj5cAGwU/tblluud1PKQoE1skA"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "id": "={{ $('Airtable').item.json.id }}",
+              "Related searches": "={{ $('Related searches').item.json.message.content }}",
+              "Blog title": "={{ $json.output.blogTitle }}",
+              "Blog content": "={{ $json.output.blogContent }}",
+              "Meta Description": "={{ $json.output.metaDescription }}",
+              "Blog slug": "={{ $json.output.blogSlug }}",
+              "Blog Excerpt": "={{ $json.output.blogExcerpt }}",
+              "SEO Image Title": "={{ $json.output.seoImages[0].title }}",
+              "SEO Image Alt Text": "={{ $json.output.seoImages[0].altText }}",
+              "SEO Image Caption": "={{ $json.output.seoImages[0].caption }}",
+              "SEO Image Description": "={{ $json.output.seoImages[0].description }}"
+            },
+            "matchingColumns": [
+              "id"
+            ],
+            "schema": [
+              {
+                "id": "id",
+                "displayName": "id",
+                "required": false,
+                "defaultMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": true,
+                "removed": false
+              },
+              {
+                "id": "Search phrase",
+                "displayName": "Search phrase",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog url",
+                "displayName": "Blog url",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog category",
+                "displayName": "Blog category",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Author ID",
+                "displayName": "Author ID",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Word Count",
+                "displayName": "Word Count",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Image ratio",
+                "displayName": "Image ratio",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "16:9",
+                    "value": "16:9"
+                  },
+                  {
+                    "name": "1:1",
+                    "value": "1:1"
+                  },
+                  {
+                    "name": "9:16",
+                    "value": "9:16"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Image procesator",
+                "displayName": "Image procesator",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "Replicate",
+                    "value": "Replicate"
+                  },
+                  {
+                    "name": "Open AI",
+                    "value": "Open AI"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo/Affiliate URL 1",
+                "displayName": "$text_22",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo/Affiliate URL 2",
+                "displayName": "$text_23",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo Image 1",
+                "displayName": "$text_24",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo Image 2",
+                "displayName": "$text_25",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Related searches",
+                "displayName": "Related searches",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog title",
+                "displayName": "Blog title",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog content",
+                "displayName": "Blog content",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Meta Description",
+                "displayName": "Meta Description",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog slug",
+                "displayName": "Blog slug",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog Excerpt",
+                "displayName": "Blog Excerpt",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Title",
+                "displayName": "$text_26",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Alt Text",
+                "displayName": "$text_27",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Caption",
+                "displayName": "$text_28",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Description",
+                "displayName": "$text_29",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Final URL",
+                "displayName": "Final URL",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog Posted",
+                "displayName": "Blog Posted",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "No",
+                    "value": "No"
+                  },
+                  {
+                    "name": "Yes",
+                    "value": "Yes"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Instagram Post",
+                "displayName": "Instagram Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "X Post",
+                "displayName": "X Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "LinkedIn Post",
+                "displayName": "LinkedIn Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "LinkedIn Page Post",
+                "displayName": "$text_30",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Facebook Post",
+                "displayName": "Facebook Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Threads Post",
+                "displayName": "Threads Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Pinterest Post",
+                "displayName": "Pinterest Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Created time",
+                "displayName": "Created time",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": true,
+                "removed": true
+              },
+              {
+                "id": "Status",
+                "displayName": "Status",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "In progress",
+                    "value": "In progress"
+                  },
+                  {
+                    "name": "Published",
+                    "value": "Published"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.airtable",
+        "typeVersion": 2.1,
+        "position": [
+          1092,
+          -620
+        ],
+        "id": "58d04499-e8e9-41ad-b1b4-433b16fbc527",
+        "name": "Airtable2",
+        "credentials": {
+          "airtableTokenApi": {
+            "id": "bayZlSl5jp9utzQ6",
+            "name": "Airtable account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $('Airtable').item.json['Image procesator'] }}",
+                      "rightValue": "Replicate",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "id": "6fcba696-3b24-465e-b97c-6510b8b0d1dc"
+                    }
+                  ],
+                  "combinator": "$text_31"
+                },
+                "renameOutput": true,
+                "outputKey": "Replicate"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "d2e423c0-b469-4750-bc8c-519aa9ef61a7",
+                      "leftValue": "={{ $('Airtable').item.json['Image procesator'] }}",
+                      "rightValue": "Open AI",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "$text_32"
+                },
+                "renameOutput": true,
+                "outputKey": "Open Ai"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.2,
+        "position": [
+          1312,
+          -620
+        ],
+        "id": "6af1d070-dd35-4f2c-ab28-fd01d45c40e5",
+        "name": "Interrupteur"
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3,
+        "position": [
+          1760,
+          -340
+        ],
+        "id": "d0521208-715f-4681-81c3-7a1158138f53",
+        "name": "Fusionner"
+      },
+      {
+        "parameters": {
+          "name": "={{ $('Airtable2').item.json.fields['Blog title'] }}",
+          "driveId": {
+            "__rl": true,
+            "mode": "list",
+            "value": "My Drive"
+          },
+          "folderId": {
+            "__rl": true,
+            "value": "14AKKbLKtFoToesFJnZbxcW80_sZQo3c7",
+            "mode": "list",
+            "cachedResultName": "N8N-Autonomous Content Engine",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/14AKKbLKtFoToesFJnZbxcW80_sZQo3c7"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 3,
+        "position": [
+          1760,
+          -140
+        ],
+        "id": "d6f8469c-5589-4d68-adca-0ae41b3445db",
+        "name": "Google Drive",
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "GP2Td0vsw7OxPZcD",
+            "name": "Google Drive account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "share",
+          "fileId": {
+            "__rl": true,
+            "value": "={{ $json.id }}",
+            "mode": "id"
+          },
+          "permissionsUi": {
+            "permissionsValues": {
+              "role": "reader",
+              "type": "anyone"
+            }
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 3,
+        "position": [
+          1980,
+          -140
+        ],
+        "id": "3bf2ad4e-07bd-4a7d-ab77-9b268ddc0221",
+        "name": "Google Drive1",
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "GP2Td0vsw7OxPZcD",
+            "name": "Google Drive account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "base": {
+            "__rl": true,
+            "value": "appYyrnkVTj5cAGwU",
+            "mode": "list",
+            "cachedResultName": "Autonomous Content Engine",
+            "cachedResultUrl": "https://airtable.com/appYyrnkVTj5cAGwU"
+          },
+          "table": {
+            "__rl": true,
+            "value": "tblluud1PKQoE1skA",
+            "mode": "list",
+            "cachedResultName": "Table 1",
+            "cachedResultUrl": "https://airtable.com/appYyrnkVTj5cAGwU/tblluud1PKQoE1skA"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Featured thumbnail": "={{ $json['Featured thumbnail'] }}",
+              "Final URL": "=",
+              "id": "={{ $('Airtable').item.json.id }}",
+              "Blog Posted": "Yes"
+            },
+            "matchingColumns": [
+              "id"
+            ],
+            "schema": [
+              {
+                "id": "id",
+                "displayName": "id",
+                "required": false,
+                "defaultMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": true,
+                "removed": false
+              },
+              {
+                "id": "Search phrase",
+                "displayName": "Search phrase",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog url",
+                "displayName": "Blog url",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog category",
+                "displayName": "Blog category",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Author ID",
+                "displayName": "Author ID",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Word Count",
+                "displayName": "Word Count",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Image ratio",
+                "displayName": "Image ratio",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "16:9",
+                    "value": "16:9"
+                  },
+                  {
+                    "name": "1:1",
+                    "value": "1:1"
+                  },
+                  {
+                    "name": "9:16",
+                    "value": "9:16"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Image procesator",
+                "displayName": "Image procesator",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "Replicate",
+                    "value": "Replicate"
+                  },
+                  {
+                    "name": "Open AI",
+                    "value": "Open AI"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo/Affiliate URL 1",
+                "displayName": "$text_33",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo/Affiliate URL 2",
+                "displayName": "$text_34",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo Image 1",
+                "displayName": "$text_35",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo Image 2",
+                "displayName": "$text_36",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Related searches",
+                "displayName": "Related searches",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog title",
+                "displayName": "Blog title",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog content",
+                "displayName": "Blog content",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Meta Description",
+                "displayName": "Meta Description",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog slug",
+                "displayName": "Blog slug",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog Excerpt",
+                "displayName": "Blog Excerpt",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Title",
+                "displayName": "$text_37",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Alt Text",
+                "displayName": "$text_38",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Caption",
+                "displayName": "$text_39",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Description",
+                "displayName": "$text_40",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Featured thumbnail",
+                "displayName": "Featured thumbnail",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "array",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Final URL",
+                "displayName": "Final URL",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog Posted",
+                "displayName": "Blog Posted",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "No",
+                    "value": "No"
+                  },
+                  {
+                    "name": "Yes",
+                    "value": "Yes"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Instagram Post",
+                "displayName": "Instagram Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "X Post",
+                "displayName": "X Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "LinkedIn Post",
+                "displayName": "LinkedIn Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "LinkedIn Page Post",
+                "displayName": "$text_41",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Facebook Post",
+                "displayName": "Facebook Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Threads Post",
+                "displayName": "Threads Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Pinterest Post",
+                "displayName": "Pinterest Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Created time",
+                "displayName": "Created time",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": true,
+                "removed": true
+              },
+              {
+                "id": "Status",
+                "displayName": "Status",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "In progress",
+                    "value": "In progress"
+                  },
+                  {
+                    "name": "Published",
+                    "value": "Published"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.airtable",
+        "typeVersion": 2.1,
+        "position": [
+          3940,
+          -140
+        ],
+        "id": "0a47dcc2-2558-4d7e-a4ff-fb2d4912e098",
+        "name": "Airtable3",
+        "credentials": {
+          "airtableTokenApi": {
+            "id": "bayZlSl5jp9utzQ6",
+            "name": "Airtable account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "mode": "raw",
+          "jsonOutput": "=$text_42",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          2200,
+          -140
+        ],
+        "id": "77deac1c-41bd-41d5-8a81-3e4d859eff1c",
+        "name": "$text_43"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=$text_44",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "wordpressApi",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "content-disposition",
+                "value": "=$text_45"
+              },
+              {
+                "name": "content-type",
+                "value": "={{ $binary.data.mimeType }}"
+              }
+            ]
+          },
+          "sendBody": true,
+          "contentType": "binaryData",
+          "inputDataFieldName": "=data",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          1980,
+          -340
+        ],
+        "id": "ca965be9-56a8-4c66-9698-6361dd7934bc",
+        "name": "$text_46",
+        "credentials": {
+          "wordpressApi": {
+            "id": "n8nsFnR5bNZ96duC",
+            "name": "Wordpress account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.replicate.com/v1/models/black-forest-labs/flux-fill-pro/predictions",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "Bearer r8_ceFk9dqNazxf9xh6VbGDTeYhrkag3WV20ENqy"
+              },
+              {
+                "name": "Prefer",
+                "value": "wait"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "=$text_47",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          1900,
+          -980
+        ],
+        "id": "946e68dc-db1d-4bb1-914d-670e4f63036f",
+        "name": "Requête HTTP"
+      },
+      {
+        "parameters": {
+          "amount": 30
+        },
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "position": [
+          2120,
+          -980
+        ],
+        "id": "62e0ca01-3cf4-4de7-a508-e097eee80380",
+        "name": "Attendre",
+        "webhookId": "20bfd1d3-988b-4e13-8c18-dc292bbc8cbb"
+      },
+      {
+        "parameters": {
+          "url": "=https://api.replicate.com/v1/predictions/{{ $('HTTP Request').item.json.id }}",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "Bearer r8_ceFk9dqNazxf9xh6VbGDTeYhrkag3WV20ENqy"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          2340,
+          -980
+        ],
+        "id": "9838b376-c3d7-4dc6-a70a-d1fd08ce4979",
+        "name": "Requête HTTP1"
+      },
+      {
+        "parameters": {
+          "url": "={{ $json.output[0] }}",
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "file"
+              }
+            }
+          }
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          2560,
+          -980
+        ],
+        "id": "f8d2ab33-3951-442e-a91a-0361762dda69",
+        "name": "Requête HTTP2"
+      },
+      {
+        "parameters": {
+          "title": "={{ $('Airtable2').item.json.fields['Blog title'] }}",
+          "additionalFields": {
+            "authorId": 2,
+            "content": "={{ $('Airtable2').item.json.fields['Blog content'] }}",
+            "status": "publish",
+            "categories": [
+              1
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.wordpress",
+        "typeVersion": 1,
+        "position": [
+          3220,
+          -880
+        ],
+        "id": "52ef8841-2bf9-46ed-9f9f-cd605f4ef581",
+        "name": "Wordpress2",
+        "credentials": {
+          "wordpressApi": {
+            "id": "n8nsFnR5bNZ96duC",
+            "name": "Wordpress account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "={{ $('Airtable').item.json['Blog url'] }}wp-json/wp/v2/media/{{ $json.id }}",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "wordpressApi",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "title",
+                "value": "={{ $('AI Agent').item.json.output.seoImages[0].title }}"
+              },
+              {
+                "name": "slug",
+                "value": "={{ $('AI Agent').item.json.output.blogSlug }}"
+              },
+              {
+                "name": "alt_text",
+                "value": "={{ $('AI Agent').item.json.output.seoImages[0].altText }}"
+              },
+              {
+                "name": "caption",
+                "value": "={{ $('AI Agent').item.json.output.seoImages[0].caption }}"
+              },
+              {
+                "name": "description",
+                "value": "={{ $('AI Agent').item.json.output.seoImages[0].description }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          3000,
+          -880
+        ],
+        "id": "523ed19b-5cbd-4627-a2f5-44e0d6af64aa",
+        "name": "$text_48",
+        "credentials": {
+          "wordpressApi": {
+            "id": "n8nsFnR5bNZ96duC",
+            "name": "Wordpress account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "={{ $('Airtable').item.json['Blog url'] }}wp-json/wp/v2/posts/{{ $json.id }}",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "wordpressApi",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "excerpt",
+                "value": "={{ $('Airtable2').item.json.fields['Blog Excerpt'] }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          3440,
+          -880
+        ],
+        "id": "fdb5b289-04f2-4c22-ab0e-b85f46cc31c3",
+        "name": "Extrait Wp2",
+        "credentials": {
+          "wordpressApi": {
+            "id": "n8nsFnR5bNZ96duC",
+            "name": "Wordpress account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "={{ $('Airtable').item.json['Blog url'] }}wp-json/wp/v2/posts/{{ $json.id }}",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "wordpressApi",
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "featured_media",
+                "value": "={{ $('Upload media on WP').item.json.id }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          3660,
+          -880
+        ],
+        "id": "189e11ec-35a0-44a7-98c2-a7594a779574",
+        "name": "$text_49",
+        "credentials": {
+          "wordpressApi": {
+            "id": "n8nsFnR5bNZ96duC",
+            "name": "Wordpress account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "base": {
+            "__rl": true,
+            "value": "appYyrnkVTj5cAGwU",
+            "mode": "list",
+            "cachedResultName": "Autonomous Content Engine",
+            "cachedResultUrl": "https://airtable.com/appYyrnkVTj5cAGwU"
+          },
+          "table": {
+            "__rl": true,
+            "value": "tblluud1PKQoE1skA",
+            "mode": "list",
+            "cachedResultName": "Table 1",
+            "cachedResultUrl": "https://airtable.com/appYyrnkVTj5cAGwU/tblluud1PKQoE1skA"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "id": "={{ $('Airtable').item.json.id }}",
+              "Final URL": "={{ $('Wordpress2').item.json.guid.rendered }}",
+              "Status": "Published",
+              "Blog Posted": "Yes"
+            },
+            "matchingColumns": [
+              "id"
+            ],
+            "schema": [
+              {
+                "id": "id",
+                "displayName": "id",
+                "required": false,
+                "defaultMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": true,
+                "removed": false
+              },
+              {
+                "id": "Search phrase",
+                "displayName": "Search phrase",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog url",
+                "displayName": "Blog url",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog category",
+                "displayName": "Blog category",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Author ID",
+                "displayName": "Author ID",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Word Count",
+                "displayName": "Word Count",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Image ratio",
+                "displayName": "Image ratio",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "16:9",
+                    "value": "16:9"
+                  },
+                  {
+                    "name": "1:1",
+                    "value": "1:1"
+                  },
+                  {
+                    "name": "9:16",
+                    "value": "9:16"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Image procesator",
+                "displayName": "Image procesator",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "Replicate",
+                    "value": "Replicate"
+                  },
+                  {
+                    "name": "Open AI",
+                    "value": "Open AI"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo/Affiliate URL 1",
+                "displayName": "$text_50",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo/Affiliate URL 2",
+                "displayName": "$text_51",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo Image 1",
+                "displayName": "$text_52",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo Image 2",
+                "displayName": "$text_53",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Related searches",
+                "displayName": "Related searches",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog title",
+                "displayName": "Blog title",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog content",
+                "displayName": "Blog content",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Meta Description",
+                "displayName": "Meta Description",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog slug",
+                "displayName": "Blog slug",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog Excerpt",
+                "displayName": "Blog Excerpt",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Title",
+                "displayName": "$text_54",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Alt Text",
+                "displayName": "$text_55",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Caption",
+                "displayName": "$text_56",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Description",
+                "displayName": "$text_57",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Featured thumbnail",
+                "displayName": "Featured thumbnail",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "array",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Final URL",
+                "displayName": "Final URL",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog Posted",
+                "displayName": "Blog Posted",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "No",
+                    "value": "No"
+                  },
+                  {
+                    "name": "Yes",
+                    "value": "Yes"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Instagram Post",
+                "displayName": "Instagram Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "X Post",
+                "displayName": "X Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "LinkedIn Post",
+                "displayName": "LinkedIn Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "LinkedIn Page Post",
+                "displayName": "$text_58",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Facebook Post",
+                "displayName": "Facebook Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Threads Post",
+                "displayName": "Threads Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Pinterest Post",
+                "displayName": "Pinterest Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Created time",
+                "displayName": "Created time",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": true,
+                "removed": true
+              },
+              {
+                "id": "Status",
+                "displayName": "Status",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "In progress",
+                    "value": "In progress"
+                  },
+                  {
+                    "name": "Published",
+                    "value": "Published"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.airtable",
+        "typeVersion": 2.1,
+        "position": [
+          3880,
+          -880
+        ],
+        "id": "be0c0506-7bf7-4d21-8f65-8f2bc10ef7ee",
+        "name": "Airtable5",
+        "credentials": {
+          "airtableTokenApi": {
+            "id": "bayZlSl5jp9utzQ6",
+            "name": "Airtable account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "=$text_59",
+          "authentication": "predefinedCredentialType",
+          "nodeCredentialType": "wordpressApi",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "content-disposition",
+                "value": "=$text_60"
+              },
+              {
+                "name": "content-type",
+                "value": "={{ $binary.data.mimeType }}"
+              }
+            ]
+          },
+          "sendBody": true,
+          "contentType": "binaryData",
+          "inputDataFieldName": "=data",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          2780,
+          -880
+        ],
+        "id": "2cf105ff-9980-4848-ac24-f0a43330d2e8",
+        "name": "$text_61",
+        "credentials": {
+          "wordpressApi": {
+            "id": "n8nsFnR5bNZ96duC",
+            "name": "Wordpress account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "name": "={{ $('AI Agent').item.json.output.blogTitle }}",
+          "driveId": {
+            "__rl": true,
+            "mode": "list",
+            "value": "My Drive"
+          },
+          "folderId": {
+            "__rl": true,
+            "value": "14AKKbLKtFoToesFJnZbxcW80_sZQo3c7",
+            "mode": "list",
+            "cachedResultName": "N8N-Autonomous Content Engine",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/14AKKbLKtFoToesFJnZbxcW80_sZQo3c7"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 3,
+        "position": [
+          2780,
+          -1080
+        ],
+        "id": "b395dc27-8460-4477-98f4-3363f77f5aba",
+        "name": "Google Drive2",
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "GP2Td0vsw7OxPZcD",
+            "name": "Google Drive account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "share",
+          "fileId": {
+            "__rl": true,
+            "value": "={{ $json.id }}",
+            "mode": "id"
+          },
+          "permissionsUi": {
+            "permissionsValues": {
+              "role": "reader",
+              "type": "anyone"
+            }
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleDrive",
+        "typeVersion": 3,
+        "position": [
+          3440,
+          -1080
+        ],
+        "id": "591f6408-c598-4081-9e4c-e9bb2e051151",
+        "name": "Google Drive3",
+        "credentials": {
+          "googleDriveOAuth2Api": {
+            "id": "GP2Td0vsw7OxPZcD",
+            "name": "Google Drive account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "base": {
+            "__rl": true,
+            "value": "appYyrnkVTj5cAGwU",
+            "mode": "list",
+            "cachedResultName": "Autonomous Content Engine",
+            "cachedResultUrl": "https://airtable.com/appYyrnkVTj5cAGwU"
+          },
+          "table": {
+            "__rl": true,
+            "value": "tblluud1PKQoE1skA",
+            "mode": "list",
+            "cachedResultName": "Table 1",
+            "cachedResultUrl": "https://airtable.com/appYyrnkVTj5cAGwU/tblluud1PKQoE1skA"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Featured thumbnail": "={{ $json['Featured thumbnail'] }}",
+              "Final URL": "=",
+              "id": "={{ $('Airtable').item.json.id }}",
+              "Blog Posted": "Yes"
+            },
+            "matchingColumns": [
+              "id"
+            ],
+            "schema": [
+              {
+                "id": "id",
+                "displayName": "id",
+                "required": false,
+                "defaultMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": true,
+                "removed": false
+              },
+              {
+                "id": "Search phrase",
+                "displayName": "Search phrase",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog url",
+                "displayName": "Blog url",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog category",
+                "displayName": "Blog category",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Author ID",
+                "displayName": "Author ID",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Word Count",
+                "displayName": "Word Count",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Image ratio",
+                "displayName": "Image ratio",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "16:9",
+                    "value": "16:9"
+                  },
+                  {
+                    "name": "1:1",
+                    "value": "1:1"
+                  },
+                  {
+                    "name": "9:16",
+                    "value": "9:16"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Image procesator",
+                "displayName": "Image procesator",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "Replicate",
+                    "value": "Replicate"
+                  },
+                  {
+                    "name": "Open AI",
+                    "value": "Open AI"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo/Affiliate URL 1",
+                "displayName": "$text_62",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo/Affiliate URL 2",
+                "displayName": "$text_63",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo Image 1",
+                "displayName": "$text_64",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo Image 2",
+                "displayName": "$text_65",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Related searches",
+                "displayName": "Related searches",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog title",
+                "displayName": "Blog title",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog content",
+                "displayName": "Blog content",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Meta Description",
+                "displayName": "Meta Description",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog slug",
+                "displayName": "Blog slug",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog Excerpt",
+                "displayName": "Blog Excerpt",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Title",
+                "displayName": "$text_66",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Alt Text",
+                "displayName": "$text_67",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Caption",
+                "displayName": "$text_68",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Description",
+                "displayName": "$text_69",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Featured thumbnail",
+                "displayName": "Featured thumbnail",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "array",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Final URL",
+                "displayName": "Final URL",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog Posted",
+                "displayName": "Blog Posted",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "No",
+                    "value": "No"
+                  },
+                  {
+                    "name": "Yes",
+                    "value": "Yes"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Instagram Post",
+                "displayName": "Instagram Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "X Post",
+                "displayName": "X Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "LinkedIn Post",
+                "displayName": "LinkedIn Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "LinkedIn Page Post",
+                "displayName": "$text_70",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Facebook Post",
+                "displayName": "Facebook Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Threads Post",
+                "displayName": "Threads Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Pinterest Post",
+                "displayName": "Pinterest Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Created time",
+                "displayName": "Created time",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": true,
+                "removed": true
+              },
+              {
+                "id": "Status",
+                "displayName": "Status",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "In progress",
+                    "value": "In progress"
+                  },
+                  {
+                    "name": "Published",
+                    "value": "Published"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.airtable",
+        "typeVersion": 2.1,
+        "position": [
+          3880,
+          -1080
+        ],
+        "id": "5b3473e4-9b0e-494e-a065-f652fabef581",
+        "name": "Airtable6",
+        "credentials": {
+          "airtableTokenApi": {
+            "id": "bayZlSl5jp9utzQ6",
+            "name": "Airtable account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "mode": "raw",
+          "jsonOutput": "=$text_71",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          3660,
+          -1080
+        ],
+        "id": "7430468e-103d-4686-8592-967abdb0f90c",
+        "name": "$text_72"
+      },
+      {
+        "parameters": {
+          "modelId": {
+            "__rl": true,
+            "value": "gpt-4o-mini",
+            "mode": "list",
+            "cachedResultName": "GPT-4O-MINI"
+          },
+          "messages": {
+            "values": [
+              {
+                "content": "=$text_73"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.openAi",
+        "typeVersion": 1.8,
+        "position": [
+          1540,
+          -980
+        ],
+        "id": "a35b8840-444b-45a5-b0a2-a2ef40b848db",
+        "name": "OpenAI1",
+        "credentials": {
+          "openAiApi": {
+            "id": "wMKWK2pxtmnFBWY4",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://backend.blotato.com/v2/posts",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "blotato-api-key",
+                "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "=$text_74",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          5540,
+          -1220
+        ],
+        "id": "43815113-cc91-4169-8978-c71feb1a5a61",
+        "name": "Instagram"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://backend.blotato.com/v2/posts",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "blotato-api-key",
+                "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "=$text_75",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          5540,
+          -20
+        ],
+        "id": "2be75053-b498-405c-be96-ecb32177e549",
+        "name": "Pinterest"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://backend.blotato.com/v2/posts",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "blotato-api-key",
+                "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "=$text_76",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          5540,
+          -1020
+        ],
+        "id": "aeb6e9dc-fbcf-49fa-b68b-a9ff392a76e6",
+        "name": "Twitter"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://backend.blotato.com/v2/posts",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "blotato-api-key",
+                "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "=$text_77",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          5540,
+          -820
+        ],
+        "id": "f85b4da9-acc1-4829-a38d-90eec6748d75",
+        "name": "LinkedIn"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://backend.blotato.com/v2/posts",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "blotato-api-key",
+                "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "=$text_78",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          5540,
+          -620
+        ],
+        "id": "838dda13-7660-4356-8b69-a808d0bbeaed",
+        "name": "Page LinkedIn"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://backend.blotato.com/v2/posts",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "blotato-api-key",
+                "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "=$text_79",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          5540,
+          -420
+        ],
+        "id": "04b7d354-7763-4a88-a760-70f7c237cfa3",
+        "name": "Compte Fb"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://backend.blotato.com/v2/posts",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "blotato-api-key",
+                "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+              }
+            ]
+          },
+          "sendBody": true,
+          "specifyBody": "json",
+          "jsonBody": "=$text_80",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          5540,
+          -220
+        ],
+        "id": "6956311f-a111-4718-9daa-a292536a3e88",
+        "name": "Threads"
+      },
+      {
+        "parameters": {
+          "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/instagram.png?v=1742473316)",
+          "height": 140,
+          "width": 150,
+          "color": 7
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          6020,
+          -1240
+        ],
+        "typeVersion": 1,
+        "id": "1d0d5ca9-0790-4bce-b7f3-41f8325d1b2b",
+        "name": "Note autocollante1"
+      },
+      {
+        "parameters": {
+          "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/x.png?v=1742473317)",
+          "height": 140,
+          "width": 150,
+          "color": 7
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          6020,
+          -1040
+        ],
+        "typeVersion": 1,
+        "id": "7efa79ac-f6d8-4d18-8894-3caa59545839",
+        "name": "Note autocollante2"
+      },
+      {
+        "parameters": {
+          "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/linkedin.png?v=1742473318)",
+          "height": 140,
+          "width": 150,
+          "color": 7
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          6020,
+          -840
+        ],
+        "typeVersion": 1,
+        "id": "eb025fa6-78b9-4750-99ed-a3c42c53a843",
+        "name": "Note autocollante3"
+      },
+      {
+        "parameters": {
+          "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/linkedin.png?v=1742473318)",
+          "height": 140,
+          "width": 150,
+          "color": 7
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          6020,
+          -640
+        ],
+        "typeVersion": 1,
+        "id": "1efbc375-ba4f-4844-8451-6597851f2115",
+        "name": "Note autocollante4"
+      },
+      {
+        "parameters": {
+          "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/facebook.png?v=1742473317)",
+          "height": 140,
+          "width": 150,
+          "color": 7
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          6020,
+          -440
+        ],
+        "typeVersion": 1,
+        "id": "1bb4ff6d-4cf3-46a9-818b-35ce7224cf23",
+        "name": "Note autocollante5"
+      },
+      {
+        "parameters": {
+          "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/threads.png?v=1742473317)",
+          "height": 140,
+          "width": 150,
+          "color": 7
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          6020,
+          -240
+        ],
+        "typeVersion": 1,
+        "id": "dc35b20f-f2d7-4dc8-a1a3-4151302fb02f",
+        "name": "Note autocollante8"
+      },
+      {
+        "parameters": {
+          "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/pinterest.png?v=1742473317)",
+          "height": 140,
+          "width": 150,
+          "color": 7
+        },
+        "type": "n8n-nodes-base.stickyNote",
+        "position": [
+          6020,
+          -20
+        ],
+        "typeVersion": 1,
+        "id": "649ac669-bfbc-4504-aebe-c8d93d39bba0",
+        "name": "Note autocollante9"
+      },
+      {
+        "parameters": {
+          "mode": "raw",
+          "jsonOutput": "$text_81",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          4720,
+          -620
+        ],
+        "id": "62e6d089-a9be-48b1-b20e-d1c0d7583402",
+        "name": "Définir l'ID"
+      },
+      {
+        "parameters": {
+          "numberInputs": 4
+        },
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3,
+        "position": [
+          4280,
+          -640
+        ],
+        "id": "3bc23ff7-6f8b-4670-b633-e92e0208fbd1",
+        "name": "Fusionner1"
+      },
+      {
+        "parameters": {
+          "modelId": {
+            "__rl": true,
+            "value": "gpt-4o-mini",
+            "mode": "list",
+            "cachedResultName": "GPT-4O-MINI"
+          },
+          "messages": {
+            "values": [
+              {
+                "content": "=$text_82"
+              }
+            ]
+          },
+          "jsonOutput": true,
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.openAi",
+        "typeVersion": 1.8,
+        "position": [
+          4940,
+          -620
+        ],
+        "id": "91a187c5-f556-4d44-bbcb-a61911a36282",
+        "name": "$text_83",
+        "credentials": {
+          "openAiApi": {
+            "id": "wMKWK2pxtmnFBWY4",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://backend.blotato.com/v2/media",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "blotato-api-key",
+                "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+              }
+            ]
+          },
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "url",
+                "value": "={{ $('Merge1').item.json.fields['Featured thumbnail'][0].url }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          5320,
+          -620
+        ],
+        "id": "7ea71f80-170a-4765-b013-3fb3dfee7dd3",
+        "name": "Requête HTTP4"
+      },
+      {
+        "parameters": {
+          "operation": "search",
+          "base": {
+            "__rl": true,
+            "value": "appYyrnkVTj5cAGwU",
+            "mode": "list",
+            "cachedResultName": "Autonomous Content Engine",
+            "cachedResultUrl": "https://airtable.com/appYyrnkVTj5cAGwU"
+          },
+          "table": {
+            "__rl": true,
+            "value": "tblluud1PKQoE1skA",
+            "mode": "list",
+            "cachedResultName": "Table 1",
+            "cachedResultUrl": "https://airtable.com/appYyrnkVTj5cAGwU/tblluud1PKQoE1skA"
+          },
+          "returnAll": false,
+          "limit": 1,
+          "options": {},
+          "sort": {
+            "property": [
+              {
+                "field": "Created time",
+                "direction": "desc"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.airtable",
+        "typeVersion": 2.1,
+        "position": [
+          4500,
+          -620
+        ],
+        "id": "689c5098-2375-4233-9694-ccc6d5c3b3e3",
+        "name": "Airtable4",
+        "executeOnce": true,
+        "credentials": {
+          "airtableTokenApi": {
+            "id": "bayZlSl5jp9utzQ6",
+            "name": "Airtable account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "base": {
+            "__rl": true,
+            "value": "appYyrnkVTj5cAGwU",
+            "mode": "list",
+            "cachedResultName": "Autonomous Content Engine",
+            "cachedResultUrl": "https://airtable.com/appYyrnkVTj5cAGwU"
+          },
+          "table": {
+            "__rl": true,
+            "value": "tblluud1PKQoE1skA",
+            "mode": "list",
+            "cachedResultName": "Table 1",
+            "cachedResultUrl": "https://airtable.com/appYyrnkVTj5cAGwU/tblluud1PKQoE1skA"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Instagram Post": "={{ $('Create social posts').item.json.message.content.instagram }}",
+              "X Post": "={{ $('Create social posts').item.json.message.content.twitter }}",
+              "LinkedIn Post": "={{ $('Create social posts').item.json.message.content.linkedin }}",
+              "LinkedIn Page Post": "={{ $('Create social posts').item.json.message.content.linkedin }}",
+              "Facebook Post": "={{ $('Create social posts').item.json.message.content.facebook }}",
+              "Threads Post": "={{ $('Create social posts').item.json.message.content.threads }}",
+              "Pinterest Post": "={{ $('Create social posts').item.json.message.content.pinterest }}",
+              "Status": "Published",
+              "id": "={{ $('Airtable').item.json.id }}"
+            },
+            "matchingColumns": [
+              "id"
+            ],
+            "schema": [
+              {
+                "id": "id",
+                "displayName": "id",
+                "required": false,
+                "defaultMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": true,
+                "removed": false
+              },
+              {
+                "id": "Search phrase",
+                "displayName": "Search phrase",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog url",
+                "displayName": "Blog url",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog category",
+                "displayName": "Blog category",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Author ID",
+                "displayName": "Author ID",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Word Count",
+                "displayName": "Word Count",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Image ratio",
+                "displayName": "Image ratio",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "16:9",
+                    "value": "16:9"
+                  },
+                  {
+                    "name": "1:1",
+                    "value": "1:1"
+                  },
+                  {
+                    "name": "9:16",
+                    "value": "9:16"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Image procesator",
+                "displayName": "Image procesator",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "Replicate",
+                    "value": "Replicate"
+                  },
+                  {
+                    "name": "Open AI",
+                    "value": "Open AI"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo/Affiliate URL 1",
+                "displayName": "$text_84",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo/Affiliate URL 2",
+                "displayName": "$text_85",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo Image 1",
+                "displayName": "$text_86",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Promo Image 2",
+                "displayName": "$text_87",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Related searches",
+                "displayName": "Related searches",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog title",
+                "displayName": "Blog title",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog content",
+                "displayName": "Blog content",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Meta Description",
+                "displayName": "Meta Description",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog slug",
+                "displayName": "Blog slug",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog Excerpt",
+                "displayName": "Blog Excerpt",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Title",
+                "displayName": "$text_88",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Alt Text",
+                "displayName": "$text_89",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Caption",
+                "displayName": "$text_90",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "SEO Image Description",
+                "displayName": "$text_91",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Featured thumbnail",
+                "displayName": "Featured thumbnail",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "array",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Final URL",
+                "displayName": "Final URL",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Blog Posted",
+                "displayName": "Blog Posted",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "No",
+                    "value": "No"
+                  },
+                  {
+                    "name": "Yes",
+                    "value": "Yes"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Instagram Post",
+                "displayName": "Instagram Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "X Post",
+                "displayName": "X Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "LinkedIn Post",
+                "displayName": "LinkedIn Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "LinkedIn Page Post",
+                "displayName": "$text_92",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Facebook Post",
+                "displayName": "Facebook Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Threads Post",
+                "displayName": "Threads Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Pinterest Post",
+                "displayName": "Pinterest Post",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": false,
+                "removed": false
+              },
+              {
+                "id": "Created time",
+                "displayName": "Created time",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "string",
+                "readOnly": true,
+                "removed": true
+              },
+              {
+                "id": "Status",
+                "displayName": "Status",
+                "required": false,
+                "defaultMatch": false,
+                "canBeUsedToMatch": true,
+                "display": true,
+                "type": "options",
+                "options": [
+                  {
+                    "name": "In progress",
+                    "value": "In progress"
+                  },
+                  {
+                    "name": "Published",
+                    "value": "Published"
+                  }
+                ],
+                "readOnly": false,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.airtable",
+        "typeVersion": 2.1,
+        "position": [
+          5760,
+          -1220
+        ],
+        "id": "77a42966-2f58-44b5-96df-8a2b0099bef4",
+        "name": "Airtable7",
+        "credentials": {
+          "airtableTokenApi": {
+            "id": "bayZlSl5jp9utzQ6",
+            "name": "Airtable account"
+          }
+        }
+      }
+    ],
+    "pinData": {},
+    "connections": {
+      "Schedule Trigger": {
+        "main": [
+          [
+            {
+              "node": "Airtable",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Wordpress": {
+        "main": [
+          [
+            {
+              "node": "Wp Excerpt",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "When clicking ‘Test workflow’": {
+        "main": [
+          [
+            {
+              "node": "Airtable",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI": {
+        "main": [
+          [
+            {
+              "node": "Merge",
+              "type": "main",
+              "index": 1
+            },
+            {
+              "node": "Google Drive",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Set image SEO": {
+        "main": [
+          [
+            {
+              "node": "Wordpress",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Wp Excerpt": {
+        "main": [
+          [
+            {
+              "node": "$text_93",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Airtable": {
+        "main": [
+          [
+            {
+              "node": "Related searches",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Set Featured Image": {
+        "main": [
+          [
+            {
+              "node": "Airtable1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Related searches": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent": {
+        "main": [
+          [
+            {
+              "node": "Airtable2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Structured Output Parser": {
+        "ai_outputParser": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_outputParser",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Airtable2": {
+        "main": [
+          [
+            {
+              "node": "Switch",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Switch": {
+        "main": [
+          [
+            {
+              "node": "OpenAI1",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "OpenAI",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Merge": {
+        "main": [
+          [
+            {
+              "node": "$text_94",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Google Drive": {
+        "main": [
+          [
+            {
+              "node": "Google Drive1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Google Drive1": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Airtable3": {
+        "main": [
+          [
+            {
+              "node": "Merge1",
+              "type": "main",
+              "index": 3
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Airtable3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Upload media on WP3": {
+        "main": [
+          [
+            {
+              "node": "$text_95",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request": {
+        "main": [
+          [
+            {
+              "node": "Wait",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Wait": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request1": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Wordpress2": {
+        "main": [
+          [
+            {
+              "node": "Wp Excerpt2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Set image SEO2": {
+        "main": [
+          [
+            {
+              "node": "Wordpress2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Wp Excerpt2": {
+        "main": [
+          [
+            {
+              "node": "$text_96",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Set Featured Image2": {
+        "main": [
+          [
+            {
+              "node": "Airtable5",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Upload media on WP": {
+        "main": [
+          [
+            {
+              "node": "$text_97",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request2": {
+        "main": [
+          [
+            {
+              "node": "$text_98",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Google Drive2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Google Drive3": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields1": {
+        "main": [
+          [
+            {
+              "node": "Airtable6",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Google Drive2": {
+        "main": [
+          [
+            {
+              "node": "Google Drive3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI1": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Set ID": {
+        "main": [
+          [
+            {
+              "node": "$text_99",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Airtable6": {
+        "main": [
+          [
+            {
+              "node": "Merge1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Airtable5": {
+        "main": [
+          [
+            {
+              "node": "Merge1",
+              "type": "main",
+              "index": 1
+            }
+          ]
+        ]
+      },
+      "Airtable1": {
+        "main": [
+          [
+            {
+              "node": "Merge1",
+              "type": "main",
+              "index": 2
+            }
+          ]
+        ]
+      },
+      "Merge1": {
+        "main": [
+          [
+            {
+              "node": "Airtable4",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Create social posts": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request4",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request4": {
+        "main": [
+          [
+            {
+              "node": "Instagram",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "LinkedIn",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Twitter",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "LinkedIn Page",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Fb Account",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Threads",
+              "type": "main",
+              "index": 0
+            },
+            {
+              "node": "Pinterest",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Airtable4": {
+        "main": [
+          [
+            {
+              "node": "Set ID",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Instagram": {
+        "main": [
+          [
+            {
+              "node": "Airtable7",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "active": false,
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "versionId": "c64b31bd-3fcd-4176-b3c7-d02bf0f6d22c",
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+    },
+    "id": "WzkReIqYKNmMqL1P",
+    "tags": [
+      {
+        "id": "1",
+        "name": "Audelalia"
+      }
+    ]
+  }
+}

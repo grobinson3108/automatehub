@@ -1,0 +1,279 @@
+{
+  "workflow_path": "/var/www/automatehub/workflows_traduits/FR/AutomationTribe/7 - Plus rapide avec MCP/MCP.json",
+  "texts_map": {
+    "$text_1": {
+      "original": "Lorsque le message de chat est reçu",
+      "path": "nodes[0].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_2": {
+      "original": "Vous êtes un assistant IA avancé avec accès à plusieurs outils via les serveurs MCP de Firecrawl et Brave Search. Votre objectif est de sélectionner et d'exécuter dynamiquement le meilleur outil en fonction de la demande de l'utilisateur tout en veillant à ce que tous les paramètres requis soient correctement fournis.\n\n## **1. Récupérer les outils disponibles**\n- Toujours **lister les outils disponibles** avant d'en sélectionner un à exécuter.\n- Sélectionnez l'outil approprié en fonction de la demande de l'utilisateur et des paramètres fournis.\n\n## **2. Exécuter l'outil sélectionné**\n- Assurez-vous que tous les paramètres requis pour l'outil sélectionné sont fournis dans le format correct.\n- Exécutez l'outil et récupérez les résultats.\n\n## **3. Traiter les résultats**\n- Analysez les résultats obtenus et préparez-les pour l'utilisateur.\n- Si nécessaire, reformatez ou résumez les résultats pour une meilleure compréhension.\n\n## **4. Gérer les erreurs**\n- Si une erreur se produit lors de l'exécution de l'outil, fournissez un message d'erreur clair à l'utilisateur.\n- Proposez des solutions ou des alternatives si possible.\n\n## **5. Interaction avec l'utilisateur**\n- Restez attentif aux demandes de l'utilisateur et soyez prêt à ajuster votre approche en fonction de ses besoins.\n- Fournissez des mises à jour régulières sur l'état de la demande de l'utilisateur.\n\n## **6. Optimisation continue**\n- Évaluez régulièrement les performances des outils et ajustez vos sélections en fonction des résultats obtenus.\n- Restez informé des nouvelles fonctionnalités ou mises à jour des outils disponibles.",
+      "path": "nodes[1].parameters.options.systemMessage",
+      "context": "system_message",
+      "has_prefix": true
+    },
+    "$text_3": {
+      "original": "Modèle de chat OpenAI",
+      "path": "nodes[2].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_4": {
+      "original": "Outils de liste Brave",
+      "path": "nodes[3].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_5": {
+      "original": "Exécuter l'outil Brave",
+      "path": "nodes[4].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_6": {
+      "original": "Outils de liste Firecrawl",
+      "path": "nodes[5].name",
+      "context": "node_name",
+      "has_prefix": false
+    },
+    "$text_7": {
+      "original": "{\n  \"url\": \"https://example.com\",\n  \"formats\": [\"markdown\"],\n  \"onlyMainContent\": true,\n  \"waitFor\": 1000,\n  \"timeout\": 30000,\n  \"mobile\": false\n}",
+      "path": "nodes[6].parameters.toolDescription",
+      "context": "user_text",
+      "has_prefix": false
+    },
+    "$text_8": {
+      "original": "Exécuter l'outil Firecrawl",
+      "path": "nodes[6].name",
+      "context": "node_name",
+      "has_prefix": false
+    }
+  },
+  "modified_workflow": {
+    "name": "MCP",
+    "nodes": [
+      {
+        "parameters": {
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          -80,
+          0
+        ],
+        "id": "fc758aef-f4c0-4340-b549-8610c99f654d",
+        "name": "$text_1",
+        "webhookId": "ce9ec18f-dbdd-46bb-b9ba-804017e757ec"
+      },
+      {
+        "parameters": {
+          "options": {
+            "systemMessage": "=$text_2"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 1.8,
+        "position": [
+          292,
+          0
+        ],
+        "id": "b2f872e2-5fa8-4f12-a5d5-886ff1bd1773",
+        "name": "Agent IA"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "mode": "list",
+            "value": "gpt-4o-mini"
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          80,
+          220
+        ],
+        "id": "6ef323b0-e661-4f8d-8608-1bcb56e4c527",
+        "name": "$text_3",
+        "credentials": {
+          "openAiApi": {
+            "id": "wMKWK2pxtmnFBWY4",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-mcp.mcpClientTool",
+        "typeVersion": 1,
+        "position": [
+          260,
+          220
+        ],
+        "id": "33155e34-1137-4bea-98ca-e9a3df21015a",
+        "name": "$text_4",
+        "credentials": {
+          "mcpClientApi": {
+            "id": "fPKMNEp8v8BxBY9L",
+            "name": "MCP Brave Search"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "executeTool",
+          "toolName": "={{$fromAI('tool', 'selected tool to execute') }}",
+          "toolParameters": "={{ $fromAI('Tool_Parameters', ``, 'json') }}"
+        },
+        "type": "n8n-nodes-mcp.mcpClientTool",
+        "typeVersion": 1,
+        "position": [
+          400,
+          220
+        ],
+        "id": "f5b2aacd-7962-4a0d-b67c-af88b3287d43",
+        "name": "$text_5",
+        "credentials": {
+          "mcpClientApi": {
+            "id": "fPKMNEp8v8BxBY9L",
+            "name": "MCP Brave Search"
+          }
+        }
+      },
+      {
+        "parameters": {},
+        "type": "n8n-nodes-mcp.mcpClientTool",
+        "typeVersion": 1,
+        "position": [
+          620,
+          220
+        ],
+        "id": "1edc6e3f-4df9-4e53-bc47-c1a9d4e9edb1",
+        "name": "$text_6",
+        "credentials": {
+          "mcpClientApi": {
+            "id": "Ro9eBiRL3Bd8RL9O",
+            "name": "MCP Firecrawl"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "descriptionType": "manual",
+          "toolDescription": "$text_7",
+          "operation": "executeTool",
+          "toolName": "={{$fromAI('tool', 'selected tool to execute') }}",
+          "toolParameters": "={{ $fromAI('Tool_Parameters', ``, 'json') }}"
+        },
+        "type": "n8n-nodes-mcp.mcpClientTool",
+        "typeVersion": 1,
+        "position": [
+          780,
+          220
+        ],
+        "id": "5e81b8dd-8c91-4955-b502-dfe439930d8c",
+        "name": "$text_8",
+        "credentials": {
+          "mcpClientApi": {
+            "id": "Ro9eBiRL3Bd8RL9O",
+            "name": "MCP Firecrawl"
+          }
+        }
+      }
+    ],
+    "pinData": {},
+    "connections": {
+      "When chat message received": {
+        "main": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent": {
+        "main": [
+          []
+        ]
+      },
+      "Brave List Tools": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Brave Execute Tool": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Firecrawl List Tools": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Firecrawl Execute Tool": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "active": false,
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "versionId": "02f02c11-2c0c-4f44-98b1-4a0947691560",
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+    },
+    "id": "d4Is4yzGIrtvcNyC",
+    "tags": [
+      {
+        "id": "1",
+        "name": "Audelalia"
+      }
+    ]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "Pack_Productivite_Entreprise",
+  "type": "Metier",
+  "description": "Outils de productivit\u00e9 pour \u00e9quipes",
+  "prix": 89,
+  "workflow_count": 70,
+  "workflows": [
+    "webhook_process_telegram_googlecalendartool_complex_15nodes.json",
+    "Create_Google_Task_from_New_Gmail_Message.json",
+    "Email-Triggered_Task_Creation_and_AI_Response.json",
+    "Email-Triggered_Task_Creation_and_AI_Response_1.json",
+    "Telegram_AI_Assistant_for_Calendar_and_Email_Management.json",
+    "\ud83d\udce6_New_Email_\u2794_Create_Google_Task.json",
+    "Telegram_AI_Assistant_for_Calendar_and_Email_Management_1.json",
+    "Create_Delivery_Tasks_from_Spreadsheet_Data.json",
+    "Optimize_Images_Uploaded_to_Google_Drive.json",
+    "Create_Onfleet_tasks_from_Spreadsheets.json"
+  ]
+}

@@ -1,0 +1,243 @@
+{
+  "name": "Module 3.4 - Dashboard Analytics Automatisé",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * 1"
+            }
+          ]
+        }
+      },
+      "id": "weekly-report",
+      "name": "Rapport hebdomadaire",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.stripe.com/v1/charges",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "stripeApi",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "created[gte]",
+              "value": "={{ Math.floor($now.minus(7, 'days').toSeconds()) }}"
+            },
+            {
+              "name": "limit",
+              "value": "100"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "get-stripe-data",
+      "name": "Récupérer ventes Stripe",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [450, 200],
+      "credentials": {
+        "stripeApi": {
+          "id": "1",
+          "name": "Stripe account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_ANALYTICS_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Trafic",
+          "mode": "name"
+        },
+        "options": {
+          "range": {
+            "rangeValue": "A2:E100"
+          }
+        }
+      },
+      "id": "get-traffic-data",
+      "name": "Récupérer données trafic",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [450, 350],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "getAll",
+        "databaseId": {
+          "__rl": true,
+          "value": "YOUR_NOTION_DATABASE_ID",
+          "mode": "id"
+        },
+        "returnAll": false,
+        "limit": 50,
+        "filters": {
+          "conditions": [
+            {
+              "key": "Status|select|name",
+              "condition": "equals",
+              "value": "Completed"
+            }
+          ]
+        }
+      },
+      "id": "get-tasks-data",
+      "name": "Récupérer tâches Notion",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2.2,
+      "position": [450, 500],
+      "credentials": {
+        "notionApi": {
+          "id": "1",
+          "name": "Notion account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Analyser les données Stripe\nconst stripeData = $input.all()[0].json.data;\nlet totalRevenue = 0;\nlet transactionCount = 0;\nlet averageOrderValue = 0;\nlet topProducts = {};\n\nstripeData.forEach(charge => {\n  if (charge.paid && charge.status === 'succeeded') {\n    totalRevenue += charge.amount / 100; // Convertir de cents en euros\n    transactionCount++;\n    \n    // Compter les produits (si metadata disponible)\n    if (charge.metadata && charge.metadata.product) {\n      topProducts[charge.metadata.product] = (topProducts[charge.metadata.product] || 0) + 1;\n    }\n  }\n});\n\naverageOrderValue = transactionCount > 0 ? (totalRevenue / transactionCount).toFixed(2) : 0;\n\n// Analyser les données de trafic\nconst trafficData = $input.all()[1].json;\nlet totalVisits = 0;\nlet uniqueVisitors = 0;\nlet conversionRate = 0;\n\nif (trafficData && Array.isArray(trafficData)) {\n  trafficData.forEach(day => {\n    totalVisits += parseInt(day.visites || 0);\n    uniqueVisitors += parseInt(day.visiteurs_uniques || 0);\n  });\n  \n  conversionRate = totalVisits > 0 ? ((transactionCount / totalVisits) * 100).toFixed(2) : 0;\n}\n\n// Analyser les tâches Notion\nconst tasksData = $input.all()[2].json;\nlet completedTasks = tasksData ? tasksData.length : 0;\n\n// Top 3 produits\nconst sortedProducts = Object.entries(topProducts)\n  .sort((a, b) => b[1] - a[1])\n  .slice(0, 3)\n  .map(([product, count]) => ({ product, count }));\n\n// Calculer les variations (simulées pour cet exemple)\nconst previousWeekRevenue = totalRevenue * 0.85; // Simulation\nconst revenueGrowth = ((totalRevenue - previousWeekRevenue) / previousWeekRevenue * 100).toFixed(1);\n\nreturn [{\n  json: {\n    periode: {\n      debut: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],\n      fin: new Date().toISOString().split('T')[0]\n    },\n    kpis: {\n      revenue: {\n        total: totalRevenue.toFixed(2),\n        croissance: revenueGrowth,\n        transactions: transactionCount,\n        panier_moyen: averageOrderValue\n      },\n      trafic: {\n        visites: totalVisits,\n        visiteurs_uniques: uniqueVisitors,\n        taux_conversion: conversionRate\n      },\n      productivite: {\n        taches_completees: completedTasks\n      }\n    },\n    top_produits: sortedProducts,\n    insights: [\n      revenueGrowth > 0 ? `📈 Croissance du CA de ${revenueGrowth}%` : `📉 Baisse du CA de ${Math.abs(revenueGrowth)}%`,\n      `💰 Panier moyen: ${averageOrderValue}€`,\n      `🎯 Taux de conversion: ${conversionRate}%`,\n      `✅ ${completedTasks} tâches complétées`\n    ]\n  }\n}];"
+      },
+      "id": "analyze-data",
+      "name": "Analyser données",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 350]
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": "={{ $json.kpis.revenue.total }}",
+        "from": "EUR",
+        "to": [
+          "USD",
+          "GBP"
+        ],
+        "property": "kpis.revenue.conversions"
+      },
+      "id": "currency-rates",
+      "name": "Taux de change",
+      "type": "n8n-nodes-base.exchangeRates",
+      "typeVersion": 1,
+      "position": [850, 350]
+    },
+    {
+      "parameters": {
+        "content": "=<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7fa; margin: 0; padding: 20px; }\n    .dashboard { max-width: 1200px; margin: auto; }\n    .header { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }\n    .header h1 { margin: 0; color: #2c3e50; }\n    .period { color: #7f8c8d; font-size: 14px; margin-top: 5px; }\n    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 20px; }\n    .kpi-card { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }\n    .kpi-title { color: #7f8c8d; font-size: 14px; margin-bottom: 10px; }\n    .kpi-value { font-size: 32px; font-weight: bold; color: #2c3e50; }\n    .kpi-change { font-size: 14px; margin-top: 5px; }\n    .positive { color: #27ae60; }\n    .negative { color: #e74c3c; }\n    .chart-container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }\n    .insights { background: #3498db; color: white; padding: 25px; border-radius: 10px; }\n    .insights h3 { margin-top: 0; }\n    .insights ul { margin: 0; padding-left: 20px; }\n    .insights li { margin: 10px 0; }\n  </style>\n</head>\n<body>\n  <div class=\"dashboard\">\n    <div class=\"header\">\n      <h1>📊 Rapport Analytics Hebdomadaire</h1>\n      <div class=\"period\">Période: {{ $json.periode.debut }} au {{ $json.periode.fin }}</div>\n    </div>\n    \n    <div class=\"kpi-grid\">\n      <div class=\"kpi-card\">\n        <div class=\"kpi-title\">💰 CHIFFRE D'AFFAIRES</div>\n        <div class=\"kpi-value\">{{ $json.kpis.revenue.total }}€</div>\n        <div class=\"kpi-change {{ parseFloat($json.kpis.revenue.croissance) >= 0 ? 'positive' : 'negative' }}\">\n          {{ parseFloat($json.kpis.revenue.croissance) >= 0 ? '↑' : '↓' }} {{ Math.abs($json.kpis.revenue.croissance) }}%\n        </div>\n      </div>\n      \n      <div class=\"kpi-card\">\n        <div class=\"kpi-title\">🛒 TRANSACTIONS</div>\n        <div class=\"kpi-value\">{{ $json.kpis.revenue.transactions }}</div>\n        <div class=\"kpi-change\">Panier moyen: {{ $json.kpis.revenue.panier_moyen }}€</div>\n      </div>\n      \n      <div class=\"kpi-card\">\n        <div class=\"kpi-title\">👥 VISITEURS</div>\n        <div class=\"kpi-value\">{{ $json.kpis.trafic.visiteurs_uniques }}</div>\n        <div class=\"kpi-change\">{{ $json.kpis.trafic.visites }} visites totales</div>\n      </div>\n      \n      <div class=\"kpi-card\">\n        <div class=\"kpi-title\">🎯 CONVERSION</div>\n        <div class=\"kpi-value\">{{ $json.kpis.trafic.taux_conversion }}%</div>\n        <div class=\"kpi-change\">Des visiteurs en clients</div>\n      </div>\n    </div>\n    \n    <div class=\"chart-container\">\n      <h3>🏆 Top Produits</h3>\n      <ol>\n        {{ $json.top_produits.map(item => `<li>${item.product} - ${item.count} ventes</li>`).join('') }}\n      </ol>\n    </div>\n    \n    <div class=\"insights\">\n      <h3>💡 Insights de la semaine</h3>\n      <ul>\n        {{ $json.insights.map(insight => `<li>${insight}</li>`).join('') }}\n      </ul>\n    </div>\n  </div>\n</body>\n</html>",
+        "contentType": "html"
+      },
+      "id": "generate-dashboard",
+      "name": "Générer dashboard HTML",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [1050, 350]
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {
+          "format": "A4",
+          "landscape": true,
+          "margin": {
+            "top": "10mm",
+            "bottom": "10mm",
+            "left": "10mm",
+            "right": "10mm"
+          }
+        }
+      },
+      "id": "dashboard-to-pdf",
+      "name": "Convertir en PDF",
+      "type": "n8n-nodes-base.htmlToPdf",
+      "typeVersion": 1,
+      "position": [1250, 350]
+    },
+    {
+      "parameters": {
+        "sendTo": "direction@automatehub.fr",
+        "subject": "📊 Rapport Analytics Hebdomadaire - {{ $json.periode.fin }}",
+        "emailType": "html",
+        "message": "=<p>Bonjour,</p>\n\n<p>Veuillez trouver ci-joint le rapport analytics hebdomadaire.</p>\n\n<h3>Résumé rapide:</h3>\n<ul>\n  <li>CA de la semaine: <strong>{{ $json.kpis.revenue.total }}€</strong></li>\n  <li>Croissance: <strong>{{ $json.kpis.revenue.croissance }}%</strong></li>\n  <li>Taux de conversion: <strong>{{ $json.kpis.trafic.taux_conversion }}%</strong></li>\n</ul>\n\n<p>Le rapport complet est disponible en pièce jointe.</p>\n\n<p>Cordialement,<br>\nVotre assistant analytics</p>",
+        "attachments": {
+          "values": [
+            {
+              "binaryPropertyName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "send-report",
+      "name": "Envoyer rapport",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.2,
+      "position": [1450, 350],
+      "credentials": {
+        "smtp": {
+          "id": "1",
+          "name": "SMTP Account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Rapport hebdomadaire": {
+      "main": [[
+        {"node": "Récupérer ventes Stripe", "type": "main", "index": 0},
+        {"node": "Récupérer données trafic", "type": "main", "index": 0},
+        {"node": "Récupérer tâches Notion", "type": "main", "index": 0}
+      ]]
+    },
+    "Récupérer ventes Stripe": {
+      "main": [[{"node": "Analyser données", "type": "main", "index": 0}]]
+    },
+    "Récupérer données trafic": {
+      "main": [[{"node": "Analyser données", "type": "main", "index": 0}]]
+    },
+    "Récupérer tâches Notion": {
+      "main": [[{"node": "Analyser données", "type": "main", "index": 0}]]
+    },
+    "Analyser données": {
+      "main": [[{"node": "Taux de change", "type": "main", "index": 0}]]
+    },
+    "Taux de change": {
+      "main": [[{"node": "Générer dashboard HTML", "type": "main", "index": 0}]]
+    },
+    "Générer dashboard HTML": {
+      "main": [[{"node": "Convertir en PDF", "type": "main", "index": 0}]]
+    },
+    "Convertir en PDF": {
+      "main": [[{"node": "Envoyer rapport", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Dashboard analytics automatisé qui agrège données de ventes, trafic et productivité pour générer des rapports visuels hebdomadaires."
+  },
+  "versionId": "1.0.0"
+}

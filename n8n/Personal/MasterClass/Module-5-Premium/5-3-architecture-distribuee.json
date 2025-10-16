@@ -1,0 +1,317 @@
+{
+  "name": "5.3 - Architecture Distribuée",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "seconds",
+              "secondsInterval": 30
+            }
+          ]
+        }
+      },
+      "id": "monitoring-trigger-503",
+      "name": "Monitoring Système",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Système de monitoring distribué pour n8n\nconst systemMetrics = {\n  timestamp: new Date().toISOString(),\n  node_id: process.env.NODE_ID || 'node-001',\n  cluster_id: process.env.CLUSTER_ID || 'cluster-prod'\n};\n\n// Classe pour le monitoring système\nclass DistributedMonitor {\n  constructor() {\n    this.metrics = systemMetrics;\n    this.healthChecks = [];\n    this.alerts = [];\n  }\n  \n  // Collecte des métriques système\n  async collectSystemMetrics() {\n    // Métriques CPU\n    const cpuUsage = process.cpuUsage();\n    this.metrics.cpu = {\n      user: cpuUsage.user / 1000000, // Convert to seconds\n      system: cpuUsage.system / 1000000,\n      usage_percent: Math.random() * 100 // Simulation\n    };\n    \n    // Métriques mémoire\n    const memUsage = process.memoryUsage();\n    this.metrics.memory = {\n      rss: memUsage.rss / 1024 / 1024, // MB\n      heapTotal: memUsage.heapTotal / 1024 / 1024,\n      heapUsed: memUsage.heapUsed / 1024 / 1024,\n      external: memUsage.external / 1024 / 1024,\n      usage_percent: (memUsage.heapUsed / memUsage.heapTotal) * 100\n    };\n    \n    // Métriques n8n spécifiques\n    this.metrics.n8n = {\n      active_workflows: Math.floor(Math.random() * 50) + 10,\n      executions_per_minute: Math.floor(Math.random() * 100) + 20,\n      queue_size: Math.floor(Math.random() * 20),\n      failed_executions: Math.floor(Math.random() * 5),\n      webhook_calls: Math.floor(Math.random() * 200) + 50\n    };\n    \n    // Métriques réseau\n    this.metrics.network = {\n      connections: Math.floor(Math.random() * 100) + 50,\n      bandwidth_in: Math.floor(Math.random() * 1000) + 100, // KB/s\n      bandwidth_out: Math.floor(Math.random() * 500) + 50,\n      latency: Math.floor(Math.random() * 50) + 10 // ms\n    };\n    \n    return this;\n  }\n  \n  // Vérifications de santé\n  async performHealthChecks() {\n    const checks = [\n      { name: 'CPU', threshold: 80, current: this.metrics.cpu.usage_percent },\n      { name: 'Memory', threshold: 85, current: this.metrics.memory.usage_percent },\n      { name: 'Queue', threshold: 15, current: this.metrics.n8n.queue_size },\n      { name: 'Failed Executions', threshold: 10, current: this.metrics.n8n.failed_executions },\n      { name: 'Network Latency', threshold: 100, current: this.metrics.network.latency }\n    ];\n    \n    checks.forEach(check => {\n      const status = check.current > check.threshold ? 'critical' : \n                    check.current > check.threshold * 0.8 ? 'warning' : 'healthy';\n      \n      this.healthChecks.push({\n        name: check.name,\n        status: status,\n        current: check.current,\n        threshold: check.threshold,\n        timestamp: new Date().toISOString()\n      });\n      \n      // Générer des alertes si nécessaire\n      if (status === 'critical') {\n        this.alerts.push({\n          type: 'critical',\n          metric: check.name,\n          message: `${check.name} is critical: ${check.current}% (threshold: ${check.threshold}%)`,\n          timestamp: new Date().toISOString()\n        });\n      }\n    });\n    \n    return this;\n  }\n  \n  // Analyse des tendances\n  analyzeTrends() {\n    const trends = {\n      cpu_trend: this.calculateTrend('cpu'),\n      memory_trend: this.calculateTrend('memory'),\n      execution_trend: this.calculateTrend('executions'),\n      performance_score: this.calculatePerformanceScore()\n    };\n    \n    this.metrics.trends = trends;\n    return this;\n  }\n  \n  // Calcul de tendance (simulation)\n  calculateTrend(metric) {\n    const variation = (Math.random() - 0.5) * 10;\n    return {\n      direction: variation > 0 ? 'increasing' : 'decreasing',\n      percentage: Math.abs(variation),\n      prediction: variation > 5 ? 'high_load_expected' : \n                 variation < -5 ? 'load_decreasing' : 'stable'\n    };\n  }\n  \n  // Calcul du score de performance\n  calculatePerformanceScore() {\n    let score = 100;\n    \n    // Pénalités basées sur les métriques\n    if (this.metrics.cpu.usage_percent > 80) score -= 20;\n    if (this.metrics.memory.usage_percent > 85) score -= 20;\n    if (this.metrics.n8n.queue_size > 10) score -= 15;\n    if (this.metrics.n8n.failed_executions > 5) score -= 15;\n    if (this.metrics.network.latency > 50) score -= 10;\n    \n    return Math.max(0, score);\n  }\n  \n  // Génération de recommandations\n  generateRecommendations() {\n    const recommendations = [];\n    \n    if (this.metrics.cpu.usage_percent > 70) {\n      recommendations.push({\n        type: 'scaling',\n        priority: 'high',\n        action: 'Scale up CPU resources or distribute load',\n        details: `Current CPU usage: ${this.metrics.cpu.usage_percent}%`\n      });\n    }\n    \n    if (this.metrics.memory.usage_percent > 80) {\n      recommendations.push({\n        type: 'memory',\n        priority: 'high',\n        action: 'Increase memory allocation or optimize workflows',\n        details: `Current memory usage: ${this.metrics.memory.usage_percent}%`\n      });\n    }\n    \n    if (this.metrics.n8n.queue_size > 10) {\n      recommendations.push({\n        type: 'queue',\n        priority: 'medium',\n        action: 'Add more worker nodes or optimize workflow execution',\n        details: `Current queue size: ${this.metrics.n8n.queue_size} items`\n      });\n    }\n    \n    if (this.metrics.n8n.failed_executions > 3) {\n      recommendations.push({\n        type: 'reliability',\n        priority: 'medium',\n        action: 'Review failed workflows and improve error handling',\n        details: `Failed executions: ${this.metrics.n8n.failed_executions} in last minute`\n      });\n    }\n    \n    return recommendations;\n  }\n  \n  // Génération du rapport complet\n  generateMonitoringReport() {\n    const overallHealth = this.healthChecks.every(check => check.status === 'healthy') ? 'healthy' :\n                         this.healthChecks.some(check => check.status === 'critical') ? 'critical' : 'warning';\n    \n    return {\n      cluster_info: {\n        node_id: this.metrics.node_id,\n        cluster_id: this.metrics.cluster_id,\n        timestamp: this.metrics.timestamp\n      },\n      overall_health: overallHealth,\n      performance_score: this.metrics.trends.performance_score,\n      system_metrics: this.metrics,\n      health_checks: this.healthChecks,\n      alerts: this.alerts,\n      recommendations: this.generateRecommendations(),\n      trends: this.metrics.trends\n    };\n  }\n}\n\n// Collecte des métriques\nconst monitor = new DistributedMonitor();\nconst report = await monitor\n  .collectSystemMetrics()\n  .then(m => m.performHealthChecks())\n  .then(m => m.analyzeTrends())\n  .then(m => m.generateMonitoringReport());\n\nreturn [{ json: report }];"
+      },
+      "id": "system-monitoring-503",
+      "name": "Collecte Métriques Système",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "critical-alert",
+              "leftValue": "={{ $json.overall_health }}",
+              "rightValue": "critical",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-critical-alerts-503",
+      "name": "Vérifier Alertes Critiques",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#alerts-critical",
+        "text": "🚨 **ALERTE CRITIQUE SYSTÈME**\n\n*Cluster:* {{ $json.cluster_info.cluster_id }}\n*Node:* {{ $json.cluster_info.node_id }}\n*Score performance:* {{ $json.performance_score }}/100\n\n*Métriques critiques:*\n• CPU: {{ $json.system_metrics.cpu.usage_percent }}%\n• Mémoire: {{ $json.system_metrics.memory.usage_percent }}%\n• Queue: {{ $json.system_metrics.n8n.queue_size }} items\n• Executions échouées: {{ $json.system_metrics.n8n.failed_executions }}\n\n*Alertes:*\n{{ $json.alerts.map(alert => `• ${alert.type}: ${alert.message}`).join('\\n') }}\n\n*Actions recommandées:*\n{{ $json.recommendations.map(rec => `• ${rec.action}`).join('\\n') }}\n\n**ACTION IMMÉDIATE REQUISE !**",
+        "otherOptions": {
+          "username": "Monitoring Bot",
+          "icon_emoji": ":rotating_light:"
+        }
+      },
+      "id": "critical-alert-slack-503",
+      "name": "Alerte Critique Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "subject": "🚨 ALERTE CRITIQUE - Cluster {{ $json.cluster_info.cluster_id }}",
+        "message": "Une alerte critique a été détectée sur votre cluster n8n.\n\n📊 **Détails du système:**\n• Cluster: {{ $json.cluster_info.cluster_id }}\n• Node: {{ $json.cluster_info.node_id }}\n• Score performance: {{ $json.performance_score }}/100\n• Timestamp: {{ $json.cluster_info.timestamp }}\n\n🔥 **Métriques critiques:**\n• CPU: {{ $json.system_metrics.cpu.usage_percent }}%\n• Mémoire: {{ $json.system_metrics.memory.usage_percent }}%\n• Queue size: {{ $json.system_metrics.n8n.queue_size }} items\n• Executions échouées: {{ $json.system_metrics.n8n.failed_executions }}\n• Latence réseau: {{ $json.system_metrics.network.latency }}ms\n\n⚠️ **Alertes actives:**\n{{ $json.alerts.map(alert => `• ${alert.type.toUpperCase()}: ${alert.message}`).join('\\n') }}\n\n🛠️ **Actions recommandées:**\n{{ $json.recommendations.map(rec => `• ${rec.priority.toUpperCase()}: ${rec.action}`).join('\\n') }}\n\n📈 **Tendances:**\n• CPU: {{ $json.trends.cpu_trend.direction }} ({{ $json.trends.cpu_trend.percentage }}%)\n• Mémoire: {{ $json.trends.memory_trend.direction }} ({{ $json.trends.memory_trend.percentage }}%)\n• Exécutions: {{ $json.trends.execution_trend.direction }} ({{ $json.trends.execution_trend.percentage }}%)\n\n**Action immédiate requise !**\n\nAccédez au dashboard de monitoring pour plus de détails.",
+        "toList": "admin@automatehub.fr,devops@automatehub.fr",
+        "options": {}
+      },
+      "id": "critical-alert-email-503",
+      "name": "Alerte Critique Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1250,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Système d'auto-healing pour résoudre les problèmes automatiquement\nconst monitoringData = $input.first().json;\n\n// Classe pour l'auto-healing\nclass AutoHealing {\n  constructor(monitoringData) {\n    this.data = monitoringData;\n    this.healingActions = [];\n    this.results = [];\n  }\n  \n  // Analyse des problèmes et génération d'actions\n  analyzeAndHeal() {\n    const recommendations = this.data.recommendations || [];\n    \n    recommendations.forEach(rec => {\n      switch(rec.type) {\n        case 'scaling':\n          this.healingActions.push({\n            type: 'scale_up',\n            action: 'Increase cluster resources',\n            priority: rec.priority,\n            automated: true,\n            estimated_time: '2-5 minutes'\n          });\n          break;\n          \n        case 'memory':\n          this.healingActions.push({\n            type: 'memory_cleanup',\n            action: 'Clear memory cache and optimize',\n            priority: rec.priority,\n            automated: true,\n            estimated_time: '30 seconds'\n          });\n          break;\n          \n        case 'queue':\n          this.healingActions.push({\n            type: 'queue_management',\n            action: 'Redistribute queue load',\n            priority: rec.priority,\n            automated: true,\n            estimated_time: '1 minute'\n          });\n          break;\n          \n        case 'reliability':\n          this.healingActions.push({\n            type: 'workflow_restart',\n            action: 'Restart failed workflows',\n            priority: rec.priority,\n            automated: false,\n            estimated_time: '5 minutes'\n          });\n          break;\n      }\n    });\n    \n    return this;\n  }\n  \n  // Exécution des actions automatiques\n  executeAutomatedActions() {\n    const automatedActions = this.healingActions.filter(action => action.automated);\n    \n    automatedActions.forEach(action => {\n      const result = this.simulateAction(action);\n      this.results.push(result);\n    });\n    \n    return this;\n  }\n  \n  // Simulation d'action (en production, cela ferait de vraies actions)\n  simulateAction(action) {\n    const success = Math.random() > 0.2; // 80% de succès\n    \n    return {\n      action: action.action,\n      type: action.type,\n      status: success ? 'success' : 'failed',\n      message: success ? `${action.action} completed successfully` : `${action.action} failed - manual intervention required`,\n      timestamp: new Date().toISOString(),\n      estimated_impact: success ? this.calculateImpact(action.type) : null\n    };\n  }\n  \n  // Calcul de l'impact estimé\n  calculateImpact(actionType) {\n    const impacts = {\n      'scale_up': 'CPU usage reduced by 15-25%',\n      'memory_cleanup': 'Memory usage reduced by 10-20%',\n      'queue_management': 'Queue size reduced by 50-80%',\n      'workflow_restart': 'Failed executions reduced by 90%'\n    };\n    \n    return impacts[actionType] || 'Performance improvement expected';\n  }\n  \n  // Génération du rapport d'auto-healing\n  generateHealingReport() {\n    const successfulActions = this.results.filter(r => r.status === 'success');\n    const failedActions = this.results.filter(r => r.status === 'failed');\n    \n    return {\n      cluster_info: this.data.cluster_info,\n      healing_summary: {\n        total_actions: this.healingActions.length,\n        automated_actions: this.healingActions.filter(a => a.automated).length,\n        manual_actions: this.healingActions.filter(a => !a.automated).length,\n        successful_actions: successfulActions.length,\n        failed_actions: failedActions.length\n      },\n      actions_performed: this.results,\n      remaining_actions: this.healingActions.filter(a => !a.automated),\n      expected_improvement: {\n        performance_score_increase: successfulActions.length * 5,\n        estimated_resolution_time: '2-10 minutes',\n        next_check_recommended: '5 minutes'\n      },\n      generated_at: new Date().toISOString()\n    };\n  }\n}\n\n// Exécution de l'auto-healing\nconst healer = new AutoHealing(monitoringData);\nconst healingReport = healer\n  .analyzeAndHeal()\n  .executeAutomatedActions()\n  .generateHealingReport();\n\nreturn [{ \n  json: {\n    ...monitoringData,\n    auto_healing: healingReport\n  }\n}];"
+      },
+      "id": "auto-healing-503",
+      "name": "Auto-Healing Actions",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1500,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#monitoring",
+        "text": "📊 **Rapport de monitoring système**\n\n*Cluster:* {{ $json.cluster_info.cluster_id }}\n*Node:* {{ $json.cluster_info.node_id }}\n*Santé globale:* {{ $json.overall_health }}\n*Score performance:* {{ $json.performance_score }}/100\n\n*Métriques système:*\n• CPU: {{ $json.system_metrics.cpu.usage_percent }}%\n• Mémoire: {{ $json.system_metrics.memory.usage_percent }}%\n• Workflows actifs: {{ $json.system_metrics.n8n.active_workflows }}\n• Exécutions/min: {{ $json.system_metrics.n8n.executions_per_minute }}\n• Queue: {{ $json.system_metrics.n8n.queue_size }} items\n\n*Tendances:*\n• CPU {{ $json.trends.cpu_trend.direction }}\n• Mémoire {{ $json.trends.memory_trend.direction }}\n• Exécutions {{ $json.trends.execution_trend.direction }}",
+        "otherOptions": {
+          "username": "Monitoring Bot"
+        }
+      },
+      "id": "monitoring-report-slack-503",
+      "name": "Rapport Monitoring Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://your-monitoring-api.com/metrics",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer YOUR_MONITORING_API_KEY",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "cluster_id": "={{ $json.cluster_info.cluster_id }}",
+          "node_id": "={{ $json.cluster_info.node_id }}",
+          "timestamp": "={{ $json.cluster_info.timestamp }}",
+          "metrics": "={{ JSON.stringify($json.system_metrics) }}",
+          "health": "={{ $json.overall_health }}",
+          "performance_score": "={{ $json.performance_score }}",
+          "alerts": "={{ JSON.stringify($json.alerts) }}"
+        },
+        "options": {}
+      },
+      "id": "send-to-monitoring-api-503",
+      "name": "Envoyer à API Monitoring",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1250,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": "VOTRE_MONITORING_SHEET_ID",
+        "sheetName": "System_Metrics",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $json.cluster_info.timestamp }}",
+            "Cluster_ID": "={{ $json.cluster_info.cluster_id }}",
+            "Node_ID": "={{ $json.cluster_info.node_id }}",
+            "Overall_Health": "={{ $json.overall_health }}",
+            "Performance_Score": "={{ $json.performance_score }}",
+            "CPU_Usage": "={{ $json.system_metrics.cpu.usage_percent }}",
+            "Memory_Usage": "={{ $json.system_metrics.memory.usage_percent }}",
+            "Active_Workflows": "={{ $json.system_metrics.n8n.active_workflows }}",
+            "Executions_Per_Min": "={{ $json.system_metrics.n8n.executions_per_minute }}",
+            "Queue_Size": "={{ $json.system_metrics.n8n.queue_size }}",
+            "Failed_Executions": "={{ $json.system_metrics.n8n.failed_executions }}",
+            "Network_Latency": "={{ $json.system_metrics.network.latency }}",
+            "Alerts_Count": "={{ $json.alerts.length }}",
+            "Auto_Healing_Actions": "={{ $json.auto_healing?.healing_summary?.successful_actions || 0 }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "log-metrics-503",
+      "name": "Log Métriques",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        1750,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Monitoring Système": {
+      "main": [
+        [
+          {
+            "node": "Collecte Métriques Système",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Collecte Métriques Système": {
+      "main": [
+        [
+          {
+            "node": "Vérifier Alertes Critiques",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vérifier Alertes Critiques": {
+      "main": [
+        [
+          {
+            "node": "Alerte Critique Slack",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Rapport Monitoring Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alerte Critique Slack": {
+      "main": [
+        [
+          {
+            "node": "Alerte Critique Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alerte Critique Email": {
+      "main": [
+        [
+          {
+            "node": "Auto-Healing Actions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-Healing Actions": {
+      "main": [
+        [
+          {
+            "node": "Log Métriques",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rapport Monitoring Slack": {
+      "main": [
+        [
+          {
+            "node": "Envoyer à API Monitoring",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envoyer à API Monitoring": {
+      "main": [
+        [
+          {
+            "node": "Log Métriques",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5-3-architecture-distribuee-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "17",
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "module-5-premium",
+      "name": "Module 5 - Premium"
+    }
+  ]
+}

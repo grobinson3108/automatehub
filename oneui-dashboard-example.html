@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutomateHub - OneUI 5 Dashboard</title>
+    <link rel="stylesheet" href="oneui-design-system.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: var(--oneui-font-family);
+            background: var(--oneui-surface-gradient);
+            min-height: 100vh;
+        }
+        
+        .dashboard-header {
+            background: var(--oneui-surface-primary);
+            border-bottom: 1px solid var(--oneui-border-light);
+            padding: var(--oneui-space-6);
+            margin-bottom: var(--oneui-space-6);
+        }
+        
+        .dashboard-title {
+            display: flex;
+            align-items: center;
+            gap: var(--oneui-space-4);
+        }
+        
+        .logo-circle {
+            width: 60px;
+            height: 60px;
+            background: var(--oneui-primary-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--oneui-text-2xl);
+            font-weight: var(--oneui-font-bold);
+            color: var(--oneui-text-inverse);
+            box-shadow: var(--oneui-shadow-md);
+        }
+        
+        .stats-grid {
+            margin-bottom: var(--oneui-space-8);
+        }
+        
+        .chart-container {
+            background: var(--oneui-surface-primary);
+            border-radius: var(--oneui-radius-lg);
+            padding: var(--oneui-space-6);
+            box-shadow: var(--oneui-shadow-md);
+            margin-bottom: var(--oneui-space-6);
+        }
+        
+        .workflow-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--oneui-space-4);
+            background: var(--oneui-surface-primary);
+            border-radius: var(--oneui-radius-md);
+            box-shadow: var(--oneui-shadow-sm);
+            margin-bottom: var(--oneui-space-3);
+            transition: all 0.2s ease-in-out;
+        }
+        
+        .workflow-item:hover {
+            box-shadow: var(--oneui-shadow-md);
+            transform: translateY(-1px);
+        }
+        
+        .workflow-info {
+            display: flex;
+            align-items: center;
+            gap: var(--oneui-space-3);
+        }
+        
+        .workflow-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--oneui-radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--oneui-text-lg);
+            color: var(--oneui-text-inverse);
+        }
+        
+        .workflow-icon.email { background: var(--oneui-primary); }
+        .workflow-icon.data { background: var(--oneui-success); }
+        .workflow-icon.api { background: var(--oneui-warning); }
+        .workflow-icon.notification { background: var(--oneui-error); }
+        
+        .performance-chart {
+            height: 200px;
+            background: linear-gradient(135deg, rgba(66, 133, 244, 0.1) 0%, rgba(25, 118, 210, 0.1) 100%);
+            border-radius: var(--oneui-radius-md);
+            display: flex;
+            align-items: end;
+            justify-content: space-around;
+            padding: var(--oneui-space-4);
+            margin-top: var(--oneui-space-4);
+        }
+        
+        .chart-bar {
+            background: var(--oneui-accent-gradient);
+            border-radius: var(--oneui-radius-sm) var(--oneui-radius-sm) 0 0;
+            min-width: 30px;
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .chart-bar:hover {
+            transform: scale(1.1);
+            box-shadow: var(--oneui-shadow-md);
+        }
+        
+        .chart-bar::after {
+            content: attr(data-value);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--oneui-text-primary);
+            color: var(--oneui-text-inverse);
+            padding: var(--oneui-space-1) var(--oneui-space-2);
+            border-radius: var(--oneui-radius-sm);
+            font-size: var(--oneui-text-xs);
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+        
+        .chart-bar:hover::after {
+            opacity: 1;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: var(--oneui-space-4);
+            flex-wrap: wrap;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard-title {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="dashboard-header">
+        <div class="oneui-container">
+            <div class="dashboard-title">
+                <div class="logo-circle">AH</div>
+                <div>
+                    <h1 class="oneui-text-headline oneui-m-0">AutomateHub Analytics</h1>
+                    <p class="oneui-text-caption oneui-m-0">Tableau de bord des performances de workflows</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="oneui-container">
+        <!-- Statistics Cards -->
+        <section class="stats-grid oneui-grid oneui-grid-3">
+            <div class="oneui-card oneui-animate-fade-in">
+                <div class="oneui-flex oneui-flex-between oneui-mb-4">
+                    <div class="oneui-status oneui-status-active">
+                        <div class="oneui-status-indicator"></div>
+                        Workflows Actifs
+                    </div>
+                    <span class="oneui-icon">⚡</span>
+                </div>
+                <div class="oneui-metric">
+                    <h2 class="oneui-metric-value">147</h2>
+                    <p class="oneui-metric-label">Workflows en cours</p>
+                    <p class="oneui-metric-change positive">+12% cette semaine</p>
+                </div>
+            </div>
+
+            <div class="oneui-card oneui-animate-fade-in" style="animation-delay: 0.1s;">
+                <div class="oneui-flex oneui-flex-between oneui-mb-4">
+                    <div class="oneui-status oneui-status-active">
+                        <div class="oneui-status-indicator"></div>
+                        Exécutions Totales
+                    </div>
+                    <span class="oneui-icon">📊</span>
+                </div>
+                <div class="oneui-metric">
+                    <h2 class="oneui-metric-value">24.7K</h2>
+                    <p class="oneui-metric-label">Exécutions ce mois</p>
+                    <p class="oneui-metric-change positive">+8% aujourd'hui</p>
+                </div>
+            </div>
+
+            <div class="oneui-card oneui-animate-fade-in" style="animation-delay: 0.2s;">
+                <div class="oneui-flex oneui-flex-between oneui-mb-4">
+                    <div class="oneui-status oneui-status-active">
+                        <div class="oneui-status-indicator"></div>
+                        Taux de Réussite
+                    </div>
+                    <span class="oneui-icon">✅</span>
+                </div>
+                <div class="oneui-metric">
+                    <h2 class="oneui-metric-value">98.5%</h2>
+                    <p class="oneui-metric-label">Fiabilité globale</p>
+                    <p class="oneui-metric-change positive">Excellent</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Performance Chart -->
+        <section class="chart-container oneui-animate-scale-in">
+            <h2 class="oneui-text-title">Tendances de Performance</h2>
+            <p class="oneui-text-caption oneui-mb-4">Exécutions des 7 derniers jours</p>
+            
+            <div class="performance-chart">
+                <div class="chart-bar" style="height: 60%;" data-value="2.4K"></div>
+                <div class="chart-bar" style="height: 75%;" data-value="3.1K"></div>
+                <div class="chart-bar" style="height: 90%;" data-value="3.8K"></div>
+                <div class="chart-bar" style="height: 85%;" data-value="3.5K"></div>
+                <div class="chart-bar" style="height: 95%;" data-value="4.1K"></div>
+                <div class="chart-bar" style="height: 80%;" data-value="3.3K"></div>
+                <div class="chart-bar" style="height: 100%;" data-value="4.3K"></div>
+            </div>
+        </section>
+
+        <!-- Recent Workflows -->
+        <section class="oneui-grid oneui-grid-2">
+            <div class="oneui-card">
+                <h2 class="oneui-text-title oneui-mb-4">Workflows Récents</h2>
+                
+                <div class="workflow-item">
+                    <div class="workflow-info">
+                        <div class="workflow-icon email">📧</div>
+                        <div>
+                            <h3 class="oneui-text-body oneui-m-0">Newsletter Automatique</h3>
+                            <p class="oneui-text-caption oneui-m-0">Dernière exécution il y a 2 min</p>
+                        </div>
+                    </div>
+                    <div class="oneui-status oneui-status-active">
+                        <div class="oneui-status-indicator"></div>
+                        Actif
+                    </div>
+                </div>
+
+                <div class="workflow-item">
+                    <div class="workflow-info">
+                        <div class="workflow-icon data">📊</div>
+                        <div>
+                            <h3 class="oneui-text-body oneui-m-0">Traitement de Données</h3>
+                            <p class="oneui-text-caption oneui-m-0">Dernière exécution il y a 15 min</p>
+                        </div>
+                    </div>
+                    <div class="oneui-status oneui-status-active">
+                        <div class="oneui-status-indicator"></div>
+                        Actif
+                    </div>
+                </div>
+
+                <div class="workflow-item">
+                    <div class="workflow-info">
+                        <div class="workflow-icon api">🔗</div>
+                        <div>
+                            <h3 class="oneui-text-body oneui-m-0">Synchronisation API</h3>
+                            <p class="oneui-text-caption oneui-m-0">Dernière exécution il y a 1h</p>
+                        </div>
+                    </div>
+                    <div class="oneui-status oneui-status-paused">
+                        <div class="oneui-status-indicator"></div>
+                        En pause
+                    </div>
+                </div>
+
+                <div class="workflow-item">
+                    <div class="workflow-info">
+                        <div class="workflow-icon notification">🔔</div>
+                        <div>
+                            <h3 class="oneui-text-body oneui-m-0">Alertes Système</h3>
+                            <p class="oneui-text-caption oneui-m-0">Dernière exécution il y a 3h</p>
+                        </div>
+                    </div>
+                    <div class="oneui-status oneui-status-error">
+                        <div class="oneui-status-indicator"></div>
+                        Erreur
+                    </div>
+                </div>
+            </div>
+
+            <div class="oneui-card">
+                <h2 class="oneui-text-title oneui-mb-4">Distribution des Types</h2>
+                
+                <div class="oneui-mb-4">
+                    <div class="oneui-flex oneui-flex-between oneui-mb-2">
+                        <span class="oneui-text-body">🔓 Email Automation</span>
+                        <span class="oneui-text-body" style="color: var(--oneui-primary);">40%</span>
+                    </div>
+                    <div style="background: var(--oneui-surface-tertiary); height: 8px; border-radius: 4px;">
+                        <div style="background: var(--oneui-primary); height: 100%; width: 40%; border-radius: 4px;"></div>
+                    </div>
+                </div>
+
+                <div class="oneui-mb-4">
+                    <div class="oneui-flex oneui-flex-between oneui-mb-2">
+                        <span class="oneui-text-body">📊 Data Processing</span>
+                        <span class="oneui-text-body" style="color: var(--oneui-success);">25%</span>
+                    </div>
+                    <div style="background: var(--oneui-surface-tertiary); height: 8px; border-radius: 4px;">
+                        <div style="background: var(--oneui-success); height: 100%; width: 25%; border-radius: 4px;"></div>
+                    </div>
+                </div>
+
+                <div class="oneui-mb-4">
+                    <div class="oneui-flex oneui-flex-between oneui-mb-2">
+                        <span class="oneui-text-body">🔗 API Integration</span>
+                        <span class="oneui-text-body" style="color: var(--oneui-warning);">20%</span>
+                    </div>
+                    <div style="background: var(--oneui-surface-tertiary); height: 8px; border-radius: 4px;">
+                        <div style="background: var(--oneui-warning); height: 100%; width: 20%; border-radius: 4px;"></div>
+                    </div>
+                </div>
+
+                <div class="oneui-mb-4">
+                    <div class="oneui-flex oneui-flex-between oneui-mb-2">
+                        <span class="oneui-text-body">🔔 Notifications</span>
+                        <span class="oneui-text-body" style="color: var(--oneui-error);">15%</span>
+                    </div>
+                    <div style="background: var(--oneui-surface-tertiary); height: 8px; border-radius: 4px;">
+                        <div style="background: var(--oneui-error); height: 100%; width: 15%; border-radius: 4px;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Action Buttons -->
+        <section class="oneui-mt-6 oneui-mb-6">
+            <div class="action-buttons">
+                <button class="oneui-button oneui-button-primary">
+                    ➕ Créer un Workflow
+                </button>
+                <button class="oneui-button oneui-button-secondary">
+                    📋 Voir Tous les Workflows
+                </button>
+                <button class="oneui-button oneui-button-tertiary">
+                    📤 Exporter le Rapport
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer style="background: var(--oneui-surface-primary); border-top: 1px solid var(--oneui-border-light); padding: var(--oneui-space-6); margin-top: var(--oneui-space-8);">
+        <div class="oneui-container oneui-text-center">
+            <p class="oneui-text-caption oneui-m-0">
+                AutomateHub Dashboard • Dernière mise à jour: 14 août 2025
+            </p>
+            <div class="oneui-flex oneui-flex-center oneui-mt-2">
+                <div class="oneui-status-indicator" style="background: var(--oneui-success);"></div>
+                <span class="oneui-text-caption oneui-ml-2">Tous les systèmes opérationnels</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Animation d'entrée pour les cartes
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observer toutes les cartes
+        document.querySelectorAll('.oneui-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'all 0.6s ease-out';
+            observer.observe(card);
+        });
+
+        // Interactivité des boutons
+        document.querySelectorAll('.oneui-button').forEach(button => {
+            button.addEventListener('click', function() {
+                // Animation de clic
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+
+                // Action simulée
+                const action = this.textContent.trim();
+                console.log(`Action déclenchée: ${action}`);
+                
+                // Vous pouvez ici ajouter des appels à l'API AutomateHub
+                // Par exemple: ./mcp n8n-create "Nouveau Workflow"
+            });
+        });
+
+        // Mise à jour en temps réel (simulation)
+        setInterval(() => {
+            // Simulation de mise à jour des métriques
+            const metrics = document.querySelectorAll('.oneui-metric-value');
+            metrics.forEach(metric => {
+                if (Math.random() > 0.9) { // 10% de chance de mise à jour
+                    metric.style.color = 'var(--oneui-primary)';
+                    setTimeout(() => {
+                        metric.style.color = 'var(--oneui-text-primary)';
+                    }, 1000);
+                }
+            });
+        }, 5000);
+    </script>
+</body>
+</html>

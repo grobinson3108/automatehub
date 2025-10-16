@@ -1,0 +1,914 @@
+{
+  "name": "Sumobundle - Telegram Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        520
+      ],
+      "id": "81487ec1-f57a-4313-b555-f7897a023b83",
+      "name": "Recevoir un message",
+      "webhookId": "97ad91b8-8d3c-4c40-b197-bd5e509538ba",
+      "credentials": {
+        "telegramApi": {
+          "id": "UI4U9iyGqL2RkK7a",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.1,
+      "position": [
+        320,
+        780
+      ],
+      "id": "ce7be15a-d868-4204-a815-047223a739b0",
+      "name": "Modèle de chat OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=## TRADUIT PARTIELLEMENT ##\n## ROLE  \nYou are an intelligent and supportive assistant.  \nYour name is **Sumobundle**, and you communicate in a warm, friendly, and helpful manner.  \nAlways provide responses in **English**.  \n\n## Important Information  \n- You are interacting with **{{ $('Switcher').item.json.message.from.first_name }}**. \n- Current date and time: **{{ $now }}**.  \n\n## Tools  \n\n### Get Emails  \nUse this tool to fetch unread emails from Gmail.  \nWhen responding, include:  \n- **A concise summary** of the email content  \n- **The sender's email address**  \n- **The sender's name**  \n\n### Send Email  \nThis tool allows you to send an email.  \nEnsure that the email includes:  \n- **Recipient’s email address**  \n- **Subject line**  \n- **Email body**  \nAdd my name at the end.\n\n## Create Draft  \nUse this tool to create an email draft. It requires the recipient's email address, subject, and email body. The draft will be saved but not sent, allowing for further review and edits before sending. \nAdd my name at the end.\n\n### Get Calendar  \nUse this tool to retrieve upcoming calendar events.  \n\n### Set Calendar  \nUse this tool to create new events in the calendar.  \n- **Schedule the event** on the specified date and time.  \n- **Include a description**.  \n- Ensure meetings are set in **Europe/Bucharest time**.  \n\n### Check Calendar  \nUtilize this tool to review scheduled calendar events.  \n- **All times are based on Europe/Bucharest time**.  \n\n### Contacts  \nUse this tool to retrieve details about contacts, including their email addresses.  \n\n### Tasks  \nUse this tool to **create tasks** in Google Tasks.  \n\n### Get Tasks  \nRetrieve existing tasks from Google Tasks using this tool.  \n\n### Translator  \nTranslate text from one language to another.  \n- **Only return the translated text**.  \n- **Do not include phrases** like:  \n  > *\"The translation of \"\" into \"Language\" is:\"*  \n- **Provide only the translated content**.  \n\n## Google Search \nUse this function to **search the web using Google**.  \nIt fetches search results based on a keyword query and returns relevant links. "
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        660,
+        520
+      ],
+      "id": "d837b827-ded8-4349-959b-77cd76bf80f0",
+      "name": "Agent IA"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Receive Message').item.json.message.chat.id }}",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        500,
+        760
+      ],
+      "id": "ebc52679-b8f4-4a89-b92b-1e2c6266c28e",
+      "name": "Mémoire tampon de la fenêtre",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "input": "={{ $json.output }}",
+        "voice": "nova",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1240,
+        400
+      ],
+      "id": "64456e14-457c-415d-8777-6bba5d9ba46c",
+      "name": "Générer de l'audio",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        260,
+        380
+      ],
+      "id": "6464a6d2-e5a1-47a6-83da-28485f0f1d58",
+      "name": "Transcrire",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 5,
+        "filters": {
+          "labelIds": [
+            "UNREAD",
+            "INBOX"
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        -40,
+        1300
+      ],
+      "id": "8786e15a-c647-4251-923d-6f4b928cdd9a",
+      "name": "Obtenir des e-mails",
+      "webhookId": "d2e64baa-5c0c-43cc-9117-77a74bd4358e",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QFPxPaMpeldVrA16",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "### Agent Tools",
+        "height": 380,
+        "width": 2060,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        1120
+      ],
+      "id": "349cab1e-9540-40e1-8a04-5208b017e9aa",
+      "name": "Note autocollante"
+    },
+    {
+      "parameters": {
+        "content": "### Voice",
+        "height": 240,
+        "width": 440,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        320
+      ],
+      "id": "8f78b5cb-b6ae-4c7e-8c34-2a9da4fcbf92",
+      "name": "Note autocollante2"
+    },
+    {
+      "parameters": {
+        "content": "### Text",
+        "height": 240,
+        "width": 260,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        580
+      ],
+      "id": "d5eb59a3-cd86-4f37-8015-98e7da7743df",
+      "name": "Note autocollante3"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $fromAI('recipient_email') }}",
+        "subject": "={{ $fromAI('email_subject') }}",
+        "emailType": "text",
+        "message": "={{ $fromAI('email_body') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        160,
+        1300
+      ],
+      "id": "03d0f7a4-dc8b-40d1-90a0-27215213c145",
+      "name": "Envoyer un e-mail",
+      "webhookId": "33501ace-0ca0-44b3-b91b-bdb370df8401",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QFPxPaMpeldVrA16",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "={{ $fromAI(\"Title\" , \"title of the event\") }}",
+        "calendar": {
+          "__rl": true,
+          "value": "contact@grafup.com",
+          "mode": "list",
+          "cachedResultName": "contact@grafup.com"
+        },
+        "start": "={{ $fromAI(\"start\", \"date and hour to start the event\") }}",
+        "end": "={{ $fromAI(\"end\", \"date and hour to end the event\") }}",
+        "additionalFields": {
+          "attendees": [],
+          "description": "={{ $fromAI(\"description\" , \"description of the event\") }}",
+          "summary": "={{ $fromAI(\"Summary\" , \"Summary of the event\") }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        580,
+        1300
+      ],
+      "id": "3e7848fe-8f56-46cc-9eab-cbcd21ac08f6",
+      "name": "Définir un calendrier",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "SyU5uBp7QPITKgvQ",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        1620,
+        1300
+      ],
+      "id": "08c39f59-8ec0-43ca-9499-3b2887c07e61",
+      "name": "Recherche Google",
+      "credentials": {
+        "serpApi": {
+          "id": "xVRLzHyTXnJgP6fd",
+          "name": "SerpAPI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "contact@grafup.com",
+          "mode": "list",
+          "cachedResultName": "contact@grafup.com"
+        },
+        "returnAll": true,
+        "options": {
+          "timeMin": "={{ $now }}",
+          "timeZone": {
+            "__rl": true,
+            "value": "Europe/Bucharest",
+            "mode": "list",
+            "cachedResultName": "Europe/Bucharest"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.2,
+      "position": [
+        800,
+        1300
+      ],
+      "id": "902103d4-5dda-49b7-a3e7-1c7151d61b7b",
+      "name": "Vérifier le calendrier",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "SyU5uBp7QPITKgvQ",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "Tasks",
+        "description": "={{ $json.text }}",
+        "workflowId": {
+          "__rl": true,
+          "value": "5ARirULqBsunS1Z6",
+          "mode": "list",
+          "cachedResultName": "Sub workflow Google Tasks"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "create_tasks": "={{ $fromAI('create_tasks') }}"
+          },
+          "matchingColumns": [
+            "create_tasks"
+          ],
+          "schema": [
+            {
+              "id": "create_tasks",
+              "displayName": "create_tasks",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        1300
+      ],
+      "id": "256b0471-a1cf-468e-b2e2-ba727269355c",
+      "name": "Ajouter des tâches Google"
+    },
+    {
+      "parameters": {
+        "name": "GetTasks",
+        "description": "Call this tool to get all the tasks i have",
+        "workflowId": {
+          "__rl": true,
+          "value": "24PJoa6LMmZOy5sg",
+          "mode": "list",
+          "cachedResultName": "Sub workflow - Get Google Tasks"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "get_tasks": "={{ $fromAI('get_tasks') }}"
+          },
+          "matchingColumns": [
+            "get_tasks"
+          ],
+          "schema": [
+            {
+              "id": "get_tasks",
+              "displayName": "get_tasks",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        1220,
+        1300
+      ],
+      "id": "939a2bb2-fb35-4caa-802a-3575a31ad420",
+      "name": "Obtenir des tâches Google"
+    },
+    {
+      "parameters": {
+        "name": "Translate",
+        "description": "Call this tool to translate the text",
+        "workflowId": {
+          "__rl": true,
+          "value": "9fU1FkGuKDO6AG0e",
+          "mode": "list",
+          "cachedResultName": "Sub workflow Translate"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "translate": "={{ $fromAI('translate') }}"
+          },
+          "matchingColumns": [
+            "translate"
+          ],
+          "schema": [
+            {
+              "id": "translate",
+              "displayName": "translate",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2,
+      "position": [
+        1420,
+        1300
+      ],
+      "id": "2bd50995-c216-4359-94c3-c6e13d13c3d4",
+      "name": "Traducteur"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2a9d7a90-7f2e-4228-84df-6476a2534a04",
+                    "leftValue": "={{ $json.message.voice.file_id }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "voice"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "text"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -220,
+        520
+      ],
+      "id": "2c1449ee-026f-4234-9ae1-8c55522ddef9",
+      "name": "Interrupteur"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "3d8b9900-fe93-48d3-a1cf-8fd70542f091",
+              "leftValue": "={{ $('Receive Message').item.json.message.voice.file_id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1020,
+        520
+      ],
+      "id": "67eb7a25-9eb9-4147-b529-ca9d8ec23d84",
+      "name": "Audio ?"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Receive Message').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1240,
+        620
+      ],
+      "id": "c11b3f87-3282-44fe-8280-de12050d620e",
+      "name": "Texte de réponse",
+      "credentials": {
+        "telegramApi": {
+          "id": "UI4U9iyGqL2RkK7a",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAudio",
+        "chatId": "={{ $('Receive Message').item.json.message.chat.id }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1440,
+        400
+      ],
+      "id": "7aa70a7b-faf5-4b08-b69e-742fa6ef0fdd",
+      "name": "Audio de réponse",
+      "credentials": {
+        "telegramApi": {
+          "id": "UI4U9iyGqL2RkK7a",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}"
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        380
+      ],
+      "id": "797b242d-b482-4f07-bf25-c53f1161d5c5",
+      "name": "Obtenir de l'audio",
+      "credentials": {
+        "telegramApi": {
+          "id": "UI4U9iyGqL2RkK7a",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "88cbdd27-f094-458b-878f-60504b8c3ad7",
+              "name": "text",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        80,
+        660
+      ],
+      "id": "b6f73951-a8e5-4698-b4d4-9eb49c8c8200",
+      "name": "Obtenir du texte"
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "subject": "={{ $fromAI('Email_subject') }}",
+        "message": "={{ $fromAI('email_body') }}",
+        "options": {
+          "sendTo": "={{ $fromAI('recipient_email') }}"
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        380,
+        1300
+      ],
+      "id": "035e9573-de06-4dda-a9fe-3b2bf47464eb",
+      "name": "Créer un brouillon",
+      "webhookId": "5ee230b3-18b4-408b-b55d-a745a8021163",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QFPxPaMpeldVrA16",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Please leave a comment \n**In this youtube video and i will add more features to this workflow.**\n[Leave a comment on Youtube](https://www.youtube.com/watch?v=cRfeMZJrSFo/)",
+        "height": 140,
+        "width": 800,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -180,
+        1520
+      ],
+      "id": "b9a2e4c4-8493-4123-9b72-abb72cf83cbc",
+      "name": "Note autocollante1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Receive Message": {
+      "main": [
+        [
+          {
+            "node": "Switcher",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Audio ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Audio": {
+      "main": [
+        [
+          {
+            "node": "Response Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcribe": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Emails": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Search": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Google Tasks": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Google Tasks": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Translator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switcher": {
+      "main": [
+        [
+          {
+            "node": "Get Audio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Audio ?": {
+      "main": [
+        [
+          {
+            "node": "Generate Audio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Response Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Audio": {
+      "main": [
+        [
+          {
+            "node": "Transcribe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Text": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create draft": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "d5939a56-1a5e-4e00-aa0c-0b96c6178684",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+  },
+  "id": "plwglfofyKhmgzdw",
+  "tags": [
+    {
+      "createdAt": "2025-01-25T16:07:36.200Z",
+      "updatedAt": "2025-01-25T16:07:36.200Z",
+      "id": "De8GOe5bEZWe62Yp",
+      "name": "Skool"
+    },
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

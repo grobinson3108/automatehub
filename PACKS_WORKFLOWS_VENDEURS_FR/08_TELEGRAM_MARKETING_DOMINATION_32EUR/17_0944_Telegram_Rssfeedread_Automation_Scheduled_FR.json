@@ -1,0 +1,483 @@
+{
+  "id": "3",
+  "name": "rss-telegram",
+  "nodes": [
+    {
+      "name": "DiviserEnLots",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        480,
+        220
+      ],
+      "parameters": {
+        "batchSize": 1
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Fonction",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        610,
+        220
+      ],
+      "parameters": {
+        "functionCode": "const staticData = getWorkflowStaticData('global');\n\n// Access its data\nconst oldlink = staticData.oldlink;\n\nitems[0].json.oldlink = oldlink || \"\";\n\n// Update its data\nstaticData.oldlink = items[0].json.link;\n\nreturn items;"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Cron1",
+      "type": "n8n-nodes-base.cron",
+      "position": [
+        180,
+        290
+      ],
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Répéter ou non",
+      "type": "n8n-nodes-base.if",
+      "notes": "Vérifier si les liens sont identiques",
+      "position": [
+        750,
+        220
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Function\"].data[\"oldlink\"]}}",
+              "value2": "={{$node[\"Function\"].data[\"link\"]}}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Écrire les attributs de l'image",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        910,
+        220
+      ],
+      "parameters": {
+        "functionCode": "function imgList(items) {\n  let imgReg = /<img.*?(?:>|\\/>)/gi //匹配图片中的img标签\n  let srcReg = /src=[\\'\\\"]?([^\\'\\\"]*)[\\'\\\"]?/i // 匹配图片中的src\n  let str = items[0].json.content\n  let arr = str.match(imgReg)  //筛选出所有的img\n  let srcArr = []\n  if(arr !== null){\n     for (let i = 0; i < arr.length; i++) {\n          let src = arr[i].match(srcReg)\n          // 获取图片地址\n          srcArr.push(src[1])\n      }\n        items[0].json.arrlength = arr.length;\n        items[0].json.imgList = srcArr;\n   } else {\n        items[0].json.arrlength = 0;\n   }\n   \n }\nimgList(items)\nreturn items;"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Vérification du nombre d'images",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1060,
+        220
+      ],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"写入图片的属性\"].data[\"arrlength\"]}}",
+              "value2": 1,
+              "operation": "equal"
+            }
+          ],
+          "string": [],
+          "boolean": []
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Une seule image",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1270,
+        80
+      ],
+      "parameters": {
+        "file": "={{$node[\"图片数量判断\"].data[\"imgList\"][0]}}",
+        "chatId": "-1001314058276",
+        "operation": "sendPhoto",
+        "additionalFields": {
+          "caption": "={{$node[\"图片数量判断\"].data[\"contentSnippet\"]}}"
+        }
+      },
+      "credentials": {
+        "telegramApi": "lataimei"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Autres situations",
+      "type": "n8n-nodes-base.telegram",
+      "notes": "Pas d'image",
+      "position": [
+        1270,
+        230
+      ],
+      "parameters": {
+        "text": "={{$node[\"Vérification du nombre d'images\"].data[\"contentSnippet\"]}} {{$node[\"Vérification du nombre d'images\"].data[\"link\"]}}",
+        "chatId": "-1001314058276",
+        "additionalFields": {
+          "parse_mode": "HTML",
+          "disable_web_page_preview": true
+        }
+      },
+      "credentials": {
+        "telegramApi": "lataimei"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "NaN",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        910,
+        370
+      ],
+      "parameters": {
+        "functionCode": "function imgList(items) {\n  let imgReg = /<img.*?(?:>|\\/>)/gi //匹配图片中的img标签\n  let srcReg = /src=[\\'\\\"]?([^\\'\\\"]*)[\\'\\\"]?/i // 匹配图片中的src\n  let str = items[0].json.content\n  let arr = str.match(imgReg)  //筛选出所有的img\n  let srcArr = []\n  if(arr !== null){\n     for (let i = 0; i < arr.length; i++) {\n          let src = arr[i].match(srcReg)\n          // 获取图片地址\n          srcArr.push(src[1])\n      }\n        items[0].json.arrlength = arr.length;\n        items[0].json.imgList = srcArr;\n   } else {\n        items[0].json.arrlength = 0;\n   }\n   \n }\nimgList(items)\nreturn items;"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "DiviserEnLots1",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        480,
+        370
+      ],
+      "parameters": {
+        "batchSize": 1
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Fonction1",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        610,
+        370
+      ],
+      "parameters": {
+        "functionCode": "const staticData = getWorkflowStaticData('global');\n\n// Access its data\nconst tsaioldlink = staticData.tsaioldlink;\n\nitems[0].json.tsaioldlink = tsaioldlink || \"\";\n\n// Update its data\nstaticData.tsaioldlink = items[0].json.link;\n\nreturn items;"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "SI",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        750,
+        370
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$node[\"Function1\"].data[\"tsaioldlink\"]}}",
+              "value2": "={{$node[\"Function1\"].data[\"link\"]}}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "SI1",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1060,
+        370
+      ],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": 1,
+              "value2": "=0",
+              "operation": "equal"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "envoyer",
+      "type": "n8n-nodes-base.telegram",
+      "notes": "pas d'image",
+      "position": [
+        1270,
+        380
+      ],
+      "parameters": {
+        "file": "={{$node[\"IF1\"].data[\"imgList\"][0]}}",
+        "chatId": "-1001499587010",
+        "operation": "sendPhoto",
+        "additionalFields": {
+          "caption": "={{$node[\"IF1\"].data[\"contentSnippet\"]}}"
+        }
+      },
+      "credentials": {
+        "telegramApi": "lataimei"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "flux rss instagram",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "position": [
+        360,
+        370
+      ],
+      "parameters": {
+        "url": "=https://rsshub985.herokuapp.com/instagram/user/tsai_ingwen/"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "flux rss weibo",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "position": [
+        360,
+        220
+      ],
+      "parameters": {
+        "url": "=https://rsshub985.herokuapp.com/weibo/user/5721376081"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1270,
+        530
+      ],
+      "parameters": {
+        "file": "={{$node[\"IF1\"].data[\"imgList\"][0]}}",
+        "chatId": "-1001499587010",
+        "operation": "sendPhoto",
+        "additionalFields": {
+          "caption": "={{$node[\"IF1\"].data[\"contentSnippet\"]}} {{$node[\"IF1\"].data[\"link\"]}}"
+        }
+      },
+      "credentials": {
+        "telegramApi": "lataimei"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "test",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        180,
+        130
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    }
+  ],
+  "active": true,
+  "settings": {},
+  "connections": {
+    "SI": {
+      "main": [
+        [],
+        [
+          {
+            "node": "NaN",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SI1": {
+      "main": [
+        [
+          {
+            "node": "envoyer",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NaN": {
+      "main": [
+        [
+          {
+            "node": "SI1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "test": {
+      "main": [
+        [
+          {
+            "node": "flux rss instagram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "flux rss weibo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cron1": {
+      "main": [
+        [
+          {
+            "node": "flux rss weibo",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "flux rss instagram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fonction": {
+      "main": [
+        [
+          {
+            "node": "Répéter ou non",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fonction1": {
+      "main": [
+        [
+          {
+            "node": "SI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "flux rss weibo": {
+      "main": [
+        [
+          {
+            "node": "DiviserEnLots",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Répéter ou non": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Écrire les attributs de l'image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "flux rss instagram": {
+      "main": [
+        [
+          {
+            "node": "DiviserEnLots1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DiviserEnLots": {
+      "main": [
+        [
+          {
+            "node": "Fonction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DiviserEnLots1": {
+      "main": [
+        [
+          {
+            "node": "Fonction1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vérification du nombre d'images": {
+      "main": [
+        [
+          {
+            "node": "Une seule image",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Autres situations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Écrire les attributs de l'image": {
+      "main": [
+        [
+          {
+            "node": "Vérification du nombre d'images",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

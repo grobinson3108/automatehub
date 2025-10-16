@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /user/
+Disallow: /api/
+Disallow: /storage/
+Disallow: /*.pdf$
+
+Sitemap: https://automatehub.fr/sitemap.xml
+
+Crawl-delay: 1

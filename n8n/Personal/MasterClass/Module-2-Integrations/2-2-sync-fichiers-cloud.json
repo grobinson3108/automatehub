@@ -1,0 +1,363 @@
+{
+  "name": "2.2 - Synchronisation Fichiers Cloud",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "schedule-sync-202",
+      "name": "Sync Horaire",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "search",
+        "name": "Sync_Folder",
+        "options": {}
+      },
+      "id": "search-drive-folder-202",
+      "name": "Rechercher Dossier Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        500,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "list",
+        "folderId": "={{ $json.id }}",
+        "options": {
+          "fields": "files(id,name,mimeType,modifiedTime,size,parents)"
+        }
+      },
+      "id": "list-drive-files-202",
+      "name": "Lister Fichiers Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        750,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "path": "/sync_folder",
+        "options": {
+          "recursive": true,
+          "includeHidden": false
+        }
+      },
+      "id": "list-dropbox-files-202",
+      "name": "Lister Fichiers Dropbox",
+      "type": "n8n-nodes-base.dropbox",
+      "typeVersion": 2,
+      "position": [
+        500,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Synchronisation intelligente entre Drive et Dropbox\nconst driveFiles = $input.first().json.files || [];\nconst dropboxFiles = $input.last().json.entries || [];\n\n// Créer des maps pour comparaison rapide\nconst driveFileMap = new Map();\nconst dropboxFileMap = new Map();\n\ndriveFiles.forEach(file => {\n  driveFileMap.set(file.name, {\n    id: file.id,\n    name: file.name,\n    modifiedTime: new Date(file.modifiedTime),\n    size: file.size,\n    platform: 'drive'\n  });\n});\n\ndropboxFiles.forEach(file => {\n  dropboxFileMap.set(file.name, {\n    id: file.path_lower,\n    name: file.name,\n    modifiedTime: new Date(file.client_modified),\n    size: file.size,\n    platform: 'dropbox'\n  });\n});\n\n// Analyser les différences\nconst syncActions = [];\n\n// Fichiers à copier de Drive vers Dropbox\ndriveFileMap.forEach((driveFile, fileName) => {\n  const dropboxFile = dropboxFileMap.get(fileName);\n  \n  if (!dropboxFile) {\n    // Fichier existe seulement dans Drive\n    syncActions.push({\n      action: 'copy_to_dropbox',\n      file: driveFile,\n      reason: 'missing_in_dropbox'\n    });\n  } else if (driveFile.modifiedTime > dropboxFile.modifiedTime) {\n    // Fichier Drive plus récent\n    syncActions.push({\n      action: 'update_dropbox',\n      file: driveFile,\n      reason: 'drive_newer'\n    });\n  }\n});\n\n// Fichiers à copier de Dropbox vers Drive\ndropboxFileMap.forEach((dropboxFile, fileName) => {\n  const driveFile = driveFileMap.get(fileName);\n  \n  if (!driveFile) {\n    // Fichier existe seulement dans Dropbox\n    syncActions.push({\n      action: 'copy_to_drive',\n      file: dropboxFile,\n      reason: 'missing_in_drive'\n    });\n  } else if (dropboxFile.modifiedTime > driveFile.modifiedTime) {\n    // Fichier Dropbox plus récent\n    syncActions.push({\n      action: 'update_drive',\n      file: dropboxFile,\n      reason: 'dropbox_newer'\n    });\n  }\n});\n\n// Statistiques de synchronisation\nconst syncStats = {\n  totalDriveFiles: driveFiles.length,\n  totalDropboxFiles: dropboxFiles.length,\n  syncActionsCount: syncActions.length,\n  timestamp: new Date().toISOString()\n};\n\nreturn syncActions.map(action => ({\n  json: {\n    ...action,\n    stats: syncStats\n  }\n}));"
+      },
+      "id": "sync-analysis-202",
+      "name": "Analyse Synchronisation",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "values": {
+            "string": [
+              {
+                "name": "action",
+                "value": "={{ $json.action }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "route-sync-action-202",
+      "name": "Router Actions",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        1250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": "={{ $json.file.id }}",
+        "options": {}
+      },
+      "id": "download-from-drive-202",
+      "name": "Télécharger Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1500,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "path": "/sync_folder/{{ $json.file.name }}",
+        "binaryData": true,
+        "options": {
+          "mode": "overwrite"
+        }
+      },
+      "id": "upload-to-dropbox-202",
+      "name": "Uploader Dropbox",
+      "type": "n8n-nodes-base.dropbox",
+      "typeVersion": 2,
+      "position": [
+        1750,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "path": "={{ $json.file.id }}",
+        "options": {}
+      },
+      "id": "download-from-dropbox-202",
+      "name": "Télécharger Dropbox",
+      "type": "n8n-nodes-base.dropbox",
+      "typeVersion": 2,
+      "position": [
+        1500,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "fileContent": "={{ $binary.data }}",
+        "name": "={{ $json.file.name }}",
+        "options": {
+          "parents": {
+            "parentId": "VOTRE_SYNC_FOLDER_ID"
+          }
+        }
+      },
+      "id": "upload-to-drive-202",
+      "name": "Uploader Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1750,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": "VOTRE_SYNC_LOG_ID",
+        "sheetName": "Sync_Log",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $json.stats.timestamp }}",
+            "Action": "={{ $json.action }}",
+            "Fichier": "={{ $json.file.name }}",
+            "Raison": "={{ $json.reason }}",
+            "Taille": "={{ $json.file.size }}",
+            "Drive_Files": "={{ $json.stats.totalDriveFiles }}",
+            "Dropbox_Files": "={{ $json.stats.totalDropboxFiles }}",
+            "Actions_Count": "={{ $json.stats.syncActionsCount }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "log-sync-202",
+      "name": "Log Synchronisation",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        2000,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Sync Horaire": {
+      "main": [
+        [
+          {
+            "node": "Rechercher Dossier Drive",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Lister Fichiers Dropbox",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rechercher Dossier Drive": {
+      "main": [
+        [
+          {
+            "node": "Lister Fichiers Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lister Fichiers Drive": {
+      "main": [
+        [
+          {
+            "node": "Analyse Synchronisation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lister Fichiers Dropbox": {
+      "main": [
+        [
+          {
+            "node": "Analyse Synchronisation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyse Synchronisation": {
+      "main": [
+        [
+          {
+            "node": "Router Actions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Router Actions": {
+      "main": [
+        [
+          {
+            "node": "Télécharger Drive",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Télécharger Drive",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Télécharger Dropbox",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Télécharger Dropbox",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Télécharger Drive": {
+      "main": [
+        [
+          {
+            "node": "Uploader Dropbox",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Uploader Dropbox": {
+      "main": [
+        [
+          {
+            "node": "Log Synchronisation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Télécharger Dropbox": {
+      "main": [
+        [
+          {
+            "node": "Uploader Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Uploader Drive": {
+      "main": [
+        [
+          {
+            "node": "Log Synchronisation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2-2-sync-fichiers-cloud-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "6",
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "module-2-integrations",
+      "name": "Module 2 - Intégrations"
+    }
+  ]
+}

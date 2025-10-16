@@ -1,0 +1,685 @@
+{
+  "id": "ZBH1ExE58wsoodkZ",
+  "meta": {
+    "instanceId": "a5283507e1917a33cc3ae615b2e7d5ad2c1e50955e6f831272ddd5ab816f3fb6"
+  },
+  "name": "Outil Agent NFT OpenSea",
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "33cb5db2-a023-4a6c-a4ad-3f4b3c35ce42",
+      "name": "Cerveau Agent NFT",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1340,
+        240
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "yUizd8t0sD5wMYVG",
+          "name": "OpenAi account"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "9d1fa8e4-3acf-4ace-965c-ea5cdfcdc366",
+      "name": "Mémoire Agent NFT",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        1520,
+        240
+      ],
+      "parameters": {},
+      "typeVersion": 1.3
+    },
+    {
+      "id": "d396bb90-00a6-41da-898d-7815d8d25fe3",
+      "name": "Agent NFT OpenSea",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        2140,
+        -20
+      ],
+      "parameters": {
+        "text": "={{ $json.message }}",
+        "options": {
+          "systemMessage": "# **🛠 Agent NFT OpenSea – Message Système**  \n\n## **🔹 Rôle & Objectif**  \nL'**Agent NFT OpenSea** est un assistant puissant piloté par l'IA, spécialisé dans la récupération, l'analyse et le traitement des données liées aux NFT à partir de **l'API d'OpenSea**. Il fournit des informations sur :  \n- Les profils utilisateurs  \n- Les collections et contrats NFT  \n- Les NFT individuels, leurs métadonnées, caractéristiques et propriété  \n- Les tokens de paiement utilisés dans les transactions NFT  \n- Les récupérations en masse de NFT (par compte, collection ou contrat)\n\nCet agent est conçu pour interagir **directement** avec l’API d’OpenSea et suit des règles de formatage strictes afin de garantir des requêtes valides et des réponses précises.\n\n---\n\n# **⚡ Outils disponibles et comment les utiliser**\nL’**Agent NFT** a accès à **plusieurs points de terminaison de l’API OpenSea**, chacun ayant une fonction spécifique.\n\n## **1️⃣ Obtenir le Compte**  \n📍 **Point de terminaison** : `/api/v2/accounts/{address_or_username}`  \n🔹 **Description** : Récupère un profil utilisateur OpenSea, incluant :  \n  - Bio  \n  - Noms d'utilisateur des réseaux sociaux  \n  - Image de profil  \n\n🔹 **Paramètre requis** :  \n  - `address_or_username` → Adresse publique blockchain ou nom d'utilisateur OpenSea  \n\n🔹 **Exemple de requête** :  \n  _\"Récupérer le profil OpenSea pour l'utilisateur `0xA5f49655E6814d9262fb656d92f17D7874d5Ac7E`.\"_\n\n---\n\n## **2️⃣ Obtenir la Collection**\n📍 **Point de terminaison** : `/api/v2/collections/{collection_slug}`  \n🔹 **Description** : Récupère les détails d'une collection NFT spécifique, incluant :\n  - Métadonnées de la collection  \n  - Frais  \n  - Traits  \n  - Liens vers les réseaux sociaux  \n\n🔹 **Paramètre requis** :  \n  - `collection_slug` → Identifiant unique de la collection (trouvé dans l'URL OpenSea)  \n\n🔹 **Exemple de requête** :  \n  _\"Récupérer les détails de la collection 'Bored Ape Yacht Club'.\"_\n\n---\n\n## **3️⃣ Obtenir les Collections**\\n📍 **Point de terminaison** : `/api/v2/collections`  \\n🔹 **Description** : Récupère une **liste de collections NFT** avec des filtres optionnels.\n\n🔹 **Paramètres optionnels** :  \n  - `chain` → Filtrer par blockchain (**doit être une chaîne valide** de la liste ci-dessous).  \n  - `creator_username` → Retourner les collections d'un nom d'utilisateur OpenSea spécifique.  \n  - `include_hidden` → Booléen (`true`/`false`) pour inclure les collections cachées.  \n  - `limit` → Nombre de résultats (1-100, par défaut : 100).  \n  - `next` → Curseur pour la pagination.  \n  - `order_by` → Option de tri (`created_date`, `market_cap`, `num_owners`, `one_day_change`, `seven_day_change`, `seven_day_volume`).\n\n🔹 **Exemple de requête** :  \n  _\"Listez les 10 principales collections NFT sur Ethereum classées par capitalisation boursière.\"_\n\n---\n\n## **4️⃣ Obtenir le contrat**  \n📍 **Point de terminaison** : `/api/v2/chain/{chain}/contract/{address}`  \n🔹 **Description** : Récupère les **détails du smart contract** d'une collection NFT.  \n\n🔹 **Paramètres requis** :  \n  - `chain` → Réseau blockchain (**doit être valide, voir la liste ci-dessous**).  \n  - `address` → Adresse du smart contract de la collection NFT.\n\n🔹 **Exemple de requête** :  \n  _\"Récupérer les détails du contrat pour `0xABCDEF...` sur Ethereum.\"_\n\n---\n\n## **5️⃣ Obtenir un NFT**  \n📍 **Point de terminaison** : `/api/v2/chain/{chain}/contract/{address}/nfts/{identifier}`  \n🔹 **Description** : Récupère les **métadonnées, traits, propriété et rareté** d’un NFT spécifique.  \n\n🔹 **Paramètres requis** :  \n  - `chain` → Réseau blockchain (**doit être valide, voir la liste ci-dessous**).  \n  - `address` → Adresse du contrat intelligent de la collection NFT.  \n  - `identifier` → L’**ID du jeton NFT**.\n\n🔹 **Exemple de requête** :  \n  _\"Récupérer les métadonnées du NFT #1234 du contrat Ethereum `0xABCDEF...`.\"_\n\n---\n\n## **6️⃣ Obtenir les NFTs (par compte)**\n📍 **Point de terminaison** : `/api/v2/chain/{chain}/account/{address}/nfts`  \n🔹 **Description** : Récupère **tous les NFTs possédés** par une adresse de compte donnée.  \n\n🔹 **Paramètres requis** :  \n  - `chain` → Réseau blockchain (**doit être valide, voir la liste ci-dessous**).  \n  - `address` → Adresse publique blockchain du propriétaire.\n\n🔹 **Paramètres optionnels** :  \n  - `collection` → Filtrer par collection NFT spécifique.  \n  - `limit` → Nombre de NFTs à retourner (1-200, par défaut : 50).  \n  - `next` → Curseur pour la pagination.  \n\n🔹 **Exemple de requête** :  \n  _\"Récupérer tous les NFTs possédés par `0x123...` sur Ethereum.\"_\n\n---\n\n## **⚠️ Règles & Restrictions Importantes**\n### **🚨 1. Entrées Blockchain Autorisées Uniquement**\n✅ **Blockchains Valides pour les Requêtes** :\n- `amoy`\n- `ape_chain`\n- `ape_curtis`\n- `arbitrum`\n- `arbitrum_nova`\n- `arbitrum_sepolia`\n- `avalanche`\n- `avalanche_fuji`\n- `b3`\n- `b3_sepolia`\n- `baobab`\n- `base`\n- `base_sepolia`\n- `bera_chain`\n- `blast`\n- `blast_sepolia`\n- `ethereum`\n- `flow`\n- `flow_testnet`\n- `klaytn`\n- **`matic`** _(Utilisez ceci à la place de \"polygon\")_\n- `monad_testnet`\n- `mumbai`\n- `optimism`\n- `optimism_sepolia`\n- `sei_testnet`\n- `sepolia`\n- `shape`\n- `solana`\n- `soldev`\n- `soneium`\n- `soneium_minato`\n- `unichain`\n- `zora`\n- `zora_sepolia`\n\n🚨 **Règle Critique :**\n- ❌ `\"polygon\"` **n'est PAS une entrée de chaîne valide** et **doit être remplacé par** `\"matic\"`.  \n- ❌ Utiliser une blockchain non prise en charge **provoquera une erreur**.  \n- ✅ Vérifiez toujours les noms des blockchains avant d'exécuter une requête.\n\n---\n\n## **📌 Exemples de requêtes**\n✅ _\"Trouver le profil OpenSea pour `0x123...`.\"_  \n✅ _\"Lister toutes les collections NFT créées par `CryptoArtistX`.\"_  \n✅ _\"Récupérer les détails du contrat pour `0xABC...` sur Ethereum.\"_  \n✅ _\"Obtenir les métadonnées du NFT #5678 dans la collection 'Azuki'.\"_  \n✅ _\"Lister les 5 principales collections NFT sur Solana, classées par capitalisation boursière.\"_  \n\n---\n\n## **⚠️ Gestion des erreurs**\nSi une requête à l'API OpenSea échoue, **vérifiez les erreurs** :\n- ✅ `200` → Succès  \n- ❌ `400` → Mauvaise requête (Format d'entrée invalide)  \n- ❌ `404` → Non trouvé ( `collection_slug`, `address` ou `identifier` incorrect)  \n- ❌ `500` → Erreur serveur (Problème avec l'API OpenSea)  \n\n---\n\n# **🚀 Conclusion**\nL'**Agent NFT OpenSea** est un **assistant spécialisé propulsé par l'IA** conçu pour récupérer et analyser les données liées aux NFT sur OpenSea. Que vous soyez **collectionneur, investisseur ou analyste**, cet agent vous aide à rester **en avance sur le marché** en fournissant des **informations en temps réel, structurées et approfondies**.  \n\n**🔥 Suivez toutes les règles pour garantir le succès des requêtes API ! 🔥**"
+        },
+        "promptType": "define"
+      },
+      "typeVersion": 1.8
+    },
+    {
+      "id": "c055762a-8fe7-4141-a639-df2372f30060",
+      "name": "Déclencheur d'entrée du workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        1420,
+        -20
+      ],
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "message"
+            },
+            {
+              "name": "sessionId"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "e2b0e848-ae9a-4fce-bf74-11cdebca512e",
+      "name": "OpenSea Obtenir Compte",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        1720,
+        240
+      ],
+      "parameters": {
+        "url": "https://api.opensea.io/api/v2/accounts/{address_or_username}",
+        "sendHeaders": true,
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "toolDescription": "Cet outil récupère un profil de compte OpenSea, y compris la bio, les noms d'utilisateur des réseaux sociaux et l'image de profil.",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "application/json",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3v99GVMGF4tKP5nM",
+          "name": "OpenSea"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "a343aba5-6a1c-4a19-8054-d80a92b30db0",
+      "name": "OpenSea Obtenir Collection",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        1920,
+        240
+      ],
+      "parameters": {
+        "url": "https://api.opensea.io/api/v2/collections/{collection_slug}",
+        "sendHeaders": true,
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "toolDescription": "Cet outil récupère les détails d'une collection NFT spécifique sur OpenSea, y compris les frais, les attributs et les liens.",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "application/json",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3v99GVMGF4tKP5nM",
+          "name": "OpenSea"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "c21482cd-bc29-47ee-9913-b200abdfd5bd",
+      "name": "OpenSea Obtenir Collections",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        2120,
+        240
+      ],
+      "parameters": {
+        "url": "https://api.opensea.io/api/v2/collections",
+        "sendQuery": true,
+        "sendHeaders": true,
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "chain",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "creator_username",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "include_hidden",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "limit",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "next",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "order_by",
+              "valueProvider": "modelOptional"
+            }
+          ]
+        },
+        "toolDescription": "Cet outil récupère une liste de collections OpenSea avec des options de filtrage pour la blockchain, le créateur, la visibilité, le tri et la pagination.",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "application/json",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3v99GVMGF4tKP5nM",
+          "name": "OpenSea"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "ab41e2bc-8c99-41ae-bfa5-5a94c8068f33",
+      "name": "OpenSea Obtenir Contrat",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        2340,
+        240
+      ],
+      "parameters": {
+        "url": "https://api.opensea.io/api/v2/chain/{chain}/contract/{address}",
+        "sendHeaders": true,
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "toolDescription": "Cet outil récupère les détails d'un contrat intelligent depuis OpenSea en fonction d'une blockchain et d'une adresse de contrat données.",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "application/json",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3v99GVMGF4tKP5nM",
+          "name": "OpenSea"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "f938ea94-59f7-4e9b-a75f-02b8e606e8ed",
+      "name": "OpenSea Obtenir NFT",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        2580,
+        260
+      ],
+      "parameters": {
+        "url": "https://api.opensea.io/api/v2/chain/{chain}/contract/{address}/nfts/{identifier}",
+        "sendHeaders": true,
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "toolDescription": "Cet outil récupère les métadonnées, les caractéristiques, les informations de propriété et la rareté d'un seul NFT sur OpenSea.",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "application/json",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3v99GVMGF4tKP5nM",
+          "name": "OpenSea"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "c62f092e-353e-4038-a875-d3c86b9e2a3d",
+      "name": "OpenSea Obtenir NFTs par Compte",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        2820,
+        260
+      ],
+      "parameters": {
+        "url": "https://api.opensea.io/api/v2/chain/{chain}/account/{address}/nfts",
+        "sendQuery": true,
+        "sendHeaders": true,
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "collection",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "limit",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "next",
+              "valueProvider": "modelOptional"
+            }
+          ]
+        },
+        "toolDescription": "Cet outil récupère les NFTs possédés par une adresse de compte donnée sur OpenSea, permettant un filtrage par collection, blockchain et options de pagination.",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "application/json",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3v99GVMGF4tKP5nM",
+          "name": "OpenSea"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "4603a4f0-a46b-4ea9-b226-726f9763d823",
+      "name": "OpenSea Obtenir NFTs par Collection",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        3080,
+        260
+      ],
+      "parameters": {
+        "url": "https://api.opensea.io/api/v2/collection/{collection_slug}/nfts",
+        "sendQuery": true,
+        "sendHeaders": true,
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "limit",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "next",
+              "valueProvider": "modelOptional"
+            }
+          ]
+        },
+        "toolDescription": "Cet outil récupère plusieurs NFTs pour une collection donnée sur OpenSea, permettant des options de pagination et de limite.",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "application/json",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3v99GVMGF4tKP5nM",
+          "name": "OpenSea"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "f27c8a55-230e-41a2-ba92-f8facb323e8d",
+      "name": "OpenSea Obtenir NFTs par Contrat",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        3320,
+        260
+      ],
+      "parameters": {
+        "url": "https://api.opensea.io/api/v2/chain/{chain}/contract/{address}/nfts",
+        "sendQuery": true,
+        "sendHeaders": true,
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "limit",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "next",
+              "valueProvider": "modelOptional"
+            }
+          ]
+        },
+        "toolDescription": "Cet outil récupère plusieurs NFTs pour un contrat intelligent donné sur OpenSea, permettant des options de pagination et de limite.",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "application/json",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3v99GVMGF4tKP5nM",
+          "name": "OpenSea"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "6043b056-339b-4bdd-898e-91e3b5915afd",
+      "name": "OpenSea Obtenir Jeton de Paiement",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        3540,
+        260
+      ],
+      "parameters": {
+        "url": "https://api.opensea.io/api/v2/chain/{chain}/payment_token/{address}",
+        "sendHeaders": true,
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "toolDescription": "Cet outil récupère les détails d'un jeton de paiement depuis OpenSea basé sur une blockchain et une adresse de jeton données.",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "application/json",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3v99GVMGF4tKP5nM",
+          "name": "OpenSea"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "5601cd2a-45f8-4cb6-acd8-02e44b033dcb",
+      "name": "OpenSea Obtenir Caractéristiques",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        3760,
+        260
+      ],
+      "parameters": {
+        "url": "https://api.opensea.io/api/v2/traits/{collection_slug}",
+        "sendHeaders": true,
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "toolDescription": "Cet outil récupère les caractéristiques dans une collection NFT donnée depuis OpenSea.",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "application/json",
+              "valueProvider": "fieldValue"
+            },
+            {
+              "name": "x-api-key",
+              "value": "YOUR_OPENSEA_API_KEY",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3v99GVMGF4tKP5nM",
+          "name": "OpenSea"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "86a6c757-bbda-41a9-90d1-1e8af808ae66",
+      "name": "Note Autocollante",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        160,
+        -1240
+      ],
+      "parameters": {
+        "color": 2,
+        "width": 920,
+        "height": 1880,
+        "content": "# Outil Agent NFT OpenSea (Workflow n8n) Guide\n\n## 🚀 Aperçu du Workflow\nL'**Outil Agent NFT OpenSea** est un **assistant spécialisé propulsé par l'IA** conçu pour interagir avec l'**API d'OpenSea** afin de récupérer, analyser et traiter les données liées aux NFT. Il aide les utilisateurs à accéder efficacement à la **propriété des NFT, aux métadonnées, aux traits, aux collections, aux contrats et aux tokens de paiement**.\n\n### 🎯 **Fonctionnalités clés** :\n- Récupérer les **profils utilisateurs OpenSea** par adresse de portefeuille ou nom d'utilisateur.\n- Obtenir les **collections NFT**, métadonnées, contrats et détails des contrats intelligents.\n- Accéder aux **détails individuels des NFT**, y compris la rareté et la propriété.\n- Suivre les **NFT possédés par un compte**, les collections et les contrats intelligents.\n- Récupérer les **tokens de paiement** et les traits des NFT.\n- Assurer la **validité des requêtes API** et des réponses structurées.\n\n---\n\n## 🔗 **Nœuds & Fonctions**\n\n### **1️⃣ Agent Cerveau NFT**\n- **Type** : Modèle de Langage IA (GPT-4o Mini)\n- **Objectif** : Traite les requêtes API liées aux NFT et interprète les requêtes de données OpenSea.\n\n### **2️⃣ Mémoire Agent NFT**\n- **Type** : Tampon de Mémoire IA\n- **Objectif** : Stocke les données de session pour maintenir le contexte à travers plusieurs requêtes.\n\n### **3️⃣ OpenSea Obtenir un Compte**\n- **Type** : Requête API\n- **Point de terminaison** : `/api/v2/accounts/{address_or_username}`\n- **Fonction** : Récupère un **profil utilisateur** OpenSea, incluant la bio, les liens sociaux, et l'image de profil.\n\n### **4️⃣ OpenSea Obtenir une Collection**\n- **Type** : Requête API\n- **Point de terminaison** : `/api/v2/collections/{collection_slug}`\n- **Fonction** : Récupère les **métadonnées de la collection**, les frais, et les caractéristiques.\n\n### **5️⃣ OpenSea Obtenir les Collections**\n- **Type** : Requête API\n- **Endpoint** : `/api/v2/collections`\n- **Fonction** : Récupère **une liste de collections NFT**, filtrée par chaîne, créateur, visibilité ou classement.\n\n### **6️⃣ OpenSea Obtenir le Contrat**\n- **Type** : Requête API\n- **Endpoint** : `/api/v2/chain/{chain}/contract/{address}`\n- **Fonction** : Récupère **les détails du contrat intelligent de la collection NFT**.\n\n### **7️⃣ OpenSea Obtenir NFT**\n- **Type** : Requête API\n- **Endpoint** : `/api/v2/chain/{chain}/contract/{address}/nfts/{identifier}`\n- **Fonction** : Récupère les **métadonnées, traits, rareté et propriété** d’un seul NFT.\n\n### **8️⃣ OpenSea Obtenir les NFTs par Compte**\n- **Type** : Requête API\n- **Endpoint** : `/api/v2/chain/{chain}/account/{address}/nfts`\n- **Fonction** : Récupère **tous les NFTs possédés** par une adresse de portefeuille.\n\n### **9️⃣ OpenSea Obtenir les NFTs par Collection**\n- **Type** : Requête API\n- **Endpoint** : `/api/v2/collection/{collection_slug}/nfts`\n- **Fonction** : Récupère **tous les NFTs d'une collection**.\n\n### **🔟 OpenSea Obtenir les NFTs par Contrat**\n- **Type** : Requête API\n- **Endpoint** : `/api/v2/chain/{chain}/contract/{address}/nfts`\n- **Fonction** : Récupère **les NFTs liés à un contrat intelligent**.\n\n### **11️⃣ OpenSea Obtenir le Jeton de Paiement**\n- **Type** : Requête API\n- **Endpoint** : `/api/v2/chain/{chain}/payment_token/{address}`\n- **Fonction** : Récupère les détails d'une **cryptomonnaie/jeton** utilisée pour les transactions NFT.\n\n### **12️⃣ OpenSea Obtenir les Traits**\n- **Type** : Requête API\n- **Endpoint** : `/api/v2/traits/{collection_slug}`\n- **Fonction** : Récupère les **catégories de traits et attributs** pour une collection donnée.\n\n---"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "c35f3855-5167-4230-8017-f60297d1dcec",
+      "name": "Note Autocollante1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1540,
+        -1240
+      ],
+      "parameters": {
+        "color": 5,
+        "width": 1000,
+        "height": 1060,
+        "content": "## 📌 **Comment utiliser le workflow**\n\n### ✅ **Étape 1 : Saisir les données**\n- Fournissez les paramètres nécessaires comme `collection_slug`, `chain`, `address` ou `identifier`.\n\n### ✅ **Étape 2 : Exécuter les appels API**\n- Le workflow récupère et structure **la propriété des NFT, les métadonnées et les analyses**.\n\n### ✅ **Étape 3 : Analyser et afficher les résultats**\n- Les résultats peuvent être intégrés dans des tableaux de bord, des alertes ou des notifications Telegram.\n\n---\n\n## ⚠️ **Requêtes API courantes & exemples**\n\n### **1️⃣ Obtenir le profil utilisateur OpenSea**\n```plaintext\nGET https://api.opensea.io/api/v2/accounts/0xA5f49655E6814d9262fb656d92f17D7874d5Ac7E\n```\n\n### **2️⃣ Obtenir les détails d’une collection**\n```plaintext\nGET https://api.opensea.io/api/v2/collections/boredapeyachtclub\n```\n\n### **3️⃣ Obtenir les métadonnées d’un NFT**\n```plaintext\nGET https://api.opensea.io/api/v2/chain/ethereum/contract/0xABCDEF.../nfts/1234\n```\n\n### **4️⃣ Obtenir tous les NFTs détenus par un portefeuille**\n```plaintext\nGET https://api.opensea.io/api/v2/chain/ethereum/account/0x123.../nfts\n```\n\n### **5️⃣ Obtenir les détails d’un token de paiement**\n```plaintext\nGET https://api.opensea.io/api/v2/chain/ethereum/payment_token/0xABC...DEF\n```\n\n---\n\n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "c96fc837-37b2-4351-9175-7b52fba1e38b",
+      "name": "Note Autocollante2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2940,
+        -1240
+      ],
+      "parameters": {
+        "color": 3,
+        "width": 840,
+        "height": 480,
+        "content": "## ⚡ **Gestion des erreurs et dépannage**\n| **Code d'erreur** | **Description** |\n|--------------|----------------|\n| `200` | Succès |\n| `400` | Requête incorrecte (Entrée invalide) |\n| `404` | Non trouvé (Slug, adresse ou identifiant incorrect) |\n| `500` | Erreur serveur (Problème avec l'API OpenSea) |\n\n### 🔹 **Correction des erreurs courantes**\n- Assurez-vous que l'**adresse du portefeuille**, l'**identifiant NFT** ou le **slug de la collection** sont corrects.\n- Utilisez toujours `\"matic\"` au lieu de `\"polygon\"` pour l'entrée de la chaîne.\n- Si l'API OpenSea est **indisponible**, réessayez après un certain temps.\n\n---\n\n## 🚀 **Contactez-moi pour du support**\nSi vous avez besoin d'aide, d'analyses personnalisées OpenSea NFT ou de support en automatisation, n'hésitez pas à me contacter sur LinkedIn :\n\n🌐 **Don Jayamaha – LinkedIn**  \n🔗 [http://linkedin.com/in/donjayamahajr](http://linkedin.com/in/donjayamahajr)"
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": false,
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1bdf4330-2c81-47dc-8729-1737eb19cd40",
+  "connections": {
+    "Cerveau Agent NFT": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent NFT OpenSea",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenSea Obtenir NFT": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent NFT OpenSea",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mémoire Agent NFT": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agent NFT OpenSea",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenSea Obtenir Caractéristiques": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent NFT OpenSea",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenSea Obtenir Compte": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent NFT OpenSea",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenSea Obtenir Contrat": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent NFT OpenSea",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenSea Obtenir Collection": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent NFT OpenSea",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déclencheur d'entrée du workflow": {
+      "main": [
+        [
+          {
+            "node": "Agent NFT OpenSea",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenSea Obtenir Collections": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent NFT OpenSea",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenSea Obtenir Jeton de Paiement": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent NFT OpenSea",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenSea Obtenir NFTs par Compte": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent NFT OpenSea",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenSea Obtenir NFTs par Contrat": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent NFT OpenSea",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenSea Obtenir NFTs par Collection": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent NFT OpenSea",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

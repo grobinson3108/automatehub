@@ -1,0 +1,11 @@
+{
+  "name": "Bundle_Entrepreneur",
+  "description": "\ud83d\udce6 BUNDLE ENTREPRENEUR : Marketing + Vente + Productivit\u00e9",
+  "prix": 349,
+  "included_packs": [
+    "Pack_Marketing_Complet",
+    "Pack_Vente_CRM",
+    "Pack_Productivite_Entreprise"
+  ],
+  "total_workflows": 250
+}

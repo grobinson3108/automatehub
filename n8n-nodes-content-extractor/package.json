@@ -1,0 +1,46 @@
+{
+  "name": "n8n-nodes-content-extractor",
+  "version": "1.0.0",
+  "description": "Content Extractor nodes for n8n - Extract YouTube transcripts and scrape web content",
+  "keywords": [
+    "n8n",
+    "n8n-node",
+    "youtube",
+    "transcript",
+    "scraping",
+    "content-extraction",
+    "dumpling-alternative"
+  ],
+  "author": {
+    "name": "AutomateHub",
+    "email": "contact@automatehub.fr"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/automatehub/n8n-nodes-content-extractor"
+  },
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "jest"
+  },
+  "files": [
+    "dist"
+  ],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": [
+      "dist/credentials/ContentExtractorApi.credentials.js"
+    ],
+    "nodes": [
+      "dist/nodes/ContentExtractor/ContentExtractor.node.js"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "n8n-core": "^1.0.0",
+    "n8n-workflow": "^1.0.0",
+    "typescript": "^5.0.0"
+  }
+}

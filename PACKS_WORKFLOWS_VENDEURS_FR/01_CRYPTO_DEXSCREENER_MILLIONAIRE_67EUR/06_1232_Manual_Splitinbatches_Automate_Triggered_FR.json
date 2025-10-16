@@ -1,0 +1,140 @@
+{
+  "nodes": [
+    {
+      "name": "Lors du clic sur 'exécuter'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        430,
+        310
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "name": "Fonction",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        630,
+        310
+      ],
+      "parameters": {
+        "functionCode": "const newItems = [];\n\nfor (let i=0;i<10;i++) {\n  newItems.push({json:{i}});\n}\n\nreturn newItems;"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "DiviserEnLots",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        830,
+        310
+      ],
+      "parameters": {
+        "options": {},
+        "batchSize": 1
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "SI",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1030,
+        460
+      ],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"SplitInBatches\"].context[\"currentRunIndex\"];}}",
+              "value2": 5,
+              "operation": "equal"
+            }
+          ],
+          "boolean": []
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Définir",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1230,
+        360
+      ],
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "Message",
+              "value": "Loop Ended"
+            }
+          ]
+        },
+        "options": {},
+        "keepOnlySet": true
+      },
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "SI": {
+      "main": [
+        [
+          {
+            "node": "Définir",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "DiviserEnLots",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fonction": {
+      "main": [
+        [
+          {
+            "node": "DiviserEnLots",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DiviserEnLots": {
+      "main": [
+        [
+          {
+            "node": "SI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lors du clic sur 'exécuter'": {
+      "main": [
+        [
+          {
+            "node": "Fonction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

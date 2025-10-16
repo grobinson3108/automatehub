@@ -1,0 +1,431 @@
+/* 
+ * OneUI theme is loaded via link tag in app.blade.php
+ * This file contains only custom styles and utilities that extend OneUI
+ */
+
+/* Import Tailwind utilities only - no base styles */
+@import 'tailwindcss';
+
+@plugin 'tailwindcss-animate';
+
+@source '../views';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+    --font-sans:
+        'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+    --radius: 0.5rem;
+    --radius-lg: var(--radius);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-sm: calc(var(--radius) - 4px);
+
+    /* 🎨 AutomateHub Orange Theme - Light Mode */
+    --color-background: hsl(0 0% 100%);
+    --color-foreground: hsl(20 14.3% 4.1%);
+
+    --color-card: hsl(0 0% 100%);
+    --color-card-foreground: hsl(20 14.3% 4.1%);
+
+    --color-popover: hsl(0 0% 100%);
+    --color-popover-foreground: hsl(20 14.3% 4.1%);
+
+    --color-primary: hsl(24.6 95% 53.1%); /* 🔥 Orange vibrant #FF7A1F */
+    --color-primary-foreground: hsl(60 9.1% 97.8%);
+
+    --color-secondary: hsl(60 4.8% 95.9%);
+    --color-secondary-foreground: hsl(24 9.8% 10%);
+
+    --color-muted: hsl(60 4.8% 95.9%);
+    --color-muted-foreground: hsl(25 5.3% 44.7%);
+
+    --color-accent: hsl(60 4.8% 95.9%);
+    --color-accent-foreground: hsl(24 9.8% 10%);
+
+    --color-destructive: hsl(0 84.2% 60.2%);
+    --color-destructive-foreground: hsl(60 9.1% 97.8%);
+
+    --color-border: hsl(20 5.9% 90%);
+    --color-input: hsl(20 5.9% 90%);
+    --color-ring: hsl(24.6 95% 53.1%);
+
+    --color-chart-1: 24.6 95% 53.1%;
+    --color-chart-2: 20.5 90.2% 48.2%;
+    --color-chart-3: 35 100% 50%;
+    --color-chart-4: 10 80% 50%;
+    --color-chart-5: 40 100% 55%;
+
+    --color-sidebar: 60 9.1% 97.8%;
+    --color-sidebar-foreground: 20 14.3% 4.1%;
+    --color-sidebar-primary: 24.6 95% 53.1%;
+    --color-sidebar-primary-foreground: 60 9.1% 97.8%;
+    --color-sidebar-accent: 60 4.8% 95.9%;
+    --color-sidebar-accent-foreground: 24 9.8% 10%;
+    --color-sidebar-border: 20 5.9% 90%;
+    --color-sidebar-ring: 24.6 95% 53.1%;
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+        border-color: var(--color-gray-200, currentColor);
+    }
+
+    /* 🌙 Dark Mode Colors */
+    .dark {
+        --color-background: hsl(20 14.3% 4.1%);
+        --color-foreground: hsl(60 9.1% 97.8%);
+
+        --color-card: hsl(24 9.8% 8%);
+        --color-card-foreground: hsl(0 0% 95%);
+
+        --color-popover: hsl(20 14.3% 4.1%);
+        --color-popover-foreground: hsl(60 9.1% 97.8%);
+
+        --color-primary: hsl(20.5 90.2% 48.2%); /* 🔥 Orange chaud #E86426 */
+        --color-primary-foreground: hsl(60 9.1% 97.8%);
+
+        --color-secondary: hsl(12 6.5% 15.1%);
+        --color-secondary-foreground: hsl(60 9.1% 97.8%);
+
+        --color-muted: hsl(12 6.5% 15.1%);
+        --color-muted-foreground: hsl(24 5.4% 63.9%);
+
+        --color-accent: hsl(12 6.5% 15.1%);
+        --color-accent-foreground: hsl(60 9.1% 97.8%);
+
+        --color-destructive: hsl(0 72.2% 50.6%);
+        --color-destructive-foreground: hsl(60 9.1% 97.8%);
+
+        --color-border: hsl(12 6.5% 15.1%);
+        --color-input: hsl(12 6.5% 15.1%);
+        --color-ring: hsl(20.5 90.2% 48.2%);
+    }
+}
+
+/* OneUI Color Variables Override */
+:root {
+    /* OneUI Primary Colors */
+    --bs-primary: #3b5998;
+    --bs-primary-rgb: 59, 89, 152;
+    --bs-success: #46c37b;
+    --bs-info: #5c90d2;
+    --bs-warning: #f3b760;
+    --bs-danger: #d26a5c;
+    
+    /* 🎨 AutomateHub Orange Theme - Light Mode */
+    --background: 0 0% 100%;
+    --foreground: 20 14.3% 4.1%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 20 14.3% 4.1%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 20 14.3% 4.1%;
+
+    --primary: 24.6 95% 53.1%; /* 🔥 Orange vibrant #FF7A1F */
+    --primary-foreground: 60 9.1% 97.8%;
+
+    --secondary: 60 4.8% 95.9%;
+    --secondary-foreground: 24 9.8% 10%;
+
+    --muted: 60 4.8% 95.9%;
+    --muted-foreground: 25 5.3% 44.7%;
+
+    --accent: 60 4.8% 95.9%;
+    --accent-foreground: 24 9.8% 10%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 60 9.1% 97.8%;
+
+    --border: 20 5.9% 90%;
+    --input: 20 5.9% 90%;
+    --ring: 24.6 95% 53.1%; /* Ring orange comme primary */
+
+    --chart-1: 24.6 95% 53.1%; /* Orange */
+    --chart-2: 20.5 90.2% 48.2%; /* Orange foncé */
+    --chart-3: 35 100% 50%; /* Orange doré */
+    --chart-4: 10 80% 50%; /* Rouge-orange */
+    --chart-5: 40 100% 55%; /* Jaune-orange */
+
+    --radius: 0.5rem;
+
+    --sidebar: 60 9.1% 97.8%;
+    --sidebar-foreground: 20 14.3% 4.1%;
+    --sidebar-primary: 24.6 95% 53.1%;
+    --sidebar-primary-foreground: 60 9.1% 97.8%;
+    --sidebar-accent: 60 4.8% 95.9%;
+    --sidebar-accent-foreground: 24 9.8% 10%;
+    --sidebar-border: 20 5.9% 90%;
+    --sidebar-ring: 24.6 95% 53.1%;
+}
+
+.dark {
+    /* 🌙 AutomateHub Orange Theme - Dark Mode */
+    --background: 20 14.3% 4.1%; /* Brun très foncé */
+    --foreground: 60 9.1% 97.8%;
+
+    --card: 24 9.8% 8%; /* Card avec teinte orange */
+    --card-foreground: 0 0% 95%;
+
+    --popover: 20 14.3% 4.1%;
+    --popover-foreground: 60 9.1% 97.8%;
+
+    --primary: 20.5 90.2% 48.2%; /* 🔥 Orange chaud #E86426 */
+    --primary-foreground: 60 9.1% 97.8%;
+
+    --secondary: 12 6.5% 15.1%;
+    --secondary-foreground: 60 9.1% 97.8%;
+
+    --muted: 12 6.5% 15.1%;
+    --muted-foreground: 24 5.4% 63.9%;
+
+    --accent: 12 6.5% 15.1%;
+    --accent-foreground: 60 9.1% 97.8%;
+
+    --destructive: 0 72.2% 50.6%;
+    --destructive-foreground: 60 9.1% 97.8%;
+
+    --border: 12 6.5% 15.1%;
+    --input: 12 6.5% 15.1%;
+    --ring: 20.5 90.2% 48.2%; /* Ring orange comme primary */
+
+    --chart-1: 20.5 90.2% 48.2%; /* Orange dark */
+    --chart-2: 24.6 95% 53.1%; /* Orange vif */
+    --chart-3: 35 85% 55%; /* Orange doré dark */
+    --chart-4: 10 75% 48%; /* Rouge-orange dark */
+    --chart-5: 40 90% 52%; /* Jaune-orange dark */
+
+    --sidebar: 20 14.3% 4.1%;
+    --sidebar-foreground: 60 9.1% 97.8%;
+    --sidebar-primary: 20.5 90.2% 48.2%;
+    --sidebar-primary-foreground: 60 9.1% 97.8%;
+    --sidebar-accent: 12 6.5% 15.1%;
+    --sidebar-accent-foreground: 60 9.1% 97.8%;
+    --sidebar-border: 12 6.5% 15.1%;
+    --sidebar-ring: 20.5 90.2% 48.2%;
+}
+
+/* Let OneUI handle all base styles */
+
+/* Custom utilities */
+.line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+
+.line-clamp-3 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+/* Loading animations */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: .5;
+    }
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Scrollbar styles */
+.scrollbar-thin {
+    scrollbar-width: thin;
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+    width: 8px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* OneUI Integration Styles */
+
+/* Content locking styles */
+.content-locked {
+    filter: blur(4px);
+    user-select: none;
+    pointer-events: none;
+}
+
+.content-blur {
+    filter: blur(3px);
+}
+
+.overlay-unlock {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(2px);
+}
+
+/* Block hover effects */
+.block-link-pop {
+    transition: all 0.15s ease-in-out;
+}
+
+.block-link-pop:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.block-link-shadow:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Custom badge styles */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 0.25rem;
+}
+
+/* Item circles */
+.item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+}
+
+.item-2x {
+    width: 4rem;
+    height: 4rem;
+}
+
+.item-circle {
+    border-radius: 50%;
+}
+
+/* Background utilities */
+.bg-primary-lighter {
+    background-color: rgba(59, 89, 152, 0.1);
+}
+
+.bg-success-light {
+    background-color: rgba(70, 195, 123, 0.1);
+}
+
+.bg-warning-light {
+    background-color: rgba(243, 183, 96, 0.1);
+}
+
+.bg-info-light {
+    background-color: rgba(92, 144, 210, 0.1);
+}
+
+.bg-body-extra-light {
+    background-color: #fafbfc;
+}
+
+.bg-image-bottom {
+    background-position: center bottom;
+    background-size: cover;
+}
+
+.bg-black-50 {
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* Text utilities */
+.text-white-75 {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.text-dual {
+    color: #0e1a2b;
+}
+
+/* Navigation styles */
+.nav-main-link {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    transition: all 0.15s ease-in-out;
+}
+
+.nav-main-link:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+}
+
+.nav-main-link-icon {
+    margin-right: 0.5rem;
+}
+
+/* Hero buttons */
+.btn-hero {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* Fix for Font Awesome icons */
+.fa-ul {
+    list-style: none;
+    margin-left: 2rem;
+    padding-left: 0;
+}
+
+.fa-li {
+    position: absolute;
+    left: -2rem;
+    width: 2rem;
+    text-align: center;
+}
+
+/* Block header customization */
+.block-header-default {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+/* Responsive utilities */
+@media (max-width: 768px) {
+    .btn-hero {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .content {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}

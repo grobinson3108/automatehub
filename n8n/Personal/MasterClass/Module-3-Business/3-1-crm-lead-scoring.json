@@ -1,0 +1,341 @@
+{
+  "name": "3.1 - CRM Lead Scoring Avancé",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "labelIds": ["INBOX"],
+          "q": "from:contact@* OR from:info@* OR from:sales@*"
+        },
+        "format": "resolved"
+      },
+      "id": "lead-email-trigger-301",
+      "name": "Nouveaux Leads Email",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "crm/new-lead",
+        "options": {}
+      },
+      "id": "lead-webhook-301",
+      "name": "Webhook Nouveau Lead",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        400
+      ],
+      "webhookId": "crm-lead-301"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normalisation des données de leads\nconst inputData = $input.first().json;\nlet leadData = {};\n\n// Détecter la source du lead\nif (inputData.subject) {\n  // Source : Email\n  leadData = {\n    source: 'email',\n    email: inputData.from.address,\n    name: inputData.from.name || inputData.from.address.split('@')[0],\n    company: inputData.from.address.split('@')[1] || '',\n    subject: inputData.subject,\n    message: inputData.textPlain || inputData.textHtml || '',\n    date: inputData.date,\n    raw_data: inputData\n  };\n} else {\n  // Source : Webhook\n  leadData = {\n    source: 'webhook',\n    email: inputData.email,\n    name: inputData.name || inputData.first_name + ' ' + inputData.last_name,\n    company: inputData.company || '',\n    phone: inputData.phone || '',\n    website: inputData.website || '',\n    interest: inputData.interest || '',\n    message: inputData.message || '',\n    date: inputData.timestamp || new Date().toISOString(),\n    raw_data: inputData\n  };\n}\n\n// Enrichissement initial\nleadData.lead_id = `lead_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;\nleadData.processed_at = new Date().toISOString();\nleadData.status = 'new';\n\nreturn [{ json: leadData }];"
+      },
+      "id": "normalize-lead-data-301",
+      "name": "Normaliser Données Lead",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.clearbit.com/v2/people/find",
+        "method": "GET",
+        "headers": {
+          "Authorization": "Bearer YOUR_CLEARBIT_API_KEY"
+        },
+        "qs": {
+          "email": "={{ $json.email }}"
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "enrich-clearbit-301",
+      "name": "Enrichir avec Clearbit",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Système de scoring avancé\nconst leadData = $input.first().json;\nconst enrichmentData = $input.last().json || {};\n\n// Initialiser le score\nlet score = 0;\nlet scoringDetails = {};\n\n// 1. Scoring basé sur l'email et le domaine\nconst emailDomain = leadData.email.split('@')[1];\nconst isBusinessEmail = !['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'].includes(emailDomain);\n\nif (isBusinessEmail) {\n  score += 25;\n  scoringDetails.email_domain = { points: 25, reason: 'Business email domain' };\n} else {\n  scoringDetails.email_domain = { points: 0, reason: 'Personal email domain' };\n}\n\n// 2. Scoring basé sur les données enrichies\nif (enrichmentData.person) {\n  const person = enrichmentData.person;\n  const company = person.employment?.name;\n  \n  // Taille de l'entreprise\n  if (company) {\n    const employeeCount = person.employment?.employeeCount || 0;\n    if (employeeCount > 1000) {\n      score += 20;\n      scoringDetails.company_size = { points: 20, reason: 'Large company (>1000 employees)' };\n    } else if (employeeCount > 100) {\n      score += 15;\n      scoringDetails.company_size = { points: 15, reason: 'Medium company (100-1000 employees)' };\n    } else if (employeeCount > 10) {\n      score += 10;\n      scoringDetails.company_size = { points: 10, reason: 'Small company (10-100 employees)' };\n    } else {\n      scoringDetails.company_size = { points: 0, reason: 'Very small company (<10 employees)' };\n    }\n  }\n  \n  // Poste/rôle\n  const role = person.employment?.title?.toLowerCase() || '';\n  if (role.includes('ceo') || role.includes('founder') || role.includes('president')) {\n    score += 25;\n    scoringDetails.decision_maker = { points: 25, reason: 'C-level or founder' };\n  } else if (role.includes('director') || role.includes('manager') || role.includes('head')) {\n    score += 15;\n    scoringDetails.decision_maker = { points: 15, reason: 'Management level' };\n  } else if (role.includes('lead') || role.includes('senior')) {\n    score += 10;\n    scoringDetails.decision_maker = { points: 10, reason: 'Senior level' };\n  } else {\n    scoringDetails.decision_maker = { points: 0, reason: 'Individual contributor' };\n  }\n}\n\n// 3. Scoring basé sur le contenu du message\nif (leadData.message) {\n  const message = leadData.message.toLowerCase();\n  const urgentKeywords = ['urgent', 'asap', 'immediately', 'quickly', 'soon'];\n  const budgetKeywords = ['budget', 'price', 'cost', 'investment', 'purchase'];\n  const timeframeKeywords = ['when', 'timeline', 'deadline', 'schedule'];\n  \n  if (urgentKeywords.some(keyword => message.includes(keyword))) {\n    score += 15;\n    scoringDetails.urgency = { points: 15, reason: 'Urgent language detected' };\n  }\n  \n  if (budgetKeywords.some(keyword => message.includes(keyword))) {\n    score += 10;\n    scoringDetails.budget_discussion = { points: 10, reason: 'Budget discussion' };\n  }\n  \n  if (timeframeKeywords.some(keyword => message.includes(keyword))) {\n    score += 10;\n    scoringDetails.timeline_discussion = { points: 10, reason: 'Timeline discussion' };\n  }\n}\n\n// 4. Scoring basé sur la source\nif (leadData.source === 'webhook') {\n  score += 15;\n  scoringDetails.lead_source = { points: 15, reason: 'Direct form submission' };\n} else {\n  score += 5;\n  scoringDetails.lead_source = { points: 5, reason: 'Email inquiry' };\n}\n\n// Déterminer la priorité\nlet priority = 'low';\nlet nextAction = 'nurture';\n\nif (score >= 80) {\n  priority = 'hot';\n  nextAction = 'call_immediately';\n} else if (score >= 60) {\n  priority = 'warm';\n  nextAction = 'call_today';\n} else if (score >= 40) {\n  priority = 'lukewarm';\n  nextAction = 'email_followup';\n} else if (score >= 20) {\n  priority = 'cold';\n  nextAction = 'add_to_newsletter';\n}\n\n// Données finales\nconst scoredLead = {\n  ...leadData,\n  enrichment: enrichmentData,\n  score: score,\n  scoring_details: scoringDetails,\n  priority: priority,\n  next_action: nextAction,\n  scored_at: new Date().toISOString()\n};\n\nreturn [{ json: scoredLead }];"
+      },
+      "id": "lead-scoring-engine-301",
+      "name": "Moteur de Scoring",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "record",
+        "operation": "create",
+        "base": "VOTRE_CRM_BASE_ID",
+        "table": "Leads",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Lead_ID": "={{ $json.lead_id }}",
+            "Name": "={{ $json.name }}",
+            "Email": "={{ $json.email }}",
+            "Company": "={{ $json.company }}",
+            "Phone": "={{ $json.phone }}",
+            "Source": "={{ $json.source }}",
+            "Score": "={{ $json.score }}",
+            "Priority": "={{ $json.priority }}",
+            "Next_Action": "={{ $json.next_action }}",
+            "Message": "={{ $json.message }}",
+            "Processed_At": "={{ $json.processed_at }}",
+            "Scored_At": "={{ $json.scored_at }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "save-to-crm-301",
+      "name": "Sauvegarder dans CRM",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [
+        1250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "hot-lead-condition",
+              "leftValue": "={{ $json.priority }}",
+              "rightValue": "hot",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-hot-leads-301",
+      "name": "Filtrer Leads Chauds",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1500,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#sales",
+        "text": "🔥 **LEAD CHAUD DÉTECTÉ !**\n\n*Nom:* {{ $json.name }}\n*Email:* {{ $json.email }}\n*Entreprise:* {{ $json.company }}\n*Score:* {{ $json.score }}/100\n*Priorité:* {{ $json.priority }}\n*Action:* {{ $json.next_action }}\n\n*Message:*\n> {{ $json.message }}\n\n*Détails du scoring:*\n{{ Object.keys($json.scoring_details).map(key => `• ${key}: ${$json.scoring_details[key].points} pts - ${$json.scoring_details[key].reason}`).join('\\n') }}\n\n**📞 APPELER IMMÉDIATEMENT !**",
+        "otherOptions": {
+          "username": "Lead Scoring Bot"
+        }
+      },
+      "id": "notify-hot-lead-301",
+      "name": "Notifier Lead Chaud",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [
+        1750,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "subject": "🔥 LEAD CHAUD - Action Immédiate Requise",
+        "message": "Un lead avec un score élevé vient d'être détecté:\n\nNom: {{ $json.name }}\nEmail: {{ $json.email }}\nEntreprise: {{ $json.company }}\nScore: {{ $json.score }}/100\nPriorité: {{ $json.priority }}\n\nMessage du lead:\n{{ $json.message }}\n\nAction recommandée: {{ $json.next_action }}\n\nContactez ce lead immédiatement pour maximiser les chances de conversion.\n\nLien CRM: https://airtable.com/your-base/{{ $json.lead_id }}",
+        "toList": "sales@votre-entreprise.com",
+        "options": {
+          "ccList": "manager@votre-entreprise.com"
+        }
+      },
+      "id": "email-sales-team-301",
+      "name": "Email Équipe Vente",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1500,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": "VOTRE_ANALYTICS_SHEET_ID",
+        "sheetName": "Lead_Scoring_Analytics",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $json.scored_at }}",
+            "Lead_ID": "={{ $json.lead_id }}",
+            "Name": "={{ $json.name }}",
+            "Email": "={{ $json.email }}",
+            "Company": "={{ $json.company }}",
+            "Source": "={{ $json.source }}",
+            "Score": "={{ $json.score }}",
+            "Priority": "={{ $json.priority }}",
+            "Next_Action": "={{ $json.next_action }}",
+            "Email_Domain_Score": "={{ $json.scoring_details.email_domain?.points || 0 }}",
+            "Company_Size_Score": "={{ $json.scoring_details.company_size?.points || 0 }}",
+            "Decision_Maker_Score": "={{ $json.scoring_details.decision_maker?.points || 0 }}",
+            "Urgency_Score": "={{ $json.scoring_details.urgency?.points || 0 }}",
+            "Lead_Source_Score": "={{ $json.scoring_details.lead_source?.points || 0 }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "analytics-tracking-301",
+      "name": "Tracking Analytics",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        2000,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Nouveaux Leads Email": {
+      "main": [
+        [
+          {
+            "node": "Normaliser Données Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook Nouveau Lead": {
+      "main": [
+        [
+          {
+            "node": "Normaliser Données Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normaliser Données Lead": {
+      "main": [
+        [
+          {
+            "node": "Enrichir avec Clearbit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enrichir avec Clearbit": {
+      "main": [
+        [
+          {
+            "node": "Moteur de Scoring",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Moteur de Scoring": {
+      "main": [
+        [
+          {
+            "node": "Sauvegarder dans CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sauvegarder dans CRM": {
+      "main": [
+        [
+          {
+            "node": "Filtrer Leads Chauds",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Email Équipe Vente",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Tracking Analytics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrer Leads Chauds": {
+      "main": [
+        [
+          {
+            "node": "Notifier Lead Chaud",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3-1-crm-lead-scoring-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "9",
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "module-3-business",
+      "name": "Module 3 - Business"
+    }
+  ]
+}

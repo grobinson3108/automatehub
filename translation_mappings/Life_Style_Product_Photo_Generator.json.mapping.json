@@ -1,0 +1,218 @@
+{
+  "workflow_path": "/var/www/automatehub/workflows_traduits/FR/AutomationTribe/5 - Produits Prennent Vie/Life_Style_Product_Photo_Generator.json",
+  "texts_map": {
+    "$text_1": {
+      "original": "Générateur de photos de produits de style de vie",
+      "path": "name",
+      "context": "workflow_name"
+    },
+    "$text_2": {
+      "original": "Lors de l'appui sur 'Tester le workflow'",
+      "path": "nodes[0].name",
+      "context": "node_name"
+    },
+    "$text_3": {
+      "original": "Attendre",
+      "path": "nodes[1].name",
+      "context": "node_name"
+    },
+    "$text_4": {
+      "original": "Obtenir l'image",
+      "path": "nodes[2].name",
+      "context": "node_name"
+    },
+    "$text_5": {
+      "original": "Envoyer la demande",
+      "path": "nodes[3].name",
+      "context": "node_name"
+    },
+    "$text_6": {
+      "original": "Obtenir le lien de l'image",
+      "path": "nodes[4].name",
+      "context": "node_name"
+    }
+  },
+  "modified_workflow": {
+    "name": "$text_1",
+    "nodes": [
+      {
+        "parameters": {},
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1,
+        "position": [
+          -300,
+          0
+        ],
+        "id": "8b1ea6dc-e3dd-4ccd-b089-a37cc434212c",
+        "name": "$text_2"
+      },
+      {
+        "parameters": {
+          "amount": 300
+        },
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "position": [
+          140,
+          0
+        ],
+        "id": "8480c7bc-3d2b-469b-80d6-b4285d2b25b5",
+        "name": "$text_3",
+        "webhookId": "26bf2418-8ca0-4f25-99fa-8ee7eddba1da"
+      },
+      {
+        "parameters": {
+          "url": "={{ $json.poll_url }}",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "x-api-key",
+                "value": "SG_8c67c8a8bcd9c008"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          340,
+          0
+        ],
+        "id": "6b56f2c0-f036-4e3a-b162-dabd429b97a1",
+        "name": "$text_4"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://api.segmind.com/workflows/6780bee21cd362b65eb04173-v7",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "x-api-key",
+                "value": "SG_8c67c8a8bcd9c008"
+              }
+            ]
+          },
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "product_image",
+                "value": "https://stock-graphics.com/delete/wine.png"
+              },
+              {
+                "name": "prompt",
+                "value": "generate an image with a man in a red suite holding a bottle of vine"
+              },
+              {
+                "name": "product_type",
+                "value": "WIne"
+              },
+              {
+                "name": "seed",
+                "value": "4715087"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          -80,
+          0
+        ],
+        "id": "6f13c135-4186-4c36-ba51-a93bec1b0cbe",
+        "name": "$text_5"
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "d3fd976e-78d2-4cd4-bb5e-2d65ae51f8c7",
+                "name": "image_url",
+                "value": "={{ JSON.parse($json[\"output\"])[0][\"value\"][\"data\"] }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          560,
+          0
+        ],
+        "id": "d69b7b5c-da56-460a-b64a-f5190da5ad52",
+        "name": "$text_6"
+      }
+    ],
+    "pinData": {},
+    "connections": {
+      "When clicking ‘Test workflow’": {
+        "main": [
+          [
+            {
+              "node": "Send request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Wait": {
+        "main": [
+          [
+            {
+              "node": "Get image",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get image": {
+        "main": [
+          [
+            {
+              "node": "Get image link",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Send request": {
+        "main": [
+          [
+            {
+              "node": "Wait",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "active": false,
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "versionId": "919d2658-bedf-42b2-ab53-44113a62d9a1",
+    "meta": {
+      "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+    },
+    "id": "uDUVv2QT7wjxuMxn",
+    "tags": [
+      {
+        "id": "1",
+        "name": "Audelalia"
+      }
+    ]
+  }
+}

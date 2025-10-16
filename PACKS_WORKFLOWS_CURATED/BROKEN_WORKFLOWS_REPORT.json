@@ -1,0 +1,2757 @@
+{
+    "total_workflows": 581,
+    "broken_workflows": 550,
+    "fixed_workflows": 0,
+    "errors": [
+        {
+            "pack": "01_CRYPTO_DEXSCREENER_MILLIONAIRE_67EUR",
+            "file": "01_1522_Telegram_Schedule_Send_Webhook.json",
+            "reason": "Connections cassées - 12\/12 vont vers error handlers"
+        },
+        {
+            "pack": "01_CRYPTO_DEXSCREENER_MILLIONAIRE_67EUR",
+            "file": "02_1632_HTTP_Telegram_Monitor_Webhook.json",
+            "reason": "Connections cassées - 11\/11 vont vers error handlers"
+        },
+        {
+            "pack": "01_CRYPTO_DEXSCREENER_MILLIONAIRE_67EUR",
+            "file": "03_0340_Telegram_Automation_Webhook.json",
+            "reason": "Connections cassées - 75\/75 vont vers error handlers"
+        },
+        {
+            "pack": "01_CRYPTO_DEXSCREENER_MILLIONAIRE_67EUR",
+            "file": "04_1304_Telegram_Code_Monitor_Webhook.json",
+            "reason": "Connections cassées - 11\/11 vont vers error handlers"
+        },
+        {
+            "pack": "01_CRYPTO_DEXSCREENER_MILLIONAIRE_67EUR",
+            "file": "05_1280_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "01_CRYPTO_DEXSCREENER_MILLIONAIRE_67EUR",
+            "file": "06_2024_Linkedin_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 37\/37 vont vers error handlers"
+        },
+        {
+            "pack": "01_CRYPTO_DEXSCREENER_MILLIONAIRE_67EUR",
+            "file": "07_1342_Linkedin_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 75\/75 vont vers error handlers"
+        },
+        {
+            "pack": "01_CRYPTO_DEXSCREENER_MILLIONAIRE_67EUR",
+            "file": "08_1782_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "01_CRYPTO_DEXSCREENER_MILLIONAIRE_67EUR",
+            "file": "10_1631_HTTP_Telegram_Automation_Webhook.json",
+            "reason": "Connections cassées - 39\/39 vont vers error handlers"
+        },
+        {
+            "pack": "01_CRYPTO_DEXSCREENER_MILLIONAIRE_67EUR",
+            "file": "11_1684_HTTP_Telegram_Automation_Webhook.json",
+            "reason": "Connections cassées - 39\/39 vont vers error handlers"
+        },
+        {
+            "pack": "01_CRYPTO_DEXSCREENER_MILLIONAIRE_67EUR",
+            "file": "13_0383_Telegram_Wait_Create_Webhook.json",
+            "reason": "Connections cassées - 56\/56 vont vers error handlers"
+        },
+        {
+            "pack": "01_CRYPTO_DEXSCREENER_MILLIONAIRE_67EUR",
+            "file": "14_1182_Telegram_Webhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 53\/53 vont vers error handlers"
+        },
+        {
+            "pack": "01_CRYPTO_DEXSCREENER_MILLIONAIRE_67EUR",
+            "file": "15_1878_Telegram_Wait_Create_Webhook.json",
+            "reason": "Connections cassées - 188\/188 vont vers error handlers"
+        },
+        {
+            "pack": "01_CRYPTO_DEXSCREENER_MILLIONAIRE_67EUR",
+            "file": "16_1904_Telegram_Limit_Process_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "01_CRYPTO_DEXSCREENER_MILLIONAIRE_67EUR",
+            "file": "17_1490_Telegram_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 11\/11 vont vers error handlers"
+        },
+        {
+            "pack": "01_CRYPTO_DEXSCREENER_MILLIONAIRE_67EUR",
+            "file": "18_1470_Telegram_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 69\/69 vont vers error handlers"
+        },
+        {
+            "pack": "01_CRYPTO_DEXSCREENER_MILLIONAIRE_67EUR",
+            "file": "19_1439_Telegram_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "01_CRYPTO_DEXSCREENER_MILLIONAIRE_67EUR",
+            "file": "20_0462_Telegram_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "02_BLOCKCHAIN_TRADING_EMPIRE_47EUR",
+            "file": "01_1905_Telegram_Googleanalytics_Automation_Webhook.json",
+            "reason": "Connections cassées - 52\/52 vont vers error handlers"
+        },
+        {
+            "pack": "02_BLOCKCHAIN_TRADING_EMPIRE_47EUR",
+            "file": "02_1280_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "02_BLOCKCHAIN_TRADING_EMPIRE_47EUR",
+            "file": "03_2024_Linkedin_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 37\/37 vont vers error handlers"
+        },
+        {
+            "pack": "02_BLOCKCHAIN_TRADING_EMPIRE_47EUR",
+            "file": "04_1342_Linkedin_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 75\/75 vont vers error handlers"
+        },
+        {
+            "pack": "02_BLOCKCHAIN_TRADING_EMPIRE_47EUR",
+            "file": "05_1782_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "02_BLOCKCHAIN_TRADING_EMPIRE_47EUR",
+            "file": "07_1631_HTTP_Telegram_Automation_Webhook.json",
+            "reason": "Connections cassées - 39\/39 vont vers error handlers"
+        },
+        {
+            "pack": "02_BLOCKCHAIN_TRADING_EMPIRE_47EUR",
+            "file": "08_1684_HTTP_Telegram_Automation_Webhook.json",
+            "reason": "Connections cassées - 39\/39 vont vers error handlers"
+        },
+        {
+            "pack": "02_BLOCKCHAIN_TRADING_EMPIRE_47EUR",
+            "file": "10_0383_Telegram_Wait_Create_Webhook.json",
+            "reason": "Connections cassées - 56\/56 vont vers error handlers"
+        },
+        {
+            "pack": "02_BLOCKCHAIN_TRADING_EMPIRE_47EUR",
+            "file": "11_1182_Telegram_Webhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 53\/53 vont vers error handlers"
+        },
+        {
+            "pack": "02_BLOCKCHAIN_TRADING_EMPIRE_47EUR",
+            "file": "12_1878_Telegram_Wait_Create_Webhook.json",
+            "reason": "Connections cassées - 188\/188 vont vers error handlers"
+        },
+        {
+            "pack": "02_BLOCKCHAIN_TRADING_EMPIRE_47EUR",
+            "file": "13_1904_Telegram_Limit_Process_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "02_BLOCKCHAIN_TRADING_EMPIRE_47EUR",
+            "file": "14_1490_Telegram_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 11\/11 vont vers error handlers"
+        },
+        {
+            "pack": "02_BLOCKCHAIN_TRADING_EMPIRE_47EUR",
+            "file": "15_1470_Telegram_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 69\/69 vont vers error handlers"
+        },
+        {
+            "pack": "02_BLOCKCHAIN_TRADING_EMPIRE_47EUR",
+            "file": "16_1439_Telegram_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "02_BLOCKCHAIN_TRADING_EMPIRE_47EUR",
+            "file": "17_0462_Telegram_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "02_BLOCKCHAIN_TRADING_EMPIRE_47EUR",
+            "file": "18_1341_Telegram_Splitout_Automate_Webhook.json",
+            "reason": "Connections cassées - 59\/59 vont vers error handlers"
+        },
+        {
+            "pack": "03_COINGECKO_PROFIT_MACHINE_37EUR",
+            "file": "01_1905_Telegram_Googleanalytics_Automation_Webhook.json",
+            "reason": "Connections cassées - 52\/52 vont vers error handlers"
+        },
+        {
+            "pack": "03_COINGECKO_PROFIT_MACHINE_37EUR",
+            "file": "02_1450_Telegram_Automation_Webhook.json",
+            "reason": "Connections cassées - 12\/12 vont vers error handlers"
+        },
+        {
+            "pack": "03_COINGECKO_PROFIT_MACHINE_37EUR",
+            "file": "03_1280_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "03_COINGECKO_PROFIT_MACHINE_37EUR",
+            "file": "04_2024_Linkedin_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 37\/37 vont vers error handlers"
+        },
+        {
+            "pack": "03_COINGECKO_PROFIT_MACHINE_37EUR",
+            "file": "05_1342_Linkedin_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 75\/75 vont vers error handlers"
+        },
+        {
+            "pack": "03_COINGECKO_PROFIT_MACHINE_37EUR",
+            "file": "06_1782_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "03_COINGECKO_PROFIT_MACHINE_37EUR",
+            "file": "08_1631_HTTP_Telegram_Automation_Webhook.json",
+            "reason": "Connections cassées - 39\/39 vont vers error handlers"
+        },
+        {
+            "pack": "03_COINGECKO_PROFIT_MACHINE_37EUR",
+            "file": "09_1684_HTTP_Telegram_Automation_Webhook.json",
+            "reason": "Connections cassées - 39\/39 vont vers error handlers"
+        },
+        {
+            "pack": "03_COINGECKO_PROFIT_MACHINE_37EUR",
+            "file": "11_0383_Telegram_Wait_Create_Webhook.json",
+            "reason": "Connections cassées - 56\/56 vont vers error handlers"
+        },
+        {
+            "pack": "03_COINGECKO_PROFIT_MACHINE_37EUR",
+            "file": "12_1182_Telegram_Webhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 53\/53 vont vers error handlers"
+        },
+        {
+            "pack": "03_COINGECKO_PROFIT_MACHINE_37EUR",
+            "file": "13_1878_Telegram_Wait_Create_Webhook.json",
+            "reason": "Connections cassées - 188\/188 vont vers error handlers"
+        },
+        {
+            "pack": "03_COINGECKO_PROFIT_MACHINE_37EUR",
+            "file": "14_1904_Telegram_Limit_Process_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "03_COINGECKO_PROFIT_MACHINE_37EUR",
+            "file": "15_1490_Telegram_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 11\/11 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "01_1543_Manual_Openai_Automation_Triggered.json",
+            "reason": "Connections cassées - 2\/2 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "02_1669_Manual_Openai_Automation_Triggered.json",
+            "reason": "Connections cassées - 2\/2 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "03_1618_Openai_GoogleSheets_Create_Triggered.json",
+            "reason": "Connections cassées - 3\/3 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "04_1177_Openai_GoogleSheets_Create_Triggered.json",
+            "reason": "Connections cassées - 3\/3 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "05_1878_Telegram_Wait_Create_Webhook.json",
+            "reason": "Connections cassées - 188\/188 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "06_1341_Telegram_Splitout_Automate_Webhook.json",
+            "reason": "Connections cassées - 59\/59 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "07_1288_Telegram_Wait_Automation_Webhook.json",
+            "reason": "Connections cassées - 162\/162 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "08_1281_Code_Schedule_Monitor_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "09_1278_Code_Schedule_Monitor_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "10_0299_Code_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "11_1653_Code_Webhook_Send_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "12_0889_Converttofile_HTTP_Create_Webhook.json",
+            "reason": "Connections cassées - 34\/34 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "13_1282_Wait_Code_Import_Webhook.json",
+            "reason": "Connections cassées - 131\/131 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "14_1513_Wait_Splitout_Process_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "15_0523_Wait_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "16_1512_Wait_Splitout_Process_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "17_1678_Splitout_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 34\/34 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "18_0554_Splitout_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 34\/34 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "19_1995_Limit_Splitout_Automation_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "04_IA_BUSINESS_REVOLUTION_47EUR",
+            "file": "20_1645_Limit_Splitout_Automation_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "05_CONTENT_VIRAL_FACTORY_39EUR",
+            "file": "01_1807_Linkedin_Googledocs_Automate_Webhook.json",
+            "reason": "Connections cassées - 60\/60 vont vers error handlers"
+        },
+        {
+            "pack": "05_CONTENT_VIRAL_FACTORY_39EUR",
+            "file": "02_1342_Linkedin_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 75\/75 vont vers error handlers"
+        },
+        {
+            "pack": "05_CONTENT_VIRAL_FACTORY_39EUR",
+            "file": "03_1280_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "05_CONTENT_VIRAL_FACTORY_39EUR",
+            "file": "04_1782_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "05_CONTENT_VIRAL_FACTORY_39EUR",
+            "file": "05_1709_Linkedin_Wordpress_Automation_Webhook.json",
+            "reason": "Connections cassées - 25\/25 vont vers error handlers"
+        },
+        {
+            "pack": "05_CONTENT_VIRAL_FACTORY_39EUR",
+            "file": "06_1121_Linkedin_Wait_Create_Webhook.json",
+            "reason": "Connections cassées - 139\/139 vont vers error handlers"
+        },
+        {
+            "pack": "05_CONTENT_VIRAL_FACTORY_39EUR",
+            "file": "07_1330_Linkedin_Schedule_Automate_Webhook.json",
+            "reason": "Connections cassées - 10\/10 vont vers error handlers"
+        },
+        {
+            "pack": "05_CONTENT_VIRAL_FACTORY_39EUR",
+            "file": "08_1491_Linkedin_Wait_Create_Webhook.json",
+            "reason": "Connections cassées - 139\/139 vont vers error handlers"
+        },
+        {
+            "pack": "05_CONTENT_VIRAL_FACTORY_39EUR",
+            "file": "09_1922_Linkedin_Schedule_Automate_Webhook.json",
+            "reason": "Connections cassées - 10\/10 vont vers error handlers"
+        },
+        {
+            "pack": "05_CONTENT_VIRAL_FACTORY_39EUR",
+            "file": "10_1989_HTTP_Schedule_Create_Webhook.json",
+            "reason": "Connections cassées - 9\/9 vont vers error handlers"
+        },
+        {
+            "pack": "05_CONTENT_VIRAL_FACTORY_39EUR",
+            "file": "11_1470_Telegram_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 69\/69 vont vers error handlers"
+        },
+        {
+            "pack": "05_CONTENT_VIRAL_FACTORY_39EUR",
+            "file": "12_1482_Telegram_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 69\/69 vont vers error handlers"
+        },
+        {
+            "pack": "05_CONTENT_VIRAL_FACTORY_39EUR",
+            "file": "13_1288_Telegram_Wait_Automation_Webhook.json",
+            "reason": "Connections cassées - 162\/162 vont vers error handlers"
+        },
+        {
+            "pack": "05_CONTENT_VIRAL_FACTORY_39EUR",
+            "file": "14_2024_Linkedin_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 37\/37 vont vers error handlers"
+        },
+        {
+            "pack": "05_CONTENT_VIRAL_FACTORY_39EUR",
+            "file": "15_1939_Linkedin_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 9\/9 vont vers error handlers"
+        },
+        {
+            "pack": "05_CONTENT_VIRAL_FACTORY_39EUR",
+            "file": "16_1070_Telegram_Wordpress_Create_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "05_CONTENT_VIRAL_FACTORY_39EUR",
+            "file": "17_1273_Datetime_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "05_CONTENT_VIRAL_FACTORY_39EUR",
+            "file": "18_1272_Datetime_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "01_1808_HTTP_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 14\/14 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "02_1687_HTTP_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 14\/14 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "03_1304_Telegram_Code_Monitor_Webhook.json",
+            "reason": "Connections cassées - 11\/11 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "04_1280_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "05_1782_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "06_1182_Telegram_Webhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 53\/53 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "07_1878_Telegram_Wait_Create_Webhook.json",
+            "reason": "Connections cassées - 188\/188 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "08_1341_Telegram_Splitout_Automate_Webhook.json",
+            "reason": "Connections cassées - 59\/59 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "09_1919_Telegram_Splitout_Automate_Webhook.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "10_1487_Telegram_Extractfromfile_Automate_Webhook.json",
+            "reason": "Connections cassées - 19\/19 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "11_0782_Telegram_Redis_Create_Webhook.json",
+            "reason": "Connections cassées - 30\/30 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "12_2038_Telegram_Extractfromfile_Automate_Webhook.json",
+            "reason": "Connections cassées - 19\/19 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "13_2051_Telegram_Webhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 53\/53 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "14_1575_Telegramtool_Woocommercetool_Automate_Webhook.json",
+            "reason": "Connections cassées - 34\/34 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "15_2054_Deep_Research_Report_Generation_With_Open_Router_Google_Search_Webhook_Telegram_and_Notion.json",
+            "reason": "Connections cassées - 67\/67 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "16_1688_HTTP_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 38\/38 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "17_0970_HTTP_Schedule_Create_Webhook.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "18_0594_HTTP_Telegram_Create_Webhook.json",
+            "reason": "Connections cassées - 38\/38 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "19_0771_HTTP_Telegram_Create_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "06_TELEGRAM_CRYPTO_EMPIRE_52EUR",
+            "file": "20_1522_Telegram_Schedule_Send_Webhook.json",
+            "reason": "Connections cassées - 12\/12 vont vers error handlers"
+        },
+        {
+            "pack": "07_TELEGRAM_AI_ASSISTANT_SUPREME_42EUR",
+            "file": "01_Academic Assistant Chatbot (Telegram + OpenAI).json",
+            "reason": "Connections cassées - 3\/3 vont vers error handlers"
+        },
+        {
+            "pack": "07_TELEGRAM_AI_ASSISTANT_SUPREME_42EUR",
+            "file": "02_1439_Telegram_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "07_TELEGRAM_AI_ASSISTANT_SUPREME_42EUR",
+            "file": "03_0462_Telegram_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "07_TELEGRAM_AI_ASSISTANT_SUPREME_42EUR",
+            "file": "04_1341_Telegram_Splitout_Automate_Webhook.json",
+            "reason": "Connections cassées - 59\/59 vont vers error handlers"
+        },
+        {
+            "pack": "07_TELEGRAM_AI_ASSISTANT_SUPREME_42EUR",
+            "file": "05_1919_Telegram_Splitout_Automate_Webhook.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "07_TELEGRAM_AI_ASSISTANT_SUPREME_42EUR",
+            "file": "06_1575_Telegramtool_Woocommercetool_Automate_Webhook.json",
+            "reason": "Connections cassées - 34\/34 vont vers error handlers"
+        },
+        {
+            "pack": "07_TELEGRAM_AI_ASSISTANT_SUPREME_42EUR",
+            "file": "07_1808_HTTP_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 14\/14 vont vers error handlers"
+        },
+        {
+            "pack": "07_TELEGRAM_AI_ASSISTANT_SUPREME_42EUR",
+            "file": "08_1687_HTTP_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 14\/14 vont vers error handlers"
+        },
+        {
+            "pack": "07_TELEGRAM_AI_ASSISTANT_SUPREME_42EUR",
+            "file": "09_1685_Openai_Telegram_Automate_Triggered.json",
+            "reason": "Connections cassées - 8\/8 vont vers error handlers"
+        },
+        {
+            "pack": "07_TELEGRAM_AI_ASSISTANT_SUPREME_42EUR",
+            "file": "10_0248_Openai_Telegram_Automate_Triggered.json",
+            "reason": "Connections cassées - 8\/8 vont vers error handlers"
+        },
+        {
+            "pack": "07_TELEGRAM_AI_ASSISTANT_SUPREME_42EUR",
+            "file": "11_1843_Telegram_Code_Automate_Triggered.json",
+            "reason": "Connections cassées - 3\/3 vont vers error handlers"
+        },
+        {
+            "pack": "07_TELEGRAM_AI_ASSISTANT_SUPREME_42EUR",
+            "file": "12_2053_Telegram_Googledocs_Automate_Triggered.json",
+            "reason": "Connections cassées - 7\/7 vont vers error handlers"
+        },
+        {
+            "pack": "07_TELEGRAM_AI_ASSISTANT_SUPREME_42EUR",
+            "file": "13_1610_Telegram_Googledocs_Automate_Triggered.json",
+            "reason": "Connections cassées - 7\/7 vont vers error handlers"
+        },
+        {
+            "pack": "07_TELEGRAM_AI_ASSISTANT_SUPREME_42EUR",
+            "file": "14_1990_Wait_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 109\/109 vont vers error handlers"
+        },
+        {
+            "pack": "07_TELEGRAM_AI_ASSISTANT_SUPREME_42EUR",
+            "file": "15_1366_Wait_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 109\/109 vont vers error handlers"
+        },
+        {
+            "pack": "07_TELEGRAM_AI_ASSISTANT_SUPREME_42EUR",
+            "file": "16_1263_Webhook_Respondtowebhook_Automate_Webhook.json",
+            "reason": "Connections cassées - 42\/42 vont vers error handlers"
+        },
+        {
+            "pack": "07_TELEGRAM_AI_ASSISTANT_SUPREME_42EUR",
+            "file": "17_1887_Webhook_Respondtowebhook_Automate_Webhook.json",
+            "reason": "Connections cassées - 42\/42 vont vers error handlers"
+        },
+        {
+            "pack": "07_TELEGRAM_AI_ASSISTANT_SUPREME_42EUR",
+            "file": "18_1280_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "08_TELEGRAM_MARKETING_DOMINATION_32EUR",
+            "file": "01_1878_Telegram_Wait_Create_Webhook.json",
+            "reason": "Connections cassées - 188\/188 vont vers error handlers"
+        },
+        {
+            "pack": "08_TELEGRAM_MARKETING_DOMINATION_32EUR",
+            "file": "02_1341_Telegram_Splitout_Automate_Webhook.json",
+            "reason": "Connections cassées - 59\/59 vont vers error handlers"
+        },
+        {
+            "pack": "08_TELEGRAM_MARKETING_DOMINATION_32EUR",
+            "file": "03_0782_Telegram_Redis_Create_Webhook.json",
+            "reason": "Connections cassées - 30\/30 vont vers error handlers"
+        },
+        {
+            "pack": "08_TELEGRAM_MARKETING_DOMINATION_32EUR",
+            "file": "04_1904_Telegram_Limit_Process_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "08_TELEGRAM_MARKETING_DOMINATION_32EUR",
+            "file": "05_1288_Telegram_Wait_Automation_Webhook.json",
+            "reason": "Connections cassées - 162\/162 vont vers error handlers"
+        },
+        {
+            "pack": "08_TELEGRAM_MARKETING_DOMINATION_32EUR",
+            "file": "06_0742_Telegram_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 24\/24 vont vers error handlers"
+        },
+        {
+            "pack": "08_TELEGRAM_MARKETING_DOMINATION_32EUR",
+            "file": "07_1522_Telegram_Schedule_Send_Webhook.json",
+            "reason": "Connections cassées - 12\/12 vont vers error handlers"
+        },
+        {
+            "pack": "08_TELEGRAM_MARKETING_DOMINATION_32EUR",
+            "file": "08_1280_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "08_TELEGRAM_MARKETING_DOMINATION_32EUR",
+            "file": "09_1782_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "08_TELEGRAM_MARKETING_DOMINATION_32EUR",
+            "file": "11_2018_Telegram_Cal_Create_Webhook.json",
+            "reason": "Connections cassées - 11\/11 vont vers error handlers"
+        },
+        {
+            "pack": "08_TELEGRAM_MARKETING_DOMINATION_32EUR",
+            "file": "12_1812_Telegram_Code_Automate_Triggered.json",
+            "reason": "Connections cassées - 4\/4 vont vers error handlers"
+        },
+        {
+            "pack": "08_TELEGRAM_MARKETING_DOMINATION_32EUR",
+            "file": "13_1182_Telegram_Webhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 53\/53 vont vers error handlers"
+        },
+        {
+            "pack": "08_TELEGRAM_MARKETING_DOMINATION_32EUR",
+            "file": "14_1380_Telegram_Code_Automate_Triggered.json",
+            "reason": "Connections cassées - 4\/4 vont vers error handlers"
+        },
+        {
+            "pack": "08_TELEGRAM_MARKETING_DOMINATION_32EUR",
+            "file": "15_1741_Telegram_Gumroad_Create_Webhook.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "09_TELEGRAM_LEAD_MAGNET_37EUR",
+            "file": "01_1280_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "09_TELEGRAM_LEAD_MAGNET_37EUR",
+            "file": "02_1782_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "09_TELEGRAM_LEAD_MAGNET_37EUR",
+            "file": "03_1878_Telegram_Wait_Create_Webhook.json",
+            "reason": "Connections cassées - 188\/188 vont vers error handlers"
+        },
+        {
+            "pack": "09_TELEGRAM_LEAD_MAGNET_37EUR",
+            "file": "04_1341_Telegram_Splitout_Automate_Webhook.json",
+            "reason": "Connections cassées - 59\/59 vont vers error handlers"
+        },
+        {
+            "pack": "09_TELEGRAM_LEAD_MAGNET_37EUR",
+            "file": "05_0782_Telegram_Redis_Create_Webhook.json",
+            "reason": "Connections cassées - 30\/30 vont vers error handlers"
+        },
+        {
+            "pack": "09_TELEGRAM_LEAD_MAGNET_37EUR",
+            "file": "06_0742_Telegram_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 24\/24 vont vers error handlers"
+        },
+        {
+            "pack": "09_TELEGRAM_LEAD_MAGNET_37EUR",
+            "file": "07_2024_Linkedin_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 37\/37 vont vers error handlers"
+        },
+        {
+            "pack": "09_TELEGRAM_LEAD_MAGNET_37EUR",
+            "file": "10_1904_Telegram_Limit_Process_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "09_TELEGRAM_LEAD_MAGNET_37EUR",
+            "file": "11_0769_Telegram_Webhook_Send_Webhook.json",
+            "reason": "Connections cassées - 43\/43 vont vers error handlers"
+        },
+        {
+            "pack": "09_TELEGRAM_LEAD_MAGNET_37EUR",
+            "file": "12_1288_Telegram_Wait_Automation_Webhook.json",
+            "reason": "Connections cassées - 162\/162 vont vers error handlers"
+        },
+        {
+            "pack": "09_TELEGRAM_LEAD_MAGNET_37EUR",
+            "file": "13_0613_Splitout_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 21\/21 vont vers error handlers"
+        },
+        {
+            "pack": "09_TELEGRAM_LEAD_MAGNET_37EUR",
+            "file": "14_0702_Webhook_GoogleCalendar_Create_Webhook.json",
+            "reason": "Connections cassées - 120\/120 vont vers error handlers"
+        },
+        {
+            "pack": "09_TELEGRAM_LEAD_MAGNET_37EUR",
+            "file": "15_1522_Telegram_Schedule_Send_Webhook.json",
+            "reason": "Connections cassées - 12\/12 vont vers error handlers"
+        },
+        {
+            "pack": "10_EMAIL_MARKETING_MILLIONAIRE_42EUR",
+            "file": "01_1427_Emailreadimap_Manual_Send_Webhook.json",
+            "reason": "Connections cassées - 39\/39 vont vers error handlers"
+        },
+        {
+            "pack": "10_EMAIL_MARKETING_MILLIONAIRE_42EUR",
+            "file": "02_1936_Emailreadimap_Manual_Send_Webhook.json",
+            "reason": "Connections cassées - 39\/39 vont vers error handlers"
+        },
+        {
+            "pack": "10_EMAIL_MARKETING_MILLIONAIRE_42EUR",
+            "file": "03_0362_Code_HTTP_Send_Webhook.json",
+            "reason": "Connections cassées - 17\/17 vont vers error handlers"
+        },
+        {
+            "pack": "10_EMAIL_MARKETING_MILLIONAIRE_42EUR",
+            "file": "04_1962_Emailreadimap_Manual_Send_Webhook.json",
+            "reason": "Connections cassées - 42\/42 vont vers error handlers"
+        },
+        {
+            "pack": "10_EMAIL_MARKETING_MILLIONAIRE_42EUR",
+            "file": "05_1277_Emailreadimap_Manual_Send_Webhook.json",
+            "reason": "Connections cassées - 42\/42 vont vers error handlers"
+        },
+        {
+            "pack": "10_EMAIL_MARKETING_MILLIONAIRE_42EUR",
+            "file": "06_0910_Bitly_Datetime_Update_Webhook.json",
+            "reason": "Connections cassées - 78\/78 vont vers error handlers"
+        },
+        {
+            "pack": "10_EMAIL_MARKETING_MILLIONAIRE_42EUR",
+            "file": "07_1778_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "10_EMAIL_MARKETING_MILLIONAIRE_42EUR",
+            "file": "08_1538_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "10_EMAIL_MARKETING_MILLIONAIRE_42EUR",
+            "file": "09_1341_Telegram_Splitout_Automate_Webhook.json",
+            "reason": "Connections cassées - 59\/59 vont vers error handlers"
+        },
+        {
+            "pack": "10_EMAIL_MARKETING_MILLIONAIRE_42EUR",
+            "file": "10_1424_Telegram_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 41\/41 vont vers error handlers"
+        },
+        {
+            "pack": "10_EMAIL_MARKETING_MILLIONAIRE_42EUR",
+            "file": "11_1905_Telegram_Googleanalytics_Automation_Webhook.json",
+            "reason": "Connections cassées - 52\/52 vont vers error handlers"
+        },
+        {
+            "pack": "10_EMAIL_MARKETING_MILLIONAIRE_42EUR",
+            "file": "12_0671_Code_Converttofile_Create_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "10_EMAIL_MARKETING_MILLIONAIRE_42EUR",
+            "file": "13_0670_Code_Microsoftoutlook_Create_Webhook.json",
+            "reason": "Connections cassées - 28\/28 vont vers error handlers"
+        },
+        {
+            "pack": "10_EMAIL_MARKETING_MILLIONAIRE_42EUR",
+            "file": "14_1307_Code_Converttofile_Send_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "10_EMAIL_MARKETING_MILLIONAIRE_42EUR",
+            "file": "15_1308_Code_Microsoftoutlook_Send_Webhook.json",
+            "reason": "Connections cassées - 28\/28 vont vers error handlers"
+        },
+        {
+            "pack": "10_EMAIL_MARKETING_MILLIONAIRE_42EUR",
+            "file": "16_1405_Wait_Splitout_Automation_Webhook.json",
+            "reason": "Connections cassées - 55\/55 vont vers error handlers"
+        },
+        {
+            "pack": "10_EMAIL_MARKETING_MILLIONAIRE_42EUR",
+            "file": "17_0583_Wait_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 55\/55 vont vers error handlers"
+        },
+        {
+            "pack": "10_EMAIL_MARKETING_MILLIONAIRE_42EUR",
+            "file": "18_1333_Splitout_GoogleCalendar_Automate_Webhook.json",
+            "reason": "Connections cassées - 14\/14 vont vers error handlers"
+        },
+        {
+            "pack": "11_GMAIL_PRODUCTIVITY_BEAST_32EUR",
+            "file": "01_1341_Telegram_Splitout_Automate_Webhook.json",
+            "reason": "Connections cassées - 59\/59 vont vers error handlers"
+        },
+        {
+            "pack": "11_GMAIL_PRODUCTIVITY_BEAST_32EUR",
+            "file": "02_0739_HTTP_Form_Automate_Webhook.json",
+            "reason": "Connections cassées - 21\/21 vont vers error handlers"
+        },
+        {
+            "pack": "11_GMAIL_PRODUCTIVITY_BEAST_32EUR",
+            "file": "03_1764_Extractfromfile_HTTP_Automation_Webhook.json",
+            "reason": "Connections cassées - 15\/15 vont vers error handlers"
+        },
+        {
+            "pack": "11_GMAIL_PRODUCTIVITY_BEAST_32EUR",
+            "file": "04_1648_Splitout_Converttofile_Send_Webhook.json",
+            "reason": "Connections cassées - 11\/11 vont vers error handlers"
+        },
+        {
+            "pack": "11_GMAIL_PRODUCTIVITY_BEAST_32EUR",
+            "file": "05_1904_Telegram_Limit_Process_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "11_GMAIL_PRODUCTIVITY_BEAST_32EUR",
+            "file": "06_1985_Converttofile_HTTP_Automation_Webhook.json",
+            "reason": "Connections cassées - 63\/63 vont vers error handlers"
+        },
+        {
+            "pack": "11_GMAIL_PRODUCTIVITY_BEAST_32EUR",
+            "file": "07_1362_Wait_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "11_GMAIL_PRODUCTIVITY_BEAST_32EUR",
+            "file": "08_1513_Wait_Splitout_Process_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "11_GMAIL_PRODUCTIVITY_BEAST_32EUR",
+            "file": "09_0523_Wait_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "11_GMAIL_PRODUCTIVITY_BEAST_32EUR",
+            "file": "10_1512_Wait_Splitout_Process_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "11_GMAIL_PRODUCTIVITY_BEAST_32EUR",
+            "file": "11_0883_Splitout_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 12\/12 vont vers error handlers"
+        },
+        {
+            "pack": "11_GMAIL_PRODUCTIVITY_BEAST_32EUR",
+            "file": "12_0915_Splitout_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "11_GMAIL_PRODUCTIVITY_BEAST_32EUR",
+            "file": "13_0910_Bitly_Datetime_Update_Webhook.json",
+            "reason": "Connections cassées - 78\/78 vont vers error handlers"
+        },
+        {
+            "pack": "11_GMAIL_PRODUCTIVITY_BEAST_32EUR",
+            "file": "15_1522_Telegram_Schedule_Send_Webhook.json",
+            "reason": "Connections cassées - 12\/12 vont vers error handlers"
+        },
+        {
+            "pack": "12_EMAIL_CRM_SALES_MACHINE_37EUR",
+            "file": "01_0920_HubSpot_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 25\/25 vont vers error handlers"
+        },
+        {
+            "pack": "12_EMAIL_CRM_SALES_MACHINE_37EUR",
+            "file": "02_1628_Emailsend_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 15\/15 vont vers error handlers"
+        },
+        {
+            "pack": "12_EMAIL_CRM_SALES_MACHINE_37EUR",
+            "file": "03_0422_Schedule_HTTP_Send_Webhook.json",
+            "reason": "Connections cassées - 9\/9 vont vers error handlers"
+        },
+        {
+            "pack": "12_EMAIL_CRM_SALES_MACHINE_37EUR",
+            "file": "04_0426_Hunter_Form_Send_Webhook.json",
+            "reason": "Connections cassées - 9\/9 vont vers error handlers"
+        },
+        {
+            "pack": "12_EMAIL_CRM_SALES_MACHINE_37EUR",
+            "file": "05_1113_Telegram_Splitout_Automation_Scheduled.json",
+            "reason": "Connections cassées - 24\/24 vont vers error handlers"
+        },
+        {
+            "pack": "12_EMAIL_CRM_SALES_MACHINE_37EUR",
+            "file": "06_2052_Telegram_Splitout_Automation_Scheduled.json",
+            "reason": "Connections cassées - 24\/24 vont vers error handlers"
+        },
+        {
+            "pack": "12_EMAIL_CRM_SALES_MACHINE_37EUR",
+            "file": "07_1362_Wait_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "12_EMAIL_CRM_SALES_MACHINE_37EUR",
+            "file": "08_1427_Emailreadimap_Manual_Send_Webhook.json",
+            "reason": "Connections cassées - 39\/39 vont vers error handlers"
+        },
+        {
+            "pack": "12_EMAIL_CRM_SALES_MACHINE_37EUR",
+            "file": "09_1936_Emailreadimap_Manual_Send_Webhook.json",
+            "reason": "Connections cassées - 39\/39 vont vers error handlers"
+        },
+        {
+            "pack": "12_EMAIL_CRM_SALES_MACHINE_37EUR",
+            "file": "10_1879_Wait_Slack_Monitor_Triggered.json",
+            "reason": "Connections cassées - 2\/2 vont vers error handlers"
+        },
+        {
+            "pack": "12_EMAIL_CRM_SALES_MACHINE_37EUR",
+            "file": "11_1648_Splitout_Converttofile_Send_Webhook.json",
+            "reason": "Connections cassées - 11\/11 vont vers error handlers"
+        },
+        {
+            "pack": "12_EMAIL_CRM_SALES_MACHINE_37EUR",
+            "file": "12_0890_Form_Stickynote_Send_Triggered.json",
+            "reason": "Connections cassées - 1\/1 vont vers error handlers"
+        },
+        {
+            "pack": "12_EMAIL_CRM_SALES_MACHINE_37EUR",
+            "file": "14_1807_Linkedin_Googledocs_Automate_Webhook.json",
+            "reason": "Connections cassées - 60\/60 vont vers error handlers"
+        },
+        {
+            "pack": "12_EMAIL_CRM_SALES_MACHINE_37EUR",
+            "file": "15_1342_Linkedin_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 75\/75 vont vers error handlers"
+        },
+        {
+            "pack": "12_EMAIL_CRM_SALES_MACHINE_37EUR",
+            "file": "16_1535_HTTP_Form_Automate_Webhook.json",
+            "reason": "Connections cassées - 10\/10 vont vers error handlers"
+        },
+        {
+            "pack": "13_GOOGLE_SHEETS_DATA_GENIUS_42EUR",
+            "file": "01_1341_Telegram_Splitout_Automate_Webhook.json",
+            "reason": "Connections cassées - 59\/59 vont vers error handlers"
+        },
+        {
+            "pack": "13_GOOGLE_SHEETS_DATA_GENIUS_42EUR",
+            "file": "02_1281_Code_Schedule_Monitor_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "13_GOOGLE_SHEETS_DATA_GENIUS_42EUR",
+            "file": "03_1278_Code_Schedule_Monitor_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "13_GOOGLE_SHEETS_DATA_GENIUS_42EUR",
+            "file": "04_1603_Splitout_Manual_Automation_Webhook.json",
+            "reason": "Connections cassées - 21\/21 vont vers error handlers"
+        },
+        {
+            "pack": "13_GOOGLE_SHEETS_DATA_GENIUS_42EUR",
+            "file": "05_2041_Splitout_Manual_Automation_Webhook.json",
+            "reason": "Connections cassées - 21\/21 vont vers error handlers"
+        },
+        {
+            "pack": "13_GOOGLE_SHEETS_DATA_GENIUS_42EUR",
+            "file": "06_0902_Splitout_Code_Create_Scheduled.json",
+            "reason": "Connections cassées - 30\/30 vont vers error handlers"
+        },
+        {
+            "pack": "13_GOOGLE_SHEETS_DATA_GENIUS_42EUR",
+            "file": "07_1273_Datetime_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "13_GOOGLE_SHEETS_DATA_GENIUS_42EUR",
+            "file": "08_1272_Datetime_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "13_GOOGLE_SHEETS_DATA_GENIUS_42EUR",
+            "file": "09_1764_Extractfromfile_HTTP_Automation_Webhook.json",
+            "reason": "Connections cassées - 15\/15 vont vers error handlers"
+        },
+        {
+            "pack": "13_GOOGLE_SHEETS_DATA_GENIUS_42EUR",
+            "file": "10_1789_Code_Webhook_Automate_Webhook.json",
+            "reason": "Connections cassées - 21\/21 vont vers error handlers"
+        },
+        {
+            "pack": "13_GOOGLE_SHEETS_DATA_GENIUS_42EUR",
+            "file": "11_2011_Code_Manual_Import_Webhook.json",
+            "reason": "Connections cassées - 19\/19 vont vers error handlers"
+        },
+        {
+            "pack": "13_GOOGLE_SHEETS_DATA_GENIUS_42EUR",
+            "file": "12_1412_Splitout_Code_Automation_Scheduled.json",
+            "reason": "Connections cassées - 11\/11 vont vers error handlers"
+        },
+        {
+            "pack": "13_GOOGLE_SHEETS_DATA_GENIUS_42EUR",
+            "file": "13_1694_Webhook_HTTP_Automation_Webhook.json",
+            "reason": "Connections cassées - 21\/21 vont vers error handlers"
+        },
+        {
+            "pack": "13_GOOGLE_SHEETS_DATA_GENIUS_42EUR",
+            "file": "15_0478_Schedule_HTTP_Create_Webhook.json",
+            "reason": "Connections cassées - 13\/13 vont vers error handlers"
+        },
+        {
+            "pack": "13_GOOGLE_SHEETS_DATA_GENIUS_42EUR",
+            "file": "16_0470_HTTP_GoogleSheets_Update_Webhook.json",
+            "reason": "Connections cassées - 11\/11 vont vers error handlers"
+        },
+        {
+            "pack": "13_GOOGLE_SHEETS_DATA_GENIUS_42EUR",
+            "file": "17_1454_Splitout_Schedule_Import_Webhook.json",
+            "reason": "Connections cassées - 10\/10 vont vers error handlers"
+        },
+        {
+            "pack": "13_GOOGLE_SHEETS_DATA_GENIUS_42EUR",
+            "file": "18_1970_Splitout_Manual_Sync_Webhook.json",
+            "reason": "Connections cassées - 11\/11 vont vers error handlers"
+        },
+        {
+            "pack": "14_GOOGLE_DRIVE_ORGANISATION_KING_27EUR",
+            "file": "01_1924_Code_Webhook_Export_Webhook.json",
+            "reason": "Connections cassées - 34\/34 vont vers error handlers"
+        },
+        {
+            "pack": "14_GOOGLE_DRIVE_ORGANISATION_KING_27EUR",
+            "file": "02_0578_Wait_Schedule_Create_Webhook.json",
+            "reason": "Connections cassées - 42\/42 vont vers error handlers"
+        },
+        {
+            "pack": "14_GOOGLE_DRIVE_ORGANISATION_KING_27EUR",
+            "file": "03_1736_Wait_Schedule_Automation_Webhook.json",
+            "reason": "Connections cassées - 42\/42 vont vers error handlers"
+        },
+        {
+            "pack": "14_GOOGLE_DRIVE_ORGANISATION_KING_27EUR",
+            "file": "04_1237_Error_Telegram_Automation_Webhook.json",
+            "reason": "Connections cassées - 33\/33 vont vers error handlers"
+        },
+        {
+            "pack": "14_GOOGLE_DRIVE_ORGANISATION_KING_27EUR",
+            "file": "05_1764_Extractfromfile_HTTP_Automation_Webhook.json",
+            "reason": "Connections cassées - 15\/15 vont vers error handlers"
+        },
+        {
+            "pack": "14_GOOGLE_DRIVE_ORGANISATION_KING_27EUR",
+            "file": "06_1839_Code_Manual_Automation_Webhook.json",
+            "reason": "Connections cassées - 14\/14 vont vers error handlers"
+        },
+        {
+            "pack": "14_GOOGLE_DRIVE_ORGANISATION_KING_27EUR",
+            "file": "07_0669_Code_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "14_GOOGLE_DRIVE_ORGANISATION_KING_27EUR",
+            "file": "08_1943_Splitout_Editimage_Automation_Webhook.json",
+            "reason": "Connections cassées - 22\/22 vont vers error handlers"
+        },
+        {
+            "pack": "14_GOOGLE_DRIVE_ORGANISATION_KING_27EUR",
+            "file": "09_1343_Splitout_Editimage_Automation_Webhook.json",
+            "reason": "Connections cassées - 22\/22 vont vers error handlers"
+        },
+        {
+            "pack": "14_GOOGLE_DRIVE_ORGANISATION_KING_27EUR",
+            "file": "10_1559_Splitout_Code_Automate_Webhook.json",
+            "reason": "Connections cassées - 12\/12 vont vers error handlers"
+        },
+        {
+            "pack": "14_GOOGLE_DRIVE_ORGANISATION_KING_27EUR",
+            "file": "11_1999_Manual_HTTP_Import_Webhook.json",
+            "reason": "Connections cassées - 10\/10 vont vers error handlers"
+        },
+        {
+            "pack": "14_GOOGLE_DRIVE_ORGANISATION_KING_27EUR",
+            "file": "12_1141_Stickynote_GoogleDrive_Automate_Triggered.json",
+            "reason": "Connections cassées - 7\/7 vont vers error handlers"
+        },
+        {
+            "pack": "15_GOOGLE_CALENDAR_TIME_MASTER_25EUR",
+            "file": "01_1778_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "15_GOOGLE_CALENDAR_TIME_MASTER_25EUR",
+            "file": "02_1538_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "15_GOOGLE_CALENDAR_TIME_MASTER_25EUR",
+            "file": "03_1361_GoogleCalendar_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 89\/89 vont vers error handlers"
+        },
+        {
+            "pack": "15_GOOGLE_CALENDAR_TIME_MASTER_25EUR",
+            "file": "05_1679_Telegram_GoogleCalendar_Automation_Scheduled.json",
+            "reason": "Connections cassées - 3\/3 vont vers error handlers"
+        },
+        {
+            "pack": "15_GOOGLE_CALENDAR_TIME_MASTER_25EUR",
+            "file": "06_1346_GoogleCalendar_GoogleSheets_Automate_Triggered.json",
+            "reason": "Connections cassées - 2\/2 vont vers error handlers"
+        },
+        {
+            "pack": "15_GOOGLE_CALENDAR_TIME_MASTER_25EUR",
+            "file": "07_1315_Telegram_Gmailtool_Automation_Triggered.json",
+            "reason": "Connections cassées - 6\/6 vont vers error handlers"
+        },
+        {
+            "pack": "15_GOOGLE_CALENDAR_TIME_MASTER_25EUR",
+            "file": "08_1384_Telegram_Stickynote_Create_Triggered.json",
+            "reason": "Connections cassées - 2\/2 vont vers error handlers"
+        },
+        {
+            "pack": "15_GOOGLE_CALENDAR_TIME_MASTER_25EUR",
+            "file": "09_0599_Telegram_Gmailtool_Send_Triggered.json",
+            "reason": "Connections cassées - 6\/6 vont vers error handlers"
+        },
+        {
+            "pack": "15_GOOGLE_CALENDAR_TIME_MASTER_25EUR",
+            "file": "10_0920_HubSpot_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 25\/25 vont vers error handlers"
+        },
+        {
+            "pack": "15_GOOGLE_CALENDAR_TIME_MASTER_25EUR",
+            "file": "11_0735_Telegram_GoogleCalendar_Automation_Webhook.json",
+            "reason": "Connections cassées - 64\/64 vont vers error handlers"
+        },
+        {
+            "pack": "15_GOOGLE_CALENDAR_TIME_MASTER_25EUR",
+            "file": "12_1710_Code_Schedule_Automation_Scheduled.json",
+            "reason": "Connections cassées - 11\/11 vont vers error handlers"
+        },
+        {
+            "pack": "16_GOOGLE_WORKSPACE_BUSINESS_SUITE_35EUR",
+            "file": "01_1764_Extractfromfile_HTTP_Automation_Webhook.json",
+            "reason": "Connections cassées - 15\/15 vont vers error handlers"
+        },
+        {
+            "pack": "16_GOOGLE_WORKSPACE_BUSINESS_SUITE_35EUR",
+            "file": "02_1924_Code_Webhook_Export_Webhook.json",
+            "reason": "Connections cassées - 34\/34 vont vers error handlers"
+        },
+        {
+            "pack": "16_GOOGLE_WORKSPACE_BUSINESS_SUITE_35EUR",
+            "file": "03_0578_Wait_Schedule_Create_Webhook.json",
+            "reason": "Connections cassées - 42\/42 vont vers error handlers"
+        },
+        {
+            "pack": "16_GOOGLE_WORKSPACE_BUSINESS_SUITE_35EUR",
+            "file": "04_1736_Wait_Schedule_Automation_Webhook.json",
+            "reason": "Connections cassées - 42\/42 vont vers error handlers"
+        },
+        {
+            "pack": "16_GOOGLE_WORKSPACE_BUSINESS_SUITE_35EUR",
+            "file": "05_1361_GoogleCalendar_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 89\/89 vont vers error handlers"
+        },
+        {
+            "pack": "16_GOOGLE_WORKSPACE_BUSINESS_SUITE_35EUR",
+            "file": "06_1839_Code_Manual_Automation_Webhook.json",
+            "reason": "Connections cassées - 14\/14 vont vers error handlers"
+        },
+        {
+            "pack": "16_GOOGLE_WORKSPACE_BUSINESS_SUITE_35EUR",
+            "file": "07_0910_Bitly_Datetime_Update_Webhook.json",
+            "reason": "Connections cassées - 78\/78 vont vers error handlers"
+        },
+        {
+            "pack": "16_GOOGLE_WORKSPACE_BUSINESS_SUITE_35EUR",
+            "file": "08_1612_Webhook_Code_Automate_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "16_GOOGLE_WORKSPACE_BUSINESS_SUITE_35EUR",
+            "file": "09_1341_Telegram_Splitout_Automate_Webhook.json",
+            "reason": "Connections cassées - 59\/59 vont vers error handlers"
+        },
+        {
+            "pack": "16_GOOGLE_WORKSPACE_BUSINESS_SUITE_35EUR",
+            "file": "10_1983_Splitout_Converttofile_Automation_Webhook.json",
+            "reason": "Connections cassées - 13\/13 vont vers error handlers"
+        },
+        {
+            "pack": "16_GOOGLE_WORKSPACE_BUSINESS_SUITE_35EUR",
+            "file": "11_1346_GoogleCalendar_GoogleSheets_Automate_Triggered.json",
+            "reason": "Connections cassées - 2\/2 vont vers error handlers"
+        },
+        {
+            "pack": "16_GOOGLE_WORKSPACE_BUSINESS_SUITE_35EUR",
+            "file": "12_1778_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "16_GOOGLE_WORKSPACE_BUSINESS_SUITE_35EUR",
+            "file": "13_1538_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "16_GOOGLE_WORKSPACE_BUSINESS_SUITE_35EUR",
+            "file": "14_1281_Code_Schedule_Monitor_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "16_GOOGLE_WORKSPACE_BUSINESS_SUITE_35EUR",
+            "file": "15_1278_Code_Schedule_Monitor_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "16_GOOGLE_WORKSPACE_BUSINESS_SUITE_35EUR",
+            "file": "16_0837_GoogleSheets_Gmail_Create_Triggered.json",
+            "reason": "Connections cassées - 6\/6 vont vers error handlers"
+        },
+        {
+            "pack": "17_CRM_SALES_ACCELERATOR_52EUR",
+            "file": "01_1628_Emailsend_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 15\/15 vont vers error handlers"
+        },
+        {
+            "pack": "17_CRM_SALES_ACCELERATOR_52EUR",
+            "file": "02_0920_HubSpot_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 25\/25 vont vers error handlers"
+        },
+        {
+            "pack": "17_CRM_SALES_ACCELERATOR_52EUR",
+            "file": "03_0422_Schedule_HTTP_Send_Webhook.json",
+            "reason": "Connections cassées - 9\/9 vont vers error handlers"
+        },
+        {
+            "pack": "17_CRM_SALES_ACCELERATOR_52EUR",
+            "file": "04_0426_Hunter_Form_Send_Webhook.json",
+            "reason": "Connections cassées - 9\/9 vont vers error handlers"
+        },
+        {
+            "pack": "17_CRM_SALES_ACCELERATOR_52EUR",
+            "file": "05_1113_Telegram_Splitout_Automation_Scheduled.json",
+            "reason": "Connections cassées - 24\/24 vont vers error handlers"
+        },
+        {
+            "pack": "17_CRM_SALES_ACCELERATOR_52EUR",
+            "file": "06_2052_Telegram_Splitout_Automation_Scheduled.json",
+            "reason": "Connections cassées - 24\/24 vont vers error handlers"
+        },
+        {
+            "pack": "17_CRM_SALES_ACCELERATOR_52EUR",
+            "file": "07_1362_Wait_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "17_CRM_SALES_ACCELERATOR_52EUR",
+            "file": "08_1879_Wait_Slack_Monitor_Triggered.json",
+            "reason": "Connections cassées - 2\/2 vont vers error handlers"
+        },
+        {
+            "pack": "17_CRM_SALES_ACCELERATOR_52EUR",
+            "file": "09_0890_Form_Stickynote_Send_Triggered.json",
+            "reason": "Connections cassées - 1\/1 vont vers error handlers"
+        },
+        {
+            "pack": "17_CRM_SALES_ACCELERATOR_52EUR",
+            "file": "11_1807_Linkedin_Googledocs_Automate_Webhook.json",
+            "reason": "Connections cassées - 60\/60 vont vers error handlers"
+        },
+        {
+            "pack": "17_CRM_SALES_ACCELERATOR_52EUR",
+            "file": "12_1342_Linkedin_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 75\/75 vont vers error handlers"
+        },
+        {
+            "pack": "17_CRM_SALES_ACCELERATOR_52EUR",
+            "file": "13_1535_HTTP_Form_Automate_Webhook.json",
+            "reason": "Connections cassées - 10\/10 vont vers error handlers"
+        },
+        {
+            "pack": "17_CRM_SALES_ACCELERATOR_52EUR",
+            "file": "14_0739_HTTP_Form_Automate_Webhook.json",
+            "reason": "Connections cassées - 21\/21 vont vers error handlers"
+        },
+        {
+            "pack": "17_CRM_SALES_ACCELERATOR_52EUR",
+            "file": "15_1778_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "17_CRM_SALES_ACCELERATOR_52EUR",
+            "file": "16_1538_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "17_CRM_SALES_ACCELERATOR_52EUR",
+            "file": "17_1904_Telegram_Limit_Process_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "17_CRM_SALES_ACCELERATOR_52EUR",
+            "file": "18_1341_Telegram_Splitout_Automate_Webhook.json",
+            "reason": "Connections cassées - 59\/59 vont vers error handlers"
+        },
+        {
+            "pack": "17_CRM_SALES_ACCELERATOR_52EUR",
+            "file": "19_1606_Telegram_Webhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 85\/85 vont vers error handlers"
+        },
+        {
+            "pack": "17_CRM_SALES_ACCELERATOR_52EUR",
+            "file": "20_1982_Telegram_Splitout_Automation_Scheduled.json",
+            "reason": "Connections cassées - 12\/12 vont vers error handlers"
+        },
+        {
+            "pack": "18_ECOMMERCE_PROFIT_MAXIMIZER_52EUR",
+            "file": "01_0739_HTTP_Form_Automate_Webhook.json",
+            "reason": "Connections cassées - 21\/21 vont vers error handlers"
+        },
+        {
+            "pack": "18_ECOMMERCE_PROFIT_MAXIMIZER_52EUR",
+            "file": "02_1773_HTTP_Stripe_Sync_Webhook.json",
+            "reason": "Connections cassées - 9\/9 vont vers error handlers"
+        },
+        {
+            "pack": "18_ECOMMERCE_PROFIT_MAXIMIZER_52EUR",
+            "file": "03_1697_Schedule_HTTP_Monitor_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "18_ECOMMERCE_PROFIT_MAXIMIZER_52EUR",
+            "file": "05_2011_Code_Manual_Import_Webhook.json",
+            "reason": "Connections cassées - 19\/19 vont vers error handlers"
+        },
+        {
+            "pack": "18_ECOMMERCE_PROFIT_MAXIMIZER_52EUR",
+            "file": "06_0246_Functionitem_Pipedrive_Create_Scheduled.json",
+            "reason": "Connections cassées - 9\/9 vont vers error handlers"
+        },
+        {
+            "pack": "18_ECOMMERCE_PROFIT_MAXIMIZER_52EUR",
+            "file": "09_1743_Wait_Code_Sync_Scheduled.json",
+            "reason": "Connections cassées - 4\/4 vont vers error handlers"
+        },
+        {
+            "pack": "18_ECOMMERCE_PROFIT_MAXIMIZER_52EUR",
+            "file": "10_1560_Splitout_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 99\/99 vont vers error handlers"
+        },
+        {
+            "pack": "18_ECOMMERCE_PROFIT_MAXIMIZER_52EUR",
+            "file": "11_1824_Splitout_Schedule_Import_Scheduled.json",
+            "reason": "Connections cassées - 10\/10 vont vers error handlers"
+        },
+        {
+            "pack": "18_ECOMMERCE_PROFIT_MAXIMIZER_52EUR",
+            "file": "12_1857_Woocommercetool_Manual_Automation_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "18_ECOMMERCE_PROFIT_MAXIMIZER_52EUR",
+            "file": "13_1599_Woocommercetool_Manual_Automation_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "18_ECOMMERCE_PROFIT_MAXIMIZER_52EUR",
+            "file": "15_1709_Linkedin_Wordpress_Automation_Webhook.json",
+            "reason": "Connections cassées - 25\/25 vont vers error handlers"
+        },
+        {
+            "pack": "18_ECOMMERCE_PROFIT_MAXIMIZER_52EUR",
+            "file": "17_1964_HTTP_Aggregate_Automation_Webhook.json",
+            "reason": "Connections cassées - 30\/30 vont vers error handlers"
+        },
+        {
+            "pack": "18_ECOMMERCE_PROFIT_MAXIMIZER_52EUR",
+            "file": "19_1367_HTTP_Schedule_Automate_Webhook.json",
+            "reason": "Connections cassées - 92\/92 vont vers error handlers"
+        },
+        {
+            "pack": "18_ECOMMERCE_PROFIT_MAXIMIZER_52EUR",
+            "file": "20_1775_Telegram_Code_Import_Triggered.json",
+            "reason": "Connections cassées - 4\/4 vont vers error handlers"
+        },
+        {
+            "pack": "19_SOCIAL_MEDIA_VIRAL_ENGINE_47EUR",
+            "file": "01_1280_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "19_SOCIAL_MEDIA_VIRAL_ENGINE_47EUR",
+            "file": "02_1807_Linkedin_Googledocs_Automate_Webhook.json",
+            "reason": "Connections cassées - 60\/60 vont vers error handlers"
+        },
+        {
+            "pack": "19_SOCIAL_MEDIA_VIRAL_ENGINE_47EUR",
+            "file": "03_1342_Linkedin_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 75\/75 vont vers error handlers"
+        },
+        {
+            "pack": "19_SOCIAL_MEDIA_VIRAL_ENGINE_47EUR",
+            "file": "04_1782_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "19_SOCIAL_MEDIA_VIRAL_ENGINE_47EUR",
+            "file": "05_1709_Linkedin_Wordpress_Automation_Webhook.json",
+            "reason": "Connections cassées - 25\/25 vont vers error handlers"
+        },
+        {
+            "pack": "19_SOCIAL_MEDIA_VIRAL_ENGINE_47EUR",
+            "file": "06_1288_Telegram_Wait_Automation_Webhook.json",
+            "reason": "Connections cassées - 162\/162 vont vers error handlers"
+        },
+        {
+            "pack": "19_SOCIAL_MEDIA_VIRAL_ENGINE_47EUR",
+            "file": "07_1121_Linkedin_Wait_Create_Webhook.json",
+            "reason": "Connections cassées - 139\/139 vont vers error handlers"
+        },
+        {
+            "pack": "19_SOCIAL_MEDIA_VIRAL_ENGINE_47EUR",
+            "file": "08_1330_Linkedin_Schedule_Automate_Webhook.json",
+            "reason": "Connections cassées - 10\/10 vont vers error handlers"
+        },
+        {
+            "pack": "19_SOCIAL_MEDIA_VIRAL_ENGINE_47EUR",
+            "file": "09_1491_Linkedin_Wait_Create_Webhook.json",
+            "reason": "Connections cassées - 139\/139 vont vers error handlers"
+        },
+        {
+            "pack": "19_SOCIAL_MEDIA_VIRAL_ENGINE_47EUR",
+            "file": "10_1922_Linkedin_Schedule_Automate_Webhook.json",
+            "reason": "Connections cassées - 10\/10 vont vers error handlers"
+        },
+        {
+            "pack": "19_SOCIAL_MEDIA_VIRAL_ENGINE_47EUR",
+            "file": "11_1989_HTTP_Schedule_Create_Webhook.json",
+            "reason": "Connections cassées - 9\/9 vont vers error handlers"
+        },
+        {
+            "pack": "19_SOCIAL_MEDIA_VIRAL_ENGINE_47EUR",
+            "file": "12_2024_Linkedin_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 37\/37 vont vers error handlers"
+        },
+        {
+            "pack": "19_SOCIAL_MEDIA_VIRAL_ENGINE_47EUR",
+            "file": "13_1939_Linkedin_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 9\/9 vont vers error handlers"
+        },
+        {
+            "pack": "19_SOCIAL_MEDIA_VIRAL_ENGINE_47EUR",
+            "file": "14_0263_Postgres_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 38\/38 vont vers error handlers"
+        },
+        {
+            "pack": "19_SOCIAL_MEDIA_VIRAL_ENGINE_47EUR",
+            "file": "15_2012_Code_Schedule_Create_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "19_SOCIAL_MEDIA_VIRAL_ENGINE_47EUR",
+            "file": "16_1646_Code_Schedule_Create_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "19_SOCIAL_MEDIA_VIRAL_ENGINE_47EUR",
+            "file": "17_1405_Wait_Splitout_Automation_Webhook.json",
+            "reason": "Connections cassées - 55\/55 vont vers error handlers"
+        },
+        {
+            "pack": "19_SOCIAL_MEDIA_VIRAL_ENGINE_47EUR",
+            "file": "18_0583_Wait_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 55\/55 vont vers error handlers"
+        },
+        {
+            "pack": "20_DATABASE_INSIGHTS_GENIUS_47EUR",
+            "file": "01_1848_Postgrestool_Stickynote_Automation_Triggered.json",
+            "reason": "Connections cassées - 1\/1 vont vers error handlers"
+        },
+        {
+            "pack": "20_DATABASE_INSIGHTS_GENIUS_47EUR",
+            "file": "02_1377_Postgrestool_Stickynote_Automation_Triggered.json",
+            "reason": "Connections cassées - 1\/1 vont vers error handlers"
+        },
+        {
+            "pack": "20_DATABASE_INSIGHTS_GENIUS_47EUR",
+            "file": "03_0376_Webhook_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 18\/18 vont vers error handlers"
+        },
+        {
+            "pack": "20_DATABASE_INSIGHTS_GENIUS_47EUR",
+            "file": "04_1558_HTTP_Stickynote_Automate_Webhook.json",
+            "reason": "Connections cassées - 12\/12 vont vers error handlers"
+        },
+        {
+            "pack": "20_DATABASE_INSIGHTS_GENIUS_47EUR",
+            "file": "06_0263_Postgres_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 38\/38 vont vers error handlers"
+        },
+        {
+            "pack": "20_DATABASE_INSIGHTS_GENIUS_47EUR",
+            "file": "07_1252_Webhook_Respondtowebhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 37\/37 vont vers error handlers"
+        },
+        {
+            "pack": "20_DATABASE_INSIGHTS_GENIUS_47EUR",
+            "file": "08_1601_Webhook_Respondtowebhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 37\/37 vont vers error handlers"
+        },
+        {
+            "pack": "20_DATABASE_INSIGHTS_GENIUS_47EUR",
+            "file": "10_1738_Schedule_Comparedatasets_Automation_Scheduled.json",
+            "reason": "Connections cassées - 2\/2 vont vers error handlers"
+        },
+        {
+            "pack": "20_DATABASE_INSIGHTS_GENIUS_47EUR",
+            "file": "11_1470_Telegram_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 69\/69 vont vers error handlers"
+        },
+        {
+            "pack": "20_DATABASE_INSIGHTS_GENIUS_47EUR",
+            "file": "12_1482_Telegram_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 69\/69 vont vers error handlers"
+        },
+        {
+            "pack": "20_DATABASE_INSIGHTS_GENIUS_47EUR",
+            "file": "13_0655_Code_Postgres_Update_Scheduled.json",
+            "reason": "Connections cassées - 19\/19 vont vers error handlers"
+        },
+        {
+            "pack": "20_DATABASE_INSIGHTS_GENIUS_47EUR",
+            "file": "14_0453_Webhook_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 76\/76 vont vers error handlers"
+        },
+        {
+            "pack": "20_DATABASE_INSIGHTS_GENIUS_47EUR",
+            "file": "15_1942_Postgres_Wordpress_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "20_DATABASE_INSIGHTS_GENIUS_47EUR",
+            "file": "16_2014_Postgres_Webhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 55\/55 vont vers error handlers"
+        },
+        {
+            "pack": "20_DATABASE_INSIGHTS_GENIUS_47EUR",
+            "file": "17_1752_Postgres_Wordpress_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "20_DATABASE_INSIGHTS_GENIUS_47EUR",
+            "file": "18_1788_Postgres_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 9\/9 vont vers error handlers"
+        },
+        {
+            "pack": "21_API_INTEGRATION_WIZARD_29EUR",
+            "file": "01_0920_HubSpot_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 25\/25 vont vers error handlers"
+        },
+        {
+            "pack": "21_API_INTEGRATION_WIZARD_29EUR",
+            "file": "02_1827_HTTP_Respondtowebhook_Automate_Webhook.json",
+            "reason": "Connections cassées - 54\/54 vont vers error handlers"
+        },
+        {
+            "pack": "21_API_INTEGRATION_WIZARD_29EUR",
+            "file": "03_1778_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "21_API_INTEGRATION_WIZARD_29EUR",
+            "file": "04_1354_HTTP_Respondtowebhook_Automate_Webhook.json",
+            "reason": "Connections cassées - 54\/54 vont vers error handlers"
+        },
+        {
+            "pack": "21_API_INTEGRATION_WIZARD_29EUR",
+            "file": "05_1538_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "21_API_INTEGRATION_WIZARD_29EUR",
+            "file": "06_1606_Telegram_Webhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 85\/85 vont vers error handlers"
+        },
+        {
+            "pack": "21_API_INTEGRATION_WIZARD_29EUR",
+            "file": "07_0690_Telegram_Webhook_Send_Webhook.json",
+            "reason": "Connections cassées - 85\/85 vont vers error handlers"
+        },
+        {
+            "pack": "21_API_INTEGRATION_WIZARD_29EUR",
+            "file": "08_1356_Code_Webhook_Import_Webhook.json",
+            "reason": "Connections cassées - 67\/67 vont vers error handlers"
+        },
+        {
+            "pack": "21_API_INTEGRATION_WIZARD_29EUR",
+            "file": "09_2054_Deep_Research_Report_Generation_With_Open_Router_Google_Search_Webhook_Telegram_and_Notion.json",
+            "reason": "Connections cassées - 67\/67 vont vers error handlers"
+        },
+        {
+            "pack": "21_API_INTEGRATION_WIZARD_29EUR",
+            "file": "10_0330_Wait_Webhook_Send_Webhook.json",
+            "reason": "Connections cassées - 55\/55 vont vers error handlers"
+        },
+        {
+            "pack": "21_API_INTEGRATION_WIZARD_29EUR",
+            "file": "11_1258_Splitout_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 76\/76 vont vers error handlers"
+        },
+        {
+            "pack": "21_API_INTEGRATION_WIZARD_29EUR",
+            "file": "12_1355_Splitout_Webhook_Automate_Webhook.json",
+            "reason": "Connections cassées - 100\/100 vont vers error handlers"
+        },
+        {
+            "pack": "22_AUTOMATION_ECOSYSTEM_BUILDER_32EUR",
+            "file": "01_0392_Stopanderror_GitHub_Automate_Webhook.json",
+            "reason": "Connections cassées - 105\/105 vont vers error handlers"
+        },
+        {
+            "pack": "22_AUTOMATION_ECOSYSTEM_BUILDER_32EUR",
+            "file": "02_1591_Splitout_Code_Automate_Webhook.json",
+            "reason": "Connections cassées - 54\/54 vont vers error handlers"
+        },
+        {
+            "pack": "22_AUTOMATION_ECOSYSTEM_BUILDER_32EUR",
+            "file": "03_0920_HubSpot_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 25\/25 vont vers error handlers"
+        },
+        {
+            "pack": "22_AUTOMATION_ECOSYSTEM_BUILDER_32EUR",
+            "file": "04_1827_HTTP_Respondtowebhook_Automate_Webhook.json",
+            "reason": "Connections cassées - 54\/54 vont vers error handlers"
+        },
+        {
+            "pack": "22_AUTOMATION_ECOSYSTEM_BUILDER_32EUR",
+            "file": "05_1778_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "22_AUTOMATION_ECOSYSTEM_BUILDER_32EUR",
+            "file": "06_1354_HTTP_Respondtowebhook_Automate_Webhook.json",
+            "reason": "Connections cassées - 54\/54 vont vers error handlers"
+        },
+        {
+            "pack": "22_AUTOMATION_ECOSYSTEM_BUILDER_32EUR",
+            "file": "07_1538_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "22_AUTOMATION_ECOSYSTEM_BUILDER_32EUR",
+            "file": "08_0769_Telegram_Webhook_Send_Webhook.json",
+            "reason": "Connections cassées - 43\/43 vont vers error handlers"
+        },
+        {
+            "pack": "22_AUTOMATION_ECOSYSTEM_BUILDER_32EUR",
+            "file": "09_0585_Telegram_Splitout_Automation_Webhook.json",
+            "reason": "Connections cassées - 38\/38 vont vers error handlers"
+        },
+        {
+            "pack": "22_AUTOMATION_ECOSYSTEM_BUILDER_32EUR",
+            "file": "10_1606_Telegram_Webhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 85\/85 vont vers error handlers"
+        },
+        {
+            "pack": "22_AUTOMATION_ECOSYSTEM_BUILDER_32EUR",
+            "file": "11_0690_Telegram_Webhook_Send_Webhook.json",
+            "reason": "Connections cassées - 85\/85 vont vers error handlers"
+        },
+        {
+            "pack": "22_AUTOMATION_ECOSYSTEM_BUILDER_32EUR",
+            "file": "12_0700_Code_Respondtowebhook_Send_Webhook.json",
+            "reason": "Connections cassées - 37\/37 vont vers error handlers"
+        },
+        {
+            "pack": "22_AUTOMATION_ECOSYSTEM_BUILDER_32EUR",
+            "file": "13_1257_Code_Webhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 58\/58 vont vers error handlers"
+        },
+        {
+            "pack": "22_AUTOMATION_ECOSYSTEM_BUILDER_32EUR",
+            "file": "14_1299_Code_Webhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 41\/41 vont vers error handlers"
+        },
+        {
+            "pack": "22_AUTOMATION_ECOSYSTEM_BUILDER_32EUR",
+            "file": "15_0696_Code_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 58\/58 vont vers error handlers"
+        },
+        {
+            "pack": "23_ZAPIER_KILLER_ALTERNATIVE_35EUR",
+            "file": "01_0392_Stopanderror_GitHub_Automate_Webhook.json",
+            "reason": "Connections cassées - 105\/105 vont vers error handlers"
+        },
+        {
+            "pack": "23_ZAPIER_KILLER_ALTERNATIVE_35EUR",
+            "file": "02_0920_HubSpot_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 25\/25 vont vers error handlers"
+        },
+        {
+            "pack": "23_ZAPIER_KILLER_ALTERNATIVE_35EUR",
+            "file": "03_1827_HTTP_Respondtowebhook_Automate_Webhook.json",
+            "reason": "Connections cassées - 54\/54 vont vers error handlers"
+        },
+        {
+            "pack": "23_ZAPIER_KILLER_ALTERNATIVE_35EUR",
+            "file": "04_1778_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "23_ZAPIER_KILLER_ALTERNATIVE_35EUR",
+            "file": "05_1354_HTTP_Respondtowebhook_Automate_Webhook.json",
+            "reason": "Connections cassées - 54\/54 vont vers error handlers"
+        },
+        {
+            "pack": "23_ZAPIER_KILLER_ALTERNATIVE_35EUR",
+            "file": "06_1538_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "23_ZAPIER_KILLER_ALTERNATIVE_35EUR",
+            "file": "07_0769_Telegram_Webhook_Send_Webhook.json",
+            "reason": "Connections cassées - 43\/43 vont vers error handlers"
+        },
+        {
+            "pack": "23_ZAPIER_KILLER_ALTERNATIVE_35EUR",
+            "file": "08_0585_Telegram_Splitout_Automation_Webhook.json",
+            "reason": "Connections cassées - 38\/38 vont vers error handlers"
+        },
+        {
+            "pack": "23_ZAPIER_KILLER_ALTERNATIVE_35EUR",
+            "file": "09_1606_Telegram_Webhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 85\/85 vont vers error handlers"
+        },
+        {
+            "pack": "23_ZAPIER_KILLER_ALTERNATIVE_35EUR",
+            "file": "10_0690_Telegram_Webhook_Send_Webhook.json",
+            "reason": "Connections cassées - 85\/85 vont vers error handlers"
+        },
+        {
+            "pack": "23_ZAPIER_KILLER_ALTERNATIVE_35EUR",
+            "file": "11_0700_Code_Respondtowebhook_Send_Webhook.json",
+            "reason": "Connections cassées - 37\/37 vont vers error handlers"
+        },
+        {
+            "pack": "23_ZAPIER_KILLER_ALTERNATIVE_35EUR",
+            "file": "12_1257_Code_Webhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 58\/58 vont vers error handlers"
+        },
+        {
+            "pack": "23_ZAPIER_KILLER_ALTERNATIVE_35EUR",
+            "file": "13_1299_Code_Webhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 41\/41 vont vers error handlers"
+        },
+        {
+            "pack": "23_ZAPIER_KILLER_ALTERNATIVE_35EUR",
+            "file": "14_0696_Code_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 58\/58 vont vers error handlers"
+        },
+        {
+            "pack": "23_ZAPIER_KILLER_ALTERNATIVE_35EUR",
+            "file": "15_0438_Code_Filter_Create_Webhook.json",
+            "reason": "Connections cassées - 28\/28 vont vers error handlers"
+        },
+        {
+            "pack": "24_SLACK_TEAM_SUPERCHARGER_35EUR",
+            "file": "02_1299_Code_Webhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 41\/41 vont vers error handlers"
+        },
+        {
+            "pack": "24_SLACK_TEAM_SUPERCHARGER_35EUR",
+            "file": "03_1281_Code_Schedule_Monitor_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "24_SLACK_TEAM_SUPERCHARGER_35EUR",
+            "file": "04_1278_Code_Schedule_Monitor_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "24_SLACK_TEAM_SUPERCHARGER_35EUR",
+            "file": "05_0548_Code_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 41\/41 vont vers error handlers"
+        },
+        {
+            "pack": "24_SLACK_TEAM_SUPERCHARGER_35EUR",
+            "file": "06_0453_Webhook_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 76\/76 vont vers error handlers"
+        },
+        {
+            "pack": "24_SLACK_TEAM_SUPERCHARGER_35EUR",
+            "file": "07_1273_Datetime_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "24_SLACK_TEAM_SUPERCHARGER_35EUR",
+            "file": "08_1272_Datetime_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "24_SLACK_TEAM_SUPERCHARGER_35EUR",
+            "file": "09_1643_Slack_Manual_Automate_Webhook.json",
+            "reason": "Connections cassées - 24\/24 vont vers error handlers"
+        },
+        {
+            "pack": "24_SLACK_TEAM_SUPERCHARGER_35EUR",
+            "file": "10_1541_Webhook_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 28\/28 vont vers error handlers"
+        },
+        {
+            "pack": "24_SLACK_TEAM_SUPERCHARGER_35EUR",
+            "file": "12_0423_Slack_Hunter_Send_Webhook.json",
+            "reason": "Connections cassées - 10\/10 vont vers error handlers"
+        },
+        {
+            "pack": "24_SLACK_TEAM_SUPERCHARGER_35EUR",
+            "file": "13_1349_HTTP_Slack_Automation_Webhook.json",
+            "reason": "Connections cassées - 37\/37 vont vers error handlers"
+        },
+        {
+            "pack": "24_SLACK_TEAM_SUPERCHARGER_35EUR",
+            "file": "14_0585_Telegram_Splitout_Automation_Webhook.json",
+            "reason": "Connections cassées - 38\/38 vont vers error handlers"
+        },
+        {
+            "pack": "24_SLACK_TEAM_SUPERCHARGER_35EUR",
+            "file": "15_1958_Code_Slack_Send_Triggered.json",
+            "reason": "Connections cassées - 4\/4 vont vers error handlers"
+        },
+        {
+            "pack": "25_TEAM_COLLABORATION_REVOLUTION_42EUR",
+            "file": "01_1281_Code_Schedule_Monitor_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "25_TEAM_COLLABORATION_REVOLUTION_42EUR",
+            "file": "02_1278_Code_Schedule_Monitor_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "25_TEAM_COLLABORATION_REVOLUTION_42EUR",
+            "file": "03_1273_Datetime_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "25_TEAM_COLLABORATION_REVOLUTION_42EUR",
+            "file": "04_1272_Datetime_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "25_TEAM_COLLABORATION_REVOLUTION_42EUR",
+            "file": "05_0902_Splitout_Code_Create_Scheduled.json",
+            "reason": "Connections cassées - 30\/30 vont vers error handlers"
+        },
+        {
+            "pack": "25_TEAM_COLLABORATION_REVOLUTION_42EUR",
+            "file": "06_0613_Splitout_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 21\/21 vont vers error handlers"
+        },
+        {
+            "pack": "25_TEAM_COLLABORATION_REVOLUTION_42EUR",
+            "file": "07_0370_Code_Schedule_Create_Webhook.json",
+            "reason": "Connections cassées - 12\/12 vont vers error handlers"
+        },
+        {
+            "pack": "25_TEAM_COLLABORATION_REVOLUTION_42EUR",
+            "file": "08_0529_Schedule_Slack_Update_Webhook.json",
+            "reason": "Connections cassées - 13\/13 vont vers error handlers"
+        },
+        {
+            "pack": "25_TEAM_COLLABORATION_REVOLUTION_42EUR",
+            "file": "09_1299_Code_Webhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 41\/41 vont vers error handlers"
+        },
+        {
+            "pack": "25_TEAM_COLLABORATION_REVOLUTION_42EUR",
+            "file": "10_0548_Code_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 41\/41 vont vers error handlers"
+        },
+        {
+            "pack": "25_TEAM_COLLABORATION_REVOLUTION_42EUR",
+            "file": "11_1985_Converttofile_HTTP_Automation_Webhook.json",
+            "reason": "Connections cassées - 63\/63 vont vers error handlers"
+        },
+        {
+            "pack": "25_TEAM_COLLABORATION_REVOLUTION_42EUR",
+            "file": "12_1639_Wait_Webhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 24\/24 vont vers error handlers"
+        },
+        {
+            "pack": "25_TEAM_COLLABORATION_REVOLUTION_42EUR",
+            "file": "13_1625_Splitout_Schedule_Monitor_Webhook.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "25_TEAM_COLLABORATION_REVOLUTION_42EUR",
+            "file": "14_0645_Splitout_Code_Sync_Webhook.json",
+            "reason": "Connections cassées - 28\/28 vont vers error handlers"
+        },
+        {
+            "pack": "25_TEAM_COLLABORATION_REVOLUTION_42EUR",
+            "file": "15_0453_Webhook_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 76\/76 vont vers error handlers"
+        },
+        {
+            "pack": "25_TEAM_COLLABORATION_REVOLUTION_42EUR",
+            "file": "16_0644_Webhook_Slack_Create_Webhook.json",
+            "reason": "Connections cassées - 129\/129 vont vers error handlers"
+        },
+        {
+            "pack": "25_TEAM_COLLABORATION_REVOLUTION_42EUR",
+            "file": "17_1643_Slack_Manual_Automate_Webhook.json",
+            "reason": "Connections cassées - 24\/24 vont vers error handlers"
+        },
+        {
+            "pack": "25_TEAM_COLLABORATION_REVOLUTION_42EUR",
+            "file": "18_1541_Webhook_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 28\/28 vont vers error handlers"
+        },
+        {
+            "pack": "26_CONTENT_MARKETING_EMPIRE_42EUR",
+            "file": "01_1535_HTTP_Form_Automate_Webhook.json",
+            "reason": "Connections cassées - 10\/10 vont vers error handlers"
+        },
+        {
+            "pack": "26_CONTENT_MARKETING_EMPIRE_42EUR",
+            "file": "02_1070_Telegram_Wordpress_Create_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "26_CONTENT_MARKETING_EMPIRE_42EUR",
+            "file": "03_1709_Linkedin_Wordpress_Automation_Webhook.json",
+            "reason": "Connections cassées - 25\/25 vont vers error handlers"
+        },
+        {
+            "pack": "26_CONTENT_MARKETING_EMPIRE_42EUR",
+            "file": "04_1424_Telegram_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 41\/41 vont vers error handlers"
+        },
+        {
+            "pack": "26_CONTENT_MARKETING_EMPIRE_42EUR",
+            "file": "05_1291_Telegram_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 38\/38 vont vers error handlers"
+        },
+        {
+            "pack": "26_CONTENT_MARKETING_EMPIRE_42EUR",
+            "file": "06_1323_Splitout_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "26_CONTENT_MARKETING_EMPIRE_42EUR",
+            "file": "07_1980_Splitout_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "26_CONTENT_MARKETING_EMPIRE_42EUR",
+            "file": "08_1942_Postgres_Wordpress_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "26_CONTENT_MARKETING_EMPIRE_42EUR",
+            "file": "09_1752_Postgres_Wordpress_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "26_CONTENT_MARKETING_EMPIRE_42EUR",
+            "file": "10_1550_Wordpress_Manual_Automation_Webhook.json",
+            "reason": "Connections cassées - 33\/33 vont vers error handlers"
+        },
+        {
+            "pack": "26_CONTENT_MARKETING_EMPIRE_42EUR",
+            "file": "11_1771_Wait_Code_Automate_Webhook.json",
+            "reason": "Connections cassées - 11\/11 vont vers error handlers"
+        },
+        {
+            "pack": "26_CONTENT_MARKETING_EMPIRE_42EUR",
+            "file": "12_1327_Wordpress_Manual_Automate_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "26_CONTENT_MARKETING_EMPIRE_42EUR",
+            "file": "13_1949_Wordpress_Manual_Automate_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "26_CONTENT_MARKETING_EMPIRE_42EUR",
+            "file": "14_1753_Splitout_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 39\/39 vont vers error handlers"
+        },
+        {
+            "pack": "26_CONTENT_MARKETING_EMPIRE_42EUR",
+            "file": "15_1273_Datetime_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "26_CONTENT_MARKETING_EMPIRE_42EUR",
+            "file": "16_1272_Datetime_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "26_CONTENT_MARKETING_EMPIRE_42EUR",
+            "file": "17_0502_Wordpress_Filter_Update_Scheduled.json",
+            "reason": "Connections cassées - 36\/36 vont vers error handlers"
+        },
+        {
+            "pack": "26_CONTENT_MARKETING_EMPIRE_42EUR",
+            "file": "18_1807_Linkedin_Googledocs_Automate_Webhook.json",
+            "reason": "Connections cassées - 60\/60 vont vers error handlers"
+        },
+        {
+            "pack": "27_BUSINESS_EFFICIENCY_MAXIMIZER_42EUR",
+            "file": "01_0739_HTTP_Form_Automate_Webhook.json",
+            "reason": "Connections cassées - 21\/21 vont vers error handlers"
+        },
+        {
+            "pack": "27_BUSINESS_EFFICIENCY_MAXIMIZER_42EUR",
+            "file": "02_1904_Telegram_Limit_Process_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "27_BUSINESS_EFFICIENCY_MAXIMIZER_42EUR",
+            "file": "03_1341_Telegram_Splitout_Automate_Webhook.json",
+            "reason": "Connections cassées - 59\/59 vont vers error handlers"
+        },
+        {
+            "pack": "27_BUSINESS_EFFICIENCY_MAXIMIZER_42EUR",
+            "file": "04_1985_Converttofile_HTTP_Automation_Webhook.json",
+            "reason": "Connections cassées - 63\/63 vont vers error handlers"
+        },
+        {
+            "pack": "27_BUSINESS_EFFICIENCY_MAXIMIZER_42EUR",
+            "file": "05_1362_Wait_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "27_BUSINESS_EFFICIENCY_MAXIMIZER_42EUR",
+            "file": "06_1513_Wait_Splitout_Process_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "27_BUSINESS_EFFICIENCY_MAXIMIZER_42EUR",
+            "file": "07_0523_Wait_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "27_BUSINESS_EFFICIENCY_MAXIMIZER_42EUR",
+            "file": "08_1512_Wait_Splitout_Process_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "27_BUSINESS_EFFICIENCY_MAXIMIZER_42EUR",
+            "file": "09_0883_Splitout_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 12\/12 vont vers error handlers"
+        },
+        {
+            "pack": "27_BUSINESS_EFFICIENCY_MAXIMIZER_42EUR",
+            "file": "10_0915_Splitout_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "27_BUSINESS_EFFICIENCY_MAXIMIZER_42EUR",
+            "file": "11_0910_Bitly_Datetime_Update_Webhook.json",
+            "reason": "Connections cassées - 78\/78 vont vers error handlers"
+        },
+        {
+            "pack": "27_BUSINESS_EFFICIENCY_MAXIMIZER_42EUR",
+            "file": "12_1764_Extractfromfile_HTTP_Automation_Webhook.json",
+            "reason": "Connections cassées - 15\/15 vont vers error handlers"
+        },
+        {
+            "pack": "27_BUSINESS_EFFICIENCY_MAXIMIZER_42EUR",
+            "file": "14_1522_Telegram_Schedule_Send_Webhook.json",
+            "reason": "Connections cassées - 12\/12 vont vers error handlers"
+        },
+        {
+            "pack": "27_BUSINESS_EFFICIENCY_MAXIMIZER_42EUR",
+            "file": "15_0871_Wait_HTTP_Create_Webhook.json",
+            "reason": "Connections cassées - 30\/30 vont vers error handlers"
+        },
+        {
+            "pack": "27_BUSINESS_EFFICIENCY_MAXIMIZER_42EUR",
+            "file": "16_0868_Wait_Filter_Create_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "27_BUSINESS_EFFICIENCY_MAXIMIZER_42EUR",
+            "file": "17_1648_Splitout_Converttofile_Send_Webhook.json",
+            "reason": "Connections cassées - 11\/11 vont vers error handlers"
+        },
+        {
+            "pack": "27_BUSINESS_EFFICIENCY_MAXIMIZER_42EUR",
+            "file": "18_0817_Schedule_Removeduplicates_Create_Webhook.json",
+            "reason": "Connections cassées - 11\/11 vont vers error handlers"
+        },
+        {
+            "pack": "28_TIME_MANAGEMENT_GENIUS_37EUR",
+            "file": "01_1778_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "28_TIME_MANAGEMENT_GENIUS_37EUR",
+            "file": "02_1538_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "28_TIME_MANAGEMENT_GENIUS_37EUR",
+            "file": "03_1361_GoogleCalendar_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 89\/89 vont vers error handlers"
+        },
+        {
+            "pack": "28_TIME_MANAGEMENT_GENIUS_37EUR",
+            "file": "05_0920_HubSpot_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 25\/25 vont vers error handlers"
+        },
+        {
+            "pack": "28_TIME_MANAGEMENT_GENIUS_37EUR",
+            "file": "06_0735_Telegram_GoogleCalendar_Automation_Webhook.json",
+            "reason": "Connections cassées - 64\/64 vont vers error handlers"
+        },
+        {
+            "pack": "28_TIME_MANAGEMENT_GENIUS_37EUR",
+            "file": "07_0530_Splitout_GoogleCalendar_Create_Webhook.json",
+            "reason": "Connections cassées - 24\/24 vont vers error handlers"
+        },
+        {
+            "pack": "28_TIME_MANAGEMENT_GENIUS_37EUR",
+            "file": "08_1297_Splitout_GoogleCalendar_Automation_Webhook.json",
+            "reason": "Connections cassées - 24\/24 vont vers error handlers"
+        },
+        {
+            "pack": "28_TIME_MANAGEMENT_GENIUS_37EUR",
+            "file": "09_0899_Splitout_GoogleCalendar_Update_Webhook.json",
+            "reason": "Connections cassées - 19\/19 vont vers error handlers"
+        },
+        {
+            "pack": "28_TIME_MANAGEMENT_GENIUS_37EUR",
+            "file": "10_1333_Splitout_GoogleCalendar_Automate_Webhook.json",
+            "reason": "Connections cassées - 14\/14 vont vers error handlers"
+        },
+        {
+            "pack": "28_TIME_MANAGEMENT_GENIUS_37EUR",
+            "file": "11_0649_Splitout_GoogleCalendar_Create_Webhook.json",
+            "reason": "Connections cassées - 14\/14 vont vers error handlers"
+        },
+        {
+            "pack": "28_TIME_MANAGEMENT_GENIUS_37EUR",
+            "file": "12_0428_Splitout_GoogleCalendar_Send_Webhook.json",
+            "reason": "Connections cassées - 19\/19 vont vers error handlers"
+        },
+        {
+            "pack": "28_TIME_MANAGEMENT_GENIUS_37EUR",
+            "file": "13_0429_Splitout_GoogleCalendar_Send_Webhook.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "28_TIME_MANAGEMENT_GENIUS_37EUR",
+            "file": "14_0702_Webhook_GoogleCalendar_Create_Webhook.json",
+            "reason": "Connections cassées - 120\/120 vont vers error handlers"
+        },
+        {
+            "pack": "28_TIME_MANAGEMENT_GENIUS_37EUR",
+            "file": "15_1184_Debughelper_HTTP_Create_Webhook.json",
+            "reason": "Connections cassées - 14\/14 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "01_1685_Openai_Telegram_Automate_Triggered.json",
+            "reason": "Connections cassées - 8\/8 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "02_0248_Openai_Telegram_Automate_Triggered.json",
+            "reason": "Connections cassées - 8\/8 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "03_1439_Telegram_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "04_0462_Telegram_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "05_1368_Telegram_Limit_Export_Triggered.json",
+            "reason": "Connections cassées - 14\/14 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "06_1341_Telegram_Splitout_Automate_Webhook.json",
+            "reason": "Connections cassées - 59\/59 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "07_0299_Code_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "08_1653_Code_Webhook_Send_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "09_0487_Schedule_Telegram_Create_Scheduled.json",
+            "reason": "Connections cassées - 8\/8 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "10_1275_Schedule_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 8\/8 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "11_0768_Telegram_Stickynote_Create_Triggered.json",
+            "reason": "Connections cassées - 5\/5 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "12_0486_Schedule_Telegram_Create_Scheduled.json",
+            "reason": "Connections cassées - 7\/7 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "13_1276_Schedule_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 7\/7 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "14_Academic Assistant Chatbot (Telegram + OpenAI).json",
+            "reason": "Connections cassées - 3\/3 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "15_1543_Manual_Openai_Automation_Triggered.json",
+            "reason": "Connections cassées - 2\/2 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "16_1669_Manual_Openai_Automation_Triggered.json",
+            "reason": "Connections cassées - 2\/2 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "17_1618_Openai_GoogleSheets_Create_Triggered.json",
+            "reason": "Connections cassées - 3\/3 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "18_1177_Openai_GoogleSheets_Create_Triggered.json",
+            "reason": "Connections cassées - 3\/3 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "19_1280_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "29_AI_CRYPTO_WEALTH_MACHINE_67EUR",
+            "file": "20_1782_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "30_EMAIL_AI_CRM_TRINITY_POWER_57EUR",
+            "file": "01_1405_Wait_Splitout_Automation_Webhook.json",
+            "reason": "Connections cassées - 55\/55 vont vers error handlers"
+        },
+        {
+            "pack": "30_EMAIL_AI_CRM_TRINITY_POWER_57EUR",
+            "file": "02_0583_Wait_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 55\/55 vont vers error handlers"
+        },
+        {
+            "pack": "30_EMAIL_AI_CRM_TRINITY_POWER_57EUR",
+            "file": "03_1341_Telegram_Splitout_Automate_Webhook.json",
+            "reason": "Connections cassées - 59\/59 vont vers error handlers"
+        },
+        {
+            "pack": "30_EMAIL_AI_CRM_TRINITY_POWER_57EUR",
+            "file": "04_1778_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "30_EMAIL_AI_CRM_TRINITY_POWER_57EUR",
+            "file": "05_1538_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "30_EMAIL_AI_CRM_TRINITY_POWER_57EUR",
+            "file": "06_1113_Telegram_Splitout_Automation_Scheduled.json",
+            "reason": "Connections cassées - 24\/24 vont vers error handlers"
+        },
+        {
+            "pack": "30_EMAIL_AI_CRM_TRINITY_POWER_57EUR",
+            "file": "07_1424_Telegram_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 41\/41 vont vers error handlers"
+        },
+        {
+            "pack": "30_EMAIL_AI_CRM_TRINITY_POWER_57EUR",
+            "file": "08_2052_Telegram_Splitout_Automation_Scheduled.json",
+            "reason": "Connections cassées - 24\/24 vont vers error handlers"
+        },
+        {
+            "pack": "30_EMAIL_AI_CRM_TRINITY_POWER_57EUR",
+            "file": "09_0671_Code_Converttofile_Create_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "30_EMAIL_AI_CRM_TRINITY_POWER_57EUR",
+            "file": "10_0670_Code_Microsoftoutlook_Create_Webhook.json",
+            "reason": "Connections cassées - 28\/28 vont vers error handlers"
+        },
+        {
+            "pack": "30_EMAIL_AI_CRM_TRINITY_POWER_57EUR",
+            "file": "11_0299_Code_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "30_EMAIL_AI_CRM_TRINITY_POWER_57EUR",
+            "file": "12_1653_Code_Webhook_Send_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "30_EMAIL_AI_CRM_TRINITY_POWER_57EUR",
+            "file": "13_1307_Code_Converttofile_Send_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "30_EMAIL_AI_CRM_TRINITY_POWER_57EUR",
+            "file": "14_1308_Code_Microsoftoutlook_Send_Webhook.json",
+            "reason": "Connections cassées - 28\/28 vont vers error handlers"
+        },
+        {
+            "pack": "30_EMAIL_AI_CRM_TRINITY_POWER_57EUR",
+            "file": "15_1362_Wait_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "30_EMAIL_AI_CRM_TRINITY_POWER_57EUR",
+            "file": "16_1513_Wait_Splitout_Process_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "30_EMAIL_AI_CRM_TRINITY_POWER_57EUR",
+            "file": "17_0523_Wait_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "30_EMAIL_AI_CRM_TRINITY_POWER_57EUR",
+            "file": "18_1512_Wait_Splitout_Process_Webhook.json",
+            "reason": "Connections cassées - 29\/29 vont vers error handlers"
+        },
+        {
+            "pack": "31_SOCIAL_AI_INFLUENCE_EMPIRE_52EUR",
+            "file": "01_1280_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "31_SOCIAL_AI_INFLUENCE_EMPIRE_52EUR",
+            "file": "02_1807_Linkedin_Googledocs_Automate_Webhook.json",
+            "reason": "Connections cassées - 60\/60 vont vers error handlers"
+        },
+        {
+            "pack": "31_SOCIAL_AI_INFLUENCE_EMPIRE_52EUR",
+            "file": "03_1342_Linkedin_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 75\/75 vont vers error handlers"
+        },
+        {
+            "pack": "31_SOCIAL_AI_INFLUENCE_EMPIRE_52EUR",
+            "file": "04_1782_Linkedin_Telegram_Automation_Scheduled.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "31_SOCIAL_AI_INFLUENCE_EMPIRE_52EUR",
+            "file": "05_1709_Linkedin_Wordpress_Automation_Webhook.json",
+            "reason": "Connections cassées - 25\/25 vont vers error handlers"
+        },
+        {
+            "pack": "31_SOCIAL_AI_INFLUENCE_EMPIRE_52EUR",
+            "file": "06_1121_Linkedin_Wait_Create_Webhook.json",
+            "reason": "Connections cassées - 139\/139 vont vers error handlers"
+        },
+        {
+            "pack": "31_SOCIAL_AI_INFLUENCE_EMPIRE_52EUR",
+            "file": "07_1330_Linkedin_Schedule_Automate_Webhook.json",
+            "reason": "Connections cassées - 10\/10 vont vers error handlers"
+        },
+        {
+            "pack": "31_SOCIAL_AI_INFLUENCE_EMPIRE_52EUR",
+            "file": "08_1491_Linkedin_Wait_Create_Webhook.json",
+            "reason": "Connections cassées - 139\/139 vont vers error handlers"
+        },
+        {
+            "pack": "31_SOCIAL_AI_INFLUENCE_EMPIRE_52EUR",
+            "file": "09_1922_Linkedin_Schedule_Automate_Webhook.json",
+            "reason": "Connections cassées - 10\/10 vont vers error handlers"
+        },
+        {
+            "pack": "31_SOCIAL_AI_INFLUENCE_EMPIRE_52EUR",
+            "file": "10_1989_HTTP_Schedule_Create_Webhook.json",
+            "reason": "Connections cassées - 9\/9 vont vers error handlers"
+        },
+        {
+            "pack": "31_SOCIAL_AI_INFLUENCE_EMPIRE_52EUR",
+            "file": "11_2024_Linkedin_Telegram_Automate_Webhook.json",
+            "reason": "Connections cassées - 37\/37 vont vers error handlers"
+        },
+        {
+            "pack": "31_SOCIAL_AI_INFLUENCE_EMPIRE_52EUR",
+            "file": "12_0171_Readbinaryfiles_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 28\/28 vont vers error handlers"
+        },
+        {
+            "pack": "31_SOCIAL_AI_INFLUENCE_EMPIRE_52EUR",
+            "file": "13_1583_Readbinaryfiles_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 28\/28 vont vers error handlers"
+        },
+        {
+            "pack": "31_SOCIAL_AI_INFLUENCE_EMPIRE_52EUR",
+            "file": "14_1405_Wait_Splitout_Automation_Webhook.json",
+            "reason": "Connections cassées - 55\/55 vont vers error handlers"
+        },
+        {
+            "pack": "31_SOCIAL_AI_INFLUENCE_EMPIRE_52EUR",
+            "file": "15_0583_Wait_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 55\/55 vont vers error handlers"
+        },
+        {
+            "pack": "31_SOCIAL_AI_INFLUENCE_EMPIRE_52EUR",
+            "file": "16_1951_Linkedin_Webhook_Automate_Webhook.json",
+            "reason": "Connections cassées - 69\/69 vont vers error handlers"
+        },
+        {
+            "pack": "31_SOCIAL_AI_INFLUENCE_EMPIRE_52EUR",
+            "file": "17_1939_Linkedin_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 9\/9 vont vers error handlers"
+        },
+        {
+            "pack": "31_SOCIAL_AI_INFLUENCE_EMPIRE_52EUR",
+            "file": "18_0636_HTTP_Stickynote_Create_Webhook.json",
+            "reason": "Connections cassées - 11\/11 vont vers error handlers"
+        },
+        {
+            "pack": "32_AUTOMATION_STARTER_SUCCESS_19EUR",
+            "file": "01_1951_Linkedin_Webhook_Automate_Webhook.json",
+            "reason": "Connections cassées - 69\/69 vont vers error handlers"
+        },
+        {
+            "pack": "32_AUTOMATION_STARTER_SUCCESS_19EUR",
+            "file": "02_0901_HTTP_GoogleSheets_Automate_Webhook.json",
+            "reason": "Connections cassées - 45\/45 vont vers error handlers"
+        },
+        {
+            "pack": "32_AUTOMATION_STARTER_SUCCESS_19EUR",
+            "file": "03_0920_HubSpot_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 25\/25 vont vers error handlers"
+        },
+        {
+            "pack": "32_AUTOMATION_STARTER_SUCCESS_19EUR",
+            "file": "05_1778_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "32_AUTOMATION_STARTER_SUCCESS_19EUR",
+            "file": "07_1538_HTTP_Googlecalendartool_Automation_Webhook.json",
+            "reason": "Connections cassées - 31\/31 vont vers error handlers"
+        },
+        {
+            "pack": "32_AUTOMATION_STARTER_SUCCESS_19EUR",
+            "file": "08_1182_Telegram_Webhook_Automation_Webhook.json",
+            "reason": "Connections cassées - 53\/53 vont vers error handlers"
+        },
+        {
+            "pack": "32_AUTOMATION_STARTER_SUCCESS_19EUR",
+            "file": "09_1904_Telegram_Limit_Process_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "32_AUTOMATION_STARTER_SUCCESS_19EUR",
+            "file": "10_0769_Telegram_Webhook_Send_Webhook.json",
+            "reason": "Connections cassées - 43\/43 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "01_0655_Code_Postgres_Update_Scheduled.json",
+            "reason": "Connections cassées - 19\/19 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "02_1281_Code_Schedule_Monitor_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "03_1278_Code_Schedule_Monitor_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "04_0902_Splitout_Code_Create_Scheduled.json",
+            "reason": "Connections cassées - 30\/30 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "05_0613_Splitout_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 21\/21 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "06_1273_Datetime_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "07_1272_Datetime_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "08_0370_Code_Schedule_Create_Webhook.json",
+            "reason": "Connections cassées - 12\/12 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "09_1879_Wait_Slack_Monitor_Triggered.json",
+            "reason": "Connections cassées - 2\/2 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "10_0283_Lemlist_Slack_Create_Webhook.json",
+            "reason": "Connections cassées - 12\/12 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "11_0529_Schedule_Slack_Update_Webhook.json",
+            "reason": "Connections cassées - 13\/13 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "12_0167_HTTP_Slack_Create_Webhook.json",
+            "reason": "Connections cassées - 10\/10 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "13_1904_Telegram_Limit_Process_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "14_1625_Splitout_Schedule_Monitor_Webhook.json",
+            "reason": "Connections cassées - 20\/20 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "15_0722_Webhook_Respondtowebhook_Automate_Webhook.json",
+            "reason": "Connections cassées - 48\/48 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "16_1774_Splitout_Manual_Automation_Webhook.json",
+            "reason": "Connections cassées - 10\/10 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "17_0392_Stopanderror_GitHub_Automate_Webhook.json",
+            "reason": "Connections cassées - 105\/105 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "18_0920_HubSpot_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 25\/25 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "19_1709_Linkedin_Wordpress_Automation_Webhook.json",
+            "reason": "Connections cassées - 25\/25 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "21_0739_HTTP_Form_Automate_Webhook.json",
+            "reason": "Connections cassées - 21\/21 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "22_1964_HTTP_Aggregate_Automation_Webhook.json",
+            "reason": "Connections cassées - 30\/30 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "24_1367_HTTP_Schedule_Automate_Webhook.json",
+            "reason": "Connections cassées - 92\/92 vont vers error handlers"
+        },
+        {
+            "pack": "33_ENTERPRISE_DOMINATION_SUITE_97EUR",
+            "file": "25_1878_Telegram_Wait_Create_Webhook.json",
+            "reason": "Connections cassées - 188\/188 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "01_0171_Readbinaryfiles_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 28\/28 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "02_1583_Readbinaryfiles_Code_Automation_Webhook.json",
+            "reason": "Connections cassées - 28\/28 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "03_1405_Wait_Splitout_Automation_Webhook.json",
+            "reason": "Connections cassées - 55\/55 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "04_0583_Wait_Splitout_Create_Webhook.json",
+            "reason": "Connections cassées - 55\/55 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "05_1543_Manual_Openai_Automation_Triggered.json",
+            "reason": "Connections cassées - 2\/2 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "06_1669_Manual_Openai_Automation_Triggered.json",
+            "reason": "Connections cassées - 2\/2 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "07_1618_Openai_GoogleSheets_Create_Triggered.json",
+            "reason": "Connections cassées - 3\/3 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "08_1177_Openai_GoogleSheets_Create_Triggered.json",
+            "reason": "Connections cassées - 3\/3 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "09_0636_HTTP_Stickynote_Create_Webhook.json",
+            "reason": "Connections cassées - 11\/11 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "10_1737_HTTP_Stickynote_Automation_Webhook.json",
+            "reason": "Connections cassées - 11\/11 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "11_1878_Telegram_Wait_Create_Webhook.json",
+            "reason": "Connections cassées - 188\/188 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "12_1904_Telegram_Limit_Process_Webhook.json",
+            "reason": "Connections cassées - 40\/40 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "13_1439_Telegram_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "14_0462_Telegram_Code_Create_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "15_1341_Telegram_Splitout_Automate_Webhook.json",
+            "reason": "Connections cassées - 59\/59 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "16_1288_Telegram_Wait_Automation_Webhook.json",
+            "reason": "Connections cassées - 162\/162 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "17_1281_Code_Schedule_Monitor_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "18_1278_Code_Schedule_Monitor_Webhook.json",
+            "reason": "Connections cassées - 16\/16 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "19_0299_Code_Webhook_Create_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "20_1653_Code_Webhook_Send_Webhook.json",
+            "reason": "Connections cassées - 23\/23 vont vers error handlers"
+        },
+        {
+            "pack": "34_AI_MASTER_WEALTH_COLLECTION_87EUR",
+            "file": "21_0889_Converttofile_HTTP_Create_Webhook.json",
+            "reason": "Connections cassées - 34\/34 vont vers error handlers"
+        }
+    ]
+}

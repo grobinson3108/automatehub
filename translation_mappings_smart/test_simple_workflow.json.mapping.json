@@ -1,0 +1,37 @@
+{
+  "workflow_path": "/var/www/automatehub/test_simple_workflow.json",
+  "texts_map": {
+    "$text_1": {
+      "original": "Test Simple Workflow",
+      "path": "name",
+      "context": "workflow_name",
+      "has_prefix": false
+    },
+    "$text_2": {
+      "original": "Click here to start",
+      "path": "nodes[0].parameters.text",
+      "context": "prompt",
+      "has_prefix": false
+    },
+    "$text_3": {
+      "original": "ENTER YOUR API KEY HERE",
+      "path": "nodes[0].parameters.value",
+      "context": "parameter_value",
+      "has_prefix": false
+    }
+  },
+  "modified_workflow": {
+    "name": "$text_1",
+    "nodes": [
+      {
+        "parameters": {
+          "text": "$text_2",
+          "value": "$text_3"
+        },
+        "name": "Test Node",
+        "type": "manual"
+      }
+    ],
+    "tags": []
+  }
+}

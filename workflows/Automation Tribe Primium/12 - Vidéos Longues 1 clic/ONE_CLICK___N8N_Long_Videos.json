@@ -1,0 +1,2021 @@
+{
+  "name": "ONE CLICK - N8N Long Videos",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appCki2G01PbeIX3V",
+          "mode": "list",
+          "cachedResultName": "N8N Long Videos",
+          "cachedResultUrl": "https://airtable.com/appCki2G01PbeIX3V"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblJ8SEPeDLCjHdbk",
+          "mode": "list",
+          "cachedResultName": "Videos",
+          "cachedResultUrl": "https://airtable.com/appCki2G01PbeIX3V/tblJ8SEPeDLCjHdbk"
+        },
+        "filterByFormula": "NOT({Status} = 'Done')",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -900,
+        -460
+      ],
+      "id": "ed68d79f-20ec-4640-99de-384cb099b0d7",
+      "name": "Airtable",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1080,
+        -460
+      ],
+      "id": "ef9f0071-60a2-4f22-8e32-8eb8e4d4f204",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.Status }}",
+                    "rightValue": "Start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "d4f8de08-2c0a-4b47-bff8-3c8daa1263d9"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Start"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "4e99105e-89ba-48bd-9da3-8a2d1aa25e0c",
+                    "leftValue": "={{ $json.Status }}",
+                    "rightValue": "Done",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Done"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -720,
+        -460
+      ],
+      "id": "1fd8a1af-69ce-44e2-9e01-6b925a8d2753",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json['Video Title / Idea'] }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an AI content strategist with expertise in video production, AI-generated media, and scriptwriting. Your task is to generate **all necessary assets** for a short-form video based on the provided scene count, seconds per scene, and style guidelines.\n\n### **Task: Generate Fully Synchronized Voiceover Script and Styled Image Prompts**\n- **Output Format:** Your response must be valid JSON following the structure provided in the \"Updated Output Parser\" below. Do not include any extra text.\n- **Scene Count:** Generate exactly {{ $json['Number of scenes'] }} scenes.\n- **Voiceover Script:** Each scene must have a spoken line lasting approximately {{ $('Airtable').item.json['Seconds per scene'] }} seconds. The script should be a single continuous text block where each scene's line flows naturally and engages the viewer.\n- **Image Prompts:** Every scene must include an image prompt. **Each image prompt must explicitly incorporate the style** defined by **{{ $('Airtable').item.json.Style }}**. The style reference should be seamlessly embedded within the image prompt description.\n- **Additional Requirements:** \n  - The JSON output must have no additional text outside the JSON structure.\n  - The template field and other variables should be maintained exactly as shown.\n\n💡 **Example Considerations:**\n- If the number of scenes is 8, generate exactly 8 concise and impactful scenes, each with its corresponding image prompt including the style reference.\n- If the number of scenes is 12, generate exactly 12 such scenes.\n\n---\n\n**Updated Output Parser:**\n\n```json\n{\n    \"comment\": \"Reel example\",\n    \"template\": \"fTQulEMPKoAybeRdjQjf\",\n    \"variables\": {\n        \"scenes\": [\n            {\n                \"imagePrompt\": \"A sunset at a beautiful beach in the style of {{ $('Airtable').item.json.Style }}\",\n                \"voiceOverText\": \"This is the voice over for scene one.\"\n            },\n            {\n                \"imagePrompt\": \"A bustling financial district of a modern city with skyscrapers in the style of {{ $('Airtable').item.json.Style }}\",\n                \"voiceOverText\": \"This is the voice over for scene two.\"\n            }\n        ],\n        \"voice\": \"{{ $('Airtable').item.json.Voice }}\",\n        \"imageModel\": \"{{ $('Airtable').item.json['Image model'] }}\",\n        \"voiceModel\": \"azure\"\n    }\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -720,
+        -920
+      ],
+      "id": "17c4ac7e-616b-43f4-9c6d-9391ed415620",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -700,
+        -640
+      ],
+      "id": "ee23e516-e74b-4c7b-a812-5cd6d7864e5d",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n    \"comment\": \"Reel example\",\n    \"template\": \"fTQulEMPKoAybeRdjQjf\",\n    \"variables\": {\n        \"scenes\": [\n            {\n                \"imagePrompt\": \"A sunset at a beautiful beach\",\n                \"voiceOverText\": \"This is the voice over of the scene one.\"\n            },\n            {\n                \"imagePrompt\": \"A financial district of a modern city, with skyscrapers\",\n                \"voiceOverText\": \"This is the voice over of the scene two.\"\n            }\n        ],\n        \"voice\": \"en-US-BrianMultilingualNeural\",\n        \"imageModel\": \"freepik-classic\",\n        \"voiceModel\": \"azure\"\n    }\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -500,
+        -640
+      ],
+      "id": "ab069563-bc1d-42aa-9d00-3c6dfc130a3e",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "url": "https://api.json2video.com/v2/movies",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "project",
+              "value": "={{ $json.project }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "Enter your JSON2video API here"
+            }
+          ]
+        },
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        740,
+        -920
+      ],
+      "id": "5929412f-93c3-41bc-89ee-aba0a6b58569",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "name": "={{ $('Airtable').item.json['Video Title / Idea'] }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1T70v6_4-DJTnFgreyhkpCUIuQrwNr3-t",
+          "mode": "list",
+          "cachedResultName": "N8N Long Videos",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1T70v6_4-DJTnFgreyhkpCUIuQrwNr3-t"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        -300,
+        -920
+      ],
+      "id": "700d0aeb-726d-4d63-86b2-8e71d7279a22",
+      "name": "Google Drive1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "GP2Td0vsw7OxPZcD",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 90
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        520,
+        -920
+      ],
+      "id": "8188e4dc-51cb-4a45-b546-5c3210bd83fc",
+      "name": "Wait",
+      "webhookId": "6c9aac64-5b5e-4eb8-8134-c6890cfe1b2b"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appCki2G01PbeIX3V",
+          "mode": "list",
+          "cachedResultName": "N8N Long Videos",
+          "cachedResultUrl": "https://airtable.com/appCki2G01PbeIX3V"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblJ8SEPeDLCjHdbk",
+          "mode": "list",
+          "cachedResultName": "Videos",
+          "cachedResultUrl": "https://airtable.com/appn1iN0lfU12MlsC/tblJ8SEPeDLCjHdbk"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Airtable').item.json.id }}",
+            "Video title": "={{ $json.output.title }}",
+            "Video Description": "={{ $json.output.description }}",
+            "Keywords": "={{ $json.output.keywords }}",
+            "Status": "Done",
+            "Final Video": "=[\n  {\n    \"url\": \"{{ $('HTTP Request1').item.json.movie.url }}\"\n  }\n]"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Video Title / Idea",
+              "displayName": "Video Title / Idea",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Start",
+                  "value": "Start"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Number of scenes",
+              "displayName": "Number of scenes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "4",
+                  "value": "4"
+                },
+                {
+                  "name": "5",
+                  "value": "5"
+                },
+                {
+                  "name": "6",
+                  "value": "6"
+                },
+                {
+                  "name": "7",
+                  "value": "7"
+                },
+                {
+                  "name": "8",
+                  "value": "8"
+                },
+                {
+                  "name": "9",
+                  "value": "9"
+                },
+                {
+                  "name": "10",
+                  "value": "10"
+                },
+                {
+                  "name": "11",
+                  "value": "11"
+                },
+                {
+                  "name": "12",
+                  "value": "12"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Style",
+              "displayName": "Style",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Photorealistic",
+                  "value": "Photorealistic"
+                },
+                {
+                  "name": "3D Render",
+                  "value": "3D Render"
+                },
+                {
+                  "name": "Cartoon",
+                  "value": "Cartoon"
+                },
+                {
+                  "name": "Cinematic",
+                  "value": "Cinematic"
+                },
+                {
+                  "name": "Anime",
+                  "value": "Anime"
+                },
+                {
+                  "name": "Cyberpunk",
+                  "value": "Cyberpunk"
+                },
+                {
+                  "name": "Low poly",
+                  "value": "Low poly"
+                },
+                {
+                  "name": "Neon Glow",
+                  "value": "Neon Glow"
+                },
+                {
+                  "name": "Surrealism",
+                  "value": "Surrealism"
+                },
+                {
+                  "name": "Pixel Art",
+                  "value": "Pixel Art"
+                },
+                {
+                  "name": "Pop Art",
+                  "value": "Pop Art"
+                },
+                {
+                  "name": "Watercolor",
+                  "value": "Watercolor"
+                },
+                {
+                  "name": "Oil Painting",
+                  "value": "Oil Painting"
+                },
+                {
+                  "name": "Stencil/Graffiti",
+                  "value": "Stencil/Graffiti"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Replicate token",
+              "displayName": "Replicate token",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Image model",
+              "displayName": "Image model",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "flux-pro",
+                  "value": "flux-pro"
+                },
+                {
+                  "name": "freepik-classic",
+                  "value": "freepik-classic"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Seconds per scene",
+              "displayName": "Seconds per scene",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "5",
+                  "value": "5"
+                },
+                {
+                  "name": "6",
+                  "value": "6"
+                },
+                {
+                  "name": "7",
+                  "value": "7"
+                },
+                {
+                  "name": "8",
+                  "value": "8"
+                },
+                {
+                  "name": "9",
+                  "value": "9"
+                },
+                {
+                  "name": "10",
+                  "value": "10"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Video title",
+              "displayName": "Video title",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Video Description",
+              "displayName": "Video Description",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Final Video",
+              "displayName": "Final Video",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Created time",
+              "displayName": "Created time",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        80,
+        -80
+      ],
+      "id": "2d01b6a9-7616-42a9-870c-0b9328a1435e",
+      "name": "Upload Video 1",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.json2video.com/v2/movies",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-api-key",
+              "value": "Enter your JSON2video API here"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $('AI Agent').item.json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        300,
+        -920
+      ],
+      "id": "ad9fa21b-36f7-42ec-9470-8f1b8d55cecf",
+      "name": "JSON 2 VIDEO - 1"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ $('AI Agent').item.json.output }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        60,
+        -920
+      ],
+      "id": "d1742843-395d-4d1a-ac08-dec20620ff6b",
+      "name": "Edit Fields",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an AI content strategist with expertise in digital media and YouTube optimization. Your task is to generate three essential assets for a YouTube video by leveraging the image prompts and voice-over text provided in the previous steps. Specifically, you need to derive:\n\n1. **Title**: A catchy and descriptive title for the YouTube video that encapsulates the essence of both the image prompts and the voice-over text.\n2. **Description**: An engaging and detailed description for the YouTube video that synthesizes the key themes and narratives from the image prompts and voice-over text. This description should effectively explain the video's content, its value, and include a call-to-action.\n3. **Keywords**: A set of twenty highly relevant keywords (related to the content from the image prompts and voice-over text) provided as a single string, with each keyword separated by a comma.\n\nBellow are the image prompts and scenes from the video\n{{ $('Edit Fields').item.json.variables.scenes[0].imagePrompt }}\n{{ $('Edit Fields').item.json.variables.scenes[0].voiceOverText }}\n\n{{ $('Edit Fields').item.json.variables.scenes[1].imagePrompt }}\n{{ $('Edit Fields').item.json.variables.scenes[1].voiceOverText }}\n\n{{ $('Edit Fields').item.json.variables.scenes[2].imagePrompt }}\n{{ $('Edit Fields').item.json.variables.scenes[2].voiceOverText }}\n\n{{ $('Edit Fields').item.json.variables.scenes[3].imagePrompt }}\n{{ $('Edit Fields').item.json.variables.scenes[3].voiceOverText }}\n\n\n**Requirements:**\n- Your response must be valid JSON with no extra text.\n- The JSON must include exactly three keys: \"title\", \"description\", and \"keywords\".\n- The \"keywords\" value should be a single string containing exactly twenty keywords, separated by commas.\n- The title, description, and keywords must be clearly based on the provided image prompts and voice-over text from the previous steps.\n\n**Example Output Parser:**\n\n```json\n{\n    \"title\": \"Stunning Visuals & Captivating Narratives: A Journey Through Art and Life\",\n    \"description\": \"Explore a mesmerizing blend of dynamic visuals and powerful voice-over narratives that take you through enchanting image prompts and thoughtful storytelling. This video highlights key themes of beauty, creativity, and inspiration, inviting viewers to immerse themselves in a unique audio-visual experience. Watch, enjoy, and share this creative masterpiece.\",\n    \"keywords\": \"visuals, narrative, art, creativity, inspiration, storytelling, imagery, voice-over, journey, dynamic, captivating, video, engaging, beauty, aesthetics, multimedia, short-form, digital media, creative, experience\"\n}",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        240,
+        -580
+      ],
+      "id": "1caf98cd-9c87-4365-9b51-c1660b0051f4",
+      "name": "AI Agent1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        240,
+        -360
+      ],
+      "id": "78a758f2-117b-42a0-9352-c6f9cd267264",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n    \"title\": \"Stunning Visuals & Captivating Narratives: A Journey Through Art and Life\",\n    \"description\": \"Explore a mesmerizing blend of dynamic visuals and powerful voice-over narratives that take you through enchanting image prompts and thoughtful storytelling. This video highlights key themes of beauty, creativity, and inspiration, inviting viewers to immerse themselves in a unique audio-visual experience. Watch, enjoy, and share this creative masterpiece.\",\n    \"keywords\": \"visuals, narrative, art, creativity, inspiration, storytelling, imagery, voice-over, journey, dynamic, captivating, video, engaging, beauty, aesthetics, multimedia, short-form, digital media, creative, experience\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        420,
+        -360
+      ],
+      "id": "6b26b7d5-144d-42cb-a84e-0a0ebc47be9e",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "name": "={{ $json.fields['Video Title / Idea'] }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "={{ $('Google Drive1').item.json.id }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        520,
+        -80
+      ],
+      "id": "b25991d8-b71e-4cb5-b683-320155307b7e",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "GP2Td0vsw7OxPZcD",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.fields['Final Video'][0].url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        300,
+        -80
+      ],
+      "id": "88f64901-eeb1-45d8-9abe-ea98e11ba483",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "upload",
+        "title": "={{ $('Upload Video 1').item.json.fields['Video title'] }}",
+        "regionCode": "RO",
+        "categoryId": "1",
+        "options": {
+          "description": "={{ $('Upload Video 1').item.json.fields['Video Description'] }}",
+          "privacyStatus": "private",
+          "tags": "={{ $('Upload Video 1').item.json.fields.Keywords }}"
+        }
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        960,
+        -80
+      ],
+      "id": "8fb6c63e-a813-4bdf-9c82-bc4fe7bd0696",
+      "name": "YouTube",
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "1grlRSK3XRREyfnS",
+          "name": "YouTube account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Upload Video 1').item.json.fields['Final Video'][0].url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        740,
+        -80
+      ],
+      "id": "7b9a044a-c78a-46c6-b174-50fd886c19c1",
+      "name": "HTTP Request2"
+    },
+    {
+      "parameters": {
+        "resource": "video",
+        "operation": "get",
+        "videoId": "={{ $json.uploadId }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.youTube",
+      "typeVersion": 1,
+      "position": [
+        1180,
+        -80
+      ],
+      "id": "e7412b56-0cc8-4cdf-bd2f-17023a5554cb",
+      "name": "YouTube2",
+      "credentials": {
+        "youTubeOAuth2Api": {
+          "id": "1grlRSK3XRREyfnS",
+          "name": "YouTube account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appCki2G01PbeIX3V",
+          "mode": "list",
+          "cachedResultName": "N8N Long Videos",
+          "cachedResultUrl": "https://airtable.com/appCki2G01PbeIX3V"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblJ8SEPeDLCjHdbk",
+          "mode": "list",
+          "cachedResultName": "Videos",
+          "cachedResultUrl": "https://airtable.com/appn1iN0lfU12MlsC/tblJ8SEPeDLCjHdbk"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Airtable').item.json.id }}",
+            "Status": "Done",
+            "Video URL": "=https://www.youtube.com/watch?v={{ $json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Video Title / Idea",
+              "displayName": "Video Title / Idea",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Start",
+                  "value": "Start"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Number of scenes",
+              "displayName": "Number of scenes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "4",
+                  "value": "4"
+                },
+                {
+                  "name": "5",
+                  "value": "5"
+                },
+                {
+                  "name": "6",
+                  "value": "6"
+                },
+                {
+                  "name": "7",
+                  "value": "7"
+                },
+                {
+                  "name": "8",
+                  "value": "8"
+                },
+                {
+                  "name": "9",
+                  "value": "9"
+                },
+                {
+                  "name": "10",
+                  "value": "10"
+                },
+                {
+                  "name": "11",
+                  "value": "11"
+                },
+                {
+                  "name": "12",
+                  "value": "12"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Style",
+              "displayName": "Style",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Photorealistic",
+                  "value": "Photorealistic"
+                },
+                {
+                  "name": "3D Render",
+                  "value": "3D Render"
+                },
+                {
+                  "name": "Cartoon",
+                  "value": "Cartoon"
+                },
+                {
+                  "name": "Cinematic",
+                  "value": "Cinematic"
+                },
+                {
+                  "name": "Anime",
+                  "value": "Anime"
+                },
+                {
+                  "name": "Cyberpunk",
+                  "value": "Cyberpunk"
+                },
+                {
+                  "name": "Low poly",
+                  "value": "Low poly"
+                },
+                {
+                  "name": "Neon Glow",
+                  "value": "Neon Glow"
+                },
+                {
+                  "name": "Surrealism",
+                  "value": "Surrealism"
+                },
+                {
+                  "name": "Pixel Art",
+                  "value": "Pixel Art"
+                },
+                {
+                  "name": "Pop Art",
+                  "value": "Pop Art"
+                },
+                {
+                  "name": "Watercolor",
+                  "value": "Watercolor"
+                },
+                {
+                  "name": "Oil Painting",
+                  "value": "Oil Painting"
+                },
+                {
+                  "name": "Stencil/Graffiti",
+                  "value": "Stencil/Graffiti"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Voice",
+              "displayName": "Voice",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Replicate token",
+              "displayName": "Replicate token",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Image model",
+              "displayName": "Image model",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "flux-pro",
+                  "value": "flux-pro"
+                },
+                {
+                  "name": "freepik-classic",
+                  "value": "freepik-classic"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Seconds per scene",
+              "displayName": "Seconds per scene",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "5",
+                  "value": "5"
+                },
+                {
+                  "name": "6",
+                  "value": "6"
+                },
+                {
+                  "name": "7",
+                  "value": "7"
+                },
+                {
+                  "name": "8",
+                  "value": "8"
+                },
+                {
+                  "name": "9",
+                  "value": "9"
+                },
+                {
+                  "name": "10",
+                  "value": "10"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Video title",
+              "displayName": "Video title",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Video Description",
+              "displayName": "Video Description",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Keywords",
+              "displayName": "Keywords",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Final Video",
+              "displayName": "Final Video",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Video URL",
+              "displayName": "Video URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Created time",
+              "displayName": "Created time",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1400,
+        -80
+      ],
+      "id": "53224f32-1b6d-418c-8cc5-1a35919e28e3",
+      "name": "Airtable1",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Create Video",
+        "height": 380,
+        "width": 1040,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -60,
+        -1060
+      ],
+      "typeVersion": 1,
+      "id": "0af3b5dc-6122-4253-a218-7f3c2ef774e0",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Upload to Youtube",
+        "height": 340,
+        "width": 1740,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -60,
+        -200
+      ],
+      "id": "94fbc7f9-012b-465b-90e3-a326a0d82679",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Instagram }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable2').item.json['Video Title / Idea'] }} {{ $('Airtable2').item.json['Video URL'] }}\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ],\n      \"platform\": \"instagram\"\n    },\n    \"target\": {\n      \"targetType\": \"instagram\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -1500
+      ],
+      "id": "9d325862-6a66-45b0-ae0c-139d38ab533f",
+      "name": "Instagram"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Pinterest }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable2').item.json['Video Title / Idea'] }}\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ],\n      \"platform\": \"pinterest\"\n    },\n    \"target\": {\n      \"targetType\": \"pinterest\",\n      \"boardId\": \"{{ $('Set ID').item.json['Pinterest-Board-id'] }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -80
+      ],
+      "id": "2e6cab4f-d6ec-4e03-b1e1-56fabcd239c9",
+      "name": "Pinterest"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.X }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable2').item.json['Video Title / Idea'] }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"twitter\"\n    },\n    \"target\": {\n      \"targetType\": \"twitter\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -1300
+      ],
+      "id": "bc289731-3250-4217-bbce-ad51f15318b5",
+      "name": "Twitter"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.LinkedIN }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable2').item.json['Video Title / Idea'] }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"linkedin\"\n    },\n    \"target\": {\n      \"targetType\": \"linkedin\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -1100
+      ],
+      "id": "8eaa027f-bef0-4cb0-b9d9-f7f55a739446",
+      "name": "LinkedIn"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.LinkedIN }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable2').item.json['Video Title / Idea'] }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"linkedin\"\n    },\n    \"target\": {\n      \"targetType\": \"linkedin\",\n      \"pageId\": \"{{ $('Set ID').item.json['LinkedIn-page-ID'] }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -900
+      ],
+      "id": "8b4b3873-de21-4d70-b18c-57fc3cf5e817",
+      "name": "LinkedIn Page"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json['FB-Account'] }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable2').item.json['Video Title / Idea'] }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"facebook\"\n    },\n    \"target\": {\n        \"targetType\": \"facebook\",\n        \"pageId\": \"{{ $('Set ID').item.json['FB-Page-Sumobundle'] }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -700
+      ],
+      "id": "50d938a2-f8b5-4b12-8b57-8e5660e0ddd2",
+      "name": "Fb Account"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.tiktok }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable2').item.json['Video Title / Idea'] }}\",\n      \"mediaUrls\": [\n        \"{{ $('HTTP Request3').item.json.url }}\"\n      ],\n      \"platform\": \"tiktok\"\n    },\n    \"target\": {\n      \"targetType\": \"tiktok\",\n      \"privacyLevel\": \"PUBLIC_TO_EVERYONE\",\n      \"disabledComments\": false,\n      \"disabledDuet\": false,\n      \"disabledStitch\": false,\n      \"isBrandedContent\": false,\n      \"isYourBrand\": false,\n      \"isAiGenerated\": true\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -500
+      ],
+      "id": "61b9639e-9440-4448-8fd2-a54a6f77d9b2",
+      "name": "Tiktok"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Threads }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable2').item.json['Video title'] }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"threads\"\n    },\n    \"target\": {\n      \"targetType\": \"threads\",\n      \"replyControl\": \"everyone\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -280
+      ],
+      "id": "8647014a-eff0-4766-a20f-519db9d2a188",
+      "name": "Threads"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"acc_12345\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable2').item.json['Video Title / Idea'] }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"bluesky\"\n    },\n    \"target\": {\n      \"targetType\": \"bluesky\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        120
+      ],
+      "id": "20f22dc3-a551-426a-bcd5-2cceb4886b86",
+      "name": "Bluesky",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"Blotato-API\": \"ADD YOUR BLOTATO API HERE\",\n  \"Instagram\": \"1238\",\n  \"Pinterest\": \"258\",\n  \"Pinterest-Board-id\": \"914864180493348767\",\n  \"X\": \"993\",\n  \"LinkedIN\": \"1180\",\n  \"LinkedIn-page-ID\": \"6399836\",\n  \"Threads\": \"404\",\n  \"FB-Account\": \"1343\",\n  \"FB-Page-Stock-Graphics\": \"1493652624208458\",\n  \"FB-Page-Bundlestorm\": \"1082239155235205\",\n  \"FB-Page-Webmaster-Deals\": \"234802546593504\",\n  \"FB-Page-Sumobundle\": \"121593267596142\",\n  \"Fb-Page-Mimozastudio\": \"103680835963722\",\n  \"Youtube\": \"486\",\n  \"tiktok\": 1529\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1400,
+        -600
+      ],
+      "id": "e3f77647-1f76-4bf7-a6af-70677a71d4e9",
+      "name": "Set ID"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appCki2G01PbeIX3V",
+          "mode": "list",
+          "cachedResultName": "N8N Long Videos",
+          "cachedResultUrl": "https://airtable.com/appCki2G01PbeIX3V"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblJ8SEPeDLCjHdbk",
+          "mode": "list",
+          "cachedResultName": "Videos",
+          "cachedResultUrl": "https://airtable.com/appCki2G01PbeIX3V/tblJ8SEPeDLCjHdbk"
+        },
+        "returnAll": false,
+        "limit": 1,
+        "options": {},
+        "sort": {
+          "property": [
+            {
+              "field": "Created time",
+              "direction": "desc"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1960,
+        -600
+      ],
+      "id": "6987d2bc-8dbd-4416-a39f-7e71f392f175",
+      "name": "Airtable2",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/media",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $json['Final Video'][0].url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2180,
+        -600
+      ],
+      "id": "616d85fd-3c5b-43bf-9e92-4579ae4fa3a4",
+      "name": "HTTP Request3"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/instagram.png?v=1742473316)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2960,
+        -1520
+      ],
+      "typeVersion": 1,
+      "id": "26846e03-914f-43fa-9b98-f0bd45058b77",
+      "name": "Sticky Note11"
+    },
+    {
+      "parameters": {
+        "content": "## Images only\n**You can upload only images on Pinterest and Bluesky",
+        "height": 340,
+        "width": 200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3160,
+        -100
+      ],
+      "typeVersion": 1,
+      "id": "3da7b5f3-eb3a-4681-a6e3-f005cc96eee9",
+      "name": "Sticky Note12"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/x.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2960,
+        -1320
+      ],
+      "typeVersion": 1,
+      "id": "2303df9f-6aeb-47e8-a7cb-6329aed2ea13",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/linkedin.png?v=1742473318)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2960,
+        -1120
+      ],
+      "typeVersion": 1,
+      "id": "0bfc1dd0-aab9-4e55-99e0-b78d8e40a40a",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/linkedin.png?v=1742473318)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2960,
+        -900
+      ],
+      "typeVersion": 1,
+      "id": "2fcde406-946f-4c7a-a405-b6f6b0733330",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/facebook.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2960,
+        -700
+      ],
+      "typeVersion": 1,
+      "id": "8c838408-75f7-4e7a-af76-027973568712",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/tiktok.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2960,
+        -500
+      ],
+      "typeVersion": 1,
+      "id": "c9401840-9f83-4828-9750-815c5819056d",
+      "name": "Sticky Note6"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/threads.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2960,
+        -300
+      ],
+      "typeVersion": 1,
+      "id": "5b76e91b-3f5a-4928-a385-46dc5f11127e",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/pinterest.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2960,
+        -100
+      ],
+      "typeVersion": 1,
+      "id": "1235e7ec-fc05-4adf-9ee1-9ba2268cefd5",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/bluesky.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2960,
+        100
+      ],
+      "typeVersion": 1,
+      "id": "abd1f603-09a9-4562-8f07-99bcd3874daa",
+      "name": "Sticky Note10"
+    },
+    {
+      "parameters": {
+        "content": "## Promote youtube video",
+        "height": 2020,
+        "width": 1100,
+        "color": 6
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2380,
+        -1620
+      ],
+      "id": "73c82acc-d472-41d1-84cd-a7721841750a",
+      "name": "Sticky Note13"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Airtable": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Google Drive1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "JSON 2 VIDEO - 1": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "JSON 2 VIDEO - 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload Video 1": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Upload Video 1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "YouTube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YouTube": {
+      "main": [
+        [
+          {
+            "node": "YouTube2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "YouTube2": {
+      "main": [
+        [
+          {
+            "node": "Airtable1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set ID": {
+      "main": [
+        [
+          {
+            "node": "Airtable2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable2": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "Instagram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Pinterest",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Twitter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LinkedIn",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LinkedIn Page",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fb Account",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Tiktok",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Threads",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Bluesky",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable1": {
+      "main": [
+        [
+          {
+            "node": "Set ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5117368b-0a20-4e13-b870-d7e0bb384662",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+  },
+  "id": "rdaR1b8fvdQI5kqe",
+  "tags": [
+    {
+      "name": "Automation-Tribe",
+      "id": "3dOSqJMqC8FlNnE3",
+      "createdAt": "2025-04-21T20:09:06.554Z",
+      "updatedAt": "2025-04-21T20:09:06.554Z"
+    }
+  ]
+}

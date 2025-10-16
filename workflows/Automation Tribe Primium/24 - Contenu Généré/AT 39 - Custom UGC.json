@@ -1,0 +1,808 @@
+{
+  "name": "AT 39 - Custom UGC",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "da46fe63-53e0-4e6d-b930-8ab08c73e007",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -944,
+        832
+      ],
+      "id": "6e14d38a-a32b-4ac5-b241-47e2df7ac8a1",
+      "name": "Webhook",
+      "webhookId": "da46fe63-53e0-4e6d-b930-8ab08c73e007"
+    },
+    {
+      "parameters": {
+        "amount": 40
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        864,
+        464
+      ],
+      "id": "3c0312ca-afda-457c-8d83-7b399c64a824",
+      "name": "Wait",
+      "webhookId": "56840a84-2307-482f-9f6c-fb55a8818a4c"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {
+          "includeBinaries": true
+        }
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        464
+      ],
+      "id": "7857c1b8-4bc2-416f-9a9f-3d787d33dea4",
+      "name": "Aggregate1",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ddc84e04-07df-4e4c-9a8b-f28b9c07a90b",
+              "name": "mainImageUrl",
+              "value": "={{$node[\"Binary to URL 1\"].json.imageUrl}}",
+              "type": "string"
+            },
+            {
+              "id": "ff932a26-0b39-4157-9663-f6c1fffa431d",
+              "name": "maskImageUrl",
+              "value": "={{$node[\"Binary to URL 2\"].json.imageUrl}}",
+              "type": "string"
+            },
+            {
+              "id": "ade145d3-ae9f-44b6-a016-71a38ada74bf",
+              "name": "referenceImageUrl",
+              "value": "={{$node[\"Binary to URL 3\"].json.imageUrl}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        464
+      ],
+      "id": "b8a9b5a3-f355-420a-8dea-ff86a8c28a05",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": false
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        -32,
+        368
+      ],
+      "id": "f1cd380e-8e35-49fb-90bb-7075f79db811",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        192,
+        464
+      ],
+      "id": "dedd0088-8c75-4163-9c8a-3cfc08b9ce72",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "image/jpeg"
+              },
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1536,
+        464
+      ],
+      "id": "88bcd25c-31e2-4517-b45f-6bd864dbe139",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "=generate_image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "9d1d0e13-9da6-4e67-b790-334d6c33e1fa"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Generate image"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "1b5e6193-a314-415b-bc0d-b13dced099da",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "generate_video",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Generate video"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "bc282e14-c326-4410-8243-1ec3d5b93e83",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "=check_video",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Check Video"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -704,
+        816
+      ],
+      "id": "908ab9e6-3c43-426d-8515-4393fc3576db",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseKey": ""
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        416,
+        832
+      ],
+      "id": "3988ba38-3176-4bc4-acf3-8753af3689e7",
+      "name": "Respond to Webhook4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "97fa13d6-3065-4f5c-b662-d30b06e1e2bb",
+              "name": "taskId",
+              "value": "={{ $json.data.taskId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        192,
+        832
+      ],
+      "id": "e3291d24-d8f4-41e3-a25e-d9e6a9404572",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        -32,
+        1024
+      ],
+      "id": "a5ea7ae6-7031-4f5d-872e-28702d91d981",
+      "name": "Respond to Webhook6"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.automation-tribe.com/4-n8n-to-url-converter-DONE/n8n-to-url-converter.php",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "main_image",
+              "value": "={{ $binary.mask_image.fileName }}"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "imageFile",
+              "inputDataFieldName": "main_image"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -256,
+        272
+      ],
+      "id": "edbd0537-f5be-49ca-b96b-30fc3d26fa37",
+      "name": "Binary to URL 1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.automation-tribe.com/4-n8n-to-url-converter-DONE/n8n-to-url-converter.php",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "mask_image",
+              "value": "={{ $binary.mask_image.fileName }}"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "imageFile",
+              "inputDataFieldName": "mask_image"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -256,
+        464
+      ],
+      "id": "05fc3d4d-21f6-4bac-93a7-669389c96d94",
+      "name": "Binary to URL 2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.automation-tribe.com/4-n8n-to-url-converter-DONE/n8n-to-url-converter.php",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "reference_image",
+              "value": "={{ $binary.reference_image.fileName }}"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "imageFile",
+              "inputDataFieldName": "reference_image"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -256,
+        656
+      ],
+      "id": "53925cb2-9b96-4662-8ae9-1f1f77dfc9dd",
+      "name": "Binary to URL 3"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.kie.ai/api/v1/playground/createTask",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer ec69f8e6b2b2f8fe57abf5603075e697"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"google/nano-banana-edit\",\n  \"input\": {\n    \"prompt\": \"{{ $('Webhook').item.json.body.prompt }}\",\n    \"image_urls\": [\n      \"{{$node['Binary to URL 1'].json.imageUrl}}\",\n      \"{{$node['Binary to URL 2'].json.imageUrl}}\",\n      \"{{$node['Binary to URL 3'].json.imageUrl}}\"\n    ]\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        640,
+        464
+      ],
+      "id": "65129aad-88de-462a-8f8d-6fe4c31cb85e",
+      "name": "Nano Banana - Generate image"
+    },
+    {
+      "parameters": {
+        "url": "https://api.kie.ai/api/v1/playground/recordInfo",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "taskId",
+              "value": "={{ $json.data.taskId }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer ec69f8e6b2b2f8fe57abf5603075e697"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1088,
+        464
+      ],
+      "id": "6dfe7fc4-aff2-4f65-b0dd-e97051efff4b",
+      "name": "Get Image"
+    },
+    {
+      "parameters": {
+        "url": "={{ JSON.parse($node[\"Get Image\"].json.data.resultJson || \"{}\").resultUrls?.[0] }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1312,
+        464
+      ],
+      "id": "f177ffe7-1d63-485b-b856-01fa0e02b1f1",
+      "name": "Get binary Image",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.automation-tribe.com/4-n8n-to-url-converter-DONE/n8n-to-url-converter.php",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "imageFile",
+              "inputDataFieldName": "image"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -256,
+        832
+      ],
+      "id": "28b88b13-854d-4910-8a74-176a0a03704e",
+      "name": "Binary to URL 4",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.kie.ai/api/v1/veo/generate",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer ec69f8e6b2b2f8fe57abf5603075e697"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"prompt\": \"{{$node['Webhook'].json.body.video_prompt}}. The character should say the following: {{$node['Webhook'].json.body.text_overlay}}\",\n  \"imageUrls\": [\n    \"{{$json.imageUrl}}\"\n  ],\n  \"model\": \"veo3\",\n  \"aspectRatio\": \"{{ $('Webhook').item.json.body.aspect_ratio }}\",\n  \"seeds\": 12345,\n  \"enableFallback\": false\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -32,
+        832
+      ],
+      "id": "c9ef5472-c253-46ef-a3d0-ad3abe38b23e",
+      "name": "Generate Video"
+    },
+    {
+      "parameters": {
+        "url": "https://api.kie.ai/api/v1/veo/record-info",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "taskId",
+              "value": "={{ $('Webhook').item.json.body.taskId }}"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "=Bearer ec69f8e6b2b2f8fe57abf5603075e697"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "dbb1c9d3-ff4a-4f8b-bca2-4979d753abd0",
+      "name": "Get final VIDEO",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -480,
+        1024
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.data.response.resultUrls[0] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -256,
+        1024
+      ],
+      "id": "740bdd9f-6787-4654-8c85-3f4fa413a649",
+      "name": "Download Video to Binary"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "Binary to URL 1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Binary to URL 2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Binary to URL 3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Nano Banana - Generate image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Binary to URL 4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get final VIDEO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Binary to URL 1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Binary to URL 2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Binary to URL 3": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Nano Banana - Generate image": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Image": {
+      "main": [
+        [
+          {
+            "node": "Get binary Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get binary Image": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Binary to URL 4": {
+      "main": [
+        [
+          {
+            "node": "Generate Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Video": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get final VIDEO": {
+      "main": [
+        [
+          {
+            "node": "Download Video to Binary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Video to Binary": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "94a8df55-8166-4752-abce-dd44a4c8c1c1",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+  },
+  "id": "guSN7wIvpPCFcCKG",
+  "tags": [
+    {
+      "createdAt": "2025-04-21T20:09:06.554Z",
+      "updatedAt": "2025-04-21T20:09:06.554Z",
+      "id": "3dOSqJMqC8FlNnE3",
+      "name": "Automation-Tribe"
+    }
+  ]
+}

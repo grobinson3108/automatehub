@@ -1,0 +1,75 @@
+{
+  "name": "Module 5.2 - RAG & Vector DB (Preview)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "preview-trigger-rag",
+      "name": "When clicking \"Test workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "content": "## 🔒 Workflow Premium - RAG & Vector Database\n\n### Système de Knowledge Base IA Avancé\n\n🧠 **Capacités du Système**\n- Upload de documents illimités (PDF, Word, Excel)\n- Indexation intelligente avec embeddings\n- Recherche sémantique ultra-rapide\n- Réponses contextuelles précises\n- Sources citées automatiquement\n\n📚 **Types de Documents Supportés**\n- Documentation technique\n- Contrats et documents légaux\n- Base de connaissances interne\n- Emails et conversations\n- Code source et documentation API\n\n🎯 **Cas d'Usage Révolutionnaires**\n1. **Support Client IA** : Réponses basées sur votre doc\n2. **Assistant Juridique** : Analyse de contrats\n3. **Knowledge Management** : Wiki intelligent\n4. **Onboarding IA** : Formation automatisée\n5. **Recherche Entreprise** : Google interne IA\n\n⚡ **Technologies Utilisées**\n- Pinecone Vector Database\n- OpenAI Embeddings\n- Chunking intelligent\n- Hybrid search (keyword + semantic)\n- Re-ranking algorithms\n\n---\n\n### 💎 Accès Premium\n\n**Premium (39€/mois)**\n- ✅ RAG jusqu'à 1000 documents\n- ✅ 5 namespaces\n- ✅ API complète\n\n**Business (97€/mois)**\n- ✅ Documents illimités\n- ✅ Namespaces illimités\n- ✅ Fine-tuning personnalisé\n- ✅ Déploiement dédié\n\n[**Commencer maintenant →**](https://automatehub.fr/pricing)",
+        "contentType": "markdown"
+      },
+      "id": "rag-preview-info",
+      "name": "RAG System Preview",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "demo-001",
+              "name": "exemple_conversation",
+              "value": "={{ [\n  {\n    \"question\": \"Quelle est la politique de remboursement ?\",\n    \"reponse\": \"Selon le document 'CGV-2024.pdf' page 12, la politique de remboursement permet un retour sous 30 jours...\",\n    \"sources\": [\"CGV-2024.pdf:p12\", \"FAQ-Retours.docx:p3\"],\n    \"confiance\": 0.95\n  },\n  {\n    \"question\": \"Comment configurer l'API v2 ?\",\n    \"reponse\": \"D'après la documentation technique 'API-Guide-v2.pdf', la configuration nécessite...\",\n    \"sources\": [\"API-Guide-v2.pdf:p45-47\"],\n    \"confiance\": 0.98\n  }\n] }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "demo-rag-data",
+      "name": "Exemple RAG",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "content": "## 🔍 Démonstration RAG en Action\n\n### Processus Complet\n\n```mermaid\ngraph LR\n    D[📄 Documents] -->|Upload| E[Embeddings]\n    E -->|Vectorisation| V[(Vector DB)]\n    Q[❓ Question] -->|Embedding| S[Recherche]\n    V --> S\n    S -->|Top K résultats| C[Contexte]\n    C --> G[GPT-4]\n    G -->|Réponse| R[✅ Résultat + Sources]\n```\n\n### Performance Réelle\n\n| Métrique | Valeur |\n|----------|--------|\n| Documents indexés | 10,000+ |\n| Temps de recherche | < 100ms |\n| Précision | 96.5% |\n| Taille max document | 50MB |\n| Langues supportées | 95+ |\n\n### 🎪 Magic Features\n\n1. **Auto-Update** : Nouveaux docs = Re-indexation auto\n2. **Version Control** : Historique des modifications\n3. **Multi-Modal** : Texte + Images + Tableaux\n4. **Security** : Permissions par utilisateur\n5. **Analytics** : Questions fréquentes détectées",
+        "contentType": "markdown"
+      },
+      "id": "rag-demo-visual",
+      "name": "RAG Visualization",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "When clicking \"Test workflow\"": {
+      "main": [[{"node": "RAG System Preview", "type": "main", "index": 0}]]
+    },
+    "RAG System Preview": {
+      "main": [[{"node": "Exemple RAG", "type": "main", "index": 0}]]
+    },
+    "Exemple RAG": {
+      "main": [[{"node": "RAG Visualization", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "description": "Preview du système RAG avec Vector Database. Knowledge base IA pour votre entreprise."
+  },
+  "versionId": "1.0.0"
+}

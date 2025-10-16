@@ -1,0 +1,375 @@
+{
+  "name": "Module 4.2 - Analyse de Sentiments Multi-Sources",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "schedule-analysis",
+      "name": "Analyse horaire",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "resource": "tweet",
+        "operation": "search",
+        "searchText": "@AutomateHub OR #n8n OR automatehub.fr",
+        "limit": 50,
+        "additionalFields": {}
+      },
+      "id": "get-tweets",
+      "name": "Récupérer tweets",
+      "type": "n8n-nodes-base.twitter",
+      "typeVersion": 2,
+      "position": [450, 200],
+      "credentials": {
+        "twitterOAuth2Api": {
+          "id": "1",
+          "name": "Twitter account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_REVIEWS_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Avis_Clients",
+          "mode": "name"
+        },
+        "options": {
+          "range": {
+            "rangeValue": "A2:E100"
+          }
+        }
+      },
+      "id": "get-reviews",
+      "name": "Récupérer avis clients",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [450, 350],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "getAll",
+        "returnAll": false,
+        "limit": 20,
+        "filters": {
+          "labelIds": [
+            "INBOX"
+          ],
+          "q": "subject:(feedback OR avis OR review)"
+        }
+      },
+      "id": "get-emails",
+      "name": "Récupérer emails feedback",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [450, 500],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "1",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "mergeByPosition",
+        "options": {}
+      },
+      "id": "merge-sources",
+      "name": "Fusionner sources",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [650, 350]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "normalize-001",
+              "name": "data_normalized",
+              "value": "={{ $json.text || $json.avis || $json.snippet || 'Pas de contenu' }}",
+              "type": "string"
+            },
+            {
+              "id": "normalize-002",
+              "name": "source",
+              "value": "={{ $json.id_str ? 'Twitter' : $json.email ? 'Email' : 'Google Sheets' }}",
+              "type": "string"
+            },
+            {
+              "id": "normalize-003",
+              "name": "author",
+              "value": "={{ $json.user?.name || $json.nom || $json.from || 'Anonyme' }}",
+              "type": "string"
+            },
+            {
+              "id": "normalize-004",
+              "name": "date",
+              "value": "={{ $json.created_at || $json.date || $now.toISO() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "normalize-data",
+      "name": "Normaliser données",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [850, 350]
+    },
+    {
+      "parameters": {
+        "model": "gpt-3.5-turbo",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Tu es un expert en analyse de sentiments. Analyse le texte suivant et retourne un JSON avec:\n- sentiment: 'positif', 'neutre' ou 'negatif'\n- score: entre -1 (très négatif) et 1 (très positif)\n- emotions: array des émotions détectées (joie, colère, tristesse, surprise, peur)\n- themes: array des thèmes principaux\n- urgent: boolean si action urgente requise\n- resume: résumé en une phrase"
+            },
+            {
+              "role": "user",
+              "content": "Texte à analyser: {{ $json.data_normalized }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.3,
+          "responseFormat": {
+            "type": "json_object"
+          }
+        }
+      },
+      "id": "analyze-sentiment",
+      "name": "Analyser sentiment IA",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.2,
+      "position": [1050, 350],
+      "credentials": {
+        "openAiApi": {
+          "id": "1",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Parser la réponse IA\nconst analysis = JSON.parse($input.item.json.choices[0].message.content);\nconst originalData = $input.item.json;\n\n// Calculer des métriques supplémentaires\nconst wordCount = originalData.data_normalized.split(' ').length;\nconst isLongFeedback = wordCount > 50;\nconst hasMention = originalData.data_normalized.includes('@');\nconst hasHashtag = originalData.data_normalized.includes('#');\n\n// Déterminer la priorité\nlet priority = 'normale';\nif (analysis.urgent || analysis.sentiment === 'negatif' && analysis.score < -0.5) {\n  priority = 'haute';\n} else if (analysis.sentiment === 'positif' && analysis.score > 0.7) {\n  priority = 'opportunité';\n}\n\n// Suggestions d'actions\nconst actions = [];\nif (analysis.sentiment === 'negatif') {\n  actions.push('répondre_rapidement');\n  actions.push('escalader_support');\n} else if (analysis.sentiment === 'positif') {\n  actions.push('remercier');\n  actions.push('demander_temoignage');\n  if (originalData.source === 'Twitter') {\n    actions.push('retweeter');\n  }\n}\n\nreturn {\n  // Données originales\n  texte_original: originalData.data_normalized,\n  source: originalData.source,\n  auteur: originalData.author,\n  date: originalData.date,\n  \n  // Analyse IA\n  sentiment: analysis.sentiment,\n  score_sentiment: analysis.score,\n  emotions: analysis.emotions || [],\n  themes: analysis.themes || [],\n  resume: analysis.resume,\n  \n  // Métriques\n  nombre_mots: wordCount,\n  feedback_detaille: isLongFeedback,\n  contient_mention: hasMention,\n  contient_hashtag: hasHashtag,\n  \n  // Actions\n  priorite: priority,\n  urgent: analysis.urgent || false,\n  actions_suggerees: actions,\n  \n  // Métadonnées\n  analyse_timestamp: new Date().toISOString(),\n  version_analyse: '1.0'\n};"
+      },
+      "id": "enrich-analysis",
+      "name": "Enrichir analyse",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1250, 350]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "urgent-check",
+              "leftValue": "={{ $json.urgent }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true"
+              }
+            }
+          ],
+          "combinator": "or",
+          "conditions": [
+            {
+              "id": "negative-check",
+              "leftValue": "={{ $json.score_sentiment }}",
+              "rightValue": -0.7,
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "check-urgent",
+      "name": "Vérifier urgence",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [1450, 350]
+    },
+    {
+      "parameters": {
+        "channel": "#urgences-sentiment",
+        "text": "=🚨 *ALERTE SENTIMENT NÉGATIF*\n\n*Source:* {{ $json.source }}\n*Auteur:* {{ $json.auteur }}\n*Sentiment:* {{ $json.sentiment }} ({{ $json.score_sentiment }})\n*Priorité:* {{ $json.priorite }}\n\n*Message:*\n> {{ $json.texte_original.substring(0, 200) }}{{ $json.texte_original.length > 200 ? '...' : '' }}\n\n*Résumé IA:* {{ $json.resume }}\n\n*Actions suggérées:*\n{{ $json.actions_suggerees.map(a => '• ' + a).join('\\n') }}\n\n⚡ Action immédiate requise!",
+        "otherOptions": {
+          "attachments": {
+            "values": [
+              {
+                "color": "#ff0000",
+                "fields": {
+                  "values": [
+                    {
+                      "short": true,
+                      "title": "Émotions",
+                      "value": "={{ $json.emotions.join(', ') }}"
+                    },
+                    {
+                      "short": true,
+                      "title": "Thèmes",
+                      "value": "={{ $json.themes.join(', ') }}"
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      },
+      "id": "alert-urgent",
+      "name": "Alerte urgente",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1650, 250],
+      "credentials": {
+        "slackApi": {
+          "id": "1",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SENTIMENT_LOG_SHEET",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Analyses",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{ $json.analyse_timestamp }}",
+            "source": "={{ $json.source }}",
+            "auteur": "={{ $json.auteur }}",
+            "sentiment": "={{ $json.sentiment }}",
+            "score": "={{ $json.score_sentiment }}",
+            "priorite": "={{ $json.priorite }}",
+            "texte": "={{ $json.texte_original }}",
+            "resume": "={{ $json.resume }}",
+            "themes": "={{ $json.themes.join(', ') }}",
+            "actions": "={{ $json.actions_suggerees.join(', ') }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "log-analysis",
+      "name": "Logger analyses",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1650, 450],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "// Agrégation des résultats\nconst items = $input.all();\n\nconst stats = {\n  total: items.length,\n  sentiments: {\n    positif: 0,\n    neutre: 0,\n    negatif: 0\n  },\n  sources: {},\n  themes: {},\n  emotions: {},\n  score_moyen: 0,\n  urgents: 0\n};\n\nitems.forEach(item => {\n  const data = item.json;\n  \n  // Compter sentiments\n  stats.sentiments[data.sentiment]++;\n  \n  // Compter sources\n  stats.sources[data.source] = (stats.sources[data.source] || 0) + 1;\n  \n  // Agréger themes\n  data.themes.forEach(theme => {\n    stats.themes[theme] = (stats.themes[theme] || 0) + 1;\n  });\n  \n  // Agréger émotions\n  data.emotions.forEach(emotion => {\n    stats.emotions[emotion] = (stats.emotions[emotion] || 0) + 1;\n  });\n  \n  // Score moyen\n  stats.score_moyen += data.score_sentiment;\n  \n  // Compter urgents\n  if (data.urgent) stats.urgents++;\n});\n\nstats.score_moyen = stats.total > 0 ? (stats.score_moyen / stats.total).toFixed(2) : 0;\n\n// Top 3 themes\nconst topThemes = Object.entries(stats.themes)\n  .sort((a, b) => b[1] - a[1])\n  .slice(0, 3)\n  .map(([theme, count]) => ({ theme, count }));\n\n// Générer insights\nconst insights = [];\nif (stats.sentiments.negatif > stats.sentiments.positif) {\n  insights.push('⚠️ Plus de sentiments négatifs que positifs');\n}\nif (stats.urgents > 0) {\n  insights.push(`🚨 ${stats.urgents} feedbacks urgents détectés`);\n}\nif (stats.score_moyen > 0.5) {\n  insights.push('😊 Sentiment global positif');\n}\n\nreturn [{\n  json: {\n    periode: new Date().toISOString(),\n    statistiques: stats,\n    top_themes: topThemes,\n    insights: insights,\n    rapport: `Analyse de ${stats.total} feedbacks: ${stats.sentiments.positif} positifs, ${stats.sentiments.neutre} neutres, ${stats.sentiments.negatif} négatifs. Score moyen: ${stats.score_moyen}`\n  }\n}];"
+      },
+      "id": "aggregate-results",
+      "name": "Agréger résultats",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 2,
+      "position": [1850, 350]
+    }
+  ],
+  "connections": {
+    "Analyse horaire": {
+      "main": [[
+        {"node": "Récupérer tweets", "type": "main", "index": 0},
+        {"node": "Récupérer avis clients", "type": "main", "index": 0},
+        {"node": "Récupérer emails feedback", "type": "main", "index": 0}
+      ]]
+    },
+    "Récupérer tweets": {
+      "main": [[{"node": "Fusionner sources", "type": "main", "index": 0}]]
+    },
+    "Récupérer avis clients": {
+      "main": [[{"node": "Fusionner sources", "type": "main", "index": 1}]]
+    },
+    "Récupérer emails feedback": {
+      "main": [[{"node": "Fusionner sources", "type": "main", "index": 2}]]
+    },
+    "Fusionner sources": {
+      "main": [[{"node": "Normaliser données", "type": "main", "index": 0}]]
+    },
+    "Normaliser données": {
+      "main": [[{"node": "Analyser sentiment IA", "type": "main", "index": 0}]]
+    },
+    "Analyser sentiment IA": {
+      "main": [[{"node": "Enrichir analyse", "type": "main", "index": 0}]]
+    },
+    "Enrichir analyse": {
+      "main": [[{"node": "Vérifier urgence", "type": "main", "index": 0}]]
+    },
+    "Vérifier urgence": {
+      "main": [
+        [{"node": "Alerte urgente", "type": "main", "index": 0}],
+        [{"node": "Logger analyses", "type": "main", "index": 0}]
+      ]
+    },
+    "Alerte urgente": {
+      "main": [[{"node": "Logger analyses", "type": "main", "index": 0}]]
+    },
+    "Logger analyses": {
+      "main": [[{"node": "Agréger résultats", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Analyse de sentiments multi-sources (Twitter, emails, avis) avec IA, détection d'urgence et tableau de bord temps réel."
+  },
+  "versionId": "1.0.0"
+}

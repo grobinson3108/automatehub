@@ -1,0 +1,168 @@
+{
+  "name": "Module 1.1 - Introduction à l'automatisation",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "value": "0 9 * * *"
+            }
+          ]
+        }
+      },
+      "name": "Démarrage quotidien",
+      "type": "n8n-nodes-base.cron",
+      "typeVersion": 1,
+      "position": [
+        100,
+        200
+      ],
+      "id": "cron-trigger"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "message_bienvenue",
+              "value": "Bienvenue dans n8n ! Ceci est votre première automation."
+            },
+            {
+              "name": "plateforme",
+              "value": "n8n"
+            },
+            {
+              "name": "niveau",
+              "value": "débutant"
+            }
+          ],
+          "number": [
+            {
+              "name": "etape",
+              "value": 1
+            }
+          ]
+        }
+      },
+      "name": "Définir les données",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        300,
+        200
+      ],
+      "id": "set-data"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.plateforme}}",
+              "operation": "equal",
+              "value2": "n8n"
+            }
+          ]
+        }
+      },
+      "name": "Vérifier plateforme",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        500,
+        200
+      ],
+      "id": "condition-check"
+    },
+    {
+      "parameters": {
+        "subject": "Module 1.1 - Introduction à n8n",
+        "message": "Félicitations ! Vous avez créé votre premier workflow n8n.\n\nCe workflow démontre :\n- Trigger automatique (Cron)\n- Manipulation de données (Set)\n- Logique conditionnelle (If)\n- Action finale (Email)\n\nMessage : {{$json.message_bienvenue}}\nÉtape : {{$json.etape}}\nNiveau : {{$json.niveau}}",
+        "toList": "student@example.com"
+      },
+      "name": "Envoyer confirmation",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [
+        700,
+        150
+      ],
+      "id": "email-success"
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "erreur",
+              "value": "Plateforme non reconnue"
+            },
+            {
+              "name": "message_erreur",
+              "value": "Le workflow ne peut pas continuer car la plateforme n'est pas reconnue."
+            }
+          ]
+        }
+      },
+      "name": "Gérer erreur",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [
+        700,
+        250
+      ],
+      "id": "error-handler"
+    }
+  ],
+  "connections": {
+    "Démarrage quotidien": {
+      "main": [
+        [
+          {
+            "node": "Définir les données",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Définir les données": {
+      "main": [
+        [
+          {
+            "node": "Vérifier plateforme",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vérifier plateforme": {
+      "main": [
+        [
+          {
+            "node": "Envoyer confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gérer erreur",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {},
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

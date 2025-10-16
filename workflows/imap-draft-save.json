@@ -1,0 +1,21 @@
+{
+  "parameters": {
+    "authentication": "passwordAuth",
+    "command": "=append",
+    "mailbox": "Drafts",
+    "flags": ["\\Draft", "\\Seen"],
+    "message": "={{$json.emlContent}}",
+    "additionalFields": {}
+  },
+  "id": "save-draft-imap",
+  "name": "Save Draft IMAP",
+  "type": "n8n-nodes-base.imap",
+  "typeVersion": 2,
+  "position": [1250, 1000],
+  "credentials": {
+    "imap": {
+      "id": "NEW_CREDENTIAL",
+      "name": "IMAP OVH AGSteel"
+    }
+  }
+}

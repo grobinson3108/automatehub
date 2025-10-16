@@ -1,0 +1,19 @@
+{
+  "name": "Pack_Acquisition_Clients",
+  "type": "Benefice",
+  "description": "\ud83c\udfaf Attirez et convertissez plus de clients automatiquement",
+  "prix": 179,
+  "workflow_count": 120,
+  "workflows": [
+    "HubSpot_Lead_Enrichment_from_Email_Analysis.json",
+    "Lead_Tracking_Google_Sheets_to_HubSpot_with_Email_Alerts.json",
+    "Form_to_Discord_Email_Leads_and_Update_Sheets.json",
+    "AI-Powered_Leaderboard_for_Popular_n8n_Workflows.json",
+    "Stripe_Payment_Order_Sync_\u2013_Auto_Retrieve_Customer_&_Product_Purchased.json",
+    "Enrich_Pipedrive_Leads_with_Clearbit_and_Filter.json",
+    "Aggregate_Customer_Data_and_Generate_Response_Report.json",
+    "Extract_Google_Maps_Business_Leads_to_Google_Sheets.json",
+    "webhook_automation_facebookleadads.json",
+    "Receive_updates_when_a_customer_is_created_in_HelpScout.json"
+  ]
+}

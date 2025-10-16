@@ -1,0 +1,93 @@
+{
+  "workflow_path": "/var/www/automatehub/workflows_traduits/FR/AutomationTribe/2-Tout automatiser/N8N Ai Agent/Sub Workflows/Sub_workflow_Google_Tasks.json",
+  "texts_map": {
+    "$text_1": {
+      "original": "Sous-flux Google Tasks",
+      "path": "name",
+      "context": "workflow_name",
+      "has_prefix": false
+    },
+    "$text_2": {
+      "original": "Déclencheur d'entrée de flux",
+      "path": "nodes[0].name",
+      "context": "node_name",
+      "has_prefix": false
+    }
+  },
+  "modified_workflow": {
+    "name": "$text_1",
+    "nodes": [
+      {
+        "parameters": {
+          "workflowInputs": {
+            "values": [
+              {
+                "name": "create_tasks",
+                "type": "any"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          -360,
+          -20
+        ],
+        "id": "35af48d0-ce50-484b-bb46-67e862deb8ce",
+        "name": "$text_2"
+      },
+      {
+        "parameters": {
+          "task": "MDU2OTQxMjI1NDIwMjM5MDUxNTI6MDow",
+          "title": "={{ $json.create_tasks }}",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.googleTasks",
+        "typeVersion": 1,
+        "position": [
+          -80,
+          -20
+        ],
+        "id": "447dd130-3d8c-44c5-a35c-90d731dedc0f",
+        "name": "Google Tasks",
+        "credentials": {
+          "googleTasksOAuth2Api": {
+            "id": "io06wtroSlSgaErZ",
+            "name": "Google Tasks account"
+          }
+        }
+      }
+    ],
+    "pinData": {},
+    "connections": {
+      "Workflow Input Trigger": {
+        "main": [
+          [
+            {
+              "node": "Google Tasks",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "active": false,
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "versionId": "dd642923-1488-402e-ae74-09debe793843",
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+    },
+    "id": "5ARirULqBsunS1Z6",
+    "tags": [
+      {
+        "id": "1",
+        "name": "Audelalia"
+      }
+    ]
+  }
+}

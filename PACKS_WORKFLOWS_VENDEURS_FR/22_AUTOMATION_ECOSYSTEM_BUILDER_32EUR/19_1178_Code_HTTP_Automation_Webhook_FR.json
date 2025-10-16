@@ -1,0 +1,1635 @@
+{
+  "id": "8Sbrzc7Au3ZGf62p",
+  "meta": {
+    "instanceId": "bcc0fe85b176c2837affb21bb7d7397fad2549880e73dc1f7a42e76ae94fd996",
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Publier des Vidéos & Images - Blotato",
+  "tags": [
+    {
+      "id": "3ys8SQgNTiRr899i",
+      "name": "social media",
+      "createdAt": "2025-03-17T08:37:35.227Z",
+      "updatedAt": "2025-04-07T06:13:46.923Z"
+    },
+    {
+      "id": "zyM31CVcOgUrUm2P",
+      "name": "blotato",
+      "createdAt": "2025-04-25T13:38:49.620Z",
+      "updatedAt": "2025-04-25T13:38:49.620Z"
+    },
+    {
+      "id": "2wv2YbZIQoYNx98Y",
+      "name": "schedule",
+      "createdAt": "2025-04-25T13:38:53.789Z",
+      "updatedAt": "2025-04-25T13:38:53.789Z"
+    },
+    {
+      "id": "PqlvV87F8bOW0yAK",
+      "name": "publish",
+      "createdAt": "2025-04-25T13:38:58.944Z",
+      "updatedAt": "2025-04-25T13:38:58.944Z"
+    },
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "53b36edb-e273-4e68-8ae9-7d3de3f7533f",
+      "name": "[Instagram] Publier via Blotato",
+      "type": "n8n-nodes-base.httpRequest",
+      "onError": "continueErrorOutput",
+      "position": [
+        96,
+        80
+      ],
+      "parameters": {
+        "url": "https://backend.blotato.com/v2/posts",
+        "method": "POST",
+        "options": {},
+        "jsonBody": "={\n  \"post\": {\n    \"target\": {\n      \"targetType\": \"instagram\"\n    },\n    \"content\": {\n      \"text\": {{ $('Prepare for Publish').item.json.final_text_short.toJsonString() }},\n      \"platform\": \"instagram\",\n      \"mediaUrls\": [\"{{ $json.url }}\"]\n    },\n    \"accountId\": \"{{ $('Prepare for Publish').item.json.instagram_id }}\"\n  }\n}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "OEAfX6pMtcbyFBAp",
+          "name": "Blotato"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "6fef0d35-9679-40f6-9224-cfb7c442056b",
+      "name": "[Facebook] Publier via Blotato",
+      "type": "n8n-nodes-base.httpRequest",
+      "onError": "continueErrorOutput",
+      "position": [
+        96,
+        480
+      ],
+      "parameters": {
+        "url": "https://backend.blotato.com/v2/posts",
+        "method": "POST",
+        "options": {},
+        "jsonBody": "={\n  \"post\": {\n    \"target\": {\n      \"targetType\": \"facebook\",\n      \"pageId\": \"{{ $('Prepare for Publish').item.json.facebook_page_id }}\"\n    },\n    \"content\": {\n      \"text\": {{ $('Prepare for Publish').item.json.final_text_long.toJsonString() }},\n      \"platform\": \"facebook\",\n      \"mediaUrls\": [\"{{ $json.url }}\"]\n    },\n    \"accountId\": \"{{ $('Prepare for Publish').item.json.facebook_id }}\"\n  }\n}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "OEAfX6pMtcbyFBAp",
+          "name": "Blotato"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "3f744ee2-988b-45a6-9d88-a718780421cf",
+      "name": "[Linkedin] Publier via Blotato",
+      "type": "n8n-nodes-base.httpRequest",
+      "onError": "continueErrorOutput",
+      "position": [
+        96,
+        880
+      ],
+      "parameters": {
+        "url": "https://backend.blotato.com/v2/posts",
+        "method": "POST",
+        "options": {},
+        "jsonBody": "={\n  \"post\": {\n    \"target\": {\n      \"targetType\": \"linkedin\"\n    },\n    \"content\": {\n      \"text\": {{ $('Prepare for Publish').item.json.final_text_long.toJsonString() }},\n      \"platform\": \"linkedin\",\n      \"mediaUrls\": [\"{{ $json.url }}\"]\n    },\n    \"accountId\": \"{{ $('Prepare for Publish').item.json.linkedin_id }}\"\n  }\n}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "OEAfX6pMtcbyFBAp",
+          "name": "Blotato"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "7f0ae540-090a-4b13-a094-2ac74e1a14b3",
+      "name": "[Tiktok] Publier via Blotato",
+      "type": "n8n-nodes-base.httpRequest",
+      "onError": "continueErrorOutput",
+      "position": [
+        96,
+        1280
+      ],
+      "parameters": {
+        "url": "https://backend.blotato.com/v2/posts",
+        "method": "POST",
+        "options": {},
+        "jsonBody": "={\n  \"post\": {\n    \"target\": {\n      \"targetType\": \"tiktok\",\n      \"isYourBrand\": false,\n      \"disabledDuet\": false,\n      \"privacyLevel\": \"PUBLIC_TO_EVERYONE\",\n      \"isAiGenerated\": true,\n      \"disabledStitch\": false,\n      \"disabledComments\": false,\n      \"isBrandedContent\": false\n    },\n    \"content\": {\n      \"text\": \"{{ $('Prepare for Publish').item.json.final_text_short }}\",\n      \"platform\": \"tiktok\",\n      \"mediaUrls\": [\"{{ $json.url }}\"]\n    },\n    \"accountId\": \"{{ $('Prepare for Publish').item.json.tiktok_id }}\"\n  }\n}\n",
+        "sendBody": true,
+        "specifyBody": "json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "OEAfX6pMtcbyFBAp",
+          "name": "Blotato"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "2593a621-0d0b-42b3-97ab-bf85785fb33c",
+      "name": "[Pinterest] Publier via Blotato",
+      "type": "n8n-nodes-base.httpRequest",
+      "onError": "continueErrorOutput",
+      "position": [
+        96,
+        1680
+      ],
+      "parameters": {
+        "url": "https://backend.blotato.com/v2/posts",
+        "method": "POST",
+        "options": {},
+        "jsonBody": "={\n  \"post\": {\n    \"target\": {\n      \"targetType\": \"pinterest\",\n      \"boardId\": \"{{ $('Prepare for Publish').item.json.pinterested_board_id }}\",\n      \"link\": \"https://www.AIwithApex.com/\"\n    },\n    \"content\": {\n      \"text\": {{ $('Prepare for Publish').item.json.final_text_short.toJsonString() }},\n      \"platform\": \"pinterest\",\n      \"mediaUrls\": [\"{{ $('Upload Image to Blotato').item.json.url }}\"]\n    },\n    \"accountId\": \"{{ $('Prepare for Publish').item.json.pinterest_id }}\"\n  }\n}\n",
+        "sendBody": true,
+        "specifyBody": "json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "OEAfX6pMtcbyFBAp",
+          "name": "Blotato"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "b47da27b-b81f-4736-9c34-cd224d78f29d",
+      "name": "[Youtube] Publier via Blotato",
+      "type": "n8n-nodes-base.httpRequest",
+      "onError": "continueErrorOutput",
+      "position": [
+        96,
+        280
+      ],
+      "parameters": {
+        "url": "https://backend.blotato.com/v2/posts",
+        "method": "POST",
+        "options": {},
+        "jsonBody": "={\n  \"post\": {\n    \"target\": {\n      \"targetType\": \"youtube\",\n      \"title\": \"{{ $('Ensure Valid YouTube Title').item.json.message.content.youtube_title }}\",\n      \"privacyStatus\": \"public\",\n      \"shouldNotifySubscribers\": true\n    },\n    \"content\": {\n      \"text\": {{ $('Prepare for Publish').item.json.final_text_long.toJsonString() }},\n      \"platform\": \"youtube\",\n      \"mediaUrls\": [\"{{ $json.url }}\"]\n    },\n    \"accountId\": \"{{ $('Prepare for Publish').item.json.youtube_id }}\"\n  }\n}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "OEAfX6pMtcbyFBAp",
+          "name": "Blotato"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "19f17323-45f5-4865-b754-e2d5f8fc6073",
+      "name": "[Threads] Publier via Blotato",
+      "type": "n8n-nodes-base.httpRequest",
+      "onError": "continueErrorOutput",
+      "position": [
+        96,
+        680
+      ],
+      "parameters": {
+        "url": "https://backend.blotato.com/v2/posts",
+        "method": "POST",
+        "options": {},
+        "jsonBody": "={\n  \"post\": {\n    \"target\": {\n      \"targetType\": \"threads\"\n    },\n    \"content\": {\n      \"text\": {{ $('Prepare for Publish').item.json.final_text_short.toJsonString() }},\n      \"platform\": \"threads\",\n      \"mediaUrls\": [\"{{ $json.url }}\"]\n    },\n    \"accountId\": \"{{ $('Prepare for Publish').item.json.threads_id }}\"\n  }\n}\n",
+        "sendBody": true,
+        "specifyBody": "json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "OEAfX6pMtcbyFBAp",
+          "name": "Blotato"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "adaa3ac1-fa2a-422e-8b70-8c4cc74782ed",
+      "name": "[Twitter] Publier via Blotato",
+      "type": "n8n-nodes-base.httpRequest",
+      "onError": "continueErrorOutput",
+      "position": [
+        96,
+        1080
+      ],
+      "parameters": {
+        "url": "https://backend.blotato.com/v2/posts",
+        "method": "POST",
+        "options": {},
+        "jsonBody": "={\n  \"post\": {\n    \"target\": {\n      \"targetType\": \"twitter\"\n    },\n    \"content\": {\n      \"text\": {{ $('Prepare for Publish').item.json.final_text_short.toJsonString() }},\n      \"platform\": \"twitter\",\n      \"mediaUrls\": [\"{{ $json.url }}\"]\n    },\n    \"accountId\": \"{{ $('Prepare for Publish').item.json.twitter_id }}\"\n  }\n}\n",
+        "sendBody": true,
+        "specifyBody": "json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "OEAfX6pMtcbyFBAp",
+          "name": "Blotato"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "af2d0a29-73d1-4ee0-84c9-f337a628b3ea",
+      "name": "[Bluesky] Publier via Blotato",
+      "type": "n8n-nodes-base.httpRequest",
+      "onError": "continueErrorOutput",
+      "position": [
+        96,
+        1480
+      ],
+      "parameters": {
+        "url": "https://backend.blotato.com/v2/posts",
+        "method": "POST",
+        "options": {},
+        "jsonBody": "={\n  \"post\": {\n    \"target\": {\n      \"targetType\": \"bluesky\"\n    },\n    \"content\": {\n      \"text\": {{ $('Prepare for Publish').item.json.final_text_short.toJsonString() }},\n      \"platform\": \"bluesky\",\n      \"mediaUrls\": [\"{{ $('Upload Image to Blotato').item.json.url }}\"]\n    },\n    \"accountId\": \"{{ $('Prepare for Publish').item.json.bluesky_id }}\"\n  }\n}\n",
+        "sendBody": true,
+        "specifyBody": "json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "OEAfX6pMtcbyFBAp",
+          "name": "Blotato"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "08253c79-44f6-471a-b7c9-b84046f16888",
+      "name": "Note Autocollante2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        16,
+        -40
+      ],
+      "parameters": {
+        "color": 2,
+        "width": 260,
+        "height": 1880,
+        "content": "# Publier sur les Réseaux Sociaux"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "dae9e738-c391-47f6-bdf7-87055a5a77f0",
+      "name": "Préparer pour la Publication",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -564,
+        880
+      ],
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": "={\n  \"instagram_id\": \"2244\",\n  \"youtube_id\": \"1300\",\n  \"tiktok_id\": \"2761\",\n  \"facebook_id\": \"2152\",\n  \"facebook_page_id\": \"127923797405586\",\n  \"threads_id\": \"670\",\n  \"twitter_id\": \"1576\",\n  \"linkedin_id\": \"1730\",\n  \"pinterest_id\": \"447\",\n  \"pinterested_board_id\": \"1097611809123639891\",\n  \"bluesky_id\": \"1311\",\n  \"final_text_long\": {{ $('Airtable').item.json.Script.toJsonString() }},\n  \"final_text_short\": {{ $('Airtable').item.json['Text for X'].toJsonString() }}\n}"
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "aaa21d7f-e175-4516-8bde-e0b87e6e183d",
+      "name": "Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        -1160,
+        880
+      ],
+      "parameters": {
+        "id": "={{ $json.airtableID }}",
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appt2yDl6xXXyqboD",
+          "cachedResultUrl": "https://airtable.com/appt2yDl6xXXyqboD",
+          "cachedResultName": "Social Media System"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "tblM3kDu1qB2FdTOF",
+          "cachedResultUrl": "https://airtable.com/appt2yDl6xXXyqboD/tblM3kDu1qB2FdTOF",
+          "cachedResultName": "Media Creation"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "YzrajURFsZkojT3x",
+          "name": "Delete Me Later Please!"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "e05d1ede-7d43-4c55-a353-6bc2bd0216d4",
+      "name": "Téléverser la vidéo sur Blotato",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -124,
+        880
+      ],
+      "parameters": {
+        "url": "https://backend.blotato.com/v2/media",
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "authentication": "genericCredentialType",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $('Airtable').item.json['Video URL'] }}"
+            }
+          ]
+        },
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "gNaQW1qT8liDV4ls",
+          "name": "Delete me toooooo!"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "92fd39a9-74c1-4cbb-abb3-511f8230cee7",
+      "name": "Téléverser l'image sur Blotato",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -344,
+        880
+      ],
+      "parameters": {
+        "url": "https://backend.blotato.com/v2/media",
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "authentication": "genericCredentialType",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $('Airtable').item.json['Image URL'] }}"
+            }
+          ]
+        },
+        "genericAuthType": "httpHeaderAuth"
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "gNaQW1qT8liDV4ls",
+          "name": "Delete me toooooo!"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "12b8ecfe-f83b-4e32-a8d7-a71b7f5c9fd1",
+      "name": "Assurer un titre YouTube valide",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        -940,
+        880
+      ],
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "options": {},
+        "messages": {
+          "values": [
+            {
+              "content": "=TITRE_ACTUEL :\n{{ $json['Media Title'] }}"
+            },
+            {
+              "role": "assistant",
+              "content": "# TÂCHE\nVous êtes spécialisé dans la création de titres viraux pour des vidéos courtes YouTube. Vous devez prendre le TITRE_ACTUEL de l'utilisateur et le réécrire pour le rendre viral.\n## Règles\n - Maximum 100 caractères\n - Objectif : viralité !\n - Doit être un titre valide pour une vidéo courte YouTube\n# SORTIE\nLa sortie doit être au format JSON, exemple :\n{ \"youtube_title\": \"<titre généré selon les instructions>\" }"
+            }
+          ]
+        },
+        "jsonOutput": true
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "KzjXYSuzUOCnnvzB",
+          "name": "OpenAi account"
+        }
+      },
+      "typeVersion": 1.8
+    },
+    {
+      "id": "d83577ae-5aa7-4d47-a67b-30e30fcd2fa4",
+      "name": "Note autocollante1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1660,
+        1060
+      ],
+      "parameters": {
+        "width": 880,
+        "height": 360,
+        "content": "## Vérification rapide de débogage\n### J'ai mis en place des liens rapides vers les réseaux sociaux pour vérifier si le système de publication a réussi ou non. J'ai essayé la vidéo si possible, sinon j'ai utilisé une image. Vous pouvez également trouver les publications échouées de Blotato ici : https://my.blotato.com/failed\n\n[remplacez ces liens par les vôtres si vous le souhaitez]\nInstagram : https://www.instagram.com/moshehbenavraham/reels/\nYoutube : https://www.youtube.com/@AIwithApex/shorts\nFacebook : https://www.facebook.com/MoshehApexWebServices/grid\nThreads : https://www.threads.com/@moshehbenavraham\nLinkedIn : https://www.linkedin.com/in/moshehbenavraham/recent-activity/all/\nX / Twitter : https://x.com/MoshehAvraham\nTikTok : https://www.tiktok.com/@moshehavraham\nBluesky : https://bsky.app/profile/aiwithapex.bsky.social\nPinterest : https://www.pinterest.com/aiwithapex/artificial-intelligence-ai-ai-automation/\n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "356518e3-1eb6-4cfe-bf77-a5f095553b74",
+      "name": "Note autocollante",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -880,
+        1440
+      ],
+      "parameters": {
+        "width": 880,
+        "height": 300,
+        "content": "## Problèmes actuels (dernière mise à jour le 29 avril 2025)\n\n- Pas encore confirmé, mais il faut -absolument- publier sur une Page FB ?\n- Je crois que vous ne pouvez publier que sur un tableau particulier dans Pinterest\n- Certains points de terminaison acceptent des textes plus longs, d'autres non\n- Certains points de terminaison acceptent des vidéos, d'autres non\n- Avec Facebook, apparemment seul le texte brut est accepté\n- Avec LinkedIn, apparemment seul le texte brut est accepté\n- Je n'ai pas trouvé d'informations sur les moyens d'accéder à ce que vous avez téléversé sur Blotato, ni sur la limite de capacité, ni sur la durée de stockage des ressources — j'ai trouvé une limite de concurrence d'utilisation de 10 requêtes/minute\n- J'ai rencontré cette erreur avec la requête POST YouTube malgré un faible nombre de publications : \"Erreur : La requête ne peut pas être complétée car vous avez dépassé votre <a href=\"/youtube/v3/getting-started#quota\">quota</a>.\""
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "503a04c9-a740-4c5d-9f67-143a8dd1422f",
+      "name": "Airtable : Instagram publié",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        316,
+        -20
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appt2yDl6xXXyqboD",
+          "cachedResultUrl": "https://airtable.com/appt2yDl6xXXyqboD",
+          "cachedResultName": "Social Media System"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "tblM3kDu1qB2FdTOF",
+          "cachedResultUrl": "https://airtable.com/appt2yDl6xXXyqboD/tblM3kDu1qB2FdTOF",
+          "cachedResultName": "Media Creation"
+        },
+        "columns": {
+          "value": {
+            "id": "={{ $('Airtable').item.json.id",
+            "Production": "Completed"
+          },
+          "schema": [
+            {
+              "id": "id",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "id": "Media Title",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Media Title",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Script",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Script",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Script Len",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Script Len",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Production",
+              "type": "options",
+              "display": true,
+              "options": [
+                {
+                  "name": "Not Started",
+                  "value": "Not Started"
+                },
+                {
+                  "name": "In progress",
+                  "value": "In progress"
+                },
+                {
+                  "name": "Ready",
+                  "value": "Ready"
+                },
+                {
+                  "name": "Review",
+                  "value": "Review"
+                },
+                {
+                  "name": "Completed",
+                  "value": "Completed"
+                },
+                {
+                  "name": "Scheduled",
+                  "value": "Scheduled"
+                },
+                {
+                  "name": "Published",
+                  "value": "Published"
+                }
+              ],
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Production",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Video URL",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Video URL",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Video",
+              "type": "array",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Video",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Publish Date (from Content Creation)",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Publish Date (from Content Creation)",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Publish Time (from Content Creation)",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Publish Time (from Content Creation)",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Test",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Test",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Content Creation",
+              "type": "array",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Content Creation",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Scenes",
+              "type": "array",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Scenes",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image URL",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Image URL",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image",
+              "type": "array",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Image",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image Caption",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Image Caption",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Text for X",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Text for X",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Text for LinkedIn",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Text for LinkedIn",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Social Channels",
+              "type": "array",
+              "display": true,
+              "options": [
+                {
+                  "name": "Blog",
+                  "value": "Blog"
+                },
+                {
+                  "name": "Facebook",
+                  "value": "Facebook"
+                },
+                {
+                  "name": "Instagram",
+                  "value": "Instagram"
+                },
+                {
+                  "name": "LinkedIn",
+                  "value": "LinkedIn"
+                },
+                {
+                  "name": "TikTok",
+                  "value": "TikTok"
+                },
+                {
+                  "name": "X",
+                  "value": "X"
+                },
+                {
+                  "name": "YouTube",
+                  "value": "YouTube"
+                }
+              ],
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Social Channels",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "n8n Publishing Date",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "n8n Publishing Date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "n8n Publishing Time",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "n8n Publishing Time",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Publishing Log",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Publishing Log",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "House Keeping",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "House Keeping",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "workflowId (from House Keeping)",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "workflowId (from House Keeping)",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "recordID (from House Keeping)",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "recordID (from House Keeping)",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created Time",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Created Time",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Modified Time",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Modified Time",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Record ID",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Record ID",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "id"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "operation": "update"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "YzrajURFsZkojT3x",
+          "name": "Delete Me Later Please!"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "f42a3763-8906-4278-b8d0-73611a1fae31",
+      "name": "Airtable : Instagram publié1",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        316,
+        180
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appt2yDl6xXXyqboD",
+          "cachedResultUrl": "https://airtable.com/appt2yDl6xXXyqboD",
+          "cachedResultName": "Social Media System"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "tblM3kDu1qB2FdTOF",
+          "cachedResultUrl": "https://airtable.com/appt2yDl6xXXyqboD/tblM3kDu1qB2FdTOF",
+          "cachedResultName": "Media Creation"
+        },
+        "columns": {
+          "value": {
+            "id": "={{ $('Airtable').item.json.id",
+            "Production": "In progress"
+          },
+          "schema": [
+            {
+              "id": "id",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "id": "Media Title",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Media Title",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Script",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Script",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Script Len",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Script Len",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Production",
+              "type": "options",
+              "display": true,
+              "options": [
+                {
+                  "name": "Not Started",
+                  "value": "Not Started"
+                },
+                {
+                  "name": "In progress",
+                  "value": "In progress"
+                },
+                {
+                  "name": "Ready",
+                  "value": "Ready"
+                },
+                {
+                  "name": "Review",
+                  "value": "Review"
+                },
+                {
+                  "name": "Completed",
+                  "value": "Completed"
+                },
+                {
+                  "name": "Scheduled",
+                  "value": "Scheduled"
+                },
+                {
+                  "name": "Published",
+                  "value": "Published"
+                }
+              ],
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Production",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Video URL",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Video URL",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Video",
+              "type": "array",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Video",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Publish Date (from Content Creation)",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Publish Date (from Content Creation)",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Publish Time (from Content Creation)",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Publish Time (from Content Creation)",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Test",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Test",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Content Creation",
+              "type": "array",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Content Creation",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Scenes",
+              "type": "array",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Scenes",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image URL",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Image URL",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image",
+              "type": "array",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Image",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image Caption",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Image Caption",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Text for X",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Text for X",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Text for LinkedIn",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Text for LinkedIn",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Social Channels",
+              "type": "array",
+              "display": true,
+              "options": [
+                {
+                  "name": "Blog",
+                  "value": "Blog"
+                },
+                {
+                  "name": "Facebook",
+                  "value": "Facebook"
+                },
+                {
+                  "name": "Instagram",
+                  "value": "Instagram"
+                },
+                {
+                  "name": "LinkedIn",
+                  "value": "LinkedIn"
+                },
+                {
+                  "name": "TikTok",
+                  "value": "TikTok"
+                },
+                {
+                  "name": "X",
+                  "value": "X"
+                },
+                {
+                  "name": "YouTube",
+                  "value": "YouTube"
+                }
+              ],
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Social Channels",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "n8n Publishing Date",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "n8n Publishing Date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "n8n Publishing Time",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "n8n Publishing Time",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Publishing Log",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Publishing Log",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "House Keeping",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "House Keeping",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "workflowId (from House Keeping)",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "workflowId (from House Keeping)",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "recordID (from House Keeping)",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "recordID (from House Keeping)",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created Time",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Created Time",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Modified Time",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Modified Time",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Record ID",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Record ID",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "id"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "operation": "update"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "YzrajURFsZkojT3x",
+          "name": "Delete Me Later Please!"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "e6d9834b-a03e-4e98-9e38-a774eec2bc93",
+      "name": "Note autocollante3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        291,
+        -300
+      ],
+      "parameters": {
+        "color": 2,
+        "width": 150,
+        "height": 640,
+        "content": "# Mettre à jour le statut de la publication\n\n*note Je n'ai pas fini d'attacher toutes les plateformes, je vous laisse ce travail :)"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "fed0373f-7fa5-469c-9972-47d0a9a447a7",
+      "name": "Lors du clic sur ‘Tester le workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -1600,
+        880
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "c68f2436-f471-45a6-9292-2410937bd444",
+      "name": "ID d'enregistrement Airtable",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -1380,
+        880
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ca998655-fcdd-4169-b470-492cf5113b6a",
+              "name": "=airtableID",
+              "type": "string",
+              "value": "=recJBpGmgd7nuLpfe"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "7617f48c-f498-4458-a64c-3fb60938546e",
+      "name": "Note adhésive4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -972,
+        780
+      ],
+      "parameters": {
+        "color": 5,
+        "width": 320,
+        "height": 260,
+        "content": "### Peut ne pas être nécessaire\n\nJ'ai ajouté ceci parce que mes Titres entrants dépassaient la limite de 100 caractères"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "054bc64d-3a3c-4ba4-9bcc-e30729bb9c87",
+      "name": "Note adhésive5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2260,
+        300
+      ],
+      "parameters": {
+        "width": 580,
+        "height": 1880,
+        "content": "# Comment Ajouter la Table d'Exemple et Connecter n8n à Airtable\n\n3. **Copiez la Base**  \n   - À droite du titre *\"Social Media System\"*, cliquez sur **\"Copier la base\"**.\n\n4. **Choisissez Votre Espace de Travail**  \n   - Sélectionnez l’espace de travail dans lequel copier la base, puis cliquez sur **\"Ajouter la base\"**.\n\n**✅ Félicitations ! Vous avez maintenant ajouté la Base d’exemple.**\n\n---\n\n## Partie 2 : Connecter n8n à Airtable\n\n### Étape A : Créer un Jeton d’Accès Personnel dans Airtable\n\n1. **Créez et Connectez-vous à Votre Compte Airtable**  \n   - [Inscrivez-vous ici (lien d’affiliation)](https://airtable.com/invite/r/6UyZyAAd)\n\n2. **Accéder aux jetons personnels**\n   - En haut à droite : cliquez sur votre **Icône de compte** → sélectionnez **\"Builder hub\"**.\n   - Navigation à gauche : allez dans **\"Developers\"** → cliquez sur **\"Personal access tokens\"**.\n\n3. **Créer un nouveau jeton**\n   - Cliquez sur **\"Create token\"**.\n   - Nommez votre jeton (exemple : *\"Jeton d'accès personnel Airtable pour n8n\"*).  \n     **(Ne créez pas encore !)**\n\n4. **Définir les scopes**\n   - Cliquez sur **\"+ Ajouter un scope\"** et activez ces scopes :\n     - `data.records:read`\n     - `data.records:write`\n     - `schema.bases:read`\n\n5. **Optionnel : Restreindre l'accès**\n   - Si vous souhaitez que les identifiants soient limités à certaines bases :\n     - Sous **Accès**, cliquez sur **\"+ Ajouter une base\"** et sélectionnez la ou les Bases.\n\n6. **Finaliser et enregistrer le token**\n   - Après la création, une fenêtre contextuelle affichera votre token **une seule fois**.\n   - **Copiez-le et conservez-le en lieu sûr !**\n\n---\n\n### Étape B : Ajouter les identifiants Airtable dans n8n\n\n1. **Créez et connectez-vous à votre compte n8n**  \n   - [Inscrivez-vous ici (lien d’affiliation)](https://n8n.partnerlinks.io/aiwithapex)\n\n2. **Créez un nouvel identifiant**\n   - En haut à droite : à côté du bouton rouge-orange **\"Create Workflow\"**, ouvrez le menu déroulant → sélectionnez **\"Create Credential\"**.\n   - (Vous pouvez également le créer depuis n’importe quel nœud Airtable.)\n\n3. **Détails du jeton d'entrée**\n   - Dans la fenêtre popup, tapez **\"Airtable personal access token api\"**, cliquez sur **\"Continuer\"**.\n   - Collez votre **jeton Airtable enregistré**.\n\n4. **Nommez correctement la crédential**\n   - En haut à gauche de la boîte de dialogue : renommez le jeton avec un nom clairement reconnaissable.\n\n5. **Enregistrez et testez la connexion**\n   - Cliquez sur le bouton **\"Enregistrer\"** en haut à droite.\n   - Vous devriez voir **\"Connexion testée avec succès\"**.\n   - Vous pouvez maintenant **fermer** la boîte de dialogue.\n\n**✅ Fait ! n8n est maintenant connecté à votre base Airtable.**"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "f10bfe19-511e-4211-9d53-b72130bcf0ec",
+      "name": "Note adhésive6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1660,
+        300
+      ],
+      "parameters": {
+        "width": 1300,
+        "height": 100,
+        "content": "# Lien d'affiliation Blotato, merci de soutenir mon travail :  https://blotato.com/?ref=max\nVous aurez besoin de la clé API pour blotato-api-key"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "825d529c-813c-42d3-b100-0dba4a84d7fe",
+      "name": "Note adhésive7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -644,
+        420
+      ],
+      "parameters": {
+        "color": 5,
+        "width": 260,
+        "height": 620,
+        "content": "## REMPLISSEZ-MOI !\n\n### Utilisez le lien ci-dessus pour vous connecter à Blotato\n\n- Roue dentée en bas à gauche pour les paramètres\n- **IMPORTANT** Connectez-vous à chaque plateforme de médias sociaux que vous souhaitez connecter avant d'utiliser les boutons de connexion et NE PAS utiliser l'option \"connecter toutes les pages\".\n- Connectez-vous à chaque compte et copiez chaque \"Account ID\" dans un endroit sûr\n- Si vous utilisez FaceBook, copiez également le 'Page ID'\n- Si vous utilisez Pinterest, utilisez mon SYSTÈME D'ID DE TABLEAU PINTEREST (tm) pour obtenir votre ID de tableau"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "b27f7a30-aa19-4d0f-a7a0-7e5d5c0a1a2d",
+      "name": "Système Pinterest (tm)",
+      "type": "n8n-nodes-base.formTrigger",
+      "position": [
+        -1600,
+        1940
+      ],
+      "webhookId": "0724d1b9-05f6-46c2-9b74-e89fd44cbef3",
+      "parameters": {
+        "options": {},
+        "formTitle": "Pinterest System (tm)",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Pinterest Board URL",
+              "placeholder": "https://www.pinterest.com/USERNAME/BOARD_NAME/",
+              "requiredField": true
+            }
+          ]
+        },
+        "formDescription": "Put in your Pinterest Board Link here, it should look like this:\n\nhttps://www.pinterest.com/USERNAME/BOARD_NAME/\n\nExample:\nhttps://www.pinterest.com/aiwithapex/artificial-intelligence-ai-ai-automation/"
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "3a5976ba-fb7d-4e33-a0bd-efbbf212031b",
+      "name": "Récupérer la page du tableau Pinterest",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        -1380,
+        1940
+      ],
+      "parameters": {
+        "url": "={{ $json['Pinterest Board URL'] }}",
+        "options": {},
+        "jsonHeaders": "{\n  \"User-Agent\": \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36\",\n  \"Accept\": \"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8\",\n  \"Accept-Language\": \"en-US,en;q=0.9\",\n  \"Accept-Encoding\": \"gzip, deflate, br\",\n  \"Connection\": \"keep-alive\",\n  \"Referer\": \"https://www.pinterest.com/\"\n}",
+        "sendHeaders": true,
+        "specifyHeaders": "json"
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "659bb65c-7aaf-4aa4-958b-0f8e5bafaf7e",
+      "name": "Détective de page Pinterest",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        -1160,
+        1940
+      ],
+      "parameters": {
+        "jsCode": "// n8n Code Node JavaScript\n\n// Get the first item OBJECT using $input.first() or $items[0]\n// Let's use $input.first() as it's slightly more modern n8n syntax\nconst item = $input.first();\n\n// Check if an item was actually received\nif (!item) {\n  console.error(\"No input item received.\");\n  // Return an empty array as expected by n8n if no input\n  return [];\n}\n\n// Check if the 'json' property exists on the item object\n// (This check might be redundant if the previous node always outputs JSON, but good practice)\nif (!item.json || typeof item.json !== 'object') {\n  console.error(\"Input item does not have a 'json' object property.\");\n  // Ensure item.json exists before adding error to it\n  item.json = item.json || {};\n  item.json.error = \"Input item does not have a 'json' object property.\";\n  // Return the item INSIDE an array\n  return [item];\n}\n\n// Check if 'data' exists within 'json'\n// <<< VERIFY this path 'item.json.data' using the INPUT panel in n8n editor >>>\nif (!item.json.hasOwnProperty('data')) {\n   console.error(\"Input item's 'json' property does not have a 'data' key.\");\n   item.json.error = \"Input item's 'json' property does not have a 'data' key.\";\n   // Return the item INSIDE an array\n   return [item];\n}\n\n// Assign the HTML string (adjust path if needed based on INPUT panel)\nconst htmlString = item.json.data;\n\n// Check if HTML string exists and is a string type\nif (typeof htmlString !== 'string') {\n  console.error(\"item.json.data is not a string.\");\n  item.json.error = \"item.json.data exists but is not a string.\";\n  // Return the item INSIDE an array\n  return [item];\n}\n\n// Check if HTML string is empty\nif (!htmlString) {\n   console.error(\"item.json.data is an empty string or null/undefined.\");\n   item.json.error = \"item.json.data is empty or null.\";\n   // Return the item INSIDE an array\n   return [item];\n}\n// </ END OF INPUT CHECKING >\n\nlet extractedBoardInfo = {};\nlet processingError = null; // Renamed to avoid conflict with built-in 'error'\n\ntry {\n  // 1. Find the JSON within the specific script tag using regex\n  const regex = /<script id=\"__PWS_INITIAL_PROPS__\" type=\"application\\/json\">(.*?)<\\/script>/s;\n  const match = htmlString.match(regex);\n\n  if (match && match[1]) {\n    const jsonString = match[1];\n    // 2. Parse the extracted JSON string\n    const parsedData = JSON.parse(jsonString);\n\n    // 3. Navigate through the nested structure\n    const boardsData = parsedData?.initialReduxState?.boards;\n\n    if (boardsData && typeof boardsData === 'object' && Object.keys(boardsData).length > 0) {\n      const boardId = Object.keys(boardsData)[0];\n      const boardDetails = boardsData[boardId];\n\n      if (boardDetails && boardDetails.id) {\n        // 4. Extract the desired information\n        extractedBoardInfo = {\n          boardId: boardDetails.id,\n          name: boardDetails.name || null,\n          description: boardDetails.description || null,\n          url: boardDetails.url || null,\n          privacy: boardDetails.privacy || null,\n          pinCount: boardDetails.pin_count !== undefined ? boardDetails.pin_count : null,\n          followerCount: boardDetails.follower_count !== undefined ? boardDetails.follower_count : null,\n          createdAt: boardDetails.created_at || null,\n          ownerUsername: boardDetails.owner?.username || null,\n          ownerId: boardDetails.owner?.id || null,\n          ownerFullName: boardDetails.owner?.full_name || null,\n        };\n      } else {\n         processingError = \"Board data structure invalid within __PWS_INITIAL_PROPS__ JSON.\";\n         console.error(processingError);\n      }\n    } else {\n      processingError = \"Boards data not found or empty in __PWS_INITIAL_PROPS__ JSON.\";\n      console.error(processingError);\n    }\n  } else {\n    processingError = \"Script tag with id='__PWS_INITIAL_PROPS__' not found or empty in HTML.\";\n    console.error(processingError);\n  }\n} catch (e) {\n  processingError = `Error processing HTML/JSON: ${e.message}`;\n  console.error(processingError, e);\n}\n\n// 5. Prepare the final item\nif (Object.keys(extractedBoardInfo).length > 0) {\n  item.json.extractedBoardInfo = extractedBoardInfo;\n  // Optionally delete the large HTML string if no longer needed\n  // delete item.json.data;\n} else {\n  // Add error information if extraction failed\n  item.json.error = processingError || \"Failed to extract board information for unknown reasons.\";\n  item.json.extractedBoardInfo = null;\n}\n\n// Return the modified item INSIDE an array as required by n8n\nreturn [item];"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "09f00540-3fde-45a8-a20b-7415e81aa777",
+      "name": "Note adhésive8",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1660,
+        1800
+      ],
+      "parameters": {
+        "color": 4,
+        "width": 660,
+        "height": 300,
+        "content": "# Détective de page Pinterest\n - Utilisez soit l'URL de test soit l'URL active selon que votre workflow soit actif ou non\n  - Il suffit de coller le lien de votre tableau et de récupérer l'ID !"
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": true,
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4b3ebaa1-ec81-4de8-9366-633594a1b0ca",
+  "connections": {
+    "Airtable": {
+      "main": [
+        [
+          {
+            "node": "Assurer un titre YouTube valide",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ID d'enregistrement Airtable": {
+      "main": [
+        [
+          {
+            "node": "Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Préparer pour la Publication": {
+      "main": [
+        [
+          {
+            "node": "Téléverser l'image sur Blotato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Système Pinterest (tm)": {
+      "main": [
+        [
+          {
+            "node": "Récupérer la page du tableau Pinterest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Téléverser l'image sur Blotato": {
+      "main": [
+        [
+          {
+            "node": "Téléverser la vidéo sur Blotato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Téléverser la vidéo sur Blotato": {
+      "main": [
+        [
+          {
+            "node": "[Instagram] Publier via Blotato",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[Facebook] Publier via Blotato",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[Linkedin] Publier via Blotato",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[Tiktok] Publier via Blotato",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[Youtube] Publier via Blotato",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[Threads] Publier via Blotato",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[Twitter] Publier via Blotato",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[Bluesky] Publier via Blotato",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "[Pinterest] Publier via Blotato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Récupérer la page du tableau Pinterest": {
+      "main": [
+        [
+          {
+            "node": "Détective de page Pinterest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Assurer un titre YouTube valide": {
+      "main": [
+        [
+          {
+            "node": "Préparer pour la Publication",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "[Instagram] Publier via Blotato": {
+      "main": [
+        [
+          {
+            "node": "Airtable : Instagram publié",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Airtable : Instagram publié1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lors du clic sur ‘Tester le workflow’": {
+      "main": [
+        [
+          {
+            "node": "ID d'enregistrement Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

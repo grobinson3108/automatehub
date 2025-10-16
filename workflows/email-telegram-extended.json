@@ -1,0 +1,1049 @@
+{
+  "name": "Email Telegram Management - Extended",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "forceReconnect": 60
+        }
+      },
+      "id": "8a33a0fe-ee96-48a0-9fea-98ece509a32f",
+      "name": "Email Trigger",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2,
+      "position": [32, 3120],
+      "credentials": {
+        "imap": {
+          "id": "TJJitmAXuDLh66Uv",
+          "name": "IMAP - AudelalIA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\n  // Génère un ID unique court (timestamp + 3 caractères aléatoires)\n  const timestamp = Date.now().toString(36); // Base 36 pour réduire la longueur\n  const random = Math.random().toString(36).substring(2, 5);\n  const shortId = `${timestamp}${random}`; // ex: \"lxis1k2abc\"\n\n  const emailData = {\n    id: shortId, // ID court pour les callbacks Telegram\n    messageId: items[0].json.metadata[\"message-id\"],\n    from: items[0].json.from,\n    fromName: items[0].json.from,\n    subject: items[0].json.subject || \"Sans objet\",\n    body:\n      items[0].json.textPlain || items[0].json.textHtml.replace(/<[^>]*>/g, \"\"),\n    date: new Date(items[0].json.date).toLocaleString(\"fr-FR\"),\n    hasAttachments:\n      items[0].json.attachments && items[0].json.attachments.length > 0,\n  };\n\n  return { emailData };"
+      },
+      "id": "4cce50d7-cfa1-4201-ab5d-f42a3b27834c",
+      "name": "Format Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [272, 3120]
+    },
+    {
+      "parameters": {
+        "chatId": "=621354826",
+        "text": "={{ $json.output.message }}",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Répondre",
+                    "additionalFields": {
+                      "callback_data": "=reply_{{ $json.output.ID }}"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "18ca6477-3c16-49d8-80f9-f8a9b38dd642",
+      "name": "Send to Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.1,
+      "position": [896, 3120],
+      "webhookId": "dbdccbe4-ecae-49f2-b18a-0844193cb88e",
+      "credentials": {
+        "telegramApi": {
+          "id": "EUimFAG839eeMHEO",
+          "name": "AG Steel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [304, 3344],
+      "id": "5a21841f-219a-408a-87b6-6ee24ad76707",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "UMiZ3xasVxXbQU41",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-20250514",
+          "cachedResultName": "Claude 4 Sonnet"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [464, 3344],
+      "id": "366e7a9f-51b4-43ce-b8b0-2bcd2ad64c9a",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "vRgKCnPypv5scwyJ",
+          "name": "Anthropic account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs",
+          "mode": "list",
+          "cachedResultName": "AG Steel",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ID', ``, 'string') }}",
+            "Nom": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nom', ``, 'string') }}",
+            "Email Reçu": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email_Re_u', ``, 'string') }}",
+            "Réponse": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('R_ponse', ``, 'string') }}",
+            "Email Préparé": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email_Pr_par_', ``, 'string') }}",
+            "Répondu": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('R_pondu', ``, 'string') }}",
+            "Date": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Date', ``, 'string') }}",
+            "Iterations": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Iterations', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Nom",
+              "displayName": "Nom",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email Reçu",
+              "displayName": "Email Reçu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Réponse",
+              "displayName": "Réponse",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Iterations",
+              "displayName": "Iterations",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email Préparé",
+              "displayName": "Email Préparé",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Répondu",
+              "displayName": "Répondu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [640, 3344],
+      "id": "8f3e5c68-e93c-4ecd-957a-b33199bb1eb5",
+      "name": "NewMail",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uFPsNWjVjI1QPU9p",
+          "name": "Google Sheets g.r3108"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"ID\": \"id du mail\",\n\t\"message\": \"ton message\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [816, 3344],
+      "id": "11fae37b-1b97-4e51-83a4-a393858cc178",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Tu es un assistant qui résumé les mails. Voici les infos :\nID : {{ $json.emailData.id }}\nDe : {{ $json.emailData.from }}\nNom : {{ $json.emailData.fromName }}\nSujet : {{ $json.emailData.subject }}\nCorps : {{ $json.emailData.body }}\nDate : {{ $json.emailData.date }}",
+        "hasOutputParser": true,
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "Tu es un assistant agent IA qui résume les mails pour les envoyer dans un message Telegram.\n\n  Le but est de savoir qui a envoyé le mail, et de m'annoncer le message général en une phrase. S'il y a des informations importantes, il faut me les donner aussi. Tu peux ignorer les signatures si elles ne sont pas pertinentes mais aussi t'en servir pour\n   m'annoncer le prénom et nom du mail.\n\n  IMPORTANT : Tu reçois un ID court unique avec chaque mail. Tu DOIS utiliser cet ID pour :\n  1. L'enregistrer en base de données\n  2. Le mentionner dans ta réponse pour que n'8n puisse créer le bouton \"Répondre\"\n\n  Utilise l'outil \"NewMail\" pour noter les informations du mail en base comme ceci :\n  ID : {{L'ID court fourni}}\n  Nom : Le nom de l'expéditeur\n  Email Reçu : Sujet + Corps du mail (sans signatures ni liens tracking)\n  Réponse : NULL\n  Itérations : 1\n  Email Préparé : NULL\n  Répondu : NULL\n  Date : La date du mail\n\n  Format de ta réponse OBLIGATOIRE :\n  [ID: {{id_court}}]\n  {{Nom}} t'a envoyé un mail à {{heure}} le {{date}}. Son objet était \"{{sujet}}\". Voici ce qu'il a dit :\n  {{corps_du_message_sans_signature}}\n\n  Exemple avec ID \"lxis1k2abc\" :\n  Greg Robinson t'a envoyé un mail à 14h12 le 03 septembre. Son objet était \"Nouvelles\". Voici ce qu'il a dit :\n  Salut Greg !\n  Je voulais savoir si tu recevais bien mes mails via n8n. Au cas où voici un lien.\n  Aussi, je t'ai ajouté une pièce jointe...\n\n  Note : Le [ID: xxx] sera utilisé par n8n pour créer le bouton \"Répondre\" avec le callback_data \"reply_lxis1k2abc\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [496, 3120],
+      "id": "c3e41f5c-d9c8-40ca-941d-a6501d55ae3f",
+      "name": "Envoyer Mails"
+    },
+    {
+      "parameters": {
+        "updates": ["callback_query"]
+      },
+      "id": "telegram-callback-trigger",
+      "name": "Telegram Callback Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [250, 2600],
+      "credentials": {
+        "telegramApi": {
+          "id": "EUimFAG839eeMHEO",
+          "name": "AG Steel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.callback_query.data}}",
+              "operation": "startsWith",
+              "value2": "reply_"
+            }
+          ]
+        }
+      },
+      "id": "if-reply-button",
+      "name": "IF Reply Button",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 2600]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst callbackData = items[0].json.callback_query.data;\nconst mailId = callbackData.replace('reply_', '');\nconst chatId = items[0].json.callback_query.message.chat.id;\nconst queryId = items[0].json.callback_query.id;\nconst firstName = items[0].json.callback_query.from.first_name || 'Utilisateur';\n\nreturn [{\n  json: {\n    mailId,\n    chatId,\n    queryId,\n    firstName,\n    messageId: items[0].json.callback_query.message.message_id\n  }\n}];"
+      },
+      "id": "extract-reply-data",
+      "name": "Extract Reply Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 2600]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{$json.chatId}}",
+        "text": "📧 Répondre au mail [{{$json.mailId}}]\n\n{{$json.firstName}}, tapez ou dictez votre réponse ci-dessous :",
+        "replyMarkup": "forceReply",
+        "additionalFields": {
+          "force_reply": true,
+          "input_field_placeholder": "Tapez votre réponse..."
+        }
+      },
+      "id": "force-reply",
+      "name": "Force Reply Keyboard",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [850, 2600],
+      "credentials": {
+        "telegramApi": {
+          "id": "EUimFAG839eeMHEO",
+          "name": "AG Steel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "callback",
+        "operation": "answerQuery",
+        "queryId": "={{$json.queryId}}",
+        "text": "✅ Tapez votre réponse",
+        "additionalFields": {
+          "show_alert": false
+        }
+      },
+      "id": "answer-reply-callback",
+      "name": "Answer Reply Callback",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1050, 2600],
+      "credentials": {
+        "telegramApi": {
+          "id": "EUimFAG839eeMHEO",
+          "name": "AG Steel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": ["message"]
+      },
+      "id": "telegram-message-trigger",
+      "name": "Telegram Message Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [250, 2200],
+      "credentials": {
+        "telegramApi": {
+          "id": "EUimFAG839eeMHEO",
+          "name": "AG Steel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.message.reply_to_message ? 'true' : 'false'}}",
+              "value2": "true"
+            },
+            {
+              "value1": "={{$json.message.reply_to_message.text}}",
+              "operation": "contains",
+              "value2": "Répondre au mail"
+            }
+          ]
+        },
+        "combineOperation": "and"
+      },
+      "id": "if-is-reply",
+      "name": "IF Is Reply to Email",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 2200]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst message = items[0].json.message;\nconst replyToText = message.reply_to_message.text;\nconst mailIdMatch = replyToText.match(/\\[([^\\]]+)\\]/);\nconst mailId = mailIdMatch ? mailIdMatch[1] : null;\n\n// Gérer texte ou audio\nlet userResponse = message.text || '';\nif (message.voice) {\n  userResponse = \"[Message vocal à transcrire]\";\n  // TODO: Ajouter intégration Whisper si nécessaire\n}\n\nreturn [{\n  json: {\n    mailId,\n    userResponse,\n    chatId: message.chat.id,\n    userId: message.from.id,\n    userName: message.from.first_name,\n    originalEmail: \"\",\n    fromEmail: \"\"\n  }\n}];"
+      },
+      "id": "extract-response",
+      "name": "Extract Response Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 2200]
+    },
+    {
+      "parameters": {
+        "operation": "lookup",
+        "documentId": {
+          "__rl": true,
+          "value": "1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs",
+          "mode": "list",
+          "cachedResultName": "AG Steel",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit#gid=0"
+        },
+        "lookupColumn": "ID",
+        "lookupValue": "={{$json.mailId}}",
+        "options": {
+          "returnAllMatches": false
+        }
+      },
+      "id": "lookup-email",
+      "name": "Lookup Original Email",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [850, 2200],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uFPsNWjVjI1QPU9p",
+          "name": "Google Sheets g.r3108"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [850, 1900],
+      "id": "draft-llm",
+      "name": "OpenAI Draft Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "UMiZ3xasVxXbQU41",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs",
+          "mode": "list"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list"
+        },
+        "columnToMatchOn": "ID",
+        "valueToMatchOn": "={{$json.mailId}}",
+        "fieldsUi": {
+          "values": [
+            {
+              "column": "Email Préparé",
+              "fieldValue": "={{$json.output.brouillon}}"
+            },
+            {
+              "column": "Réponse",
+              "fieldValue": "={{$node[\"Extract Response Data\"].json.userResponse}}"
+            },
+            {
+              "column": "Iterations",
+              "fieldValue": "={{(parseInt($node[\"Lookup Original Email\"].json[\"Iterations\"]) || 0) + 1}}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.googleSheetsTool", 
+      "typeVersion": 4.7,
+      "position": [1400, 2000],
+      "id": "update-draft-tool",
+      "name": "Update Draft Tool",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uFPsNWjVjI1QPU9p",
+          "name": "Google Sheets g.r3108"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Email original :\nDe : {{ $node[\"Lookup Original Email\"].json[\"Nom\"] }}\nSujet : {{ $node[\"Lookup Original Email\"].json[\"Email Reçu\"] }}\n\nRéponse demandée par l'utilisateur :\n{{ $json.userResponse }}\n\nGénère une réponse email professionnelle et polie basée sur la demande de l'utilisateur.",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "Tu es un assistant qui rédige des réponses professionnelles à des emails.\n\nÀ partir de l'email original et de la demande de l'utilisateur, tu dois générer un brouillon de réponse email professionnel.\n\nUtilise l'outil \"Update Draft Tool\" pour mettre à jour le Google Sheet avec :\n- Email Préparé : Le brouillon généré\n- Réponse : La demande originale de l'utilisateur\n- Iterations : Incrémenter de 1\n\nFormat de sortie OBLIGATOIRE :\n{\n  \"brouillon\": \"Le texte du brouillon de réponse\"\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [1200, 2200],
+      "id": "generate-draft-agent",
+      "name": "Generate Draft Agent"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"brouillon\": \"Le texte du brouillon de réponse\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [1400, 1900],
+      "id": "draft-output-parser",
+      "name": "Draft Output Parser"
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{$node[\"Extract Response Data\"].json.chatId}}",
+        "text": "📝 Brouillon de réponse :\n━━━━━━━━━━━━━━━\n{{$json.output.brouillon}}\n━━━━━━━━━━━━━━━",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "✏️ Modifier",
+                    "additionalFields": {
+                      "callback_data": "=edit_{{$node[\"Extract Response Data\"].json.mailId}}"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "📧 Brouillon",
+                    "additionalFields": {
+                      "callback_data": "=draft_{{$node[\"Extract Response Data\"].json.mailId}}"
+                    }
+                  },
+                  {
+                    "text": "✅ Envoyer",
+                    "additionalFields": {
+                      "callback_data": "=send_{{$node[\"Extract Response Data\"].json.mailId}}"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "id": "send-draft",
+      "name": "Send Draft with Options",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1600, 2200],
+      "credentials": {
+        "telegramApi": {
+          "id": "EUimFAG839eeMHEO",
+          "name": "AG Steel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.callback_query.data}}",
+              "operation": "startsWith",
+              "value2": "edit_"
+            }
+          ]
+        }
+      },
+      "id": "if-edit-button",
+      "name": "IF Edit Button",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 2700]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.callback_query.data}}",
+              "operation": "startsWith",
+              "value2": "send_"
+            }
+          ]
+        }
+      },
+      "id": "if-send-button",
+      "name": "IF Send Button",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 2800]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.callback_query.data}}",
+              "operation": "startsWith",
+              "value2": "draft_"
+            }
+          ]
+        }
+      },
+      "id": "if-draft-button",
+      "name": "IF Draft Button",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 2900]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.message.reply_to_message ? 'true' : 'false'}}",
+              "value2": "true"
+            },
+            {
+              "value1": "={{$json.message.reply_to_message.text}}",
+              "operation": "contains",
+              "value2": "Modifier le brouillon"
+            }
+          ]
+        },
+        "combineOperation": "and"
+      },
+      "id": "if-is-edit-reply",
+      "name": "IF Is Edit Reply",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 2100]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst callbackData = items[0].json.callback_query.data;\nconst action = callbackData.split('_')[0];\nconst mailId = callbackData.replace(action + '_', '');\nconst chatId = items[0].json.callback_query.message.chat.id;\nconst queryId = items[0].json.callback_query.id;\n\nreturn [{\n  json: {\n    action,\n    mailId,\n    chatId,\n    queryId\n  }\n}];"
+      },
+      "id": "extract-action-data",
+      "name": "Extract Action Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 2800]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{$json.chatId}}",
+        "text": "✏️ Modifier le brouillon [{{$json.mailId}}]\n\nTapez vos modifications ci-dessous :",
+        "replyMarkup": "forceReply",
+        "additionalFields": {
+          "force_reply": true,
+          "input_field_placeholder": "Tapez vos modifications..."
+        }
+      },
+      "id": "force-edit-reply",
+      "name": "Force Edit Reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [850, 2700],
+      "credentials": {
+        "telegramApi": {
+          "id": "EUimFAG839eeMHEO",
+          "name": "AG Steel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "callback",
+        "operation": "answerQuery",
+        "queryId": "={{$json.queryId}}",
+        "text": "✏️ Modifiez le brouillon"
+      },
+      "id": "answer-edit-callback",
+      "name": "Answer Edit Callback",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1050, 2700],
+      "credentials": {
+        "telegramApi": {
+          "id": "EUimFAG839eeMHEO",
+          "name": "AG Steel"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Email Trigger": {
+      "main": [
+        [
+          {
+            "node": "Format Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Email": {
+      "main": [
+        [
+          {
+            "node": "Envoyer Mails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Envoyer Mails",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Envoyer Mails",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "NewMail": {
+      "ai_tool": [
+        [
+          {
+            "node": "Envoyer Mails",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Envoyer Mails",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envoyer Mails": {
+      "main": [
+        [
+          {
+            "node": "Send to Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Callback Trigger": {
+      "main": [
+        [
+          {
+            "node": "IF Reply Button",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF Edit Button",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF Send Button",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF Draft Button",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Reply Button": {
+      "main": [
+        [
+          {
+            "node": "Extract Reply Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Reply Data": {
+      "main": [
+        [
+          {
+            "node": "Force Reply Keyboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Force Reply Keyboard": {
+      "main": [
+        [
+          {
+            "node": "Answer Reply Callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Message Trigger": {
+      "main": [
+        [
+          {
+            "node": "IF Is Reply to Email",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF Is Edit Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Is Reply to Email": {
+      "main": [
+        [
+          {
+            "node": "Extract Response Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Response Data": {
+      "main": [
+        [
+          {
+            "node": "Lookup Original Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lookup Original Email": {
+      "main": [
+        [
+          {
+            "node": "Generate Draft Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Draft Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Draft Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Draft Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Generate Draft Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Draft Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Generate Draft Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Draft Agent": {
+      "main": [
+        [
+          {
+            "node": "Send Draft with Options",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Edit Button": {
+      "main": [
+        [
+          {
+            "node": "Extract Action Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Send Button": {
+      "main": [
+        [
+          {
+            "node": "Extract Action Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Draft Button": {
+      "main": [
+        [
+          {
+            "node": "Extract Action Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Action Data": {
+      "main": [
+        [
+          {
+            "node": "Force Edit Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Force Edit Reply": {
+      "main": [
+        [
+          {
+            "node": "Answer Edit Callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Is Edit Reply": {
+      "main": [
+        [
+          {
+            "node": "Extract Response Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {
+    "Email Trigger": [
+      {
+        "textHtml": "\r\n        <br>\r\n        <br><signature id=\"local-952288f4-ebdd\"><table style=\"border-collapse: separate; border-color: gray;\" border=\"0\" width=\"370\" cellspacing=\"0\" cellpadding=\"0\">\r\n<tbody>\r\n<tr style=\"display: table-row; border-color: inherit; vertical-align: middle;\" valign=\"middle\">\r\n<td style=\"display: table-cell; vertical-align: top; padding-right: 10px;\" valign=\"top\" width=\"150\">\r\n<a style=\"display: inline-block;\" href=\"https://link.getmailspring.com/link/07F8820D-4DB4-478C-9770-B779C50F23CD@getmailspring.com/0?redirect=https%3A%2F%2Faudelalia.fr&amp;recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D\"><img style=\"border: none; margin-left: 40px;\" src=\"https://meep.fr/Images/Round-Greg.png\" width=\"70\"><br><br>   \r\n</a><a style=\"display: inline-block;\" href=\"https://link.getmailspring.com/link/07F8820D-4DB4-478C-9770-B779C50F23CD@getmailspring.com/1?redirect=https%3A%2F%2Faudelalia.fr&amp;recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D\">\r\n    <img style=\"border: none; margin-left: 10px;\" src=\"https://audelalia.fr/media/logos/logo-250x175.png\" width=\"125\">\r\n  </a>\r\n</td>\r\n<td style=\"display: table-cell; vertical-align: inherit; border-left: solid #6ba3c3 1px;\" valign=\"inherit\" width=\"11\">&nbsp;</td>\r\n<td style=\"display: table-cell; vertical-align: top; text-align: left; color: #6ba3c3; font-size: 12px; font-family: helvetica, arial;\" align=\"left\" valign=\"top\">\r\n  <span style=\"margin-right: 5px; color: #7a9cb5; font-size: 15px; font-family: helvetica, arial;\">Greg Robinson</span><br>\r\n  <span style=\"margin-right: 5px; color: #7a9cb5; font-size: 12px; font-family: helvetica, arial;\">Automatisons le quotidien</span>\r\n  <br><br>\r\n  <table style=\"border-collapse: separate; border-color: gray; margin: 0 5px 5px 0; display: inline;\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\r\n    <tbody>\r\n      <tr style=\"display: table-row; border-color: inherit; vertical-align: middle;\" valign=\"middle\">\r\n        <td style=\"display: table-cell; vertical-align: inherit; padding-right: 5px; padding-top: 5px;\" valign=\"inherit\">\r\n          <div style=\"width: 25px; height: 25px; background-color: #b4d8e8; border-radius: 50%; display: flex; justify-content: center; align-items: center;\">\r\n            <span style=\"color: #ffffff; font-size: 14px;\">â</span>\r\n          </div>\r\n        </td>\r\n        <td style=\"display: table-cell; vertical-align: inherit;\" valign=\"inherit\">\r\n          <span style=\"font: 12px helvetica, arial;\"><a style=\"color: #7a9cb5; text-decoration: none;\" href=\"https://link.getmailspring.com/link/07F8820D-4DB4-478C-9770-B779C50F23CD@getmailspring.com/2?redirect=mailto%3Agreg%40audelalia.fr&amp;recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D\">greg@audelalia.fr</a></span>\r\n        </td>\r\n      </tr>\r\n      <tr style=\"display: table-row; border-color: inherit; vertical-align: middle;\" valign=\"middle\">\r\n        <td style=\"display: table-cell; vertical-align: inherit; padding-right: 5px; padding-top: 5px;\" valign=\"inherit\">\r\n          <div style=\"width: 25px; height: 25px; background-color: #b4d8e8; border-radius: 50%; display: flex; justify-content: center; align-items: center;\">\r\n            <span style=\"color: #ffffff; font-size: 14px;\">â</span>\r\n          </div>\r\n        </td>\r\n        <td style=\"display: table-cell; vertical-align: inherit;\" valign=\"inherit\">\r\n          <span style=\"font: 12px helvetica, arial;\"><a style=\"color: #7a9cb5; text-decoration: none;\" href=\"tel:+33651308949\">06 51 30 89 49</a></span>\r\n        </td>\r\n      </tr>\r\n      <tr style=\"display: table-row; border-color: inherit; vertical-align: middle;\" valign=\"middle\">\r\n        <td style=\"display: table-cell; vertical-align: inherit; padding-right: 5px; padding-top: 5px;\" valign=\"inherit\">\r\n          <div style=\"width: 25px; height: 25px; background-color: #b4d8e8; border-radius: 50%; display: flex; justify-content: center; align-items: center;\">\r\n            <span style=\"color: #ffffff; font-size: 14px;\">ð</span>\r\n          </div>\r\n        </td>\r\n        <td style=\"display: table-cell; vertical-align: inherit;\" valign=\"inherit\">\r\n          <span style=\"font: 12px helvetica, arial;\"><a style=\"color: #7a9cb5; text-decoration: none;\" href=\"https://link.getmailspring.com/link/07F8820D-4DB4-478C-9770-B779C50F23CD@getmailspring.com/3?redirect=https%3A%2F%2Faudelalia.fr%2F&amp;recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D\">audelalia.fr</a></span>\r\n        </td>\r\n      </tr>\r\n    </tbody>\r\n  </table>\r\n  <table style=\"border-collapse: separate; border-color: gray; padding-top: 15px;\" border=\"0\" cellpadding=\"0\">\r\n    <tbody>\r\n      <tr style=\"display: table-row; border-color: inherit; vertical-align: middle;\" valign=\"middle\">\r\n        <td style=\"display: table-cell; vertical-align: inherit; padding-right: 8px;\" valign=\"inherit\">\r\n          <a style=\"display: inline-block;\" href=\"https://link.getmailspring.com/link/07F8820D-4DB4-478C-9770-B779C50F23CD@getmailspring.com/4?redirect=https%3A%2F%2Fwww.facebook.com%2Fformationgmb&amp;recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D\">\r\n            <div style=\"width: 25px; height: 25px; background-color: #e8b4b4; border-radius: 50%; display: flex; justify-content: center; align-items: center;\">\r\n              <span style=\"color: #ffffff; font-size: 14px;\">f</span>\r\n            </div>\r\n          </a>\r\n        </td>\r\n        <td style=\"display: table-cell; vertical-align: inherit; padding-right: 8px;\" valign=\"inherit\">\r\n          <a style=\"display: inline-block;\" href=\"https://link.getmailspring.com/link/07F8820D-4DB4-478C-9770-B779C50F23CD@getmailspring.com/5?redirect=https%3A%2F%2Fwww.linkedin.com%2Fin%2Fgregrobinsonphotographe%2F&amp;recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D\">\r\n            <div style=\"width: 25px; height: 25px; background-color: #e8b4b4; border-radius: 50%; display: flex; justify-content: center; align-items: center;\">\r\n              <span style=\"color: #ffffff; font-size: 14px;\">in</span>\r\n            </div>\r\n          </a>\r\n        </td>\r\n        <td style=\"display: table-cell; vertical-align: inherit; padding-right: 8px;\" valign=\"inherit\">\r\n          <a style=\"display: inline-block;\" href=\"https://link.getmailspring.com/link/07F8820D-4DB4-478C-9770-B779C50F23CD@getmailspring.com/6?redirect=https%3A%2F%2Fwww.youtube.com%2Fchannel%2FUCobMfEYIiHjIzoBWtoND_5Q&amp;recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D\">\r\n            <div style=\"width: 25px; height: 25px; background-color: #e8b4b4; border-radius: 50%; display: flex; justify-content: center; align-items: center;\">\r\n              <span style=\"color: #ffffff; font-size: 14px;\">Y</span>\r\n            </div>\r\n          </a>\r\n        </td>\r\n      </tr>\r\n    </tbody>\r\n  </table>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table>\r\n<table style=\"border-collapse: separate; border-color: gray; margin-top: 10px;\" border=\"0\" width=\"370\" cellspacing=\"0\" cellpadding=\"0\">\r\n<tbody>\r\n<tr style=\"display: table-row; border-color: inherit; vertical-align: middle;\" valign=\"middle\">\r\n<td style=\"display: table-cell; vertical-align: inherit; padding: 10px 0;\" valign=\"inherit\">\r\n  <div style=\"height: 3px; background: linear-gradient(to right, #d7ceb2, #e8b4b4, #b4d8e8, #6ba3c3); width: 100%; border-radius: 3px;\"></div>\r\n</td>\r\n</tr>\r\n</tbody>\r\n</table></signature><img class=\"mailspring-open\" alt=\"Sent from Mailspring\" width=\"0\" height=\"0\" style=\"border:0; width:0; height:0;\" src=\"https://link.getmailspring.com/open/07F8820D-4DB4-478C-9770-B779C50F23CD@getmailspring.com?me=467babfe&amp;recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D\"><div class=\"gmail_quote\">\r\n          <br>\r\n          ---------- Message transfÃ©rÃ© ---------\r\n          <br><br>\r\n          From: Gregory Robinson &lt;g.robinson3108@gmail.com&gt;<br>Objet: Message d'Armengo<br>Date: sept. 3 2025, at 4:33 pm<br>Ã: Greg Robinson &lt;greg@audelalia.fr&gt;\r\n          <br><br>\r\n          <div>Salut Greg,</div><br><div>Voici un message que j'ai reÃ§u d'Armengo : </div><br><div>Salut Papa ! Ca va ? T'as passÃ© une bonne journÃ©e ? Moi, j'ai passÃ© une super bonne journÃ©e. T'as fait quoi dans la journÃ©e ?</div><br><br><div><table style=\"border-collapse: separate; border-color: gray;\" border=\"0\" width=\"370\" cellspacing=\"0\" cellpadding=\"0\"><tbody><tr style=\"display: table-row; border-color: inherit; vertical-align: middle;\" valign=\"middle\"><td style=\"display: table-cell; vertical-align: top; padding-right: 10px;\" valign=\"top\" width=\"150\"><a style=\"display: inline-block;\" href=\"https://link.getmailspring.com/link/54F103E8-9F42-4FF5-9571-F26A3209CA91@getmailspring.com/0?redirect=https%3A%2F%2Fmeep.fr&amp;recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D\"><img style=\"border: none; margin-left: 25px;\" src=\"https://meep.fr/Images/Round-Greg.png\" width=\"100\"><br><br></a><a style=\"display: inline-block;\" href=\"https://link.getmailspring.com/link/54F103E8-9F42-4FF5-9571-F26A3209CA91@getmailspring.com/1?redirect=https%3A%2F%2Fmeep.fr&amp;recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D\"><img style=\"border: none; margin-left: 25px;\" src=\"https://meep.fr/Clients/Signature/Logo-Greg-Robinson-200.png\" width=\"100\"></a></td> <td style=\"display: table-cell; vertical-align: inherit; border-left: solid #4fa7e7 1px;\" valign=\"inherit\" width=\"11\">&nbsp;</td> <td style=\"display: table-cell; vertical-align: top; text-align: left; color: #56a9be; font-size: 12px; font-family: helvetica, arial;\" align=\"left\" valign=\"top\"><span style=\"margin-right: 5px; color: #56a9be; font-size: 15px; font-family: helvetica, arial;\">Gregory Robinson</span><br><span style=\"margin-right: 5px; color: #56a9be; font-size: 12px; font-family: helvetica, arial;\">Expert CertifiÃ© Google</span><br><br><table style=\"border-collapse: separate; border-color: gray; margin: 0 5px 5px 0; display: inline;\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tbody><tr style=\"display: table-row; border-color: inherit; vertical-align: middle;\" valign=\"middle\"><td style=\"display: table-cell; vertical-align: inherit; padding-right: 5px; padding-top: 5px;\" valign=\"inherit\"><img style=\"border: none;\" src=\"https://meep.fr/Clients/Signature/Mail.jpg\" alt=\"email\" width=\"25\" height=\"25\"></td> <td style=\"display: table-cell; vertical-align: inherit;\" valign=\"inherit\"><span style=\"font: 12px helvetica, arial;\"><a style=\"color: #56a9be; text-decoration: none;\" href=\"https://link.getmailspring.com/link/54F103E8-9F42-4FF5-9571-F26A3209CA91@getmailspring.com/2?redirect=mailto%3Agreg%40meep.fr&amp;recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D\">greg@meep.fr</a></span></td> </tr> <tr style=\"display: table-row; border-color: inherit; vertical-align: middle;\" valign=\"middle\"> <td style=\"display: table-cell; vertical-align: inherit; padding-right: 5px; padding-top: 5px;\" valign=\"inherit\"><img style=\"border: none;\" src=\"https://meep.fr/Clients/Signature/Tel.jpg\" alt=\"email\" width=\"25\" height=\"25\"></td> <td style=\"display: table-cell; vertical-align: inherit;\" valign=\"inherit\"><span style=\"font: 12px helvetica, arial;\"><a style=\"color: #56a9be; text-decoration: none;\" href=\"tel:0651308949\">06 51 30 89 49</a></span></td> </tr> <tr style=\"display: table-row; border-color: inherit; vertical-align: middle;\" valign=\"middle\"> <td style=\"display: table-cell; vertical-align: inherit; padding-right: 5px; padding-top: 5px;\" valign=\"inherit\"><img style=\"border: none;\" src=\"https://meep.fr/Clients/Signature/Web.jpg\" alt=\"email\" width=\"25\" height=\"25\"></td> <td style=\"display: table-cell; vertical-align: inherit;\" valign=\"inherit\"><span style=\"font: 12px helvetica, arial;\"><a style=\"color: #56a9be; text-decoration: none;\" href=\"https://link.getmailspring.com/link/54F103E8-9F42-4FF5-9571-F26A3209CA91@getmailspring.com/3?redirect=https%3A%2F%2Fmeep.fr%2F&amp;recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D\">www.meep.fr</a></span></td> </tr> </tbody></table><table style=\"border-collapse: separate; border-color: gray; padding-top: 30px;\" border=\"0\" cellpadding=\"0\"><tbody><tr style=\"display: table-row; border-color: inherit; vertical-align: middle;\" valign=\"middle\"><td style=\"display: table-cell; vertical-align: inherit; padding-right: 4px;\" valign=\"inherit\"><a style=\"display: inline-block;\" href=\"https://link.getmailspring.com/link/54F103E8-9F42-4FF5-9571-F26A3209CA91@getmailspring.com/4?redirect=https%3A%2F%2Fwww.facebook.com%2Fformationgmb%2F&amp;recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D\"><img style=\"border: none;\" src=\"https://meep.fr/Clients/Signature/Facebook.jpg\" alt=\"Facebook\" width=\"25\" height=\"25\"></a></td> <td style=\"display: table-cell; vertical-align: inherit; padding-right: 4px;\" valign=\"inherit\"><a style=\"display: inline-block;\" href=\"https://link.getmailspring.com/link/54F103E8-9F42-4FF5-9571-F26A3209CA91@getmailspring.com/5?redirect=https%3A%2F%2Fwww.youtube.com%2Fchannel%2FUCobMfEYIiHjIzoBWtoND_5Q&amp;recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D\"><img style=\"border: none;\" src=\"https://meep.fr/Clients/Signature/Youtube.jpg\" alt=\"LinkedIn\" width=\"25\" height=\"25\"></a></td> <td style=\"display: table-cell; vertical-align: inherit; padding-right: 4px;\" valign=\"inherit\"><a style=\"display: inline-block;\" href=\"https://link.getmailspring.com/link/54F103E8-9F42-4FF5-9571-F26A3209CA91@getmailspring.com/6?redirect=https%3A%2F%2Fwww.instagram.com%2Fgregrobinson3108%2F%3Fhl%3Dfr&amp;recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D\"><img style=\"border: none;\" src=\"https://meep.fr/Clients/Signature/Insta.jpg\" alt=\"Insta\" width=\"25\" height=\"25\"></a></td> <td style=\"display: table-cell; vertical-align: inherit; padding-right: 4px;\" valign=\"inherit\"><a style=\"display: inline-block;\" href=\"https://link.getmailspring.com/link/54F103E8-9F42-4FF5-9571-F26A3209CA91@getmailspring.com/7?redirect=https%3A%2F%2Fwww.linkedin.com%2Fin%2Fgregrobinsonphotographe%2F&amp;recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D\"><img style=\"border: none;\" src=\"https://meep.fr/Clients/Signature/LinkedIn.jpg\" alt=\"LinkedIn\" width=\"25\" height=\"25\"></a></td> </tr> </tbody></table></td></tr></tbody></table><table style=\"border-collapse: separate; border-color: gray; margin-top: 10px;\" border=\"0\" width=\"370\" cellspacing=\"0\" cellpadding=\"0\"><tbody><tr style=\"display: table-row; border-color: inherit; vertical-align: middle;\" valign=\"middle\"><td style=\"display: table-cell; vertical-align: inherit; padding: 10px 0;\" valign=\"inherit\"><a style=\"display: inline-block;\" href=\"https://link.getmailspring.com/link/54F103E8-9F42-4FF5-9571-F26A3209CA91@getmailspring.com/8?redirect=https%3A%2F%2Fmeep.fr&amp;recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D\"><img style=\"border: none;\" src=\"https://meep.fr/Clients/Signature/BGSignature.jpg\" width=\"400\"></a></td> </tr> </tbody></table></div><img class=\"mailspring-open\" alt=\"Sent from Mailspring\" width=\"0\" height=\"0\" style=\"border:0; width:0; height:0;\" src=\"https://link.getmailspring.com/open/54F103E8-9F42-4FF5-9571-F26A3209CA91@getmailspring.com?me=cc4beb0a&amp;recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D\">\r\n          <br>\r\n        </div>\r\n       ",
+        "textPlain": "\r\n\r\nGreg Robinson\r\nAutomatisons le quotidien\r\n\r\nâ\r\ngreg@audelalia.fr (https://link.getmailspring.com/link/07F8820D-4DB4-478C-9770-B779C50F23CD@getmailspring.com/2?redirect=mailto%3Agreg%40audelalia.fr&recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D)\r\n\r\nâ\r\n\r\n06 51 30 89 49 (tel:+33651308949)\r\n\r\nð\r\n\r\naudelalia.fr (https://link.getmailspring.com/link/07F8820D-4DB4-478C-9770-B779C50F23CD@getmailspring.com/3?redirect=https%3A%2F%2Faudelalia.fr%2F&recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D)\r\n\r\nf\r\n\r\nin\r\n\r\nY\r\n\r\n---------- Message transfÃ©rÃ© ---------\r\n\r\nFrom: Gregory Robinson <g.robinson3108@gmail.com>\r\nObjet: Message d'Armengo\r\nDate: sept. 3 2025, at 4:33 pm\r\nÃ: Greg Robinson <greg@audelalia.fr>\r\n\r\nSalut Greg,\r\nVoici un message que j'ai reÃ§u d'Armengo :\r\nSalut Papa ! Ca va ? T'as passÃ© une bonne journÃ©e ? Moi, j'ai passÃ© une super bonne journÃ©e. T'as fait quoi dans la journÃ©e ?\r\n\r\nGregory Robinson\r\nExpert CertifiÃ© Google\r\n\r\ngreg@meep.fr (https://link.getmailspring.com/link/54F103E8-9F42-4FF5-9571-F26A3209CA91@getmailspring.com/2?redirect=mailto%3Agreg%40meep.fr&recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D)\r\n\r\n06 51 30 89 49 (tel:0651308949)\r\n\r\nwww.meep.fr (https://link.getmailspring.com/link/54F103E8-9F42-4FF5-9571-F26A3209CA91@getmailspring.com/3?redirect=https%3A%2F%2Fmeep.fr%2F&recipient=Z3JlZ0BhdWRlbGFsaWEuZnI%3D)\r\n\r\n",
+        "metadata": {
+          "return-path": "<greg@audelalia.fr>",
+          "authentication-results": " kundenserver.de; dkim=pass header.i=greg@audelalia.fr",
+          "received": "from mout.kundenserver.de ([217.72.192.74]) by mx.kundenserver.de (mxeue001 [212.227.15.41]) with ESMTPS (Nemesis) id 1N3ZGV-1uUM6w3ZUh-012Tih for <greg@audelalia.fr>; Wed, 03 Sep 2025 17:32:37 +0200",
+          "dkim-signature": "v=1; a=rsa-sha256; c=relaxed/relaxed; d=audelalia.fr;\ts=s1-ionos; t=1756913557; x=1757518357; i=greg@audelalia.fr;\tbh=M2c91voozzQR99bNvcRrPz8DLuVGRzFejnT9kumQ2lg=;\th=X-UI-Sender-Class:Date:From:To:Message-ID:References:Subject:\t MIME-Version:Content-Type:cc:content-transfer-encoding:\t content-type:date:from:message-id:mime-version:reply-to:subject:\t to;\tb=zxiAkBgjhQz82UwVw632j7IHlSGhYka/KaVXZstqf9rNV0sucgnrvhSpzivbaFUs\t +f7HAJtHLPzp1z1ijKD9mY1Ysyp5stvZKLH2dZ3gHjV2Y6cMBdGtu7H8c9pQg4w42\t u2ZkNXmpZHZVMCqu2CCFf7UdOToMDeYfm/pjZIk/y77mBXw5/8u9fFgV8yNPjxI2z\t bsi5PzxZYQKr+CEpdf/OQ2G9E/ESu5R2saIXhh6mLJxLhj0AjjO3IRbiToapIzarC\t WVA83exY6K4+drIjBO4wVqldhq/irOC3FRLznKtiZNMW2Cr6iJwQ7F3zkxs6aqY90\t aLGYvsf7myjBoDn0pA==",
+          "x-ui-sender-class": "55c96926-9e95-11ee-ae09-1f7a4046a0f6",
+          "message-id": "<07F8820D-4DB4-478C-9770-B779C50F23CD@getmailspring.com>",
+          "references": "<54F103E8-9F42-4FF5-9571-F26A3209CA91@getmailspring.com>",
+          "x-mailer": "Mailspring",
+          "mime-version": "1.0",
+          "content-type": "multipart/alternative; boundary=\"68b85f94_327b23c6_312\"",
+          "x-provags-id": "V03:K1:REMI3+jcREVmR2asq6m7qKb64rQhvgcMSXQJDgl5kjwpv8GU7pH qFemYvWQAywFRhloqLa7d1FFNCFVBh/fOos/fXbHzPWEWu3Qer9o0nT918zBn0DBjjNzI/p R3lxK00zN9bxQqDExJynUeF12w9yyG09ogmBVLNvCMUcVN6UqUh6bGpxgcfmurZtgN4JOzg XoamFoELgFmI3cnqyA+kA==",
+          "x-spam-flag": "NO",
+          "ui-outboundreport": "notjunk:1;M01:P0:/VhOufMGm+M=;1wRzSMUWgxY7bZa7AquCmn+czuo 90LerzXVml3RWC5akxrJMvwPqUIzQctMm2QN0b2XdxMHDO0nJiFcWbBZsIxWQmtf8u8AD3ree rUM26+067RZHfbFAH0L1x/umB4vOm0E9JNocvp/8H6OAxirvMO/D7OTGEMUA8m8Xt7x57ro/3 +3dQDQ63jvkm/sfKI/wPTRs4nYSdiHv95jF9hZFTyyLWXeZqH2WnkKerR9ovBhSokwVGAxWQb tml/gtrXqCYxlFPQHQNlSroSzM2HbnVXZ/tjZXH9yhGXNoODw/wNNvCDTAGFed2r2tokkk3Cy ohxsLuHt2s8PtvEBLvbilVRBGS0ErPeptY/q3aSk4bffgG8phq17YplSPprmxgcbMfbk1JbNs 6tncOI6Yr+Il9Gtf2gWKBAa9ltwSSZdPUAu6hMJxECOz1WKfZOasWEI0v4I6+VFWBOdy6P2H5 3uozNSvnNITjvky8lqCsu5KTzYudg3xooUNJc6fCuO75jYi363VmPvZ5IgSkGn4E0ongLJOn+ sTdcBk52FMHtIaiOyZWyCBF6hS/SMoC6toU15Ll+ngojsRRKkDoQeNN6/WnO8urLJEBJONOcZ gRAEAN8R5Ae/g5QhwlLldQ98Y0/HQ4k0x7uXEyovcFZ6+K2LUCDe1p646Dib6Re9ueXs5Wo6T oewiEbYZF9IsYvADPJAi8wNxCiwjo+o4FF7nAH1YuDQ85ITMn/y5tNdXYKqZATaBf/irzAIYw jAY+TwNl+e6NYZGXsfs+achKBCX6Rl8ZgOqUatArb6YsObVWrZm8wi7HFHHXhGGef9UIf0sQP 32GRjgWuglcAoE9o6FtATdldlTQm9e26oy9Pc2OQi4j0q22b/fZ0AM02JzKcqEZ1dKav2FbEJ ms2VJQwT7X6TYoxqybvyG6y1NXYD4LChc/JKIVImk5W9Ren3ctM07DNpWUUGaX6+yWFYbTOwO Gzos1wN5Vf3GGnWKfe5sJXEnrhbGfwECl2oSamuWtrEQ5rtuIJKNK/L+7AOG3SgeBu/Wa9WGF IFllLyFhleqTUL+r+hiOlkLZczVPejx9NBlH/9j7fGGgDzldnl9UcmQz7RPEyxzZxOgEX5x/O OlzWv63hPkmHZDU957Po1eorscNooT7bdbngEOKOWyusqzMI06HCgRdDax5obj2u98wh6Hm85 NB8b4vDAOrrslK3xTxTcS3omEPT2D5j1OxQLY1Wmf41M5dO6Whlqjr2pTzu9l7wT3aqKUi2Jr Ood4QMLThVRFthWQO6eooHdbVJV87H5gDG3Zx8eWbcFuoj4oBGboH/ZILV15IIivuRgS+M0B2 f0EC/w+DvATAGJLcOVzFqfXcrdFu8x961NAu47NLzBEwGCoySTvwCzlvb4Rlbsqx+BrQmmVy2 c5ckwzr52mV4L+SVhW83Df3YSY00Wp7l8ehxEt/tXAW0f7wXyVCaK9ZisyOUehIUe9hkuf2Fq afKmbNyTeKjD2jl5InJoWcl3BdaqRbd7ubQsZ9qjFCgSaJQlHAILJxGbQkTtsH1n3tEobcIq7 NqgSbx6PCRV50yssH6A+ty/Ymdv+EC55TnnluOhufR/FQdRkkwYQVDbruz/dRMR1VXl6hAfIA KnW7RFuEoKpkKwKbEo2RFfo99NjXFOq6YRQ2mIFKN6xjQsRMhPNNvMTFE8yFsZq4smbcGjfz2 dVjKRHtIdPBSLRgBM5TKhivGt+7Dpl+UVwOs8oCK3YdkIyXwb/qV3aWrdeMlFG7rc=",
+          "envelope-to": "<greg@audelalia.fr>",
+          "ui-inboundreport": "notjunk:1;M01:P0:WYOdk1tgJ10=;GtZNFffph5U4ByUZex6x8hz5ocdu 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 AloAdhp/fUo4fdkvYPe62E7Hui6KNXhwtsk"
+        },
+        "attributes": {
+          "uid": 361
+        },
+        "date": "Wed, 3 Sep 2025 17:32:36 +0200",
+        "from": "Greg Robinson <greg@audelalia.fr>",
+        "to": "Greg Robinson <greg@audelalia.fr>",
+        "subject": "Fwd: Message d'Armengo"
+      }
+    ]
+  },
+  "settings": {
+    "executionTimeout": 120
+  }
+}

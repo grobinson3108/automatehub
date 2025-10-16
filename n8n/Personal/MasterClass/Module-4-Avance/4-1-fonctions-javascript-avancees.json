@@ -1,0 +1,252 @@
+{
+  "name": "4.1 - Fonctions JavaScript Avancées",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "data-processing",
+        "options": {}
+      },
+      "id": "webhook-data-processing-401",
+      "name": "Réception Données",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "data-processing-401"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Fonction JavaScript avancée pour traitement de données\nconst inputData = $input.first().json;\n\n// Classe pour le traitement avancé des données\nclass DataProcessor {\n  constructor(data) {\n    this.data = data;\n    this.results = [];\n    this.errors = [];\n  }\n  \n  // Méthode pour nettoyer les données\n  cleanData() {\n    if (!this.data || typeof this.data !== 'object') {\n      this.errors.push('Données invalides');\n      return this;\n    }\n    \n    // Nettoyer les chaînes de caractères\n    Object.keys(this.data).forEach(key => {\n      if (typeof this.data[key] === 'string') {\n        this.data[key] = this.data[key].trim().toLowerCase();\n      }\n    });\n    \n    return this;\n  }\n  \n  // Méthode pour valider les données\n  validate() {\n    const requiredFields = ['email', 'name', 'type'];\n    const missingFields = requiredFields.filter(field => !this.data[field]);\n    \n    if (missingFields.length > 0) {\n      this.errors.push(`Champs manquants: ${missingFields.join(', ')}`);\n    }\n    \n    // Validation email\n    const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n    if (this.data.email && !emailRegex.test(this.data.email)) {\n      this.errors.push('Format email invalide');\n    }\n    \n    return this;\n  }\n  \n  // Méthode pour enrichir les données\n  enrich() {\n    if (this.errors.length > 0) return this;\n    \n    // Enrichissement automatique\n    this.data.enriched = {\n      timestamp: new Date().toISOString(),\n      domain: this.data.email ? this.data.email.split('@')[1] : null,\n      nameLength: this.data.name ? this.data.name.length : 0,\n      isBusinessEmail: this.data.email ? !['gmail.com', 'yahoo.com', 'hotmail.com'].includes(this.data.email.split('@')[1]) : false\n    };\n    \n    // Calcul du score de qualité\n    let qualityScore = 0;\n    if (this.data.name && this.data.name.length > 2) qualityScore += 25;\n    if (this.data.email && this.data.enriched.isBusinessEmail) qualityScore += 30;\n    if (this.data.phone) qualityScore += 20;\n    if (this.data.company) qualityScore += 25;\n    \n    this.data.enriched.qualityScore = qualityScore;\n    \n    return this;\n  }\n  \n  // Méthode pour transformer les données\n  transform() {\n    if (this.errors.length > 0) return this;\n    \n    // Transformation basée sur le type\n    switch (this.data.type) {\n      case 'lead':\n        this.transformLead();\n        break;\n      case 'customer':\n        this.transformCustomer();\n        break;\n      case 'contact':\n        this.transformContact();\n        break;\n      default:\n        this.transformGeneric();\n    }\n    \n    return this;\n  }\n  \n  transformLead() {\n    this.data.transformed = {\n      id: `lead_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,\n      fullName: this.data.name,\n      email: this.data.email,\n      status: 'new',\n      priority: this.data.enriched.qualityScore > 70 ? 'high' : \n                this.data.enriched.qualityScore > 40 ? 'medium' : 'low',\n      source: 'api',\n      assignedTo: this.data.enriched.qualityScore > 70 ? 'senior-sales' : 'junior-sales',\n      nextAction: this.data.enriched.qualityScore > 70 ? 'call' : 'email',\n      createdAt: new Date().toISOString()\n    };\n  }\n  \n  transformCustomer() {\n    this.data.transformed = {\n      id: `customer_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,\n      fullName: this.data.name,\n      email: this.data.email,\n      status: 'active',\n      tier: this.data.enriched.qualityScore > 70 ? 'premium' : 'standard',\n      supportLevel: this.data.enriched.qualityScore > 70 ? 'priority' : 'standard',\n      createdAt: new Date().toISOString()\n    };\n  }\n  \n  transformContact() {\n    this.data.transformed = {\n      id: `contact_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,\n      fullName: this.data.name,\n      email: this.data.email,\n      status: 'active',\n      category: this.data.enriched.isBusinessEmail ? 'business' : 'personal',\n      createdAt: new Date().toISOString()\n    };\n  }\n  \n  transformGeneric() {\n    this.data.transformed = {\n      id: `generic_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,\n      fullName: this.data.name,\n      email: this.data.email,\n      status: 'new',\n      createdAt: new Date().toISOString()\n    };\n  }\n  \n  // Méthode pour obtenir le résultat\n  getResult() {\n    return {\n      success: this.errors.length === 0,\n      errors: this.errors,\n      original: inputData,\n      processed: this.data,\n      processingTime: new Date().toISOString()\n    };\n  }\n}\n\n// Utilisation de la classe\nconst processor = new DataProcessor(inputData);\nconst result = processor\n  .cleanData()\n  .validate()\n  .enrich()\n  .transform()\n  .getResult();\n\n// Fonction utilitaire pour formater les résultats\nfunction formatResult(result) {\n  if (!result.success) {\n    return {\n      status: 'error',\n      message: 'Erreurs de traitement détectées',\n      errors: result.errors,\n      data: result.original\n    };\n  }\n  \n  return {\n    status: 'success',\n    message: 'Données traitées avec succès',\n    data: result.processed,\n    metadata: {\n      qualityScore: result.processed.enriched?.qualityScore || 0,\n      processingTime: result.processingTime,\n      transformedId: result.processed.transformed?.id\n    }\n  };\n}\n\n// Retourner le résultat formaté\nconst formattedResult = formatResult(result);\n\nreturn [{ json: formattedResult }];"
+      },
+      "id": "advanced-processing-401",
+      "name": "Traitement Avancé JavaScript",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "success-condition",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "success",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-processing-result-401",
+      "name": "Vérifier Résultat",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Fonctions JavaScript pour intégration CRM\nconst processedData = $input.first().json;\n\n// Classe pour l'intégration CRM\nclass CRMIntegrator {\n  constructor(data) {\n    this.data = data;\n    this.crmData = null;\n  }\n  \n  // Méthode pour préparer les données CRM\n  prepareCRMData() {\n    const transformed = this.data.data.transformed;\n    \n    // Mappage des champs selon le type d'objet\n    if (transformed.id.startsWith('lead_')) {\n      this.crmData = {\n        objectType: 'lead',\n        properties: {\n          firstname: transformed.fullName.split(' ')[0],\n          lastname: transformed.fullName.split(' ').slice(1).join(' ') || 'Unknown',\n          email: transformed.email,\n          leadstatus: transformed.status,\n          hs_lead_status: transformed.priority,\n          lead_source: transformed.source,\n          owner: transformed.assignedTo,\n          next_action: transformed.nextAction,\n          lead_score: this.data.metadata.qualityScore.toString()\n        }\n      };\n    } else if (transformed.id.startsWith('customer_')) {\n      this.crmData = {\n        objectType: 'contact',\n        properties: {\n          firstname: transformed.fullName.split(' ')[0],\n          lastname: transformed.fullName.split(' ').slice(1).join(' ') || 'Unknown',\n          email: transformed.email,\n          lifecyclestage: 'customer',\n          customer_tier: transformed.tier,\n          support_level: transformed.supportLevel\n        }\n      };\n    } else {\n      this.crmData = {\n        objectType: 'contact',\n        properties: {\n          firstname: transformed.fullName.split(' ')[0],\n          lastname: transformed.fullName.split(' ').slice(1).join(' ') || 'Unknown',\n          email: transformed.email,\n          lifecyclestage: 'other'\n        }\n      };\n    }\n    \n    return this;\n  }\n  \n  // Méthode pour générer les données d'audit\n  generateAuditTrail() {\n    this.auditTrail = {\n      processingId: `audit_${Date.now()}`,\n      originalData: this.data.data.original || {},\n      transformedData: this.data.data.transformed || {},\n      qualityScore: this.data.metadata.qualityScore,\n      processingTime: this.data.metadata.processingTime,\n      crmMapping: this.crmData,\n      timestamp: new Date().toISOString()\n    };\n    \n    return this;\n  }\n  \n  // Méthode pour valider les données CRM\n  validateCRMData() {\n    const errors = [];\n    \n    if (!this.crmData.properties.email) {\n      errors.push('Email requis pour le CRM');\n    }\n    \n    if (!this.crmData.properties.firstname) {\n      errors.push('Prénom requis pour le CRM');\n    }\n    \n    this.validationErrors = errors;\n    return this;\n  }\n  \n  // Méthode pour obtenir le résultat final\n  getResult() {\n    return {\n      success: this.validationErrors.length === 0,\n      errors: this.validationErrors,\n      crmData: this.crmData,\n      auditTrail: this.auditTrail,\n      readyForCRM: this.validationErrors.length === 0\n    };\n  }\n}\n\n// Utilisation de la classe CRM\nconst crmIntegrator = new CRMIntegrator(processedData);\nconst crmResult = crmIntegrator\n  .prepareCRMData()\n  .generateAuditTrail()\n  .validateCRMData()\n  .getResult();\n\n// Fonction pour créer une notification Slack\nfunction createSlackNotification(result) {\n  if (!result.success) {\n    return {\n      channel: '#errors',\n      text: `❌ Erreur traitement CRM: ${result.errors.join(', ')}`,\n      color: 'danger'\n    };\n  }\n  \n  const objectType = result.crmData.objectType;\n  const email = result.crmData.properties.email;\n  const name = `${result.crmData.properties.firstname} ${result.crmData.properties.lastname}`;\n  \n  return {\n    channel: '#crm-updates',\n    text: `✅ Nouveau ${objectType} traité: ${name} (${email})`,\n    color: 'good',\n    attachments: [\n      {\n        fields: [\n          { title: 'Type', value: objectType, short: true },\n          { title: 'Email', value: email, short: true },\n          { title: 'Nom', value: name, short: true },\n          { title: 'Score Qualité', value: result.auditTrail.qualityScore.toString(), short: true }\n        ]\n      }\n    ]\n  };\n}\n\n// Créer la notification\nconst slackNotification = createSlackNotification(crmResult);\n\nreturn [{ \n  json: {\n    ...crmResult,\n    slackNotification: slackNotification\n  }\n}];"
+      },
+      "id": "crm-integration-401",
+      "name": "Intégration CRM",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.slackNotification.channel }}",
+        "text": "={{ $json.slackNotification.text }}",
+        "otherOptions": {
+          "username": "Processing Bot"
+        }
+      },
+      "id": "slack-notification-401",
+      "name": "Notification Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [
+        1250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Fonction pour gérer les erreurs avec retry automatique\nconst errorData = $input.first().json;\n\n// Classe pour la gestion d'erreurs avancée\nclass ErrorHandler {\n  constructor(error) {\n    this.error = error;\n    this.retryCount = 0;\n    this.maxRetries = 3;\n    this.retryStrategy = 'exponential';\n  }\n  \n  // Méthode pour analyser l'erreur\n  analyzeError() {\n    this.errorAnalysis = {\n      type: this.categorizeError(),\n      severity: this.determineSeverity(),\n      recoverable: this.isRecoverable(),\n      timestamp: new Date().toISOString()\n    };\n    \n    return this;\n  }\n  \n  categorizeError() {\n    if (this.error.errors && this.error.errors.some(e => e.includes('email'))) {\n      return 'validation_error';\n    }\n    if (this.error.errors && this.error.errors.some(e => e.includes('manquant'))) {\n      return 'missing_data';\n    }\n    return 'processing_error';\n  }\n  \n  determineSeverity() {\n    if (this.errorAnalysis?.type === 'validation_error') return 'medium';\n    if (this.errorAnalysis?.type === 'missing_data') return 'high';\n    return 'low';\n  }\n  \n  isRecoverable() {\n    return this.errorAnalysis?.type !== 'missing_data';\n  }\n  \n  // Méthode pour calculer le délai de retry\n  calculateRetryDelay() {\n    if (this.retryStrategy === 'exponential') {\n      return Math.min(1000 * Math.pow(2, this.retryCount), 30000);\n    }\n    return 5000; // Délai fixe\n  }\n  \n  // Méthode pour créer la stratégie de recovery\n  createRecoveryStrategy() {\n    if (!this.errorAnalysis.recoverable) {\n      return {\n        action: 'manual_intervention',\n        message: 'Intervention manuelle requise',\n        notifySupport: true\n      };\n    }\n    \n    if (this.retryCount < this.maxRetries) {\n      return {\n        action: 'retry',\n        delay: this.calculateRetryDelay(),\n        retryCount: this.retryCount + 1,\n        message: `Tentative ${this.retryCount + 1}/${this.maxRetries} dans ${this.calculateRetryDelay()}ms`\n      };\n    }\n    \n    return {\n      action: 'dead_letter_queue',\n      message: 'Maximum de tentatives atteint, envoi vers queue d\\'erreur',\n      notifySupport: true\n    };\n  }\n  \n  // Méthode pour créer le rapport d'erreur\n  createErrorReport() {\n    return {\n      errorId: `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,\n      originalData: this.error.original || {},\n      errors: this.error.errors || [],\n      analysis: this.errorAnalysis,\n      recoveryStrategy: this.createRecoveryStrategy(),\n      timestamp: new Date().toISOString(),\n      processed: false\n    };\n  }\n}\n\n// Utilisation de la classe ErrorHandler\nconst errorHandler = new ErrorHandler(errorData);\nconst errorReport = errorHandler\n  .analyzeError()\n  .createErrorReport();\n\n// Fonction pour créer une notification d'erreur\nfunction createErrorNotification(report) {\n  const emoji = report.analysis.severity === 'high' ? '🚨' : \n               report.analysis.severity === 'medium' ? '⚠️' : '💡';\n  \n  return {\n    channel: '#errors',\n    text: `${emoji} Erreur de traitement détectée`,\n    color: report.analysis.severity === 'high' ? 'danger' : 'warning',\n    attachments: [\n      {\n        fields: [\n          { title: 'Type', value: report.analysis.type, short: true },\n          { title: 'Sévérité', value: report.analysis.severity, short: true },\n          { title: 'Récupérable', value: report.analysis.recoverable ? 'Oui' : 'Non', short: true },\n          { title: 'Action', value: report.recoveryStrategy.action, short: true },\n          { title: 'Message', value: report.recoveryStrategy.message, short: false }\n        ]\n      }\n    ]\n  };\n}\n\nconst errorNotification = createErrorNotification(errorReport);\n\nreturn [{ \n  json: {\n    ...errorReport,\n    errorNotification: errorNotification\n  }\n}];"
+      },
+      "id": "error-handling-401",
+      "name": "Gestion d'Erreurs",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "={{ $json.errorNotification.channel }}",
+        "text": "={{ $json.errorNotification.text }}",
+        "otherOptions": {
+          "username": "Error Bot"
+        }
+      },
+      "id": "error-notification-401",
+      "name": "Notification Erreur",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [
+        1250,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": "VOTRE_PROCESSING_LOG_ID",
+        "sheetName": "Advanced_Processing_Log",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $json.auditTrail.timestamp }}",
+            "Processing_ID": "={{ $json.auditTrail.processingId }}",
+            "Original_Email": "={{ $json.auditTrail.originalData.email }}",
+            "Transformed_ID": "={{ $json.auditTrail.transformedData.id }}",
+            "Quality_Score": "={{ $json.auditTrail.qualityScore }}",
+            "CRM_Object_Type": "={{ $json.crmData.objectType }}",
+            "CRM_Ready": "={{ $json.readyForCRM }}",
+            "Success": "={{ $json.success }}",
+            "Errors": "={{ $json.errors.join(', ') }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "processing-log-401",
+      "name": "Log Traitement",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        1500,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Réception Données": {
+      "main": [
+        [
+          {
+            "node": "Traitement Avancé JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Traitement Avancé JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Vérifier Résultat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vérifier Résultat": {
+      "main": [
+        [
+          {
+            "node": "Intégration CRM",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Gestion d'Erreurs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Intégration CRM": {
+      "main": [
+        [
+          {
+            "node": "Notification Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notification Slack": {
+      "main": [
+        [
+          {
+            "node": "Log Traitement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gestion d'Erreurs": {
+      "main": [
+        [
+          {
+            "node": "Notification Erreur",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "4-1-fonctions-javascript-avancees-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "13",
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "module-4-avance",
+      "name": "Module 4 - Avancé"
+    }
+  ]
+}

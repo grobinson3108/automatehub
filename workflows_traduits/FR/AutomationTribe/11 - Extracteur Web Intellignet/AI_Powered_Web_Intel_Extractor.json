@@ -1,0 +1,341 @@
+{
+  "name": "Extracteur d'Intel Web Alimenté par IA",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -280,
+        120
+      ],
+      "id": "8af3cf4d-82c8-47cc-9ec9-636238ba938b",
+      "name": "Lorsque le message de chat est reçu",
+      "webhookId": "daddf490-77c5-4843-9152-371ebbf8c933"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "$text_3"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        180,
+        500
+      ],
+      "id": "f0f6473d-7d9d-4465-8410-7310fa71b232",
+      "name": "Analyseur de Sortie Structurée"
+    },
+    {
+      "parameters": {
+        "content": "## Understand the Question",
+        "height": 660,
+        "width": 460
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -120,
+        20
+      ],
+      "id": "e659bc92-e2a2-4a1f-8a8c-4a3e93588a2c",
+      "name": "Note Collante"
+    },
+    {
+      "parameters": {
+        "content": "## Scrape Relevant Info",
+        "height": 660,
+        "width": 360,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        360,
+        20
+      ],
+      "id": "32fbd819-b298-4f71-bc3a-7f2519226116",
+      "name": "Note Collante1"
+    },
+    {
+      "parameters": {
+        "content": "## Structure & Answer with AI",
+        "height": 660,
+        "width": 480,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        740,
+        20
+      ],
+      "id": "68fc0448-b763-4de8-9cda-4beda2502dbd",
+      "name": "Note Collante2"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: items[0].json.data.json\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        480,
+        440
+      ],
+      "id": "e36b9670-094f-4f3e-8a8f-1f7d04ff5756",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "hasOutputParser": true,
+        "messages": {
+          "messageValues": [
+            {
+              "type": "HumanMessagePromptTemplate",
+              "message": "=Given a user message, examine the content to identify any web links and related questions. For each distinct combination of question and URL, produce a structured response."
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        -20,
+        120
+      ],
+      "id": "d2b99614-ec49-4362-8e4b-6eaa1d151197",
+      "name": "Agent IA",
+      "retryOnFail": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        40,
+        340
+      ],
+      "id": "0fc3a8e2-5a48-4f3d-a7fd-f7c45a410211",
+      "name": "Analyseur de Sortie Auto-Correction"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.1,
+      "position": [
+        -60,
+        500
+      ],
+      "id": "1b1222e4-4447-4e46-8887-1496ee7e7a6e",
+      "name": "Open AI",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.1,
+      "position": [
+        1040,
+        460
+      ],
+      "id": "bde1822b-99d6-49d5-a257-b43e7ff202aa",
+      "name": "Open AI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=<data>\n{{ JSON.stringify($json, null, 2) }}\n</data>\n\n<original question>\n{{ JSON.stringify($('Ai Agent').item.json.output.queries, null, 2) }}\n{{ $('When chat message received').item.json.chatInput...",
+        "messages": {
+          "messageValues": [
+            {
+              "type": "HumanMessagePromptTemplate",
+              "message": "=Format the incoming data using markdown syntax. Only extract information that directly answers the original questions. Present the answer using only the information available in the provided data."
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        840,
+        120
+      ],
+      "id": "22eab644-d20e-4487-809a-ebe0deffccf2",
+      "name": "Formater la Réponse"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.firecrawl.dev/v1/scrape",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer fc-0a46eee422b9476d83e503b1b1682d15"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=$text_14",
+        "options": {
+          "batching": {
+            "batch": {
+              "batchSize": 1
+            }
+          }
+        }
+      },
+      "id": "6755354c-5d5c-4714-aa78-65156cd07bfe",
+      "name": "Extraire l'URL1",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        460,
+        120
+      ],
+      "retryOnFail": false,
+      "waitBetweenTries": 1000,
+      "maxTries": 3
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Ai Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-Fix Output Parser",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Format Answer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ai Agent": {
+      "main": [
+        [
+          {
+            "node": "Scrape URL1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-Fix Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Ai Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Open AI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Ai Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Auto-Fix Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Open AI1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Format Answer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape URL1": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "636d7483-8f59-4cfd-a349-20bd9ec9c7c7",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+  },
+  "id": "1pXwIpBqErt2eWCu",
+  "tags": [
+    {
+      "createdAt": "2025-03-28T11:51:08.303Z",
+      "updatedAt": "2025-03-28T11:51:08.303Z",
+      "id": "vSPoP03SVSfq37t2",
+      "name": "For SALE"
+    },
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

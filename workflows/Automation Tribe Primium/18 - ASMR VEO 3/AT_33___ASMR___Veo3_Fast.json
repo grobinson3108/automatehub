@@ -1,0 +1,816 @@
+{
+  "name": "AT 33 - ASMR - Veo3 Fast",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -800,
+        -40
+      ],
+      "id": "46c9d6cd-3bc4-4771-a5c9-a1a1d150a836",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appKAeH3rqpwENU6K",
+          "mode": "list",
+          "cachedResultName": "AT33 - ASMR videos - Veo 3",
+          "cachedResultUrl": "https://airtable.com/appKAeH3rqpwENU6K"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblzPj35EMOulxupB",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appKAeH3rqpwENU6K/tblzPj35EMOulxupB"
+        },
+        "filterByFormula": "NOT({Status} = 'Done')",
+        "returnAll": false,
+        "limit": 1,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -220,
+        -40
+      ],
+      "id": "a1acdf71-cdca-4b80-9252-7c3a232da0a6",
+      "name": "Search records",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are an AI Video Prompt Assistant. Based on the user’s input, generate a cinematic prompt that matches the style and structure of the provided reference.",
+              "role": "system"
+            },
+            {
+              "content": "=A cinematic macro shot showing a {{ $json.Item }} emerging slowly in its environment. The growth begins with {{ $json['Growth type'] }}, revealing {{ $json['Structure detail'] }} in smooth, organic motion. The camera captures every delicate moment in ultra-slow motion — from subtle texture shifts to light refraction on surfaces.\n\nSet in a {{ $json['Visual style'] }}, the scene feels immersive and hyper-real. Everything is enhanced by {{ $json['Lighting style'] }}, which adds depth, softness, and mystery to the growth process. The background is blurred and filled with environmental atmosphere — dust particles, fog, or water droplets — reinforcing the ASMR vibe.\n\nStyle: {{ $json.Style }} \nAudio suggestion: {{ $json['Audio suggestion'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        0,
+        -40
+      ],
+      "id": "c8eecbbf-0604-489b-b56f-0c4bbc22b3de",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://queue.fal.run/fal-ai/veo3/fast",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Key {{ $('Set API Keys').item.json.Fal.ai }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "prompt",
+              "value": "={{ $json.message.content }}"
+            },
+            {
+              "name": "aspect_ratio",
+              "value": "9:16"
+            },
+            {
+              "name": "duration",
+              "value": "8s"
+            },
+            {
+              "name": "enhance_prompt",
+              "value": "true"
+            },
+            {
+              "name": "generate_audio",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        360,
+        -40
+      ],
+      "id": "1d1ff14e-3ae0-4d01-8c72-76a4da2e40e8",
+      "name": "Generate Video with VEO 3 Fast"
+    },
+    {
+      "parameters": {
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        580,
+        -40
+      ],
+      "id": "251e3aa6-b3eb-4344-81c9-13fd586c3262",
+      "name": "Wait 5 minutes",
+      "webhookId": "92fea1d7-d565-40a8-b188-23573190cfa4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "35659353-d8e2-4677-876b-401b549605a0",
+              "name": "Fal.ai",
+              "type": "string",
+              "value": "976c1b7f-5903-4a09-9b6b-096b653c1959:030ed05e4908e2159bbb9e3028dbec43"
+            },
+            {
+              "id": "c4927dd6-c597-48fe-b7c1-bbffcf5ff02f",
+              "name": "Upload-Post",
+              "type": "string",
+              "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImNvbnRhY3RAZ3JhZnVwLmNvbSIsImV4cCI6NDkwNDM1NjQ4NCwianRpIjoiNWI0ZmFlMDEtNzQ5MC00NWZhLWJlYjUtZTcxYzZiMTQwMTkyIn0.dUhSk-VLhtMqMYV1v6XGYrXAPsnfJKhlAeL1XZjltNM"
+            },
+            {
+              "id": "f5e90c05-dd24-4918-9005-4c87a4fb344d",
+              "name": "Upload-Post Username",
+              "type": "string",
+              "value": "Automation-Tribe"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8bde0d29-f051-4fa1-a935-ca2d08e958aa",
+      "name": "Set API Keys",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -540,
+        -40
+      ],
+      "notesInFlow": true,
+      "typeVersion": 3.4,
+      "notes": "Set your API keys here"
+    },
+    {
+      "parameters": {
+        "content": "## Add your API keys here\n**Generate your video using the VEO 3 Fast. [Link](https://fal.ai/models/fal-ai/veo3/fast/playground)",
+        "height": 360,
+        "width": 300,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -640,
+        -180
+      ],
+      "typeVersion": 1,
+      "id": "5fc41289-cf52-426a-b677-217134457381",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.fields['Final video'][0].url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        -40
+      ],
+      "id": "0371ae76-38bd-46c4-8c96-678852efe0a8",
+      "name": "Prepare Video"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.upload-post.com/api/upload",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Apikey {{ $('Set API Keys').item.json['Upload-Post'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "={{ $('Search records').item.json.Item }}"
+            },
+            {
+              "name": "user",
+              "value": "={{ $('Set API Keys').item.json['Upload-Post Username'] }}"
+            },
+            {
+              "name": "platform[]",
+              "value": "instagram"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "video",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        -440
+      ],
+      "id": "d84a0066-533e-472c-9fc8-56cdc5124963",
+      "name": "Post to Instagram"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.upload-post.com/api/upload",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Apikey {{ $('Set API Keys').item.json['Upload-Post'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "={{ $('Search records').item.json.Item }}"
+            },
+            {
+              "name": "user",
+              "value": "={{ $('Set API Keys').item.json['Upload-Post Username'] }}"
+            },
+            {
+              "name": "platform[]",
+              "value": "tiktok"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "video",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        -240
+      ],
+      "id": "ed1994b8-26be-406f-962b-76e37846328d",
+      "name": "Post to Tiktok"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.upload-post.com/api/upload",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Apikey {{ $('Set API Keys').item.json['Upload-Post'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "={{ $('Search records').item.json.Item }}"
+            },
+            {
+              "name": "user",
+              "value": "={{ $('Set API Keys').item.json['Upload-Post Username'] }}"
+            },
+            {
+              "name": "platform[]",
+              "value": "youtube"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "video",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        -40
+      ],
+      "id": "04f247b4-69eb-45cb-8fee-6e66ce564e86",
+      "name": "Post to Youtube"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.upload-post.com/api/upload",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Apikey {{ $('Set API Keys').item.json['Upload-Post'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "={{ $('Search records').item.json['Product name'] }}"
+            },
+            {
+              "name": "user",
+              "value": "={{ $('Set API Keys').item.json['Upload-Post Username'] }}"
+            },
+            {
+              "name": "platform[]",
+              "value": "linkedin"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "video",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        160
+      ],
+      "id": "4b3ecb7c-5228-4cce-9285-2d0f35f5b651",
+      "name": "Post to Linkedin"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.upload-post.com/api/upload",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Apikey {{ $('Set API Keys').item.json['Upload-Post'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "={{ $('Search records').item.json.Item }}"
+            },
+            {
+              "name": "user",
+              "value": "={{ $('Set API Keys').item.json['Upload-Post Username'] }}"
+            },
+            {
+              "name": "platform[]",
+              "value": "facebook"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "video",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        360
+      ],
+      "id": "588a0b29-e01f-44c7-b844-7fef5003b9d8",
+      "name": "Post to Facebook"
+    },
+    {
+      "parameters": {
+        "content": "## Upload-Post Setup Guide\n\nTo use this automation, you'll need a Upload-Post account.  \n\n👉 [Register here](https://dub.sh/upload-post)\n",
+        "height": 1240,
+        "width": 620,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1260,
+        -680
+      ],
+      "typeVersion": 1,
+      "id": "90e9fb6d-0aef-4289-a728-7e712dcb109f",
+      "name": "Sticky Note17",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appKAeH3rqpwENU6K",
+          "mode": "list",
+          "cachedResultName": "AT33 - ASMR videos - Veo 3",
+          "cachedResultUrl": "https://airtable.com/appKAeH3rqpwENU6K"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblzPj35EMOulxupB",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appKAeH3rqpwENU6K/tblzPj35EMOulxupB"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Final video": "=[\n  { \"url\": \"{{ $json.video.url }}\" }\n]",
+            "Status": "Done",
+            "id": "={{ $('Search records').item.json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Item",
+              "displayName": "Item",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Todo",
+                  "value": "Todo"
+                },
+                {
+                  "name": "Done",
+                  "value": "Done"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Growth type",
+              "displayName": "Growth type",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Structure detail",
+              "displayName": "Structure detail",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Visual style",
+              "displayName": "Visual style",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Lighting style",
+              "displayName": "Lighting style",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Style",
+              "displayName": "Style",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Audio suggestion",
+              "displayName": "Audio suggestion",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Final video",
+              "displayName": "Final video",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1020,
+        -40
+      ],
+      "id": "c2de30fc-1f87-474c-8cc3-8967e7f99a87",
+      "name": "Update record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://queue.fal.run/fal-ai/veo3/requests/{{ $json.request_id }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Key {{ $('Set API Keys').item.json.Fal.ai }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        -40
+      ],
+      "id": "97591f28-2436-4d89-862f-ab9809709c23",
+      "name": "Get video"
+    },
+    {
+      "parameters": {
+        "content": "## ⚙️ Automation Tribe\n\n![Automation Tribe Logo](https://blog.automation-tribe.com/logo-AT-small.png)\n\n🎥 Check out our YouTube channel for automations, tutorials, and tools:  \n👉 [Automation Tribe on YouTube](https://www.youtube.com/@automation-tribe)\n\n👥 Join the communities:  \n\n🔗 [Premium Community](https://dub.sh/automation-tribe) \n\n🔗 [Free Community](https://dub.sh/free-community)\n\n",
+        "height": 440,
+        "width": 2080
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -840,
+        -680
+      ],
+      "typeVersion": 1,
+      "id": "26038e20-b331-437b-ac5d-2ef093d4c2c5",
+      "name": "Sticky Note"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set API Keys",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Generate Video with VEO 3 Fast",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Video with VEO 3 Fast": {
+      "main": [
+        [
+          {
+            "node": "Wait 5 minutes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 5 minutes": {
+      "main": [
+        [
+          {
+            "node": "Get video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set API Keys": {
+      "main": [
+        [
+          {
+            "node": "Search records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Video": {
+      "main": [
+        [
+          {
+            "node": "Post to Instagram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Post to Tiktok",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Post to Youtube",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Post to Linkedin",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Post to Facebook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update record": {
+      "main": [
+        [
+          {
+            "node": "Prepare Video",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get video": {
+      "main": [
+        [
+          {
+            "node": "Update record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0a80b8d0-f4e7-4d89-b56c-1237382622aa",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+  },
+  "id": "cbncsgyWdLLX7QK5",
+  "tags": []
+}

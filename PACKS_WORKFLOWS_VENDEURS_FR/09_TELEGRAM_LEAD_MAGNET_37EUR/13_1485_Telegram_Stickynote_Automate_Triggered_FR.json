@@ -1,0 +1,507 @@
+{
+  "id": "HJwTWtzlhK8Q5SOv",
+  "meta": {
+    "instanceId": "fb924c73af8f703905bc09c9ee8076f48c17b596ed05b18c0ff86915ef8a7c4a",
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Chatbot IA multi-format Telegram",
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "65196267-0d57-4af4-9081-962701478146",
+      "name": "Modèle de Chat OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        660,
+        640
+      ],
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0.7,
+          "frequencyPenalty": 0.2
+        }
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "rveqdSfp7pCRON1T",
+          "name": "Ted's Tech Talks OpenAi"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "fc446ef0-2f15-42e7-a993-7960d76d8876",
+      "name": "Mémoire tampon de fenêtre",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        800,
+        640
+      ],
+      "parameters": {
+        "sessionKey": "=chat_with_{{ $('Listen for incoming events').first().json.message.chat.id }}",
+        "contextWindowLength": 10
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "51c3cddd-fc21-4fff-b615-ea7080c47947",
+      "name": "Corriger les erreurs",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1220,
+        580
+      ],
+      "parameters": {
+        "text": "={{ $('AI Agent').item.json.output.replace(/&/g, \"&amp;\").replace(/>/g, \"&gt;\").replace(/</g, \"&lt;\").replace(/\"/g, \"&quot;\") }}",
+        "chatId": "={{ $('Listen for incoming events').first().json.message.from.id }}",
+        "additionalFields": {
+          "parse_mode": "HTML",
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "9dexJXnlVPA6wt8K",
+          "name": "Chat & Sound"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "d931b7e1-bc17-431e-ae67-967b6ef79236",
+      "name": "Écouter les événements entrants",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        -440,
+        480
+      ],
+      "webhookId": "322dce18-f93e-4f86-b9b1-3305519b7834",
+      "parameters": {
+        "updates": [
+          "*"
+        ],
+        "additionalFields": {}
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "9dexJXnlVPA6wt8K",
+          "name": "Chat & Sound"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "b33335ff-5dea-4fff-8f63-fea2b11b8241",
+      "name": "Télécharger le fichier vocal",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        60,
+        600
+      ],
+      "parameters": {
+        "fileId": "={{$json.message.voice.file_id}}",
+        "resource": "file"
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "9dexJXnlVPA6wt8K",
+          "name": "Chat & Sound"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "2954ced6-ab98-42e6-bf64-237146a433e0",
+      "name": "Combiner le contenu et définir les propriétés",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        440,
+        460
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bccbce0a-7786-49c9-979a-7a285cb69f78",
+              "name": "CombinedMessage",
+              "type": "string",
+              "value": "={{ $json.message && $json.message.text ? $json.message.text : ($json.text ? $json.text : '') }}"
+            },
+            {
+              "id": "5b1fc9f5-1408-4099-88cc-a23725c9eddb",
+              "name": "Message Type ",
+              "type": "string",
+              "value": "={{ $json?.message?.text && !$json?.text ? \"text query\" : (!$json?.message?.text && $json?.text ? \"voice message\" : \"unknown type message\") }}"
+            },
+            {
+              "id": "1e9a17fa-ec5d-49dc-9ff6-1f28b57fb02e",
+              "name": "Source Type",
+              "type": "string",
+              "value": "={{ $('Listen for incoming events').item.json.message.forward_origin ? \" forwarded\" : \"\" }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "e18de374-941f-4c2e-ab6c-6c6f68f2ce12",
+      "name": "Envoyer la réponse finale",
+      "type": "n8n-nodes-base.telegram",
+      "onError": "continueErrorOutput",
+      "position": [
+        1040,
+        460
+      ],
+      "parameters": {
+        "text": "={{ $json.output }} \n\nMerci pour votre{{ $('Combine content and set properties').item.json['Source Type'] }} {{ $('Combine content and set properties').item.json['Message Type '] }} 🤗",
+        "chatId": "={{ $('Listen for incoming events').first().json.message.from.id }}",
+        "additionalFields": {
+          "parse_mode": "HTML",
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "9dexJXnlVPA6wt8K",
+          "name": "Chat & Sound"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "b47a9583-ce5c-464f-a9e6-153fb42e685f",
+      "name": "Envoyer un message d'erreur",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        60,
+        300
+      ],
+      "parameters": {
+        "text": "=Désolé, {{ $('Listen for incoming events').first().json.message.from.first_name }} ! Cette commande n'est pas encore prise en charge. Veuillez envoyer des messages texte ou vocaux.",
+        "chatId": "={{ $('Listen for incoming events').first().json.message.from.id }}",
+        "additionalFields": {
+          "parse_mode": "Markdown",
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "9dexJXnlVPA6wt8K",
+          "name": "Chat & Sound"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "0196b49e-90a1-4f2f-8b94-492fced37dbf",
+      "name": "Convertir l'audio en texte",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        240,
+        600
+      ],
+      "parameters": {
+        "options": {
+          "language": "",
+          "temperature": 0.7
+        },
+        "resource": "audio",
+        "operation": "transcribe"
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "rveqdSfp7pCRON1T",
+          "name": "Ted's Tech Talks OpenAi"
+        }
+      },
+      "typeVersion": 1.5
+    },
+    {
+      "id": "66505b83-e0c3-4d9d-8e1a-9b54030e29e7",
+      "name": "Note autocollante",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -466.12784869794086,
+        220
+      ],
+      "parameters": {
+        "width": 1035.4478381373049,
+        "height": 547.5630890194532,
+        "content": "## Recevoir et prétraiter les messages \n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "44087d3f-86c8-407c-8791-645d167165cb",
+      "name": "Note adhésive1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        620,
+        220
+      ],
+      "parameters": {
+        "color": 2,
+        "width": 861.262180151035,
+        "height": 550.5748478134515,
+        "content": "## 1. Envoyer le message entrant à l'agent IA\n## 2. Transmettre la réponse de l'agent à l'utilisateur \n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "d7e58831-de97-483f-8b8a-583f85397245",
+      "name": "Note adhésive2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        20,
+        553.0639243489702
+      ],
+      "parameters": {
+        "color": 6,
+        "width": 367.73614918993235,
+        "height": 194.83713159725437,
+        "content": "## Transcrire l'audio"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "89515d80-6efc-40a8-95ce-343d4ff4dbee",
+      "name": "Envoyer l'action de saisie",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        -180,
+        300
+      ],
+      "parameters": {
+        "chatId": "={{ $('Listen for incoming events').first().json.message.from.id }}",
+        "operation": "sendChatAction"
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "9dexJXnlVPA6wt8K",
+          "name": "Chat & Sound"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "c925d059-f843-473c-bfd4-3c563d80ca0f",
+      "name": "Agent IA",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        680,
+        460
+      ],
+      "parameters": {
+        "text": "={{ $json.CombinedMessage }}",
+        "options": {
+          "humanMessage": "TOOLS\n------\nAssistant can ask the user to use tools to look up information that may be helpful in answering the users original question. The tools the human can use are:\n\n{tools}\n\n{format_instructions}\n\nUSER'S INPUT\n--------------------\nHere is the user's input (remember to respond with a markdown code snippet of a json blob with a single action, and NOTHING else):\n\n{{input}}",
+          "systemMessage": "=Vous êtes un assistant IA utile. Vous discutez avec l'utilisateur nommé `{{ $('Determine content type').item.json.message.from.first_name }}`. Vous devez vous adresser à l'utilisateur par son prénom. Aujourd'hui, nous sommes le {{ DateTime.fromISO($now).toLocaleString(DateTime.DATETIME_FULL) }}\n\nDans votre réponse, envoyez toujours un message au format HTML supporté par Telegram. Voici les instructions de formatage :\n1. Les balises suivantes sont actuellement supportées :\n<b>gras</b>, <strong>gras</strong>\n<i>italique</i>, <em>italique</em>\n<u>souligné</u>, <ins>souligné</ins>\n<s>barré</s>, <strike>barré</strike>, <del>barré</del>\n<span class=\"tg-spoiler\">spoiler</span>, <tg-spoiler>spoiler</tg-spoiler>\n<b>gras <i>gras italique <s>gras italique barré <span class=\"tg-spoiler\">gras italique barré spoiler</span></s> <u>gras italique souligné</u></i> gras</b>\n<a href=\"http://www.example.com/\">URL en ligne</a>\n<code>code en ligne à largeur fixe</code>\n<pre>bloc de code préformaté à largeur fixe</pre>\n2. Tout code que vous envoyez doit être encadré par ces balises : <pre><code class=\"language-python\">bloc de code préformaté à largeur fixe écrit en langage Python</code></pre>\nD'autres langages de programmation sont également supportés.\n3. Tous les symboles <, > et & qui ne font pas partie d'une balise ou d'une entité HTML doivent être remplacés par les entités HTML correspondantes (< par &lt;, > par &gt; et & par &amp;)\n4. Si l'utilisateur vous envoie un message commençant par le signe /, cela signifie qu'il s'agit d'une commande de bot Telegram. Par exemple, tous les utilisateurs envoient la commande /start comme premier message. Essayez de comprendre ce que ces commandes signifient et répondez en conséquence\n"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "2c56536d-1a86-4a49-b495-3e877adb308a",
+      "name": "Déterminer le type de contenu",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        -180,
+        480
+      ],
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "Text",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    },
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "Voice",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "dd41bbf0-bee0-450b-9160-b769821a4abc",
+                    "operator": {
+                      "type": "object",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "leftValue": "={{ $json.message.voice}}",
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "typeVersion": 3.2
+    }
+  ],
+  "active": false,
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "15ae799b-6868-4519-b579-3f202e4de5b2",
+  "connections": {
+    "Agent IA": {
+      "main": [
+        [
+          {
+            "node": "Envoyer la réponse finale",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envoyer la réponse finale": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Corriger les erreurs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modèle de Chat OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent IA",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Télécharger le fichier vocal": {
+      "main": [
+        [
+          {
+            "node": "Convertir l'audio en texte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mémoire tampon de fenêtre": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agent IA",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convertir l'audio en texte": {
+      "main": [
+        [
+          {
+            "node": "Combiner le contenu et définir les propriétés",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déterminer le type de contenu": {
+      "main": [
+        [
+          {
+            "node": "Combiner le contenu et définir les propriétés",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Télécharger le fichier vocal",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Envoyer un message d'erreur",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Écouter les événements entrants": {
+      "main": [
+        [
+          {
+            "node": "Déterminer le type de contenu",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Envoyer l'action de saisie",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Combiner le contenu et définir les propriétés": {
+      "main": [
+        [
+          {
+            "node": "Agent IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

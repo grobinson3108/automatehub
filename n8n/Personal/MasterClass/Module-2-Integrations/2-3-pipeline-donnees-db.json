@@ -1,0 +1,297 @@
+{
+  "name": "2.3 - Pipeline Données Base",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      },
+      "id": "schedule-pipeline-203",
+      "name": "Déclencheur Pipeline",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "query": "SELECT id, name, email, created_at, last_activity, status FROM users WHERE last_activity > DATE_SUB(NOW(), INTERVAL 1 HOUR) ORDER BY last_activity DESC LIMIT 100",
+        "options": {}
+      },
+      "id": "extract-mysql-203",
+      "name": "Extract MySQL",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2,
+      "position": [
+        500,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "findDocuments",
+        "collection": "user_activities",
+        "query": "{\n  \"timestamp\": {\n    \"$gte\": \"{{ $now.minus({ hours: 1 }).toISOString() }}\"\n  }\n}",
+        "options": {
+          "sort": "{ \"timestamp\": -1 }",
+          "limit": 100
+        }
+      },
+      "id": "extract-mongodb-203",
+      "name": "Extract MongoDB",
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1,
+      "position": [
+        500,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Pipeline ETL complet\nconst mysqlUsers = $input.first().json || [];\nconst mongoActivities = $input.last().json || [];\n\n// Créer un index des activités par user_id\nconst activitiesIndex = new Map();\nmongoActivities.forEach(activity => {\n  const userId = activity.user_id;\n  if (!activitiesIndex.has(userId)) {\n    activitiesIndex.set(userId, []);\n  }\n  activitiesIndex.get(userId).push(activity);\n});\n\n// Transformer et enrichir les données\nconst enrichedUsers = mysqlUsers.map(user => {\n  const userActivities = activitiesIndex.get(user.id) || [];\n  \n  // Calculer les métriques d'activité\n  const activityMetrics = {\n    totalActivities: userActivities.length,\n    lastActivity: userActivities[0]?.timestamp || user.last_activity,\n    activityTypes: [...new Set(userActivities.map(a => a.type))],\n    averageSessionDuration: userActivities.reduce((sum, a) => sum + (a.duration || 0), 0) / userActivities.length || 0\n  };\n  \n  // Calculer le score d'engagement\n  let engagementScore = 0;\n  engagementScore += Math.min(activityMetrics.totalActivities * 10, 100);\n  engagementScore += Math.min(activityMetrics.averageSessionDuration / 60, 50);\n  engagementScore += activityMetrics.activityTypes.length * 5;\n  \n  // Déterminer le segment utilisateur\n  let segment = 'inactive';\n  if (engagementScore >= 80) segment = 'champion';\n  else if (engagementScore >= 60) segment = 'loyal';\n  else if (engagementScore >= 40) segment = 'potential';\n  else if (engagementScore >= 20) segment = 'new';\n  \n  return {\n    // Données utilisateur de base\n    user_id: user.id,\n    name: user.name,\n    email: user.email,\n    created_at: user.created_at,\n    status: user.status,\n    \n    // Métriques enrichies\n    ...activityMetrics,\n    engagement_score: Math.round(engagementScore),\n    segment: segment,\n    \n    // Métadonnées\n    processed_at: new Date().toISOString(),\n    pipeline_version: '2.3.1'\n  };\n});\n\n// Statistiques du pipeline\nconst pipelineStats = {\n  processed_users: enrichedUsers.length,\n  mysql_records: mysqlUsers.length,\n  mongo_records: mongoActivities.length,\n  segments: {\n    champion: enrichedUsers.filter(u => u.segment === 'champion').length,\n    loyal: enrichedUsers.filter(u => u.segment === 'loyal').length,\n    potential: enrichedUsers.filter(u => u.segment === 'potential').length,\n    new: enrichedUsers.filter(u => u.segment === 'new').length,\n    inactive: enrichedUsers.filter(u => u.segment === 'inactive').length\n  },\n  average_engagement: enrichedUsers.reduce((sum, u) => sum + u.engagement_score, 0) / enrichedUsers.length || 0,\n  execution_time: new Date().toISOString()\n};\n\nreturn enrichedUsers.map(user => ({\n  json: {\n    ...user,\n    stats: pipelineStats\n  }\n}));"
+      },
+      "id": "transform-data-203",
+      "name": "Transform Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "table": "user_analytics",
+        "columns": "user_id, name, email, created_at, status, total_activities, last_activity, engagement_score, segment, processed_at",
+        "values": "={{ $json.user_id }}, '{{ $json.name }}', '{{ $json.email }}', '{{ $json.created_at }}', '{{ $json.status }}', {{ $json.totalActivities }}, '{{ $json.lastActivity }}', {{ $json.engagement_score }}, '{{ $json.segment }}', '{{ $json.processed_at }}'",
+        "options": {
+          "mode": "upsert"
+        }
+      },
+      "id": "load-postgresql-203",
+      "name": "Load PostgreSQL",
+      "type": "n8n-nodes-base.postgres",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "record",
+        "operation": "upsert",
+        "base": "VOTRE_AIRTABLE_BASE_ID",
+        "table": "User_Analytics",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "User_ID": "={{ $json.user_id }}",
+            "Name": "={{ $json.name }}",
+            "Email": "={{ $json.email }}",
+            "Engagement_Score": "={{ $json.engagement_score }}",
+            "Segment": "={{ $json.segment }}",
+            "Total_Activities": "={{ $json.totalActivities }}",
+            "Last_Activity": "={{ $json.lastActivity }}",
+            "Processed_At": "={{ $json.processed_at }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "load-airtable-203",
+      "name": "Load Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        450
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "high-engagement-check",
+              "leftValue": "={{ $json.engagement_score }}",
+              "rightValue": "80",
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-high-engagement-203",
+      "name": "Filtrer High Engagement",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1250,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#marketing",
+        "text": "🏆 **Utilisateur Champion détecté !**\n\n*Nom:* {{ $json.name }}\n*Email:* {{ $json.email }}\n*Score d'engagement:* {{ $json.engagement_score }}/100\n*Activités:* {{ $json.totalActivities }}\n*Segment:* {{ $json.segment }}\n\n*Action recommandée:* Contacter pour programme VIP",
+        "otherOptions": {
+          "username": "Analytics Bot"
+        }
+      },
+      "id": "notify-champion-203",
+      "name": "Notifier Champion",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [
+        1500,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": "VOTRE_ANALYTICS_SHEET_ID",
+        "sheetName": "Pipeline_Stats",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Execution_Time": "={{ $json.stats.execution_time }}",
+            "Processed_Users": "={{ $json.stats.processed_users }}",
+            "MySQL_Records": "={{ $json.stats.mysql_records }}",
+            "MongoDB_Records": "={{ $json.stats.mongo_records }}",
+            "Champions": "={{ $json.stats.segments.champion }}",
+            "Loyal": "={{ $json.stats.segments.loyal }}",
+            "Potential": "={{ $json.stats.segments.potential }}",
+            "New": "={{ $json.stats.segments.new }}",
+            "Inactive": "={{ $json.stats.segments.inactive }}",
+            "Average_Engagement": "={{ $json.stats.average_engagement }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "log-pipeline-stats-203",
+      "name": "Log Pipeline Stats",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        1500,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Déclencheur Pipeline": {
+      "main": [
+        [
+          {
+            "node": "Extract MySQL",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Extract MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract MySQL": {
+      "main": [
+        [
+          {
+            "node": "Transform Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract MongoDB": {
+      "main": [
+        [
+          {
+            "node": "Transform Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transform Data": {
+      "main": [
+        [
+          {
+            "node": "Load PostgreSQL",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Load Airtable",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Filtrer High Engagement",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Log Pipeline Stats",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrer High Engagement": {
+      "main": [
+        [
+          {
+            "node": "Notifier Champion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2-3-pipeline-donnees-db-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "7",
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "module-2-integrations",
+      "name": "Module 2 - Intégrations"
+    }
+  ]
+}

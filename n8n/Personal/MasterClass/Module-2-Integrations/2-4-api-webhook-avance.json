@@ -1,0 +1,403 @@
+{
+  "name": "2.4 - API et Webhook Avancés",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "api/webhook/advanced",
+        "options": {
+          "allowedOrigins": "*",
+          "rawBody": false
+        }
+      },
+      "id": "webhook-receiver-204",
+      "name": "Récepteur Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "advanced-webhook-204"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Validation et authentification du webhook\nconst requestData = $input.first().json;\nconst headers = $input.first().json.headers || {};\n\n// Vérifier l'authentification\nconst apiKey = headers['x-api-key'] || headers['X-API-Key'];\nconst validApiKeys = ['api-key-123', 'api-key-456', 'api-key-789'];\n\nif (!apiKey || !validApiKeys.includes(apiKey)) {\n  throw new Error('Unauthorized: Invalid API Key');\n}\n\n// Valider le format des données\nconst requiredFields = ['event_type', 'data', 'timestamp'];\nconst missingFields = requiredFields.filter(field => !requestData[field]);\n\nif (missingFields.length > 0) {\n  throw new Error(`Missing required fields: ${missingFields.join(', ')}`);\n}\n\n// Validation spécifique par type d'événement\nconst eventType = requestData.event_type;\nlet validationErrors = [];\n\nswitch (eventType) {\n  case 'user.created':\n    if (!requestData.data.email) validationErrors.push('Email required for user.created');\n    if (!requestData.data.name) validationErrors.push('Name required for user.created');\n    break;\n    \n  case 'order.completed':\n    if (!requestData.data.order_id) validationErrors.push('Order ID required for order.completed');\n    if (!requestData.data.amount) validationErrors.push('Amount required for order.completed');\n    break;\n    \n  case 'payment.failed':\n    if (!requestData.data.payment_id) validationErrors.push('Payment ID required for payment.failed');\n    if (!requestData.data.reason) validationErrors.push('Reason required for payment.failed');\n    break;\n}\n\nif (validationErrors.length > 0) {\n  throw new Error(`Validation errors: ${validationErrors.join(', ')}`);\n}\n\n// Enrichir les données\nconst enrichedData = {\n  ...requestData,\n  processed_at: new Date().toISOString(),\n  source_ip: headers['x-forwarded-for'] || 'unknown',\n  user_agent: headers['user-agent'] || 'unknown',\n  webhook_id: 'advanced-webhook-204',\n  validation_passed: true\n};\n\nreturn [{ json: enrichedData }];"
+      },
+      "id": "validate-webhook-204",
+      "name": "Valider Webhook",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "values": {
+            "string": [
+              {
+                "name": "event_type",
+                "value": "={{ $json.event_type }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "route-by-event-204",
+      "name": "Router par Événement",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "user_data",
+              "value": "{{ JSON.stringify($json.data) }}"
+            },
+            {
+              "name": "welcome_email_template",
+              "value": "user_welcome_v2"
+            },
+            {
+              "name": "onboarding_flow",
+              "value": "standard"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "prepare-user-data-204",
+      "name": "Préparer Données Utilisateur",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        1000,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.mailchimp.com/3.0/lists/YOUR_LIST_ID/members",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer YOUR_MAILCHIMP_API_KEY",
+          "Content-Type": "application/json"
+        },
+        "body": {
+          "email_address": "={{ JSON.parse($json.user_data).email }}",
+          "status": "subscribed",
+          "merge_fields": {
+            "FNAME": "={{ JSON.parse($json.user_data).name }}",
+            "LNAME": "={{ JSON.parse($json.user_data).last_name || '' }}"
+          },
+          "tags": ["new-user", "webhook-signup"]
+        },
+        "options": {}
+      },
+      "id": "add-to-mailchimp-204",
+      "name": "Ajouter à Mailchimp",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1250,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "order_data",
+              "value": "{{ JSON.stringify($json.data) }}"
+            },
+            {
+              "name": "invoice_template",
+              "value": "order_invoice_v1"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "prepare-order-data-204",
+      "name": "Préparer Données Commande",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        1000,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://api.stripe.com/v1/invoices",
+        "method": "POST",
+        "headers": {
+          "Authorization": "Bearer YOUR_STRIPE_SECRET_KEY",
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        "body": "customer={{ JSON.parse($json.order_data).customer_id }}&amount={{ JSON.parse($json.order_data).amount }}&currency=eur&description=Order {{ JSON.parse($json.order_data).order_id }}",
+        "options": {}
+      },
+      "id": "create-stripe-invoice-204",
+      "name": "Créer Facture Stripe",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1250,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "payment_data",
+              "value": "{{ JSON.stringify($json.data) }}"
+            },
+            {
+              "name": "retry_attempts",
+              "value": "3"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "prepare-payment-data-204",
+      "name": "Préparer Données Paiement",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        1000,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#alerts",
+        "text": "⚠️ **Échec de Paiement**\n\n*ID Paiement:* {{ JSON.parse($json.payment_data).payment_id }}\n*Montant:* {{ JSON.parse($json.payment_data).amount }}€\n*Raison:* {{ JSON.parse($json.payment_data).reason }}\n*Client:* {{ JSON.parse($json.payment_data).customer_email }}\n\n*Action requise:* Contacter le client",
+        "otherOptions": {
+          "username": "Payment Bot"
+        }
+      },
+      "id": "alert-payment-failure-204",
+      "name": "Alerte Échec Paiement",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [
+        1250,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": "VOTRE_WEBHOOK_LOG_ID",
+        "sheetName": "Webhook_Events",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{ $json.processed_at }}",
+            "Event_Type": "={{ $json.event_type }}",
+            "Source_IP": "={{ $json.source_ip }}",
+            "User_Agent": "={{ $json.user_agent }}",
+            "Data": "={{ JSON.stringify($json.data) }}",
+            "Validation": "={{ $json.validation_passed }}",
+            "Webhook_ID": "={{ $json.webhook_id }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "log-webhook-event-204",
+      "name": "Log Événement Webhook",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        1500,
+        350
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.callback_url }}",
+        "method": "POST",
+        "headers": {
+          "Content-Type": "application/json",
+          "X-Webhook-Source": "n8n-advanced-handler"
+        },
+        "body": {
+          "event_id": "={{ $json.event_id }}",
+          "status": "processed",
+          "processed_at": "={{ $json.processed_at }}",
+          "message": "Event processed successfully"
+        },
+        "options": {
+          "timeout": 10000
+        }
+      },
+      "id": "callback-response-204",
+      "name": "Réponse Callback",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        1750,
+        350
+      ]
+    }
+  ],
+  "connections": {
+    "Récepteur Webhook": {
+      "main": [
+        [
+          {
+            "node": "Valider Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Valider Webhook": {
+      "main": [
+        [
+          {
+            "node": "Router par Événement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Router par Événement": {
+      "main": [
+        [
+          {
+            "node": "Préparer Données Utilisateur",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Préparer Données Commande",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Préparer Données Paiement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Préparer Données Utilisateur": {
+      "main": [
+        [
+          {
+            "node": "Ajouter à Mailchimp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ajouter à Mailchimp": {
+      "main": [
+        [
+          {
+            "node": "Log Événement Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Préparer Données Commande": {
+      "main": [
+        [
+          {
+            "node": "Créer Facture Stripe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Créer Facture Stripe": {
+      "main": [
+        [
+          {
+            "node": "Log Événement Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Préparer Données Paiement": {
+      "main": [
+        [
+          {
+            "node": "Alerte Échec Paiement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Alerte Échec Paiement": {
+      "main": [
+        [
+          {
+            "node": "Log Événement Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Log Événement Webhook": {
+      "main": [
+        [
+          {
+            "node": "Réponse Callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2-4-api-webhook-avance-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "8",
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "module-2-integrations",
+      "name": "Module 2 - Intégrations"
+    }
+  ]
+}

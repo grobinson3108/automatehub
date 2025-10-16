@@ -1,0 +1,31 @@
+STATISTIQUES D'ORGANISATION DES WORKFLOWS
+========================================
+Date : Sat Sep 13 18:45:05 CEST 2025
+Total de workflows source : 4052
+Workflows Freemium : 2605
+Workflows Premium : 1418
+Total organisé : 4023
+
+TOP 10 FREEMIUM (par ordre alphabétique) :
+1059_workflow_1059.json
+AI-Assisted_Medical_Appointment_Scheduling.json
+AI-Driven_Lead_Management_and_Inquiry_Automation_with_ERPNext_&_n8n.json
+AI-Enhanced_Weather_Forecasting_with_Open-Meteo_API.json
+AI-Enhanced_Weather_Forecasting_with_Open-Meteo_Data.json
+AI-Powered_CV_Screening_and_Applicant_Feedback.json
+AI-Powered_CV_Screening_and_Evaluation_Process.json
+AI-Powered_Calculator_with_Memory_and_Response_Limit.json
+AI-Powered_Calendar_and_Email_Management_Assistant.json
+AI-Powered_Chat_Agent_for_Custom_Code_Execution.json
+
+TOP 10 PREMIUM (par ordre alphabétique) :
+#️⃣Nostr_#damus_AI_Powered_Reporting_+_Gmail_+_Telegram_complex_24nodes.json
+#️⃣Nostr_#damus_AI_Powered_Reporting_+_Gmail_+_Telegram_complex_24nodes_1.json
+AI-Assisted_Job_Posting_and_Candidate_Evaluation.json
+AI-Assisted_Job_Posting_and_Candidate_Evaluation_1.json
+AI-Driven_WooCommerce_Product_Importer_with_SEO_complex_16nodes.json
+AI-Enhanced_WooCommerce_Product_Import_from_Google_Sheets.json
+AI-Generated_Social_Media_Captions_from_Airtable_Data.json
+AI-Powered_Airtable_Data_Processing_and_Analysis.json
+AI-Powered_Amazon_Ad_Optimization_with_Google_Drive.json
+AI-Powered_BambooHR_Policy_and_Benefits_Assistant.json

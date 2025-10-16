@@ -1,0 +1,1000 @@
+{
+  "nodes": [
+    {
+      "id": "1e89a8ad-90cf-4040-b59e-1b4933ea4e69",
+      "name": "Note Autocollante",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1740,
+        -80
+      ],
+      "parameters": {
+        "color": 4,
+        "width": 982.895112064014,
+        "height": 248.06218763804304,
+        "content": "DÉPLACER LES SAUVEGARDES ACTUELLES VERS LE DOSSIER ANCIEN"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "f998e295-eafd-420a-9ba9-69571b4ab005",
+      "name": "Note Autocollante2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1740,
+        500
+      ],
+      "parameters": {
+        "width": 980.8812626356395,
+        "height": 188.38611225559103,
+        "content": "PURGER LES SAUVEGARDES PLUS ANCIENNES QUE 30 JOURS\n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "a94facb5-c0df-4ba4-8620-3427aca24333",
+      "name": "Déplacer les données binaires",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "position": [
+        2000,
+        280
+      ],
+      "parameters": {
+        "mode": "jsonToBinary",
+        "options": {
+          "fileName": "={{ $json.name }}-{{ $json.active === false ? 'inactive' : $json.active === true ? 'active' : 'unknown' }}",
+          "useRawData": true
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "049ac29e-36f2-4a14-9d3a-6fd9c9d8a744",
+      "name": "Note Autocollante3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        260,
+        -80
+      ],
+      "parameters": {
+        "color": 2,
+        "width": 1003.460056384994,
+        "height": 755.833854865218,
+        "content": "## obtenir les dossiers Google Drive"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "e830c989-815d-4c79-806e-136a82a18d72",
+      "name": "Note Autocollante4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1300,
+        -80
+      ],
+      "parameters": {
+        "color": 6,
+        "width": 427.1093081837156,
+        "height": 753.2799109651138,
+        "content": "## Ignorer tous les autres dossiers sauf : n8n_backups\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n    (il est important que vous ayez créé ce dossier)"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "4197519c-0cf7-49dc-be45-a5c0ab7598c2",
+      "name": "IGNORER LES FICHIERS",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        1440,
+        40
+      ],
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "98415e9e-5354-4223-9107-ef3ade30c2f0",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $node[\"GET CURRENT FOLDER\"].json.name }}",
+              "rightValue": "n8n_backups"
+            }
+          ]
+        }
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "d3f6191a-80c6-43dd-923f-e98f9ade02f4",
+      "name": "Créer n8n_backups",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        1000,
+        340
+      ],
+      "parameters": {
+        "name": "n8n_backups",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "options": {},
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "resource": "folder"
+      },
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o1CgNemxQmc5Fyzd",
+          "name": "Google Drive Alejandro Lobato"
+        }
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "b0ff6563-4ad5-4615-844a-aea766cf0d40",
+      "name": "Créer n8n_old",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        1000,
+        500
+      ],
+      "parameters": {
+        "name": "n8n_old",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "options": {},
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        },
+        "resource": "folder"
+      },
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o1CgNemxQmc5Fyzd",
+          "name": "Google Drive Alejandro Lobato"
+        }
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "d22a25ea-e1fd-4434-b050-480760f6ba11",
+      "name": "Note adhésive8",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        300,
+        540
+      ],
+      "parameters": {
+        "color": 6,
+        "width": 355.73762189847923,
+        "height": 105.6805438265643,
+        "content": "## Contactez-moi \n**Par Mail**. [Envoyer un mail](mailto:nuntius.creative.hub@gmail.com)"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "b34e1e76-a8b8-4e0d-921b-1a773192e027",
+      "name": "Note adhésive10",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        900,
+        220
+      ],
+      "parameters": {
+        "color": 5,
+        "width": 327.6965514381564,
+        "height": 451.756147757587,
+        "content": "## Comme le dossier n'existe pas, il en crée un nouveau.\nn8n_backups\nn8n_old"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "f0796631-ecb8-4603-838f-0ac1d1bf0a7b",
+      "name": "OBTENIR LE DOSSIER ACTUEL",
+      "type": "n8n-nodes-base.googleDrive",
+      "onError": "continueRegularOutput",
+      "position": [
+        320,
+        240
+      ],
+      "parameters": {
+        "filter": {
+          "whatToSearch": "folders"
+        },
+        "options": {},
+        "resource": "fileFolder",
+        "returnAll": true
+      },
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o1CgNemxQmc5Fyzd",
+          "name": "Google Drive Alejandro Lobato"
+        }
+      },
+      "executeOnce": true,
+      "notesInFlow": true,
+      "retryOnFail": true,
+      "typeVersion": 3,
+      "alwaysOutputData": true
+    },
+    {
+      "id": "8afbde8d-ae70-427c-8883-ffd49aea7ba7",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        500,
+        240
+      ],
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst requiredNames = [\"n8n_old\", \"n8n_backups\"];\n\n// Filtrar los nombres de la entrada\nconst folderNames = items.map(item => item.json.name);\n\n// Encontrar los nombres que faltan\nconst missingNames = requiredNames.filter(name => !folderNames.includes(name));\n\nif (missingNames.length === 0) {\n  return [{ json: { message: \"ok\" } }];\n} else {\n  return [{ json: { message: `Faltan los siguientes: ${missingNames.join(', ')}` } }];\n}\n"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "2130d3d8-23e4-48d6-b3a0-7eab5971a71d",
+      "name": "Si n8n_old",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        680,
+        360
+      ],
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "43bd468e-1018-4b45-9448-c51835ed65bc",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              },
+              "leftValue": "={{ $json.message }}",
+              "rightValue": "n8n_old"
+            }
+          ]
+        }
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "76a4ab52-b260-4a1e-be77-a7246a06b963",
+      "name": "Si1 n8n_backups",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        680,
+        120
+      ],
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "43bd468e-1018-4b45-9448-c51835ed65bc",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              },
+              "leftValue": "={{ $json.message }}",
+              "rightValue": "n8n_backups"
+            }
+          ]
+        }
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "0a215059-a7bf-4892-b584-1f037b42a59c",
+      "name": "OBTENIR LE DOSSIER ACTUEL CRÉE",
+      "type": "n8n-nodes-base.googleDrive",
+      "onError": "continueRegularOutput",
+      "position": [
+        1100,
+        40
+      ],
+      "parameters": {
+        "filter": {
+          "whatToSearch": "folders"
+        },
+        "options": {},
+        "resource": "fileFolder",
+        "returnAll": true
+      },
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o1CgNemxQmc5Fyzd",
+          "name": "Google Drive Alejandro Lobato"
+        }
+      },
+      "executeOnce": true,
+      "notesInFlow": true,
+      "retryOnFail": true,
+      "typeVersion": 3,
+      "alwaysOutputData": true
+    },
+    {
+      "id": "653d641c-b56f-4a02-b3bf-990b4f6b99f3",
+      "name": "Fusionner le message",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        920,
+        40
+      ],
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combinationMode": "mergeByPosition"
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "ae940b77-107a-4e6f-a635-a69876b342ea",
+      "name": "OBTENIR LES SAUVEGARDES ACTUELLES1",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        1800,
+        0
+      ],
+      "parameters": {
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "={{ $json.id }}"
+          }
+        },
+        "options": {
+          "fields": [
+            "name",
+            "id"
+          ]
+        },
+        "resource": "fileFolder",
+        "returnAll": true,
+        "queryString": ".json"
+      },
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o1CgNemxQmc5Fyzd",
+          "name": "Google Drive Alejandro Lobato"
+        }
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "7caa0190-9bd5-4572-80e3-e3f3b34885a6",
+      "name": "Note adhésive5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        640,
+        -40
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 203.08765089203305,
+        "height": 542.95115693689,
+        "content": "## Un dossier existe-t-il ? S'il n'existe pas, il le crée"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "1a77a0fd-dfdd-456d-adfc-6da34a4ccbab",
+      "name": "DÉPLACER DANS LE DOSSIER ANCIEN",
+      "type": "n8n-nodes-base.googleDrive",
+      "onError": "continueRegularOutput",
+      "position": [
+        2480,
+        -20
+      ],
+      "parameters": {
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.id }}"
+        },
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive",
+          "cachedResultName": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('GET CURRENT FOLDER').item.json.id }}"
+        },
+        "operation": "move"
+      },
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o1CgNemxQmc5Fyzd",
+          "name": "Google Drive Alejandro Lobato"
+        }
+      },
+      "typeVersion": 3,
+      "alwaysOutputData": true
+    },
+    {
+      "id": "f9fad351-8e82-49a3-a7da-7a43b0735c34",
+      "name": "TÉLÉCHARGER LES WORKFLOWS",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        2480,
+        260
+      ],
+      "parameters": {
+        "name": "={{ $('Split In Batches').item.binary.data.fileName }}-{{ $node[\"n8n\"].json[\"updatedAt\"] }}.json\n\n",
+        "options": {},
+        "parents": [
+          "={{ $('IGNORE FILES').item.json.id }}"
+        ],
+        "binaryData": true,
+        "authentication": "oAuth2"
+      },
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o1CgNemxQmc5Fyzd",
+          "name": "Google Drive Alejandro Lobato"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "c8496ac4-b767-4fc3-bda3-12c0550763c4",
+      "name": "Note Autocollante6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -180,
+        -80
+      ],
+      "parameters": {
+        "color": 3,
+        "width": 397.07512898799075,
+        "height": 759.2757638563562,
+        "content": "## Description\nCe modèle crée une sauvegarde nocturne de tous les workflows n8n et les enregistre dans un dossier GitHub. Chaque nuit, les sauvegardes de la nuit précédente sont déplacées dans un dossier « n8n_old » et renommées avec la date correspondante.\n\nLes sauvegardes plus anciennes qu’un certain âge spécifié sont automatiquement supprimées (cette fonctionnalité est active pendant 30 jours, vous pouvez la supprimer si vous ne souhaitez pas que les sauvegardes soient effacées).\n\n## Prérequis\n\n- Compte Google Drive et identifiants **Obtenez-les** via le lien suivant. [Link](https://console.cloud.google.com/apis/credentials/oauthclient/)\n- Version n8n 1.67.1 ou supérieure\n- Clé API n8n **Guide** via le lien suivant. [Link](https://witmovil.com/where-to-create-the-api-key-in-n8n/)\n- Un dossier de destination pour les sauvegardes :\n« n8n_old »\n« n8n_backups »\n(s’il n’existe pas, créez-le)\n\n## Configuration\nMettez à jour tous les nœuds Google Drive avec vos identifiants.\nModifiez le nœud Schedule Trigger avec l’heure souhaitée pour exécuter la sauvegarde.\nSi vous souhaitez purger automatiquement les anciennes sauvegardes.\n\nModifiez le nœud « PURGE DAYS » pour spécifier l’âge des sauvegardes que vous souhaitez supprimer.\nActivez le nœud « PURGE DAYS » ainsi que les 3 nœuds suivants.\nActivez le workflow pour qu’il s’exécute selon le planning spécifié."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "4654d857-8436-4922-aa9a-9f00d357e581",
+      "name": "Listes d'éléments",
+      "type": "n8n-nodes-base.itemLists",
+      "position": [
+        2000,
+        0
+      ],
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "id"
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "9e9cc97d-1eff-40ea-9a1d-896681330b5e",
+      "name": "Diviser en lots2",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        2220,
+        0
+      ],
+      "parameters": {
+        "options": {
+          "reset": false
+        },
+        "batchSize": 1
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "1bd963e2-6533-4d71-8790-fa840af822ab",
+      "name": "Diviser en lots",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        2220,
+        280
+      ],
+      "parameters": {
+        "options": {
+          "reset": false
+        },
+        "batchSize": 1
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "aa9a5b1c-2c6b-4aff-af66-f15271eed643",
+      "name": "n8n",
+      "type": "n8n-nodes-base.n8n",
+      "position": [
+        1800,
+        280
+      ],
+      "parameters": {
+        "filters": {},
+        "returnAll": false,
+        "requestOptions": {}
+      },
+      "credentials": {
+        "n8nApi": {
+          "id": "vPlm2YAtWv47eJLp",
+          "name": "n8n witmovil"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "d6455261-c3af-4f5a-8f7e-0dd57c5306e5",
+      "name": "LISTER LES ANCIENNES SAUVEGARDES",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        1960,
+        520
+      ],
+      "parameters": {
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "mode": "list",
+            "value": "1UcusrWKnbFl3cJYIjaDdp1VCgreg2oeV",
+            "cachedResultUrl": "https://drive.google.com/drive/folders/1UcusrWKnbFl3cJYIjaDdp1VCgreg2oeV",
+            "cachedResultName": "n8n_old"
+          }
+        },
+        "options": {
+          "fields": [
+            "name",
+            "id"
+          ]
+        },
+        "resource": "fileFolder",
+        "returnAll": true,
+        "queryString": ".json"
+      },
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o1CgNemxQmc5Fyzd",
+          "name": "Google Drive Alejandro Lobato"
+        }
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "aa1878bd-b90e-4f37-bf2e-bb4fd72b4571",
+      "name": "SUPPRIMER L'ANCIENNE SAUVEGARDE",
+      "type": "n8n-nodes-base.googleDrive",
+      "onError": "continueRegularOutput",
+      "position": [
+        2560,
+        500
+      ],
+      "parameters": {
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.id }}"
+        },
+        "options": {
+          "deletePermanently": true
+        },
+        "operation": "deleteFile"
+      },
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "o1CgNemxQmc5Fyzd",
+          "name": "Google Drive Alejandro Lobato"
+        }
+      },
+      "typeVersion": 3,
+      "alwaysOutputData": true
+    },
+    {
+      "id": "bde79076-3fb4-4f03-a907-fc492f88a17e",
+      "name": "Listes d'éléments anciennes",
+      "type": "n8n-nodes-base.itemLists",
+      "position": [
+        2160,
+        520
+      ],
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "id"
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "0bd6da8c-99ed-47ea-bb26-11e08e2f76e1",
+      "name": "Diviser en lots anciennes",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        2360,
+        520
+      ],
+      "parameters": {
+        "options": {
+          "reset": false
+        },
+        "batchSize": 1
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "fa6fb3be-baba-4bbe-9900-b0949507d164",
+      "name": "Note Autocollante9",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1320,
+        380
+      ],
+      "parameters": {
+        "color": 3,
+        "width": 344.2988945561964,
+        "height": 232.84367238845454,
+        "content": "## Corrections de bugs v3 :\n* Correction du déplacement de section qui détecte maintenant plus de 13 fichiers et les déplace vers le dossier n8n_old\n* Modification du filtrage des fichiers\n* Dans la prochaine version, \"Split In Batches\" sera renommé en \"Loop Over Items\""
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "cf2d27b7-8601-466a-8331-c767b9c0c25a",
+      "name": "Note autocollante1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1740,
+        220
+      ],
+      "parameters": {
+        "color": 5,
+        "width": 984.8018228465335,
+        "height": 267.23574473121596,
+        "content": "SAUVEGARDER TOUS LES WORKFLOWS ACTUELS limite 100 (Modifier)"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "484b37a9-8b21-4887-9443-bcb8ca34b57d",
+      "name": "Déclencheur de planification",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        320,
+        20
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "40a6f21f-f044-4bb5-8d01-1fbdc4185eae",
+      "name": "Déclencheur de planification1",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        1760,
+        560
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "daysInterval": 30
+            }
+          ]
+        }
+      },
+      "typeVersion": 1.1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "n8n": {
+      "main": [
+        [
+          {
+            "node": "Déplacer les données binaires",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Si n8n_old",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Si1 n8n_backups",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Si n8n_old": {
+      "main": [
+        [
+          {
+            "node": "Créer n8n_old",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fusionner le message",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Listes d'éléments": {
+      "main": [
+        [
+          {
+            "node": "Diviser en lots2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IGNORER LES FICHIERS": {
+      "main": [
+        [
+          {
+            "node": "OBTENIR LES SAUVEGARDES ACTUELLES1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "n8n",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fusionner le message": {
+      "main": [
+        [
+          {
+            "node": "OBTENIR LE DOSSIER ACTUEL CRÉE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Créer n8n_old": {
+      "main": [
+        [
+          {
+            "node": "OBTENIR LE DOSSIER ACTUEL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Listes d'éléments anciennes": {
+      "main": [
+        [
+          {
+            "node": "Diviser en lots anciennes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Si1 n8n_backups": {
+      "main": [
+        [
+          {
+            "node": "Créer n8n_backups",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fusionner le message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LISTER LES ANCIENNES SAUVEGARDES": {
+      "main": [
+        [
+          {
+            "node": "Listes d'éléments anciennes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déplacer les données binaires": {
+      "main": [
+        [
+          {
+            "node": "Diviser en lots",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déclencheur de planification": {
+      "main": [
+        [
+          {
+            "node": "OBTENIR LE DOSSIER ACTUEL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Diviser en lots": {
+      "main": [
+        [
+          {
+            "node": "TÉLÉCHARGER LES WORKFLOWS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "TÉLÉCHARGER LES WORKFLOWS": {
+      "main": [
+        [
+          {
+            "node": "Diviser en lots",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SUPPRIMER L'ANCIENNE SAUVEGARDE": {
+      "main": [
+        [
+          {
+            "node": "Diviser en lots anciennes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Diviser en lots2": {
+      "main": [
+        [
+          {
+            "node": "DÉPLACER DANS LE DOSSIER ANCIEN",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Créer n8n_backups": {
+      "main": [
+        [
+          {
+            "node": "OBTENIR LE DOSSIER ACTUEL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OBTENIR LE DOSSIER ACTUEL": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OBTENIR LES SAUVEGARDES ACTUELLES1": {
+      "main": [
+        [
+          {
+            "node": "Listes d'éléments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DÉPLACER DANS LE DOSSIER ANCIEN": {
+      "main": [
+        [
+          {
+            "node": "Diviser en lots2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Diviser en lots anciennes": {
+      "main": [
+        [
+          {
+            "node": "SUPPRIMER L'ANCIENNE SAUVEGARDE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OBTENIR LE DOSSIER ACTUEL CRÉE": {
+      "main": [
+        [
+          {
+            "node": "IGNORER LES FICHIERS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

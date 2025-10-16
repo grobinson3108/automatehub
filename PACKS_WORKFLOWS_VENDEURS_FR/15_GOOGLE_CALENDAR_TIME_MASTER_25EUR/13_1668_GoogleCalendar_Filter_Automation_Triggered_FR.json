@@ -1,0 +1,607 @@
+{
+  "id": "slP122GjD9meGkS6",
+  "meta": {
+    "instanceId": "178ef8a5109fc76c716d40bcadb720c455319f7b7a3fd5a39e4f336a091f524a"
+  },
+  "name": "Planification de calendrier",
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "bd1dae81-daea-4539-bf1d-38eb9a2bd2f0",
+      "name": "Déclencheur Gmail",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "position": [
+        500,
+        560
+      ],
+      "parameters": {
+        "filters": {
+          "readStatus": "unread",
+          "includeSpamTrash": false
+        },
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kLFedNEM8Zwkergv",
+          "name": "Gmail account"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "a97c3ab1-6fbc-441e-af11-3c746936013b",
+      "name": "Chat OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        720,
+        740
+      ],
+      "parameters": {
+        "model": "gpt-4",
+        "options": {
+          "temperature": 0.1
+        }
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "wJtZwsVKW5v6R2Iy",
+          "name": "OpenAi account"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "a1205598-7cd4-4278-ad53-0cfc7c7947ff",
+      "name": "Outil de workflow",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        1580,
+        759
+      ],
+      "parameters": {
+        "name": "Calendar_Availability",
+        "workflowId": "={{ $workflow.id }}",
+        "description": "Appelez cet outil pour obtenir la disponibilité de mon calendrier sous forme de tableau JSON sérialisé."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "5ba2c2b0-2218-45d2-a417-f86c80643397",
+      "name": "Chat OpenAI1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1420,
+        759
+      ],
+      "parameters": {
+        "model": "gpt-4",
+        "options": {
+          "temperature": 0
+        }
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "wJtZwsVKW5v6R2Iy",
+          "name": "OpenAi account"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "012835ec-c20a-4b84-bed8-67f6aac30698",
+      "name": "Note adhésive",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        460,
+        460
+      ],
+      "parameters": {
+        "width": 616.8060552874073,
+        "height": 410.24791575252334,
+        "content": "## Vérifier si l'email entrant concerne un rendez-vous\nNous utilisons LLM pour vérifier le sujet et le corps de l'email et déterminer s'il s'agit d'une demande de rendez-vous."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "ceaa4f77-acc8-437e-9d61-16cf344a7748",
+      "name": "Note adhésive1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1340,
+        460
+      ],
+      "parameters": {
+        "width": 676.1951194231482,
+        "height": 241.70645019745504,
+        "content": "## Obtenir la disponibilité du calendrier et composer une réponse\nAssurez-vous de mettre à jour l'ID du workflow si vous exécutez cela en tant que 2 workflows"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "499def23-7dec-4131-91fd-326b1b824762",
+      "name": "Google Calendar",
+      "type": "n8n-nodes-base.googleCalendar",
+      "position": [
+        680,
+        1120
+      ],
+      "parameters": {
+        "options": {
+          "timeMax": "={{ $now.plus(1, 'month').toISO() }}",
+          "timeMin": "={{ $now.minus(1, 'day').toISO() }}",
+          "singleEvents": true
+        },
+        "calendar": {
+          "__rl": true,
+          "mode": "list",
+          "value": "your_email@gmail.com",
+          "cachedResultName": "your_email@gmail.com"
+        },
+        "operation": "getAll",
+        "returnAll": true
+      },
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "s95HsHIMB7oK0dAH",
+          "name": "Google Calendar account"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "0f5f43fa-3386-4682-b620-21db35651d3b",
+      "name": "Exécuter le déclencheur de workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        460,
+        1120
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "8b2b82b9-c11f-4e7f-ab23-16ea5e395e11",
+      "name": "Formater la réponse",
+      "type": "n8n-nodes-base.itemLists",
+      "position": [
+        1560,
+        1120
+      ],
+      "parameters": {
+        "include": "allFieldsExcept",
+        "options": {},
+        "aggregate": "aggregateAllItemData",
+        "operation": "concatenateItems",
+        "fieldsToExclude": "sort",
+        "destinationFieldName": "response"
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "ac363d85-5c6e-4a9f-9cfc-ecc15a325b01",
+      "name": "Convertir la réponse en chaîne",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1780,
+        1120
+      ],
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "response",
+              "value": "={{ JSON.stringify($json.response) }}"
+            }
+          ]
+        },
+        "options": {},
+        "keepOnlySet": true
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "399c5bc4-c8bd-4d0b-942a-9889447880a9",
+      "name": "Extraire début, fin et nom",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1100,
+        1120
+      ],
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "start",
+              "value": "={{ DateTime.fromISO($json.start.dateTime).toLocaleString(DateTime.DATE_HUGE) }}, {{ DateTime.fromISO($json.start.dateTime).toLocaleString(DateTime.TIME_24_WITH_SHORT_OFFSET) }}"
+            },
+            {
+              "name": "end",
+              "value": "={{ DateTime.fromISO($json.end.dateTime).toLocaleString(DateTime.DATE_HUGE) }}, {{ DateTime.fromISO($json.end.dateTime).toLocaleString(DateTime.TIME_24_WITH_SHORT_OFFSET) }}"
+            },
+            {
+              "name": "name",
+              "value": "={{ $json.summary }}"
+            },
+            {
+              "name": "sort",
+              "value": "={{ $json.start.dateTime }}"
+            }
+          ]
+        },
+        "options": {},
+        "keepOnlySet": true
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "a39b6c7d-fdcc-452d-9ef5-50b038153330",
+      "name": "Filtrer uniquement les confirmés avec heure définie",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        880,
+        1120
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.status }}",
+              "value2": "confirmed"
+            }
+          ],
+          "boolean": [
+            {
+              "value1": "={{ $json.start.dateTime }}",
+              "value2": "={{ undefined }}",
+              "operation": "notEqual"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "0e0a2be9-cde7-497d-94c5-180128382bb7",
+      "name": "Est-ce une demande de rendez-vous",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1100,
+        560
+      ],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.is_appointment }}",
+              "value2": "true"
+            }
+          ],
+          "boolean": [
+            {
+              "value1": "={{ $json.is_appointment }}",
+              "value2": true
+            }
+          ]
+        },
+        "combineOperation": "any"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "a6e11f63-a56a-4fe0-91c8-0dde2720e905",
+      "name": "Classer le rendez-vous",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        720,
+        560
+      ],
+      "parameters": {
+        "prompt": "=Veuillez évaluer l'email suivant pour déterminer s'il suggère la planification d'une réunion ou d'un appel :\nSujet : {{ encodeURI($json.Subject) }}\nExtrait : {{ encodeURI($json.snippet) }}\nIndiquez votre évaluation en répondant par \"true\" s'il suggère une réunion ou un appel, ou \"false\" sinon. Utilisez des minuscules pour votre réponse.\n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "b6411b14-67f6-4195-a834-60a4dc5e4851",
+      "name": "Analyseur de sortie structurée",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        880,
+        740
+      ],
+      "parameters": {
+        "jsonSchema": "{\n \"type\": \"object\",\n \"properties\": {\n \"is_appointment\": {\n \"type\": \"boolean\"\n }\n }\n}"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "96248431-290b-4fb1-94a3-714e7c0008d4",
+      "name": "Note adhésive2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        640,
+        1058.6115582634225
+      ],
+      "parameters": {
+        "width": 810.4923211935056,
+        "height": 224.60561166142082,
+        "content": "### Récupérer tous les événements Google de la requête pour le mois prochain et extraire les données pertinentes"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "48bc7c0c-0b74-418e-8c5c-6a6faf24722c",
+      "name": "Note adhésive3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1513,
+        1060
+      ],
+      "parameters": {
+        "width": 444.4130232558142,
+        "height": 220.42397542781927,
+        "content": "### Envelopper le résultat dans un objet `response` et retourner"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "a68f7b27-1891-46c7-92b2-650cc17f94d6",
+      "name": "Trier",
+      "type": "n8n-nodes-base.itemLists",
+      "position": [
+        1320,
+        1120
+      ],
+      "parameters": {
+        "options": {},
+        "operation": "sort",
+        "sortFieldsUi": {
+          "sortField": [
+            {
+              "fieldName": "sort"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "2b5b5855-6d3f-4405-9f48-5d6c4ee2475b",
+      "name": "Marquer comme lu",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        1840,
+        739
+      ],
+      "parameters": {
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "operation": "markAsRead"
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kLFedNEM8Zwkergv",
+          "name": "Gmail account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "accbe2df-367a-4bd3-a383-12ee79062e12",
+      "name": "Envoyer la réponse",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        1840,
+        539
+      ],
+      "parameters": {
+        "message": "={{ $json.output }}",
+        "options": {
+          "replyToSenderOnly": true
+        },
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}",
+        "operation": "reply"
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "kLFedNEM8Zwkergv",
+          "name": "Gmail account"
+        }
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "66d62337-d0c1-4744-b169-8e95c1d1492a",
+      "name": "Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1400,
+        539
+      ],
+      "parameters": {
+        "text": "=Expéditeur : {{ $('Gmail Trigger').item.json.From }}\\nSujet : {{ $('Gmail Trigger').item.json.Subject }}\\nTexte de l'email : {{ $('Gmail Trigger').item.json.snippet }}",
+        "options": {
+          "systemMessage": "=Vous êtes un assistant de planification d'emails. En vous basant sur l'email reçu, vérifiez ma disponibilité et proposez une réponse appropriée.  \nVisez à obtenir une heure précise, plutôt qu'un simple jour. Lors de la vérification de ma disponibilité, assurez-vous qu'il y ait suffisamment de temps entre les réunions.  \nSi je ne suis pas disponible, proposez TOUJOURS une nouvelle heure basée sur ma disponibilité. Lors de la proposition d'une nouvelle heure, laissez toujours un tampon de 15 minutes après la réunion précédente.  \nLa date et l'heure actuelles sont : {{ $now.toISO() }}."
+        }
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": false,
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "0cf0768b-ddc0-42a3-9c84-f93d43c66dc7",
+  "connections": {
+    "Trier": {
+      "main": [
+        [
+          {
+            "node": "Formater la réponse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent": {
+      "main": [
+        [
+          {
+            "node": "Envoyer la réponse",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Marquer comme lu",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Classer le rendez-vous",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chat OpenAI1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déclencheur Gmail": {
+      "main": [
+        [
+          {
+            "node": "Classer le rendez-vous",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outil de workflow": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formater la réponse": {
+      "main": [
+        [
+          {
+            "node": "Convertir la réponse en chaîne",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar": {
+      "main": [
+        [
+          {
+            "node": "Filtrer uniquement les confirmés avec heure définie",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classer le rendez-vous": {
+      "main": [
+        [
+          {
+            "node": "Est-ce une demande de rendez-vous",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Est-ce une demande de rendez-vous": {
+      "main": [
+        [
+          {
+            "node": "Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exécuter le déclencheur de workflow": {
+      "main": [
+        [
+          {
+            "node": "Google Calendar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyseur de sortie structurée": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Classer le rendez-vous",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraire début, fin et nom": {
+      "main": [
+        [
+          {
+            "node": "Trier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrer uniquement les confirmés avec heure définie": {
+      "main": [
+        [
+          {
+            "node": "Extraire début, fin et nom",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

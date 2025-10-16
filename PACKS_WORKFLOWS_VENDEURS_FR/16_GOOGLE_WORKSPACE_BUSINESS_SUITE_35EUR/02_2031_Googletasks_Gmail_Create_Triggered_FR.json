@@ -1,0 +1,117 @@
+{
+  "id": "z0C6H2kYSgML2dib",
+  "meta": {
+    "instanceId": "2ac84bf1f440a0e879aa6d91666aa16b413615a793da24a417a70de20243c4ba",
+    "templateCredsSetupCompleted": true
+  },
+  "name": "📦 Nouvel Email ➔ Créer une Tâche Google",
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "fdba3386-940b-4ca4-81a9-c76e363a7227",
+      "name": "Déclencheur Gmail",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "position": [
+        60,
+        0
+      ],
+      "parameters": {
+        "filters": {
+          "q": "label:To-Do"
+        },
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "authentication": "serviceAccount"
+      },
+      "credentials": {
+        "googleApi": {
+          "id": "6u0XyjLYbWGHq1M4",
+          "name": "Gmail account"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "6973ee87-995d-40b2-aab3-12af2a34ea7e",
+      "name": "Google Tasks",
+      "type": "n8n-nodes-base.googleTasks",
+      "position": [
+        280,
+        0
+      ],
+      "parameters": {
+        "title": "={{$json[\"subject\"]}}",
+        "additionalFields": {
+          "notes": "={{$json[\"snippet\"]}}",
+          "dueDate": "={{ $now.plus(1, day).toLocaleString() }}"
+        }
+      },
+      "credentials": {
+        "googleTasksOAuth2Api": {
+          "id": "bwDydGxO2qvAXRCo",
+          "name": "Google Tasks account"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "d5f1c380-04dc-4638-8d8f-59535a5ea531",
+      "name": "Note Autocollante",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -60,
+        -100
+      ],
+      "parameters": {
+        "width": 600,
+        "height": 280,
+        "content": "## 📦 📦 Nouvel Email → Créer une Tâche dans Google Tasks\nCréer une tâche dans Google Tasks à chaque réception d'un nouvel email avec le label \"To Do\"."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "b0ac6967-b805-4f72-981f-51270cb17dbe",
+      "name": "Note Autocollante1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -60,
+        200
+      ],
+      "parameters": {
+        "width": 600,
+        "height": 200,
+        "content": "## Configuration Requise :\nAssurez-vous que le label Gmail \"To-Do\" existe. (Vous pouvez le créer manuellement dans les paramètres de Gmail s'il n'existe pas.)\n\nConnectez vos comptes Gmail et Google Tasks via OAuth2 dans les identifiants n8n.\n\nAccordez les autorisations nécessaires pour lire les emails et gérer les tâches."
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": false,
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "16d1e0a6-b60b-4190-a74b-c5bd7626cfdb",
+  "connections": {
+    "Déclencheur Gmail": {
+      "main": [
+        [
+          {
+            "node": "Google Tasks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

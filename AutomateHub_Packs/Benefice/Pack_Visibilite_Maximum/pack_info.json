@@ -1,0 +1,19 @@
+{
+  "name": "Pack_Visibilite_Maximum",
+  "type": "Benefice",
+  "description": "\ud83d\udce2 Faites-vous conna\u00eetre sur tous les canaux",
+  "prix": 139,
+  "workflow_count": 110,
+  "workflows": [
+    "Extract,_Split_and_Process_File_Content_with_AI.json",
+    "YouTube_Video_Updates_to_Telegram_Channel.json",
+    "Email_Processing_and_AI-Powered_Content_Analysis_1.json",
+    "Scheduled_YouTube_Video_Posting_to_Twitter.json",
+    "Analyze_Suspicious_Email_Contents_with_ChatGPT_Vision_complex_18nodes.json",
+    "PDF_to_WordPress_Automated_Content_with_Approval.json",
+    "process_youtube_telegram.json",
+    "Analyze_&_Sort_Suspicious_Email_Contents_with_ChatGPT_complex_25nodes.json",
+    "Email_Processing_and_AI-Powered_Content_Analysis.json",
+    "Extract_and_Process_File_Content_with_AI_Assistance.json"
+  ]
+}

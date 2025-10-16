@@ -1,0 +1,10 @@
+{
+  "parameters": {
+    "jsCode": "// Créer un fichier .eml pour le brouillon\nconst emailData = $node[\"Lookup for Send\"].json;\nconst draft = $json.brouillon;\n\nconst emlContent = `From: greg@agsteeltrading.com\nTo: ${emailData.Nom}\nSubject: Re: ${emailData[\"Email Reçu\"].split('\\n')[0]}\nDate: ${new Date().toUTCString()}\nMessage-ID: <${Date.now()}@agsteeltrading.com>\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: quoted-printable\nX-Unsent: 1\n\n${draft}`;\n\nreturn [{\n  json: {\n    emlContent,\n    filename: `brouillon-${$json.mailId}.eml`,\n    mailId: $json.mailId,\n    chatId: $json.chatId\n  }\n}];"
+  },
+  "id": "create-eml",
+  "name": "Create EML Draft",
+  "type": "n8n-nodes-base.code",
+  "typeVersion": 2,
+  "position": [1050, 1000]
+}

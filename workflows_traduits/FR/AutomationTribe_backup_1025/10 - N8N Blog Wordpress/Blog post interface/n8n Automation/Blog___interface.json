@@ -1,0 +1,1317 @@
+{
+  "name": "Blog - interface",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "d70e2726-3293-48ba-9675-bfd23cde889c",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -920,
+        -20
+      ],
+      "id": "9a8a42ea-7c3a-426b-aa59-b95eee724fc1",
+      "name": "Webhook",
+      "webhookId": "d70e2726-3293-48ba-9675-bfd23cde889c"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1260,
+        -540
+      ],
+      "id": "46ad06a3-e29c-462d-8bf2-934a9da04951",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Generate 10 unique blog post ideas based on the following topic: {{ $json.body.prompt }}. \n\nProvide the output in the following JSON format:\n\n{\n  \"ideas\": [\n    {\"title\": \"Title 1\"},\n    {\"title\": \"Title 2\"},\n    {\"title\": \"Title 3\"},\n    {\"title\": \"Title 4\"},\n    {\"title\": \"Title 5\"},\n    {\"title\": \"Title 6\"},\n    {\"title\": \"Title 7\"},\n    {\"title\": \"Title 8\"},\n    {\"title\": \"Title 9\"},\n    {\"title\": \"Title 10\"}\n  ]\n}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -220,
+        -540
+      ],
+      "id": "7a7b2ba7-6e4d-42c5-ad5f-66edd4b819d0",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "generate_ideas",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "0e5a7b1d-2cef-441d-beff-e1ad15628096"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Generate ideas"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5244c20c-4be2-44a1-a368-0c37e97cc2af",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "generate_post_content",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Generate post content"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cee1e9d1-7c60-4805-b1a2-fc8d4eb943fb",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "generate_image_prompt",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Generate image prompt"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a5c6e9f6-43af-4e25-afb2-9ceb397fbd4f",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "generate_image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Generate Image"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ba529a37-fc3e-4e28-aceb-ce48ee2f26c2",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "publish",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Publish"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "afe1c9bc-23af-4e15-b20a-691a5a5f3912",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "share_multi_platform",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Share multi platform"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -700,
+        -83
+      ],
+      "id": "7c2d2ba2-f7a4-409b-bea1-d06f476a6ae6",
+      "name": "Interrupteur"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an expert SEO copywriter and content strategist tasked with generating a comprehensive, well-structured, and engaging first draft for a blog post, along with optimized SEO elements, and formatting the final output as a specific JSON structure.\n\n**Inputs:**\n*   **Topic Title:** \"{{ $json.body.title }}\"\n*   **Target Audience:** {{ $json.body.audience }}\n*   **Desired Tone:** {{ $json.body.tone }}\n*   **Desired Length (Approx. Words):** {{ $json.body.post_length }}\n*   **Reference Link 1:** {{ $json.body.reference_link_1 }}\n*   **Reference Link 2:** {{ $json.body.reference_link_2 }}\n*   **Context Image URL 1:** {{ $json.body.context_image_url_1 }}\n*   **Context Image URL 2:** {{ $json.body.context_image_url_2 }}\n\n**Core Task Instructions:**\n\n1.  **Generate Blog Post Content (for `post_content` key):**\n    *   **Length:** Generate HTML content aiming for the word count corresponding to **Desired Length**:\n        *   `500`: ~400-600 words.\n        *   `1000`: ~800-1200 words.\n        *   `1500`: ~1300-1700 words.\n        *   `2000`: ~1800-2200 words.\n        *   `2500`: ~2300-2700 words.\n        Adjust the depth and number of points discussed accordingly.\n    *   **Structure (within the HTML):**\n        *   **Introduction:** Compelling hook relevant to **Topic Title**, introduce topic/outline for **Target Audience**, maintain **Desired Tone**.\n        *   **Table of Contents (TOC):** Immediately after intro, include `<h2>Table of Contents</h2>` followed by a `<ul>` linking to each main H2 ID (e.g., `<li><a href=\"#section-id\">Section Title</a></li>`).\n        *   **Main Body:** Use relevant H2 headings. **Each H2 MUST have a unique, URL-friendly `id` attribute** (e.g., `id=\"key-strategies\"`). Use H3s for sub-sections (no IDs needed). Use lists (`<ul>`, `<ol>`) for clarity. Ensure logical flow.\n        *   **Emphasis:** Use `<strong>` and `<em>` sparingly and purposefully.\n        *   **Readability:** Clear, concise language for the **Target Audience**/**Desired Tone**. Short paragraphs (2-4 sentences).\n        *   **Conclusion:** Summarize main points, provide takeaway or call to action.\n        *   **Frequently Asked Questions (FAQ):** After conclusion, add `<h2>Frequently Asked Questions</h2>` with 2-4 relevant Q&As structured as `<p><strong>Question?</strong></p><p>Answer.</p>`.\n    *   **Incorporate Provided Links & Images:**\n        *   **Pair 1:** If **BOTH** Context Image 1 & Reference Link 1 exist, embed image wrapped in link: `<a href=\"{{ $json.body.reference_link_1 }}\"><img src=\"{{ $json.body.context_image_url_1 }}\" alt=\"...\"></a>`. If **ONLY** Image 1, embed `<img src=\"...\" alt=\"...\">`. If **ONLY** Link 1, use as text link `<a href=\"...\">...</a>`.\n        *   **Pair 2:** Apply same logic for Image 2 & Link 2, placing at a *different* relevant location if generated.\n        *   **Placement:** Integrate naturally within the main body HTML.\n    *   **HTML Formatting:** Use only clean, standard tags (`<p>`, `<h2 id=\"...\">`, `<h3>`, `<ul>`, `<ol>`, `<li>`, `<strong>`, `<em>`, `<a href=\"...\">`, `<img src=\"...\" alt=\"...\">`). No `<html>`, `<head>`, `<body>`, CSS. Ensure well-formed HTML fragment.\n\n2.  **Generate SEO Elements (based on generated content):**\n    *   **Suggested Title (`suggested_title` key):** Create an SEO-optimized title suggestion. Aim for under 60 characters, include primary keywords naturally, be clear and compelling.\n    *   **Meta Description (`meta_description` key):** Write an engaging meta description. **Must** be strictly between 140 and 160 characters. Summarize the post, include keywords, and encourage clicks.\n    *   **Tags (`tags` key):** Provide a JSON array of 5-7 relevant keywords and tags. Focus on search terms.\n\n**CRITICAL OUTPUT REQUIREMENT - JSON FORMAT:**\nYou MUST format your **entire output** as a **single, valid JSON object**. The structure must be exactly as follows, containing these four keys:\n\n```json\n{\n  \"post_content\": \"YOUR_GENERATED_HTML_BLOG_POST_AS_A_SINGLE_JSON_STRING\",\n  \"suggested_title\": \"YOUR_GENERATED_SEO_TITLE_SUGGESTION\",\n  \"meta_description\": \"YOUR_GENERATED_META_DESCRIPTION\",\n  \"tags\": [\"tag1\", \"tag2\", \"tag3\", \"tag4\", \"tag5\"]\n}\n\n\n**Key Changes in the Prompt:**\n\n1.  **Combined Task:** The main task description now explicitly includes generating the post *and* SEO elements.\n2.  **SEO Instructions Added:** A new section (#2) is added to the \"Core Task Instructions\" specifically detailing the generation requirements for `suggested_title`, `meta_description`, and `tags`.\n3.  **Updated Output Requirement:** The \"CRITICAL OUTPUT REQUIREMENT\" section and the example JSON structure are updated to reflect the *new* required format with all four keys: `post_content`, `suggested_title`, `meta_description`, and `tags`.\n4.  **Data Types Specified:** Explicitly states the expected data type for each key in the JSON output instructions (string, string, array of strings).\n5.  **Clarity:** Maintained the clear structure and emphasis on the final JSON format.\n\n**Frontend JavaScript:**\n\nYour existing JavaScript for the `generatePostBtn` click listener already handles the desired output format (`{ post_content, meta_description, tags }`). You don't need to change the JavaScript for this specific modification, assuming your backend now returns this combined structure. The `generate_seo` button and its handler are completely removed/no longer needed."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -200,
+        -320
+      ],
+      "id": "b9fff50c-16eb-448a-bbab-ffff916e60b4",
+      "name": "OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "75c28640-9af9-40c5-b9ae-4b884c6850d1",
+              "name": "post_content",
+              "value": "={{ $json.message.content.post_content }}",
+              "type": "string"
+            },
+            {
+              "id": "db8b2f46-61ff-4a7d-8463-bda980b1f827",
+              "name": "message.content.meta_description",
+              "value": "={{ $json.message.content.meta_description }}",
+              "type": "string"
+            },
+            {
+              "id": "a1e073ce-3714-4436-b937-d8e7b2a6978d",
+              "name": "message.content.tags",
+              "value": "={{ $json.message.content.tags }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        820,
+        -320
+      ],
+      "id": "191dc887-f96e-4cab-a5b4-378c81f9626a",
+      "name": "Modifier les champs"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are an AI assistant specialized in creating effective image generation prompts.\nAnalyze the following blog post content:\n\n{{ $json.body.content }}\n\nBased on the main themes, keywords, and overall message of the text, generate ONE concise and descriptive prompt (ideally under 30 words) suitable for an AI image generator (like DALL-E, Midjourney, Stable Diffusion) to create a relevant thumbnail or feature image for this blog post.\n\nCRITICAL OUTPUT REQUIREMENT: Format your entire output as a single, valid JSON object containing exactly one key named \"image_prompt\". The value associated with this key MUST be the generated image prompt string.\n\nExample Output Structure:\n{\n  \"image_prompt\": \"A visually appealing graphic representing the core concept discussed in the text.\"\n}\n\nDo NOT include any explanations, apologies, introductory text, or markdown formatting. Your response MUST start directly with `{` and end directly with `}`. Generate only the valid JSON object containing the image prompt string now."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -200,
+        -100
+      ],
+      "id": "89e84e18-2f69-441e-8f9f-eb0fd454a980",
+      "name": "OpenAI2",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e45a856c-9ee7-40e8-af03-b1ddf8a6bd80",
+              "name": "image_prompt",
+              "value": "={{ $json.message.content.image_prompt }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        820,
+        -100
+      ],
+      "id": "138e1f57-540d-41bc-8298-cfbab55d6f06",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "=You are an AI assistant specialized in creating effective image generation prompts by combining user input with optional style parameters.\n\n**Base Prompt provided by user:**\n{{ $json.body.prompt }}\n\n**Optional Enhancements:**\n*   **Style:** {{ $json.body.style || 'Default' }}\n*   **Mood:** {{ $json.body.mood || 'Default' }}\n*   **(Resolution/Size is handled by the API call parameters, not needed in the prompt text itself)**\n\n**Task:**\n1.  Start with the **Base Prompt**.\n2.  If **Style** is provided (and not 'Default'), incorporate it into the prompt (e.g., append \", in a [Style] style\", or weave it in naturally).\n3.  If **Mood** is provided (and not 'Default'), incorporate it into the prompt (e.g., append \", with a [Mood] mood/atmosphere\", or weave it in).\n4.  Refine the combined text into a single, coherent, and effective prompt suitable for AI image generators (like DALL-E 3). Aim for clarity and descriptiveness.\n\n**CRITICAL: Your final output MUST be the combined and refined prompt text ONLY.** Do NOT include explanations, labels, or any other text.\n\n**Generate the final image prompt string now.**",
+        "options": {
+          "size": "={{ $('Webhook').item.json.body.resolution }}",
+          "returnImageUrls": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -180,
+        80
+      ],
+      "id": "73d30ca0-f180-45d4-8975-06aff5267e73",
+      "name": "OpenAI3",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ { \"image_url\": $json.url } }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        820,
+        80
+      ],
+      "id": "43aad928-3008-4203-bd8a-6a808ae8263a",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "title": "={{ $('Switch').item.json.body.data.title }}",
+        "additionalFields": {
+          "authorId": 2,
+          "content": "={{ $('Switch').item.json.body.data.content }}",
+          "status": "publish",
+          "categories": [
+            1
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        280,
+        260
+      ],
+      "id": "04d8c9b8-3d3b-421d-85a0-e3ed821e198d",
+      "name": "Wordpress",
+      "credentials": {
+        "wordpressApi": {
+          "id": "n8nsFnR5bNZ96duC",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Download image').item.json.blog_url }}wp-json/wp/v2/media/{{ $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "={{ $('Switch').item.json.body.data.title }}"
+            },
+            {
+              "name": "slug",
+              "value": "={{ $('Switch').item.json.body.data.title }}"
+            },
+            {
+              "name": "alt_text",
+              "value": "={{ $('Switch').item.json.body.data.thumbnail_prompt }}"
+            },
+            {
+              "name": "caption",
+              "value": "={{ $('Switch').item.json.body.data.description }}"
+            },
+            {
+              "name": "description",
+              "value": "={{ $('Switch').item.json.body.data.description }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        100,
+        260
+      ],
+      "id": "684dc099-6ccd-48ac-866c-bcd909f67719",
+      "name": "Set image SEO",
+      "credentials": {
+        "wordpressApi": {
+          "id": "n8nsFnR5bNZ96duC",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Edit Fields4').item.json.blog_url }}wp-json/wp/v2/posts/{{ $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "excerpt",
+              "value": "={{ $('Switch').item.json.body.data.description }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        260
+      ],
+      "id": "699cb506-f2af-47b0-9451-48c7b80d0a5c",
+      "name": "Wp Excerpt",
+      "credentials": {
+        "wordpressApi": {
+          "id": "n8nsFnR5bNZ96duC",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Edit Fields4').item.json.blog_url }}wp-json/wp/v2/posts/{{ $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "featured_media",
+              "value": "={{ $('Upload media on WP3').item.json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        620,
+        260
+      ],
+      "id": "65504599-a1b7-47e8-9ad6-43ffd4f5d7bc",
+      "name": "Set Featured Image",
+      "credentials": {
+        "wordpressApi": {
+          "id": "n8nsFnR5bNZ96duC",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.blog_url }}wp-json/wp/v2/media",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "content-disposition",
+              "value": "=attachment; filename={{ $binary.data.fileName }}.{{ $binary.data.fileExtension }}"
+            },
+            {
+              "name": "content-type",
+              "value": "={{ $binary.data.mimeType }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "=data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -80,
+        260
+      ],
+      "id": "f930fcda-24fd-483c-827b-f6d19de544f5",
+      "name": "Upload media on WP3",
+      "credentials": {
+        "wordpressApi": {
+          "id": "n8nsFnR5bNZ96duC",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Instagram }}\",\n    \"content\": {\n      \"text\": \"{{ $('Switch').item.json.body.description }} {{ $('Switch').item.json.body.live_url }}\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ],\n      \"platform\": \"instagram\"\n    },\n    \"target\": {\n      \"targetType\": \"instagram\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        440
+      ],
+      "id": "c0d29c7e-4975-4f9f-9566-67ec449f9df0",
+      "name": "Instagram"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Pinterest }}\",\n    \"content\": {\n      \"text\": \"{{ $('Webhook').item.json.body.title }} {{ $('Webhook').item.json.body.live_url }}\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ],\n      \"platform\": \"pinterest\"\n    },\n    \"target\": {\n      \"targetType\": \"pinterest\",\n      \"boardId\": \"{{ $('Set ID').item.json['Pinterest-Board-id'] }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        1640
+      ],
+      "id": "e7d858df-28a6-4753-b887-c623552f10ef",
+      "name": "Pinterest"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.X }}\",\n    \"content\": {\n      \"text\": \"{{ $('Webhook').item.json.body.description }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"twitter\"\n    },\n    \"target\": {\n      \"targetType\": \"twitter\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        640
+      ],
+      "id": "5f868c07-b4a5-49b8-ae05-e674d1a88fd4",
+      "name": "Twitter"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.LinkedIN }}\",\n    \"content\": {\n      \"text\": \"{{ $('Webhook').item.json.body.description }} {{ $('Webhook').item.json.body.live_url }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"linkedin\"\n    },\n    \"target\": {\n      \"targetType\": \"linkedin\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        840
+      ],
+      "id": "c5d97a5e-bd9e-41ff-9427-0cd78b800b6a",
+      "name": "LinkedIn"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.LinkedIN }}\",\n    \"content\": {\n      \"text\": \"{{ $('Webhook').item.json.body.title }} {{ $('Webhook').item.json.body.description }} {{ $('Webhook').item.json.body.live_url }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"linkedin\"\n    },\n    \"target\": {\n      \"targetType\": \"linkedin\",\n      \"pageId\": \"{{ $('Set ID').item.json['LinkedIn-page-ID'] }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        1040
+      ],
+      "id": "92e27a2e-1fd9-4795-a5a7-0fa8e684bf95",
+      "name": "LinkedIn Page"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json['FB-Account'] }}\",\n    \"content\": {\n      \"text\": \"{{ $('Webhook').item.json.body.title }} {{ $('Webhook').item.json.body.description }} {{ $('Webhook').item.json.body.live_url }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"facebook\"\n    },\n    \"target\": {\n        \"targetType\": \"facebook\",\n        \"pageId\": \"{{ $('Set ID').item.json['FB-Page-Sumobundle'] }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        1240
+      ],
+      "id": "65d0229a-a702-4068-8f41-235312e042b5",
+      "name": "Fb Account"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Threads }}\",\n    \"content\": {\n      \"text\": \"{{ $('Webhook').item.json.body.title }} {{ $('Webhook').item.json.body.description }} {{ $('Webhook').item.json.body.live_url }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"threads\"\n    },\n    \"target\": {\n      \"targetType\": \"threads\",\n      \"replyControl\": \"everyone\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        1440
+      ],
+      "id": "4d9a9bd9-385b-42d5-b129-14938b18b311",
+      "name": "Threads"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/instagram.png?v=1742473316)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1000,
+        420
+      ],
+      "typeVersion": 1,
+      "id": "a36e97df-e05b-440f-88ed-aabda21e6924",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/x.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1000,
+        620
+      ],
+      "typeVersion": 1,
+      "id": "81cd1f5d-d9cb-42e8-8394-fd45099887a1",
+      "name": "Sticky Note2"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/linkedin.png?v=1742473318)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1000,
+        820
+      ],
+      "typeVersion": 1,
+      "id": "965b0af9-17ab-4da3-89c7-614a9d467b56",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/linkedin.png?v=1742473318)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1000,
+        1020
+      ],
+      "typeVersion": 1,
+      "id": "479c98c1-7cd1-4ab4-b57c-65ffc2742430",
+      "name": "Sticky Note4"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/facebook.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1000,
+        1220
+      ],
+      "typeVersion": 1,
+      "id": "a232d4ec-c2d6-4bf8-84ab-903fc54e1c72",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/threads.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1000,
+        1420
+      ],
+      "typeVersion": 1,
+      "id": "dc68fc47-1ed4-41d6-8e81-71c08a757f29",
+      "name": "Sticky Note8"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/pinterest.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1000,
+        1640
+      ],
+      "typeVersion": 1,
+      "id": "ea7d2641-b5af-4905-8ba5-f75b5d8590bc",
+      "name": "Sticky Note9"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"Blotato-API\": \"blt_i-Your-API-Here\",\n  \"Instagram\": \"1238\",\n  \"Pinterest\": \"258\",\n  \"Pinterest-Board-id\": \"914864180493348767\",\n  \"X\": \"993\",\n  \"LinkedIN\": \"1180\",\n  \"LinkedIn-page-ID\": \"6399836\",\n  \"Threads\": \"404\",\n  \"FB-Account\": \"1343\",\n  \"FB-Page-Stock-Graphics\": \"1493652624208458\",\n  \"FB-Page-Bundlestorm\": \"1082239155235205\",\n  \"FB-Page-Webmaster-Deals\": \"234802546593504\",\n  \"FB-Page-Sumobundle\": \"121593267596142\",\n  \"Fb-Page-Mimozastudio\": \"103680835963722\",\n  \"Youtube\": \"486\",\n  \"tiktok\": 1529\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -420,
+        1040
+      ],
+      "id": "e7b74b35-08c5-40e7-ba77-fff41eb9d9fa",
+      "name": "Set ID"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/media",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $json.url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        120,
+        1040
+      ],
+      "id": "a9cf16f2-65d8-4cc5-9b8c-9141363c5235",
+      "name": "HTTP Request4"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"blog_url\": \"https://www.stock-graphics.com/blog/\"\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -440,
+        260
+      ],
+      "id": "4803643a-d7da-4a02-8c24-345f37234ec9",
+      "name": "Edit Fields4"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Switch').item.json.body.data.thumbnail_url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -260,
+        260
+      ],
+      "id": "fac887be-980e-44f3-852f-fc30f67f1be1",
+      "name": "Download image"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={ \"success\": true, \"live_url\": \"{{ $json.guid.raw }}\" }\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        820,
+        260
+      ],
+      "id": "3b2066e6-3619-4944-ae44-bc756958ae81",
+      "name": "Edit Fields7"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.stock-graphics.com/api/convert-to-url.php",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $('Webhook').item.json.body.thumbnail_url }}"
+            },
+            {
+              "name": "name",
+              "value": "={{ $('Webhook').item.json.body.title }}"
+            },
+            {
+              "name": "folder",
+              "value": "converted"
+            },
+            {
+              "name": "height"
+            },
+            {
+              "name": "folder",
+              "value": "api/converted"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -180,
+        1040
+      ],
+      "id": "61e42c82-1000-4a19-8136-e481767a2ff1",
+      "name": "HTTP Request3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OpenAI1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OpenAI2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OpenAI3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wordpress": {
+      "main": [
+        [
+          {
+            "node": "Wp Excerpt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set image SEO": {
+      "main": [
+        [
+          {
+            "node": "Wordpress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wp Excerpt": {
+      "main": [
+        [
+          {
+            "node": "Set Featured Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Featured Image": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload media on WP3": {
+      "main": [
+        [
+          {
+            "node": "Set image SEO",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Instagram": {
+      "main": [
+        []
+      ]
+    },
+    "Set ID": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request4": {
+      "main": [
+        [
+          {
+            "node": "LinkedIn",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Twitter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LinkedIn Page",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fb Account",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Threads",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Pinterest",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Instagram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Download image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download image": {
+      "main": [
+        [
+          {
+            "node": "Upload media on WP3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields7": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "cd63d3fa-9b85-4d33-84d7-50b2cf3497d5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+  },
+  "id": "WKSyB8l7BwJPIV4t",
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

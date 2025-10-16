@@ -1,0 +1,148 @@
+{
+  "name": "Email Telegram Management - Extended",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {
+          "forceReconnect": 60
+        }
+      },
+      "id": "8a33a0fe-ee96-48a0-9fea-98ece509a32f",
+      "name": "Email Trigger",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2,
+      "position": [32, 3120],
+      "credentials": {
+        "imap": {
+          "id": "TJJitmAXuDLh66Uv",
+          "name": "IMAP - AudelalIA"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\n  // Génère un ID unique court (timestamp + 3 caractères aléatoires)\n  const timestamp = Date.now().toString(36); // Base 36 pour réduire la longueur\n  const random = Math.random().toString(36).substring(2, 5);\n  const shortId = `${timestamp}${random}`; // ex: \"lxis1k2abc\"\n\n  const emailData = {\n    id: shortId, // ID court pour les callbacks Telegram\n    messageId: items[0].json.metadata[\"message-id\"],\n    from: items[0].json.from,\n    fromName: items[0].json.from,\n    subject: items[0].json.subject || \"Sans objet\",\n    body:\n      items[0].json.textPlain || items[0].json.textHtml.replace(/<[^>]*>/g, \"\"),\n    date: new Date(items[0].json.date).toLocaleString(\"fr-FR\"),\n    hasAttachments:\n      items[0].json.attachments && items[0].json.attachments.length > 0,\n  };\n\n  return { emailData };"
+      },
+      "id": "4cce50d7-cfa1-4201-ab5d-f42a3b27834c",
+      "name": "Format Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [272, 3120]
+    },
+    {
+      "parameters": {
+        "chatId": "=621354826",
+        "text": "={{ $json.output.message }}",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "Répondre",
+                    "additionalFields": {
+                      "callback_data": "=reply_{{ $json.output.ID }}"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "18ca6477-3c16-49d8-80f9-f8a9b38dd642",
+      "name": "Send to Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.1,
+      "position": [896, 3120],
+      "webhookId": "dbdccbe4-ecae-49f2-b18a-0844193cb88e",
+      "credentials": {
+        "telegramApi": {
+          "id": "EUimFAG839eeMHEO",
+          "name": "AG Steel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "updates": ["callback_query"]
+      },
+      "id": "telegram-callback-trigger",
+      "name": "Telegram Callback Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [250, 2600],
+      "credentials": {
+        "telegramApi": {
+          "id": "EUimFAG839eeMHEO",
+          "name": "AG Steel"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.callback_query.data}}",
+              "operation": "startsWith",
+              "value2": "reply_"
+            }
+          ]
+        }
+      },
+      "id": "if-reply-button",
+      "name": "IF Reply Button",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 2600]
+    },
+    {
+      "parameters": {
+        "updates": ["message"]
+      },
+      "id": "telegram-message-trigger",
+      "name": "Telegram Message Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [250, 2200],
+      "credentials": {
+        "telegramApi": {
+          "id": "EUimFAG839eeMHEO",
+          "name": "AG Steel"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Email Trigger": {
+      "main": [
+        [
+          {
+            "node": "Format Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Callback Trigger": {
+      "main": [
+        [
+          {
+            "node": "IF Reply Button",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionTimeout": 120
+  }
+}

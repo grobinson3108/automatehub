@@ -1,0 +1,282 @@
+{
+  "name": "2.1 - Automation Email Complète",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "labelIds": ["INBOX"],
+          "q": "is:unread"
+        },
+        "format": "resolved"
+      },
+      "id": "gmail-trigger-201",
+      "name": "Nouveaux Emails",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Analyse intelligente des emails\nconst emailData = $input.first().json;\n\n// Analyse du contenu\nconst subject = emailData.subject.toLowerCase();\nconst body = emailData.textPlain ? emailData.textPlain.toLowerCase() : '';\nconst from = emailData.from.address;\n\n// Détection automatique du type d'email\nlet emailType = 'general';\nlet priority = 'normale';\nlet action = 'archiver';\n\n// Mots-clés pour classification\nconst urgentKeywords = ['urgent', 'asap', 'immédiat', 'critique', 'problème'];\nconst supportKeywords = ['support', 'aide', 'problème', 'bug', 'erreur'];\nconst salesKeywords = ['devis', 'tarif', 'prix', 'achat', 'commande'];\n\n// Classification intelligente\nif (urgentKeywords.some(keyword => subject.includes(keyword) || body.includes(keyword))) {\n  priority = 'haute';\n  action = 'notifier_immediat';\n}\n\nif (supportKeywords.some(keyword => subject.includes(keyword) || body.includes(keyword))) {\n  emailType = 'support';\n  action = 'rediriger_support';\n}\n\nif (salesKeywords.some(keyword => subject.includes(keyword) || body.includes(keyword))) {\n  emailType = 'commercial';\n  action = 'rediriger_commercial';\n}\n\n// Analyser l'expéditeur\nconst isKnownSender = from.includes('@entreprise.com') || from.includes('@partenaire.com');\n\nreturn [{\n  json: {\n    ...emailData,\n    classification: {\n      type: emailType,\n      priority: priority,\n      action: action,\n      isKnownSender: isKnownSender,\n      processedAt: new Date().toISOString()\n    }\n  }\n}];"
+      },
+      "id": "analyze-email-201",
+      "name": "Analyser Email",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "options": {
+          "values": {
+            "string": [
+              {
+                "name": "action",
+                "value": "={{ $json.classification.action }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "switch-action-201",
+      "name": "Routage par Action",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "subject": "🚨 EMAIL URGENT - {{ $json.subject }}",
+        "message": "Un email urgent a été reçu:\n\nExpéditeur: {{ $json.from.address }}\nSujet: {{ $json.subject }}\nReçu le: {{ $json.date }}\n\nPriorité: {{ $json.classification.priority }}\nType: {{ $json.classification.type }}\n\nAction requise immédiatement !",
+        "toList": "manager@entreprise.com",
+        "options": {
+          "ccList": "support@entreprise.com"
+        }
+      },
+      "id": "urgent-notification-201",
+      "name": "Notification Urgente",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "subject": "📞 Nouveau ticket support - {{ $json.subject }}",
+        "message": "Nouveau ticket support reçu:\n\nClient: {{ $json.from.address }}\nSujet: {{ $json.subject }}\nContenu: {{ $json.textPlain }}\n\nTicket créé automatiquement.",
+        "toList": "support@entreprise.com",
+        "options": {}
+      },
+      "id": "support-redirect-201",
+      "name": "Redirection Support",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "subject": "💰 Opportunité commerciale - {{ $json.subject }}",
+        "message": "Nouvelle opportunité commerciale:\n\nProspect: {{ $json.from.address }}\nSujet: {{ $json.subject }}\nMessage: {{ $json.textPlain }}\n\nSuivi commercial requis.",
+        "toList": "commercial@entreprise.com",
+        "options": {}
+      },
+      "id": "commercial-redirect-201",
+      "name": "Redirection Commerciale",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "addLabels",
+        "messageId": "={{ $json.messageId }}",
+        "labelIds": ["PROCESSED"]
+      },
+      "id": "archive-processed-201",
+      "name": "Archiver Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": "VOTRE_LOG_DOCUMENT_ID",
+        "sheetName": "Email_Logs",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $json.date }}",
+            "Expéditeur": "={{ $json.from.address }}",
+            "Sujet": "={{ $json.subject }}",
+            "Type": "={{ $json.classification.type }}",
+            "Priorité": "={{ $json.classification.priority }}",
+            "Action": "={{ $json.classification.action }}",
+            "Traité_le": "={{ $json.classification.processedAt }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "log-processing-201",
+      "name": "Log Traitement",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        1250,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Nouveaux Emails": {
+      "main": [
+        [
+          {
+            "node": "Analyser Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyser Email": {
+      "main": [
+        [
+          {
+            "node": "Routage par Action",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Routage par Action": {
+      "main": [
+        [
+          {
+            "node": "Notification Urgente",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Redirection Support",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Redirection Commerciale",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Archiver Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notification Urgente": {
+      "main": [
+        [
+          {
+            "node": "Log Traitement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redirection Support": {
+      "main": [
+        [
+          {
+            "node": "Log Traitement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Redirection Commerciale": {
+      "main": [
+        [
+          {
+            "node": "Log Traitement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Archiver Email": {
+      "main": [
+        [
+          {
+            "node": "Log Traitement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2-1-automation-email-complete-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "5",
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "module-2-integrations",
+      "name": "Module 2 - Intégrations"
+    }
+  ]
+}

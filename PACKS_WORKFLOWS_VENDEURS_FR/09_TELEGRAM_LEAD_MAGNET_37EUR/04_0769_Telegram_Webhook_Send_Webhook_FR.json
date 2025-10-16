@@ -1,0 +1,1103 @@
+{
+  "meta": {
+    "instanceId": "6a2a7715680b8313f7cb4676321c5baa46680adfb913072f089f2766f42e43bd"
+  },
+  "nodes": [
+    {
+      "id": "1340d672-61c8-403e-89a7-f28e3afbc0e7",
+      "name": "Mémoire tampon de fenêtre",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        1760,
+        540
+      ],
+      "parameters": {
+        "sessionKey": "=335458847",
+        "sessionIdType": "customKey"
+      },
+      "typeVersion": 1.3
+    },
+    {
+      "id": "3c770b79-d6c5-4512-94fa-7719af6d0620",
+      "name": "Obtenir le graphique",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        1900,
+        560
+      ],
+      "parameters": {
+        "name": "getChart",
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "LCT4zHJr8LcjM6a7",
+          "cachedResultName": "Trading Agent"
+        },
+        "description": "Appelez cet outil pour obtenir une analyse d'une action demandée. L'URL générée par cet outil doit être retournée au format markdown. Par exemple, ![](url)\n\nIl sera obligatoire de passer le ticker et le style de graphique. Les deux peuvent être spécifiés par l'utilisateur. Si le style de graphique n'est pas spécifié par l'utilisateur, utilisez \"candle\" par défaut. Options possibles pour le style : [bar, candle, line, area, heikinAshi, hollowCandle, baseline, hiLo, column]",
+        "workflowInputs": {
+          "value": {
+            "ticker": "={{ $fromAI(\"ticker\") }}",
+            "chart_style": "={{ $fromAI(\"chart_style\") }}"
+          },
+          "schema": [
+            {
+              "id": "ticker",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "ticker",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "chart_style",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "chart_style",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "a44b48ac-9bfc-4988-81d7-177357971558",
+      "name": "Agent IA",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1660,
+        320
+      ],
+      "parameters": {
+        "text": "={{ $json.text }}",
+        "options": {
+          "systemMessage": "=# Aperçu  \n\nVous êtes un agent IA spécialisé dans l'analyse des actions. Vous pouvez effectuer une analyse technique en utilisant l'outil **GetChart** pour générer des graphiques boursiers.  \n\n\n# Instructions \n\n1. Commencez par offrir un accueil chaleureux et professionnel.\n2. Adoptez un style conversationnel lors de la discussion sur la finance et les marchés boursiers.\n3. Si un utilisateur demande une analyse technique d'une action, en fournissant son ticker :\n- Envoyez uniquement le ticker de l'action à l'outil GetChart.\n- Présentez l'analyse et les insights du graphique de manière conversationnelle.\n4. Lorsqu'il s'agit de sujets financiers, fournissez des explications complètes et faciles à comprendre, adaptées au niveau de connaissance de l'utilisateur.\n5. Abstenez-vous de donner des recommandations financières directes (acheter ou vendre) ou de faire des prédictions.\n\n\n## Outils  \n\n- **GetChart** : Utilisé pour générer des graphiques boursiers basés sur les tickers fournis.  \n\n## Procédure Opérationnelle Standard\n\n1. Interagissez avec l'utilisateur : Maintenez une attitude professionnelle et accessible.\n2. Effectuez l'analyse des actions :\n- Sur demande d'analyse technique, envoyez le symbole ticker de l'action à l'outil GetChart.\n- Présentez les résultats du graphique de manière claire et conversationnelle.\n3. Clarifiez les sujets financiers : Simplifiez les termes complexes en explications accessibles, adaptées au niveau de connaissance de l'utilisateur.\n4. Abstenez-vous de proposer des recommandations financières : Fournissez des informations et des analyses sans suggérer d'actions spécifiques.\n5. Vérifiez la compréhension de l'utilisateur : Posez des questions clarificatrices pour vous assurer que tous les besoins sont satisfaits."
+        },
+        "promptType": "define"
+      },
+      "typeVersion": 1.7
+    },
+    {
+      "id": "a6d405f0-52c5-4937-85cd-7ef6e4a596b6",
+      "name": "Déclencheur Telegram",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        760,
+        320
+      ],
+      "webhookId": "dbf7f0b7-5cdd-45a3-8c91-39f0665aba76",
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "UajcuBAYm5PEbptW",
+          "name": "Telegram Philipp"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "22bd61a2-45cb-4074-a027-28a9a0d327f5",
+      "name": "Envoyer l'analyse",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2040,
+        320
+      ],
+      "webhookId": "949b8c67-29b9-4714-8a42-b0e59e91ae10",
+      "parameters": {
+        "text": "={{ $json.output }}",
+        "chatId": "=335458847",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "UajcuBAYm5PEbptW",
+          "name": "Telegram Philipp"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "6f18a794-c302-47c3-8516-d14597408ae7",
+      "name": "Déclencheur d'entrée du workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        780,
+        960
+      ],
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "ticker"
+            },
+            {
+              "name": "chart_style"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "102a021b-c0bb-4bdb-bca1-a4f0f7a84687",
+      "name": "réponse",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2040,
+        960
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fdf7e016-7082-4146-9038-454139023990",
+              "name": "response",
+              "type": "string",
+              "value": "={{ $('Technical Analysis').item.json.choices[0].message.content }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "ba96d38a-5a12-44a0-927f-5893cd91ac9b",
+      "name": "Télécharger le graphique",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1440,
+        960
+      ],
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "options": {}
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "7deaf5b4-0280-46d2-b9f8-4d14a67f60b6",
+      "name": "Obtenir l'URL du graphique",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1220,
+        960
+      ],
+      "parameters": {
+        "url": "https://api.chart-img.com/v2/tradingview/advanced-chart/storage",
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        },
+        "jsonBody": "={\n  \"style\": \"{{ $json.chart_style }}\",\n  \"theme\": \"light\",\n  \"interval\": \"1W\",\n  \"symbol\": \"NASDAQ:{{ $json.ticker }}\",\n  \"override\": {\n    \"showStudyLastValue\": false\n  },\n  \"studies\": [\n    {\n      \"name\": \"Volume\",\n      \"forceOverlay\": true\n    },\n{\n      \"name\": \"Relative Strength Index\"\n    },\n{\n      \"name\": \"Stochastic RSI\"\n}\n  ]\n}",
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Go406nynVPn88QIS",
+          "name": "Header Auth account 3"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "46ebe865-b13b-4d7d-8acf-a10d78ba4b5b",
+      "name": "Envoyer le graphique",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1840,
+        960
+      ],
+      "webhookId": "a42b988a-cd3a-4cf0-8975-7a38c8b510ba",
+      "parameters": {
+        "file": "={{ $('Get Chart URL').item.json.url }}",
+        "chatId": "335458847",
+        "operation": "sendPhoto",
+        "additionalFields": {}
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "UajcuBAYm5PEbptW",
+          "name": "Telegram Philipp"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "e5a62237-af1e-42dd-befd-51aa0e0a0c08",
+      "name": "Modèle de chat OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1600,
+        540
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "9RivS2BmSh1DDBFm",
+          "name": "OpenAI Philipp"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "c3d63b6f-5908-4e64-9063-1910024b0ed4",
+      "name": "Interrupteur",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        940,
+        320
+      ],
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "Voice",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "leftValue": "={{ $json.message.voice.file_id }}",
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "Text",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "8c844924-b2ed-48b0-935c-c66a8fd0c778",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": ""
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "typeVersion": 3.2
+    },
+    {
+      "id": "1d27102b-47c9-4aa7-a93c-71699326960d",
+      "name": "Transcrire",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        1460,
+        240
+      ],
+      "parameters": {
+        "options": {},
+        "resource": "audio",
+        "operation": "transcribe"
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "9RivS2BmSh1DDBFm",
+          "name": "OpenAI Philipp"
+        }
+      },
+      "typeVersion": 1.6
+    },
+    {
+      "id": "1252b926-9965-4499-a539-3c7e2a7eb151",
+      "name": "Télécharger le fichier",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1300,
+        240
+      ],
+      "webhookId": "83bb7385-33f6-4105-8294-1a91c0ebbee5",
+      "parameters": {
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "resource": "file"
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "UajcuBAYm5PEbptW",
+          "name": "Telegram Philipp"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "3777f861-d933-4a95-af74-2e787beda709",
+      "name": "Définir le texte",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1360,
+        440
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fe7ecc99-e1e8-4a5e-bdd6-6fce9757b234",
+              "name": "text",
+              "type": "string",
+              "value": "={{ $json.message.text }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "5630eed3-7b99-400f-ad54-bf72c7e52570",
+      "name": "Définir les valeurs",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1000,
+        960
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cf5f7210-5b54-4f4a-abf7-87873be82df4",
+              "name": "ticker",
+              "type": "string",
+              "value": "={{ $json.ticker }}"
+            },
+            {
+              "id": "12a27443-a009-4bd5-b33f-bcec74aa74c7",
+              "name": "chart_style",
+              "type": "string",
+              "value": "={{ $json.chart_style }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "534cad9e-b3b8-4435-9db4-d7d22adfa305",
+      "name": "Analyse technique",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        1640,
+        960
+      ],
+      "parameters": {
+        "text": "=# Rôle Professionnel\n\nVous êtes un analyste financier, spécialisé dans l'analyse interprétative des graphiques boursiers. Votre responsabilité principale est d'examiner minutieusement les graphiques financiers fournis et de fournir des évaluations complètes de leurs dimensions techniques. Cela inclut l'examen des formations en chandelier, des indicateurs de convergence/divergence des moyennes mobiles (MACD), des modèles de volume de trading, de l'**Indice de Force Relative (RSI), du RSI Stochastique**, et du sentiment de marché prédominant. Votre analyse doit être une dissection approfondie du graphique, identifiant les zones critiques et offrant des insights pratiques.\n\nLors de l'évaluation d'un graphique boursier, assurez-vous d'inclure les éléments suivants :\n\n1. **Interprétation des motifs en chandeliers** :\n    - Reconnaître et expliquer la signification de toute formation notable de chandeliers (par exemple, avalement haussier, doji, marteau).\n    - Fournir un commentaire sur la direction actuelle du marché (à la hausse, à la baisse ou latérale).\n    - Identifier les zones potentielles de hausse ou de retracement des prix.\n\n2. **Examen de l'Indice de Force Relative (RSI)** :\n    - **Extraire la valeur numérique du RSI à partir du graphique.**\n    - Décrire la valeur actuelle du RSI et sa position sur le marché (par exemple, suracheté, survendu, neutre) **en se basant sur la valeur extraite.**\n    - Expliquer comment la valeur extraite du RSI et sa tendance soutiennent ou s'opposent à la tendance actuelle des prix.\n    - Identifier toute divergence entre les valeurs du RSI et le mouvement des prix **qui peut être discernée à partir du graphique.**\n\n3. **Examen du RSI Stochastique (Stoch RSI)** :\n    - **Extraire les valeurs numériques des lignes K et D du RSI Stochastique à partir du graphique.**\n    - Détaillez les valeurs actuelles des lignes K et D **en vous basant sur les données numériques extraites.**\n    - Analysez tout croisement ou divergence observé entre les lignes K et D **en vous basant sur les valeurs extraites et leur représentation visuelle.**\n    - Expliquez comment les relevés extraits du RSI Stochastique et leur relation soutiennent ou s'opposent à la dynamique actuelle du marché.\n\nPrésentez votre analyse avec clarté, précision et un accent sur les données. Votre objectif est de fournir aux traders et investisseurs des informations exploitables qui facilitent une prise de décision éclairée. Justifiez toujours vos conclusions par un raisonnement clair dérivé du graphique.",
+        "modelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o",
+          "cachedResultName": "GPT-4O"
+        },
+        "options": {
+          "detail": "auto"
+        },
+        "resource": "image",
+        "simplify": false,
+        "inputType": "base64",
+        "operation": "analyze"
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "9RivS2BmSh1DDBFm",
+          "name": "OpenAI Philipp"
+        }
+      },
+      "typeVersion": 1.8
+    },
+    {
+      "id": "92b4c7c2-8f0e-48a1-8ecf-01f74e612657",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        1300,
+        60
+      ],
+      "webhookId": "12a80fbc-ac59-48f3-b6fd-683d7c420995",
+      "parameters": {
+        "path": "12a80fbc-ac59-48f3-b6fd-683d7c420995",
+        "options": {},
+        "httpMethod": "POST",
+        "responseMode": "lastNode"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "e1d42095-3bcf-4841-b18c-6f8165576bc7",
+      "name": "Définir le texte1",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1460,
+        60
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fe7ecc99-e1e8-4a5e-bdd6-6fce9757b234",
+              "name": "text",
+              "type": "string",
+              "value": "={{ $json.body.text }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "5f0649d2-3f7d-42b8-a630-5dfb03035052",
+      "name": "Enregistrer le ticker",
+      "type": "n8n-nodes-base.airtableTool",
+      "position": [
+        2020,
+        540
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appXcdIeEEGCEUIti",
+          "cachedResultUrl": "https://airtable.com/appXcdIeEEGCEUIti",
+          "cachedResultName": "Trading"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "tblD0HsMed7uPgPsZ",
+          "cachedResultUrl": "https://airtable.com/appXcdIeEEGCEUIti/tblD0HsMed7uPgPsZ",
+          "cachedResultName": "Tickers"
+        },
+        "columns": {
+          "value": {
+            "Name": "={{ $fromAI(\"ticker\") }}"
+          },
+          "schema": [
+            {
+              "id": "Name",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "Name"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "operation": "create",
+        "descriptionType": "manual",
+        "toolDescription": "Utiliser l'outil lorsque l'utilisateur demande à enregistrer un ticker pour de futurs rapports"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "XT7hvl1w201jtBhx",
+          "name": "Philipp Key 2"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "b4bf95da-8be0-447c-9b83-b1a60ab95d41",
+      "name": "Boucler sur les éléments",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        1200,
+        1340
+      ],
+      "parameters": {
+        "options": {}
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "e7061b7f-8058-430d-bc3c-92efdfa84131",
+      "name": "Déclencheur de planification",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        800,
+        1340
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "4adbd0b3-8246-43a2-b1fb-114add46f35d",
+      "name": "Exécuter l'agent",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1380,
+        1420
+      ],
+      "parameters": {
+        "url": "http://localhost:5678/webhook/12a80fbc-ac59-48f3-b6fd-683d7c420995",
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "sendHeaders": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=text",
+              "value": "=Please analyze {{ $json.Name }} stocks"
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "content-type",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "59c87621-13bb-46fe-94ab-c631654ba0e0",
+      "name": "Obtenir les jetons",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        1000,
+        1340
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appXcdIeEEGCEUIti",
+          "cachedResultUrl": "https://airtable.com/appXcdIeEEGCEUIti",
+          "cachedResultName": "Trading"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "tblD0HsMed7uPgPsZ",
+          "cachedResultUrl": "https://airtable.com/appXcdIeEEGCEUIti/tblD0HsMed7uPgPsZ",
+          "cachedResultName": "Tickers"
+        },
+        "options": {},
+        "operation": "search"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "XT7hvl1w201jtBhx",
+          "name": "Philipp Key 2"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "4d44a382-8dd6-4a83-8a02-6e060feb24a8",
+      "name": "Note autocollante",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        720,
+        20
+      ],
+      "parameters": {
+        "color": 4,
+        "width": 1540,
+        "height": 780,
+        "content": "## Scénario 1 - Agent IA"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "60e58a9c-07d1-497a-b65b-8346e7d3f0ca",
+      "name": "Note adhésive3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        720,
+        1220
+      ],
+      "parameters": {
+        "width": 1540,
+        "height": 420,
+        "content": "## Scénario 2 - Analyses programmées"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "330b32f3-a965-497d-ac1f-807416cfb297",
+      "name": "Note adhésive1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        720,
+        840
+      ],
+      "parameters": {
+        "width": 1540,
+        "height": 320,
+        "content": "## Scénario 1 - Obtenir le graphique "
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "91e34e31-7a13-43b5-934d-af714b238ac7",
+      "name": "Note adhésive4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        760,
+        500
+      ],
+      "parameters": {
+        "height": 80,
+        "content": "### Remplacer la connexion Telegram"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "fdca89e7-3e31-49f2-b0ed-d703fed3803e",
+      "name": "Note adhésive5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1700,
+        700
+      ],
+      "parameters": {
+        "height": 80,
+        "content": "### Remplacer l’ID de discussion"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "01c9ecc5-6326-45b9-9f2a-863e4518893f",
+      "name": "Note adhésive6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1160,
+        860
+      ],
+      "parameters": {
+        "color": 3,
+        "width": 220,
+        "height": 80,
+        "content": "### Remplacez la clé API (en-tête = x-api-key) et les paramètres du graphique"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "322d6cc7-4793-455f-a112-e5e0f1df21d5",
+      "name": "Note adhésive7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1780,
+        860
+      ],
+      "parameters": {
+        "color": 3,
+        "width": 220,
+        "height": 80,
+        "content": "### Remplacez l’ID du chat"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "b33faeeb-d109-4984-927c-fa32878a6384",
+      "name": "Note adhésive8",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1980,
+        220
+      ],
+      "parameters": {
+        "color": 3,
+        "width": 220,
+        "height": 80,
+        "content": "### Remplacez l’ID du chat"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "6c11f9e9-f83e-42d3-9c31-3d9c4007b23a",
+      "name": "Note adhésive11",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        260,
+        620
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 330.5152611046425,
+        "height": 239.5888196628349,
+        "content": "### ... ou regardez la vidéo d’installation [11 min]\n[![Miniature Youtube](https://res.cloudinary.com/de9jgixzm/image/upload/v1740845597/Youtube%20Thumbs/Video%2022%20-%20Philipp%20Trading%20Blur.png)](https://youtu.be/94vh6hSiP9s)\n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "09704bed-c71b-4dd1-a843-eb5c2fdb568d",
+      "name": "Note adhésive9",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -40,
+        620
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 280,
+        "height": 586,
+        "content": "### Configuration\n\n1. **Préparez Airtable** :\n    - Créez une table simple pour stocker les tickers.\n\n2. **Préparez le bot Telegram** :\n    - Assurez-vous que votre bot Telegram est correctement configuré et qu’il écoute les nouveaux messages.\n\n3. **Remplacez les identifiants** :\n    - Mettez à jour tous les nœuds avec les identifiants et clés API corrects pour les services impliqués.\n\n4. **Configurez les points de terminaison API** :\n    - Assurez-vous que les URL des services de graphiques sont correctement définies pour interagir correctement avec les API correspondantes.\n\n5. **Commencez l’interaction** :\n    - Envoyez un message à votre bot pour lancer l’analyse ; spécifiez les symboles ticker et les styles de graphiques souhaités selon les besoins."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "85425ad0-4def-42bb-93e6-107102b86de6",
+      "name": "Note adhésive12",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -40,
+        20
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 636,
+        "height": 577,
+        "content": "![Logo 5min](https://res.cloudinary.com/de9jgixzm/image/upload/v1739773200/Skool%20Assets/ejm3hqnvhgwpnu2fv92s.png)\n## Comment créer un agent IA pour l'analyse technique avec N8N\n**Réalisé par [Mark Shcherbakov](https://www.linkedin.com/in/marklowcoding/) de la communauté [5minAI](https://www.skool.com/5minai)**\n\nDe nombreux traders souhaitent une analyse en temps réel des données boursières mais manquent d'expertise technique ou d'outils pour effectuer une analyse approfondie. Ce workflow permet aux utilisateurs d'interagir facilement avec un agent de trading IA via Telegram pour une analyse fluide des actions, la génération de graphiques et l'évaluation technique, tout en éliminant le besoin d'interventions manuelles.\n\nCe workflow utilise n8n pour construire un processus d'automatisation de bout en bout pour l'analyse boursière via la communication Telegram. La configuration comprend :\n- La réception des messages via un bot Telegram.\n- Le traitement des messages audio ou texte pour les requêtes de trading.\n- La transcription audio à l'aide de l'API OpenAI pour interprétation.\n- La collecte et l'affichage de graphiques basés sur les paramètres spécifiés par l'utilisateur.\n- La réalisation d'une analyse technique sur les graphiques générés.\n- L'envoi des résultats analysés via Telegram.\n\n"
+      },
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Interrupteur": {
+      "main": [
+        [
+          {
+            "node": "Télécharger le fichier",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Définir le texte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Définir le texte1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent IA": {
+      "main": [
+        [
+          {
+            "node": "Envoyer l'analyse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Définir le texte": {
+      "main": [
+        [
+          {
+            "node": "Agent IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir le graphique": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent IA",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exécuter l'agent": {
+      "main": [
+        [
+          {
+            "node": "Boucler sur les éléments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Définir le texte1": {
+      "main": [
+        [
+          {
+            "node": "Agent IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir les jetons": {
+      "main": [
+        [
+          {
+            "node": "Boucler sur les éléments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envoyer le graphique": {
+      "main": [
+        [
+          {
+            "node": "réponse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Définir les valeurs": {
+      "main": [
+        [
+          {
+            "node": "Obtenir l'URL du graphique",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcrire": {
+      "main": [
+        [
+          {
+            "node": "Agent IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enregistrer le ticker": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent IA",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Télécharger le fichier": {
+      "main": [
+        [
+          {
+            "node": "Transcrire",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir l'URL du graphique": {
+      "main": [
+        [
+          {
+            "node": "Télécharger le graphique",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Télécharger le graphique": {
+      "main": [
+        [
+          {
+            "node": "Analyse technique",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Boucler sur les éléments": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Exécuter l'agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déclencheur de planification": {
+      "main": [
+        [
+          {
+            "node": "Obtenir les jetons",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déclencheur Telegram": {
+      "main": [
+        [
+          {
+            "node": "Interrupteur",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modèle de chat OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent IA",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyse technique": {
+      "main": [
+        [
+          {
+            "node": "Envoyer le graphique",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mémoire tampon de fenêtre": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agent IA",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déclencheur d'entrée du workflow": {
+      "main": [
+        [
+          {
+            "node": "Définir les valeurs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

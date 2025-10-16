@@ -1,0 +1,276 @@
+{
+  "name": "1.4 - Intégration Gmail + Drive",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "labelIds": ["INBOX"],
+          "q": "has:attachment"
+        },
+        "format": "resolved"
+      },
+      "id": "gmail-trigger-004",
+      "name": "Nouveaux Emails avec Pièces Jointes",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-attachment-check",
+              "leftValue": "={{ $json.attachments.length }}",
+              "rightValue": "0",
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-attachments-004",
+      "name": "Vérifier Pièces Jointes",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Traitement des pièces jointes\nconst emailData = $input.first().json;\nconst attachments = emailData.attachments || [];\n\n// Créer un dossier basé sur la date et l'expéditeur\nconst senderEmail = emailData.from.address;\nconst senderName = emailData.from.name || senderEmail.split('@')[0];\nconst date = new Date().toISOString().split('T')[0];\nconst folderName = `Emails_${senderName}_${date}`;\n\n// Préparer les données pour chaque pièce jointe\nconst processedAttachments = attachments.map((attachment, index) => {\n  return {\n    json: {\n      filename: attachment.filename,\n      contentType: attachment.contentType,\n      size: attachment.size,\n      attachmentId: attachment.attachmentId,\n      emailSubject: emailData.subject,\n      sender: senderEmail,\n      senderName: senderName,\n      folderName: folderName,\n      messageId: emailData.messageId,\n      date: date,\n      index: index\n    }\n  };\n});\n\nreturn processedAttachments;"
+      },
+      "id": "process-attachments-004",
+      "name": "Traiter Pièces Jointes",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "messageId": "={{ $json.messageId }}",
+        "dataPropertyAttachmentsPrefixName": "attachment_",
+        "options": {}
+      },
+      "id": "download-attachment-004",
+      "name": "Télécharger Pièce Jointe",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "folder",
+        "operation": "create",
+        "name": "={{ $json.folderName }}",
+        "options": {
+          "parents": {
+            "parentId": "VOTRE_PARENT_FOLDER_ID"
+          }
+        }
+      },
+      "id": "create-folder-004",
+      "name": "Créer Dossier Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "upload",
+        "fileContent": "={{ $binary.attachment_0 }}",
+        "name": "={{ $json.filename }}",
+        "options": {
+          "parents": {
+            "parentId": "={{ $json.id }}"
+          }
+        }
+      },
+      "id": "upload-to-drive-004",
+      "name": "Uploader vers Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "addLabels",
+        "messageId": "={{ $json.messageId }}",
+        "labelIds": ["ARCHIVED"]
+      },
+      "id": "archive-email-004",
+      "name": "Archiver Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "summary",
+              "value": "✅ Email traité avec succès"
+            },
+            {
+              "name": "sender",
+              "value": "={{ $json.sender }}"
+            },
+            {
+              "name": "attachments_count",
+              "value": "={{ $json.attachments.length }}"
+            },
+            {
+              "name": "drive_folder",
+              "value": "={{ $json.folderName }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "final-summary-004",
+      "name": "Résumé Final",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        2000,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Nouveaux Emails avec Pièces Jointes": {
+      "main": [
+        [
+          {
+            "node": "Vérifier Pièces Jointes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vérifier Pièces Jointes": {
+      "main": [
+        [
+          {
+            "node": "Traiter Pièces Jointes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Traiter Pièces Jointes": {
+      "main": [
+        [
+          {
+            "node": "Télécharger Pièce Jointe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Télécharger Pièce Jointe": {
+      "main": [
+        [
+          {
+            "node": "Créer Dossier Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Créer Dossier Drive": {
+      "main": [
+        [
+          {
+            "node": "Uploader vers Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Uploader vers Drive": {
+      "main": [
+        [
+          {
+            "node": "Archiver Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Archiver Email": {
+      "main": [
+        [
+          {
+            "node": "Résumé Final",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1-4-integration-gmail-drive-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "4",
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "module-1-fondamentaux",
+      "name": "Module 1 - Fondamentaux"
+    }
+  ]
+}

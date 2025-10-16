@@ -1,0 +1,678 @@
+{
+  "name": "Publier sur TOUS les réseaux sociaux",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        280
+      ],
+      "id": "f69b8b6a-b4a0-4fb1-ab7c-74d5000923ef",
+      "name": "Lors du clic sur ‘Tester le workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "app5JxdZxUf1XqagM",
+          "mode": "list",
+          "cachedResultName": "Social Media",
+          "cachedResultUrl": "https://airtable.com/app5JxdZxUf1XqagM"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblUNMq9EfU8ZUoCG",
+          "mode": "list",
+          "cachedResultName": "Posts",
+          "cachedResultUrl": "https://airtable.com/app5JxdZxUf1XqagM/tblUNMq9EfU8ZUoCG"
+        },
+        "returnAll": false,
+        "limit": 1,
+        "options": {},
+        "sort": {
+          "property": [
+            {
+              "field": "Created time",
+              "direction": "desc"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        440,
+        280
+      ],
+      "id": "a49b85dc-c673-4a17-bcbb-b9083fe61155",
+      "name": "Airtable",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/media",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $json['Video URL'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        280
+      ],
+      "id": "21018664-5ad8-4bf0-a435-a21d47f625af",
+      "name": "Requête HTTP"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Instagram }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable').item.json.Title }}\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ],\n      \"platform\": \"instagram\"\n    },\n    \"target\": {\n      \"targetType\": \"instagram\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1220,
+        -620
+      ],
+      "id": "3bcef2ab-8a4f-4f5c-8d1c-1732a3689008",
+      "name": "Instagram"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Pinterest }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable').item.json.Title }}\",\n      \"mediaUrls\": [\n        \"{{ $('Airtable').item.json['Image url'] }}\"\n      ],\n      \"platform\": \"pinterest\"\n    },\n    \"target\": {\n      \"targetType\": \"pinterest\",\n      \"boardId\": \"{{ $('Set ID').item.json['Pinterest-Board-id'] }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1220,
+        980
+      ],
+      "id": "ea6f7079-6362-43eb-afc2-8f20ab5032fb",
+      "name": "Pinterest"
+    },
+    {
+      "parameters": {
+        "content": "## Images uniquement\n**Vous ne pouvez télécharger que des images sur Pinterest et Bluesky",
+        "height": 340,
+        "width": 200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1600,
+        960
+      ],
+      "typeVersion": 1,
+      "id": "fb963f80-75aa-45f7-a172-bf7a4922f801",
+      "name": "Note adhésive"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.X }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable').item.json.Title }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"twitter\"\n    },\n    \"target\": {\n      \"targetType\": \"twitter\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1220,
+        -420
+      ],
+      "id": "f690cefa-675d-4866-96c9-2f1f09e8e613",
+      "name": "Twitter"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.LinkedIN }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable').item.json.Title }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"linkedin\"\n    },\n    \"target\": {\n      \"targetType\": \"linkedin\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1220,
+        -220
+      ],
+      "id": "6b5b93a8-1111-4612-9500-72e9dd88da10",
+      "name": "LinkedIn"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.LinkedIN }}\",\n    \"content\": {\n      \"text\": \"Company update for our followers\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"linkedin\"\n    },\n    \"target\": {\n      \"targetType\": \"linkedin\",\n      \"pageId\": \"{{ $('Set ID').item.json['LinkedIn-page-ID'] }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1220,
+        -20
+      ],
+      "id": "306dadb8-d60e-463c-9df6-654806cb9bc8",
+      "name": "Page LinkedIn"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json['FB-Account'] }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable').item.json.Title }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"facebook\"\n    },\n    \"target\": {\n        \"targetType\": \"facebook\",\n        \"pageId\": \"{{ $('Set ID').item.json['FB-Page-Sumobundle'] }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1220,
+        180
+      ],
+      "id": "6f5c894c-2ae0-4c1e-b5ba-a0b585ba5c0e",
+      "name": "Compte Fb"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.tiktok }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable').item.json.Title }}\",\n      \"mediaUrls\": [\n        \"{{ $('HTTP Request').item.json.url }}\"\n      ],\n      \"platform\": \"tiktok\"\n    },\n    \"target\": {\n      \"targetType\": \"tiktok\",\n      \"privacyLevel\": \"PUBLIC_TO_EVERYONE\",\n      \"disabledComments\": false,\n      \"disabledDuet\": false,\n      \"disabledStitch\": false,\n      \"isBrandedContent\": false,\n      \"isYourBrand\": false,\n      \"isAiGenerated\": true\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1220,
+        380
+      ],
+      "id": "3b98cf72-4533-463a-b73d-64cadb289c78",
+      "name": "Tiktok"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Threads }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable').item.json.Title }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"threads\"\n    },\n    \"target\": {\n      \"targetType\": \"threads\",\n      \"replyControl\": \"everyone\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1220,
+        780
+      ],
+      "id": "fb7c568d-3717-42f7-87bb-307b94f51a8b",
+      "name": "Threads"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"acc_12345\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable').item.json.Title }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"bluesky\"\n    },\n    \"target\": {\n      \"targetType\": \"bluesky\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1220,
+        1180
+      ],
+      "id": "523e7f4c-d7f7-46be-9922-013210b3c701",
+      "name": "Bluesky",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Youtube }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable').item.json.Title }}\",\n      \"mediaUrls\": [\n        \"{{ $('HTTP Request').item.json.url }}\"\n      ],\n      \"platform\": \"youtube\"\n    },\n    \"target\": {\n      \"targetType\": \"youtube\",\n      \"title\": \"{{ $('Airtable').item.json.Title }}\",\n      \"privacyStatus\": \"private\",\n      \"shouldNotifySubscribers\": false\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1220,
+        580
+      ],
+      "id": "b6088fc7-c085-4aa7-947d-06de892a7c1d",
+      "name": "YouTube"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/instagram.png?v=1742473316)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1420,
+        -640
+      ],
+      "typeVersion": 1,
+      "id": "8cd91035-ff8d-4c11-b91d-097435663348",
+      "name": "Note adhésive1"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/x.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1420,
+        -440
+      ],
+      "typeVersion": 1,
+      "id": "39beb509-5b98-43a0-a069-a2130346f65e",
+      "name": "Note adhésive2"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/linkedin.png?v=1742473318)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1420,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "53202409-9f13-4336-8d64-771bf47e9967",
+      "name": "Note adhésive3"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/linkedin.png?v=1742473318)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1420,
+        -20
+      ],
+      "typeVersion": 1,
+      "id": "7424e66d-d365-42ea-ae0f-78aa67ec6b83",
+      "name": "Note adhésive4"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/facebook.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1420,
+        180
+      ],
+      "typeVersion": 1,
+      "id": "dd87fc9a-eb34-4082-86a3-fa3f0945493a",
+      "name": "Note adhésive5"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/tiktok.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1420,
+        380
+      ],
+      "typeVersion": 1,
+      "id": "e4539fed-17e8-4b43-9728-2195494819ba",
+      "name": "Note adhésive6"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/youtube.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1420,
+        560
+      ],
+      "typeVersion": 1,
+      "id": "bc9e6959-cf30-4e04-8ea9-46059beb8693",
+      "name": "Note adhésive7"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/threads.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1420,
+        760
+      ],
+      "typeVersion": 1,
+      "id": "4955871e-1184-4c10-8175-9a15c6ff364b",
+      "name": "Note Autocollante8"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/pinterest.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1420,
+        960
+      ],
+      "typeVersion": 1,
+      "id": "06db8e61-c426-4470-9ac6-a716111b60eb",
+      "name": "Note Autocollante9"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/bluesky.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1420,
+        1160
+      ],
+      "typeVersion": 1,
+      "id": "b8f31c88-3991-4567-b04b-3976941a7dbe",
+      "name": "Note Autocollante10"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"Blotato-API\": \"blt_Z6sVXo4Qa39+dhCIz8oD6wnJzJeDN4ZZHsjy2IXhByk=\",\n  \"Instagram\": \"1238\",\n  \"Pinterest\": \"258\",\n  \"Pinterest-Board-id\": \"914864180493348767\",\n  \"X\": \"993\",\n  \"LinkedIN\": \"1180\",\n  \"LinkedIn-page-ID\": \"6399836\",\n  \"Threads\": \"404\",\n  \"FB-Account\": \"1343\",\n  \"FB-Page-Stock-Graphics\": \"1493652624208458\",\n  \"FB-Page-Bundlestorm\": \"1082239155235205\",\n  \"FB-Page-Webmaster-Deals\": \"234802546593504\",\n  \"FB-Page-Sumobundle\": \"121593267596142\",\n  \"Fb-Page-Mimozastudio\": \"103680835963722\",\n  \"Youtube\": \"486\",\n  \"tiktok\": 1529\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        220,
+        280
+      ],
+      "id": "8453dbcc-9be4-4185-bf6a-af1051d9467f",
+      "name": "Définir l'ID"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Lors du clic sur ‘Tester le workflow’": {
+      "main": [
+        [
+          {
+            "node": "Définir l'ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable": {
+      "main": [
+        [
+          {
+            "node": "Requête HTTP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Requête HTTP": {
+      "main": [
+        [
+          {
+            "node": "Instagram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Pinterest",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Twitter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LinkedIn",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Page LinkedIn",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Compte Fb",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Tiktok",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Threads",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Bluesky",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "YouTube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Compte Fb": {
+      "main": [
+        []
+      ]
+    },
+    "Tiktok": {
+      "main": [
+        []
+      ]
+    },
+    "Threads": {
+      "main": [
+        []
+      ]
+    },
+    "Définir l'ID": {
+      "main": [
+        [
+          {
+            "node": "Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "816a0fd9-b918-4111-b24e-6ff64e04a80b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+  },
+  "id": "cgS9XvzIkB77tdea",
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

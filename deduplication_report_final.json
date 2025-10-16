@@ -1,0 +1,70 @@
+{
+  "total_analyzed": 6398,
+  "valid_workflows": 6390,
+  "invalid_workflows": 8,
+  "unique_workflows": 34,
+  "duplicates_found": 6356,
+  "packs_created": {
+    "Marketing_Digital": 3,
+    "Sales_CRM": 5,
+    "Service_Client": 2,
+    "Data_Analytics": 6,
+    "Ecommerce": 2,
+    "AI_Automation": 4,
+    "Productivite": 3,
+    "Communication": 2,
+    "General": 7
+  },
+  "duplicate_examples": [
+    {
+      "removed": "Workflow_Importer_complex_58nodes.json",
+      "kept": "Ultimate Scraper Workflow for n8n.json",
+      "similarity": 80
+    },
+    {
+      "removed": "Parse_URLs_and_Create_Short_Links_with_Switchy.io.json",
+      "kept": "Ultimate Scraper Workflow for n8n.json",
+      "similarity": 80
+    },
+    {
+      "removed": "scheduled_communicate_spotify_supabase_complex_54nodes.json",
+      "kept": "Ultimate Scraper Workflow for n8n.json",
+      "similarity": 70
+    },
+    {
+      "removed": "scheduled_file_ops_code_googlesheets_complex_51nodes.json",
+      "kept": "Ultimate Scraper Workflow for n8n.json",
+      "similarity": 80
+    },
+    {
+      "removed": "1352_Splitout_Filter_Automate_Triggered.json",
+      "kept": "Ultimate Scraper Workflow for n8n.json",
+      "similarity": 80
+    },
+    {
+      "removed": "1840_Splitout_Filter_Automate_Triggered.json",
+      "kept": "Ultimate Scraper Workflow for n8n.json",
+      "similarity": 80
+    },
+    {
+      "removed": "Hacker News to Video Content.json",
+      "kept": "Ultimate Scraper Workflow for n8n.json",
+      "similarity": 80
+    },
+    {
+      "removed": "scheduled_communicate_code_executeworkflow_complex_47nodes.json",
+      "kept": "Ultimate Scraper Workflow for n8n.json",
+      "similarity": 70
+    },
+    {
+      "removed": "0921_Splitout_Code_Send_Scheduled.json",
+      "kept": "Ultimate Scraper Workflow for n8n.json",
+      "similarity": 70
+    },
+    {
+      "removed": "0894_Splitout_Redis_Create_Triggered.json",
+      "kept": "Ultimate Scraper Workflow for n8n.json",
+      "similarity": 80
+    }
+  ]
+}

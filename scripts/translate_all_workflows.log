@@ -1,0 +1,9 @@
+🌐 TRADUCTION EN MASSE DES WORKFLOWS N8N - VERSION 3
+============================================================
+Ce script va:
+  1. Traduire tous les workflows en français
+  2. Les mettre dans un dossier 'FR'
+  3. Traduire les noms de fichiers (version améliorée)
+  4. Ajouter le tag 'Audelalia' à tous les workflows
+
+👀 Voulez-vous voir quelques exemples de traduction de noms? (o/n): 

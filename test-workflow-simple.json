@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "instanceId": "automatehub-shared-instance"
+  },
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "trigger-node",
+      "name": "🚀 Démarrer le test",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [740, 340]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Test simple AutomateHub\n// Vérifie que Claude et vous travaillez sur la même instance !\n\nconst message = {\n  timestamp: new Date().toISOString(),\n  message: '🎉 Parfait ! Claude et vous êtes synchronisés !',\n  platform: 'AutomateHub',\n  instance: 'n8n.automatehub.fr',\n  status: 'success',\n  mcp_enabled: true,\n  capabilities: {\n    javascript: '✅ Fonctionne',\n    date_handling: '✅ Fonctionne', \n    json_processing: '✅ Fonctionne'\n  },\n  next_steps: [\n    'Créer des workflows complexes',\n    'Utiliser n8n-mcp pour la documentation',\n    'Développer des tutoriels avancés'\n  ]\n};\n\nreturn { json: message };"
+      },
+      "id": "test-code",
+      "name": "✅ Test JavaScript",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [960, 340]
+    }
+  ],
+  "connections": {
+    "🚀 Démarrer le test": {
+      "main": [
+        [
+          {
+            "node": "✅ Test JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "id": "automatehub",
+      "name": "automatehub"
+    },
+    {
+      "id": "test",
+      "name": "test"
+    }
+  ]
+}

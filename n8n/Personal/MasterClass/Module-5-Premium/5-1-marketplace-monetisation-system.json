@@ -1,0 +1,343 @@
+{
+  "name": "5.1 - Marketplace et Monétisation System",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "marketplace/new-product",
+        "options": {}
+      },
+      "id": "webhook-product-submission-501",
+      "name": "Soumission Nouveau Produit",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "product-submission-501"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Système de validation et scoring de produits marketplace\nconst productData = $input.first().json;\n\n// Classe pour l'analyse et validation de produits\nclass ProductValidator {\n  constructor(data) {\n    this.data = data;\n    this.score = 0;\n    this.validationErrors = [];\n    this.recommendations = [];\n  }\n  \n  // Validation des données de base\n  validateBasicData() {\n    const required = ['name', 'description', 'category', 'price', 'author'];\n    const missing = required.filter(field => !this.data[field]);\n    \n    if (missing.length > 0) {\n      this.validationErrors.push(`Champs manquants: ${missing.join(', ')}`);\n    }\n    \n    // Validation email auteur\n    if (this.data.author && this.data.author.email) {\n      const emailRegex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;\n      if (!emailRegex.test(this.data.author.email)) {\n        this.validationErrors.push('Email auteur invalide');\n      }\n    }\n    \n    return this;\n  }\n  \n  // Scoring qualité du produit\n  calculateQualityScore() {\n    let score = 0;\n    \n    // Score description (max 25 points)\n    if (this.data.description) {\n      const descLength = this.data.description.length;\n      if (descLength > 500) score += 25;\n      else if (descLength > 200) score += 15;\n      else if (descLength > 50) score += 10;\n      else score += 5;\n    }\n    \n    // Score images (max 20 points)\n    if (this.data.images && this.data.images.length > 0) {\n      score += Math.min(this.data.images.length * 5, 20);\n    }\n    \n    // Score documentation (max 15 points)\n    if (this.data.documentation) {\n      if (this.data.documentation.length > 1000) score += 15;\n      else if (this.data.documentation.length > 500) score += 10;\n      else score += 5;\n    }\n    \n    // Score exemples (max 15 points)\n    if (this.data.examples && this.data.examples.length > 0) {\n      score += Math.min(this.data.examples.length * 5, 15);\n    }\n    \n    // Score support/contact (max 10 points)\n    if (this.data.support_email || this.data.support_url) {\n      score += 10;\n    }\n    \n    // Score pricing (max 15 points)\n    if (this.data.price) {\n      const price = parseFloat(this.data.price);\n      if (price >= 50 && price <= 500) score += 15;\n      else if (price >= 10 && price <= 1000) score += 10;\n      else score += 5;\n    }\n    \n    this.score = score;\n    return this;\n  }\n  \n  // Génération de recommandations\n  generateRecommendations() {\n    if (this.score < 30) {\n      this.recommendations.push('Améliorer la description (minimum 200 caractères)');\n    }\n    \n    if (!this.data.images || this.data.images.length === 0) {\n      this.recommendations.push('Ajouter au moins 2 images de démonstration');\n    }\n    \n    if (!this.data.documentation || this.data.documentation.length < 500) {\n      this.recommendations.push('Étoffer la documentation (minimum 500 caractères)');\n    }\n    \n    if (!this.data.examples || this.data.examples.length === 0) {\n      this.recommendations.push('Ajouter des exemples d\\'utilisation');\n    }\n    \n    if (!this.data.support_email && !this.data.support_url) {\n      this.recommendations.push('Fournir un moyen de contact pour le support');\n    }\n    \n    return this;\n  }\n  \n  // Détermination du statut\n  determineStatus() {\n    if (this.validationErrors.length > 0) {\n      return 'rejected';\n    }\n    \n    if (this.score >= 70) {\n      return 'approved';\n    } else if (this.score >= 50) {\n      return 'pending_review';\n    } else {\n      return 'needs_improvement';\n    }\n  }\n  \n  // Calcul du prix recommandé\n  calculateRecommendedPrice() {\n    let basePrice = 50;\n    \n    // Ajustement selon la catégorie\n    const categoryMultipliers = {\n      'workflow-template': 1.0,\n      'custom-node': 1.5,\n      'integration': 2.0,\n      'automation-solution': 2.5,\n      'enterprise-solution': 3.0\n    };\n    \n    const multiplier = categoryMultipliers[this.data.category] || 1.0;\n    basePrice *= multiplier;\n    \n    // Ajustement selon le score qualité\n    const qualityMultiplier = 1 + (this.score / 100);\n    basePrice *= qualityMultiplier;\n    \n    return Math.round(basePrice);\n  }\n  \n  // Génération du rapport final\n  generateReport() {\n    const status = this.determineStatus();\n    const recommendedPrice = this.calculateRecommendedPrice();\n    \n    return {\n      product_id: `product_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,\n      validation: {\n        status: status,\n        score: this.score,\n        errors: this.validationErrors,\n        recommendations: this.recommendations\n      },\n      pricing: {\n        submitted_price: this.data.price,\n        recommended_price: recommendedPrice,\n        price_analysis: this.analyzePricing()\n      },\n      product_data: this.data,\n      processed_at: new Date().toISOString()\n    };\n  }\n  \n  analyzePricing() {\n    const submittedPrice = parseFloat(this.data.price) || 0;\n    const recommendedPrice = this.calculateRecommendedPrice();\n    const difference = ((submittedPrice - recommendedPrice) / recommendedPrice) * 100;\n    \n    let analysis = '';\n    if (difference > 50) {\n      analysis = 'Prix trop élevé par rapport à la qualité';\n    } else if (difference > 20) {\n      analysis = 'Prix légèrement élevé';\n    } else if (difference < -50) {\n      analysis = 'Prix trop bas, valorisez mieux votre produit';\n    } else if (difference < -20) {\n      analysis = 'Prix en dessous de la valeur estimée';\n    } else {\n      analysis = 'Prix cohérent avec la qualité';\n    }\n    \n    return {\n      analysis: analysis,\n      difference_percentage: Math.round(difference),\n      market_position: difference > 0 ? 'premium' : difference < -20 ? 'budget' : 'standard'\n    };\n  }\n}\n\n// Utilisation du validateur\nconst validator = new ProductValidator(productData);\nconst report = validator\n  .validateBasicData()\n  .calculateQualityScore()\n  .generateRecommendations()\n  .generateReport();\n\nreturn [{ json: report }];"
+      },
+      "id": "product-validation-501",
+      "name": "Validation et Scoring Produit",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "status-approved",
+              "leftValue": "={{ $json.validation.status }}",
+              "rightValue": "approved",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-approval-status-501",
+      "name": "Vérifier Statut Approbation",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "record",
+        "operation": "create",
+        "base": "VOTRE_MARKETPLACE_BASE_ID",
+        "table": "Products",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Product_ID": "={{ $json.product_id }}",
+            "Name": "={{ $json.product_data.name }}",
+            "Description": "={{ $json.product_data.description }}",
+            "Category": "={{ $json.product_data.category }}",
+            "Author_Email": "={{ $json.product_data.author.email }}",
+            "Author_Name": "={{ $json.product_data.author.name }}",
+            "Submitted_Price": "={{ $json.pricing.submitted_price }}",
+            "Recommended_Price": "={{ $json.pricing.recommended_price }}",
+            "Quality_Score": "={{ $json.validation.score }}",
+            "Status": "={{ $json.validation.status }}",
+            "Processed_At": "={{ $json.processed_at }}",
+            "Market_Position": "={{ $json.pricing.price_analysis.market_position }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "save-to-marketplace-501",
+      "name": "Sauvegarder Marketplace",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "subject": "🎉 Votre produit a été approuvé !",
+        "message": "Félicitations ! Votre produit \"{{ $json.product_data.name }}\" a été approuvé pour le marketplace.\n\n📊 Détails de l'approbation:\n• Score qualité: {{ $json.validation.score }}/100\n• Prix recommandé: {{ $json.pricing.recommended_price }}€\n• Position marché: {{ $json.pricing.price_analysis.market_position }}\n\n🚀 Prochaines étapes:\n1. Votre produit sera publié sous 24h\n2. Vous recevrez un email de confirmation\n3. Les ventes commenceront immédiatement\n\n💰 Commission: 15% sur chaque vente\n📈 Rapports de vente: Disponibles dans votre dashboard\n\nMerci de contribuer à notre marketplace !",
+        "toList": "={{ $json.product_data.author.email }}",
+        "options": {}
+      },
+      "id": "email-approval-501",
+      "name": "Email Approbation",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1250,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#marketplace",
+        "text": "✅ **Nouveau produit approuvé !**\n\n*Produit:* {{ $json.product_data.name }}\n*Auteur:* {{ $json.product_data.author.name }}\n*Catégorie:* {{ $json.product_data.category }}\n*Score qualité:* {{ $json.validation.score }}/100\n*Prix:* {{ $json.pricing.recommended_price }}€\n\n*Action:* Publication automatique en cours",
+        "otherOptions": {
+          "username": "Marketplace Bot"
+        }
+      },
+      "id": "slack-approval-501",
+      "name": "Notification Slack Approbation",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [
+        1500,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "subject": "📋 Votre produit nécessite des améliorations",
+        "message": "Votre produit \"{{ $json.product_data.name }}\" a été évalué mais nécessite des améliorations avant approbation.\n\n📊 Évaluation:\n• Score qualité: {{ $json.validation.score }}/100\n• Statut: {{ $json.validation.status }}\n\n❌ Problèmes détectés:\n{{ $json.validation.errors.join('\\n') }}\n\n💡 Recommandations:\n{{ $json.validation.recommendations.join('\\n') }}\n\n🔄 Prochaines étapes:\n1. Apportez les améliorations suggérées\n2. Resoumettez votre produit\n3. Une nouvelle évaluation sera effectuée\n\n💰 Prix recommandé: {{ $json.pricing.recommended_price }}€\n📊 Analyse prix: {{ $json.pricing.price_analysis.analysis }}\n\nNous restons à votre disposition pour vous aider !",
+        "toList": "={{ $json.product_data.author.email }}",
+        "options": {}
+      },
+      "id": "email-rejection-501",
+      "name": "Email Amélioration",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#marketplace-review",
+        "text": "⚠️ **Produit nécessite une révision**\n\n*Produit:* {{ $json.product_data.name }}\n*Auteur:* {{ $json.product_data.author.name }}\n*Score:* {{ $json.validation.score }}/100\n*Statut:* {{ $json.validation.status }}\n\n*Problèmes:*\n{{ $json.validation.errors.join('\\n') }}\n\n*Recommandations:*\n{{ $json.validation.recommendations.join('\\n') }}",
+        "otherOptions": {
+          "username": "Marketplace Bot"
+        }
+      },
+      "id": "slack-review-501",
+      "name": "Notification Slack Révision",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [
+        1250,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Système de génération de revenus et commissions\nconst productData = $input.first().json;\n\n// Classe pour le calcul des revenus\nclass RevenueCalculator {\n  constructor(product) {\n    this.product = product;\n    this.commissionRate = 0.15; // 15% commission\n    this.platformFee = 0.02; // 2% frais plateforme\n    this.paymentFee = 0.029; // 2.9% frais paiement\n  }\n  \n  // Calcul des revenus estimés\n  calculateRevenueProjection() {\n    const price = parseFloat(this.product.pricing.recommended_price);\n    const category = this.product.product_data.category;\n    const qualityScore = this.product.validation.score;\n    \n    // Estimation des ventes mensuelles selon la catégorie\n    const salesEstimates = {\n      'workflow-template': { min: 10, max: 50, avg: 25 },\n      'custom-node': { min: 5, max: 30, avg: 15 },\n      'integration': { min: 8, max: 40, avg: 20 },\n      'automation-solution': { min: 3, max: 20, avg: 10 },\n      'enterprise-solution': { min: 1, max: 10, avg: 5 }\n    };\n    \n    const estimate = salesEstimates[category] || salesEstimates['workflow-template'];\n    \n    // Ajustement selon le score qualité\n    const qualityMultiplier = 0.5 + (qualityScore / 100);\n    const estimatedSales = Math.round(estimate.avg * qualityMultiplier);\n    \n    // Calculs financiers\n    const grossRevenue = price * estimatedSales;\n    const commission = grossRevenue * this.commissionRate;\n    const platformFee = grossRevenue * this.platformFee;\n    const paymentFee = grossRevenue * this.paymentFee;\n    const netRevenue = grossRevenue - commission - platformFee - paymentFee;\n    const authorRevenue = grossRevenue - commission;\n    \n    return {\n      monthly_projection: {\n        estimated_sales: estimatedSales,\n        price_per_unit: price,\n        gross_revenue: Math.round(grossRevenue),\n        commission: Math.round(commission),\n        platform_fee: Math.round(platformFee),\n        payment_fee: Math.round(paymentFee),\n        net_revenue: Math.round(netRevenue),\n        author_revenue: Math.round(authorRevenue)\n      },\n      yearly_projection: {\n        estimated_sales: estimatedSales * 12,\n        gross_revenue: Math.round(grossRevenue * 12),\n        commission: Math.round(commission * 12),\n        net_revenue: Math.round(netRevenue * 12),\n        author_revenue: Math.round(authorRevenue * 12)\n      },\n      break_even_analysis: {\n        development_cost_estimate: price * 2, // Estimation 2x le prix\n        break_even_units: Math.ceil((price * 2) / (price - (price * this.commissionRate)))\n      }\n    };\n  }\n  \n  // Stratégies de pricing\n  generatePricingStrategies() {\n    const basePrice = parseFloat(this.product.pricing.recommended_price);\n    \n    return {\n      economy: {\n        price: Math.round(basePrice * 0.7),\n        target: 'Volume élevé, marge faible',\n        pros: ['Accessibilité', 'Adoption rapide'],\n        cons: ['Revenus limités', 'Dévaluation perçue']\n      },\n      standard: {\n        price: basePrice,\n        target: 'Équilibre volume/marge',\n        pros: ['Prix optimal', 'Bon compromis'],\n        cons: ['Concurrence directe']\n      },\n      premium: {\n        price: Math.round(basePrice * 1.5),\n        target: 'Marge élevée, volume faible',\n        pros: ['Revenus élevés', 'Positionnement premium'],\n        cons: ['Marché restreint', 'Concurrence accrue']\n      }\n    };\n  }\n  \n  // Recommandations marketing\n  generateMarketingRecommendations() {\n    const category = this.product.product_data.category;\n    const score = this.product.validation.score;\n    \n    const recommendations = {\n      high_score: {\n        strategy: 'Premium positioning',\n        channels: ['Featured placement', 'Email campaigns', 'Social media'],\n        budget: '10-15% of projected revenue',\n        focus: 'Quality and exclusivity'\n      },\n      medium_score: {\n        strategy: 'Value demonstration',\n        channels: ['Content marketing', 'Tutorials', 'Free trials'],\n        budget: '8-12% of projected revenue',\n        focus: 'Practical benefits'\n      },\n      low_score: {\n        strategy: 'Improvement focus',\n        channels: ['Community feedback', 'Beta testing', 'Iterations'],\n        budget: '5-8% of projected revenue',\n        focus: 'Quality improvement'\n      }\n    };\n    \n    let scoreCategory = 'low_score';\n    if (score >= 70) scoreCategory = 'high_score';\n    else if (score >= 50) scoreCategory = 'medium_score';\n    \n    return recommendations[scoreCategory];\n  }\n  \n  // Génération du rapport complet\n  generateBusinessReport() {\n    return {\n      product_id: this.product.product_id,\n      revenue_projection: this.calculateRevenueProjection(),\n      pricing_strategies: this.generatePricingStrategies(),\n      marketing_recommendations: this.generateMarketingRecommendations(),\n      success_metrics: {\n        target_monthly_sales: this.calculateRevenueProjection().monthly_projection.estimated_sales,\n        target_monthly_revenue: this.calculateRevenueProjection().monthly_projection.author_revenue,\n        quality_benchmark: this.product.validation.score,\n        market_position: this.product.pricing.price_analysis.market_position\n      },\n      generated_at: new Date().toISOString()\n    };\n  }\n}\n\n// Génération du rapport business\nconst calculator = new RevenueCalculator(productData);\nconst businessReport = calculator.generateBusinessReport();\n\nreturn [{ \n  json: {\n    ...productData,\n    business_analysis: businessReport\n  }\n}];"
+      },
+      "id": "business-analysis-501",
+      "name": "Analyse Business",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": "VOTRE_MARKETPLACE_ANALYTICS_ID",
+        "sheetName": "Product_Analytics",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Product_ID": "={{ $json.product_id }}",
+            "Product_Name": "={{ $json.product_data.name }}",
+            "Category": "={{ $json.product_data.category }}",
+            "Quality_Score": "={{ $json.validation.score }}",
+            "Status": "={{ $json.validation.status }}",
+            "Recommended_Price": "={{ $json.pricing.recommended_price }}",
+            "Estimated_Monthly_Sales": "={{ $json.business_analysis.revenue_projection.monthly_projection.estimated_sales }}",
+            "Estimated_Monthly_Revenue": "={{ $json.business_analysis.revenue_projection.monthly_projection.author_revenue }}",
+            "Market_Position": "={{ $json.pricing.price_analysis.market_position }}",
+            "Processed_At": "={{ $json.processed_at }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "analytics-tracking-501",
+      "name": "Tracking Analytics",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        2000,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Soumission Nouveau Produit": {
+      "main": [
+        [
+          {
+            "node": "Validation et Scoring Produit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validation et Scoring Produit": {
+      "main": [
+        [
+          {
+            "node": "Vérifier Statut Approbation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vérifier Statut Approbation": {
+      "main": [
+        [
+          {
+            "node": "Sauvegarder Marketplace",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Email Amélioration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sauvegarder Marketplace": {
+      "main": [
+        [
+          {
+            "node": "Email Approbation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Approbation": {
+      "main": [
+        [
+          {
+            "node": "Notification Slack Approbation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notification Slack Approbation": {
+      "main": [
+        [
+          {
+            "node": "Analyse Business",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Amélioration": {
+      "main": [
+        [
+          {
+            "node": "Notification Slack Révision",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notification Slack Révision": {
+      "main": [
+        [
+          {
+            "node": "Analyse Business",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyse Business": {
+      "main": [
+        [
+          {
+            "node": "Tracking Analytics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5-1-marketplace-monetisation-system-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "15",
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "module-5-premium",
+      "name": "Module 5 - Premium"
+    }
+  ]
+}

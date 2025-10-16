@@ -1,0 +1,31 @@
+{
+  "source_file": "test_workflow_simple.json",
+  "total_texts": 3,
+  "texts": {
+    "text_0": {
+      "path": [
+        "name"
+      ],
+      "original": "Simple Email Workflow",
+      "type": "workflow_name"
+    },
+    "text_1": {
+      "path": [
+        "nodes",
+        0,
+        "name"
+      ],
+      "original": "Webhook",
+      "type": "node_name"
+    },
+    "text_2": {
+      "path": [
+        "nodes",
+        1,
+        "name"
+      ],
+      "original": "Send Email",
+      "type": "node_name"
+    }
+  }
+}

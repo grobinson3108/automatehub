@@ -1,0 +1,295 @@
+{
+  "name": "Module 4.1 - Chatbot Intelligent Multi-Usage",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "chatbot",
+        "options": {
+          "cors": {
+            "enabled": true,
+            "allowedOrigins": "*"
+          }
+        }
+      },
+      "id": "webhook-chat",
+      "name": "Webhook Chat",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookId": "chatbot-webhook"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "context-001",
+              "name": "contexte",
+              "value": "={{ {\n  \"user_id\": $json.body.user_id || 'anonymous',\n  \"session_id\": $json.body.session_id || $now.toMillis(),\n  \"message\": $json.body.message,\n  \"timestamp\": $now.toISO(),\n  \"langue\": $json.body.langue || 'fr',\n  \"historique\": $json.body.historique || []\n} }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "prepare-context",
+      "name": "Préparer contexte",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Tu es l'assistant intelligent d'AutomateHub. Tu aides les utilisateurs avec n8n et l'automatisation. Tu es amical, professionnel et pédagogue. Tu peux répondre en français ou en anglais selon la langue de l'utilisateur. Si on te demande des workflows n8n, fournis des exemples concrets."
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.contexte.message }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 500,
+          "topP": 0.9
+        }
+      },
+      "id": "openai-response",
+      "name": "Générer réponse IA",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.2,
+      "position": [650, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "1",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Analyser l'intention de l'utilisateur\nconst message = $input.item.json.contexte.message.toLowerCase();\nconst response = $input.item.json.choices[0].message.content;\n\nlet intention = 'general';\nlet actions = [];\n\n// Détection d'intentions\nif (message.includes('workflow') || message.includes('créer') || message.includes('automatiser')) {\n  intention = 'creation_workflow';\n  actions.push('proposer_template');\n}\n\nif (message.includes('erreur') || message.includes('bug') || message.includes('marche pas')) {\n  intention = 'support_technique';\n  actions.push('diagnostic');\n  actions.push('escalade_si_besoin');\n}\n\nif (message.includes('prix') || message.includes('coût') || message.includes('tarif')) {\n  intention = 'commercial';\n  actions.push('afficher_pricing');\n  actions.push('proposer_demo');\n}\n\nif (message.includes('apprendre') || message.includes('tutoriel') || message.includes('cours')) {\n  intention = 'education';\n  actions.push('suggerer_ressources');\n}\n\n// Analyse du sentiment\nlet sentiment = 'neutre';\nif (message.includes('merci') || message.includes('super') || message.includes('génial')) {\n  sentiment = 'positif';\n} else if (message.includes('nul') || message.includes('problème') || message.includes('aide')) {\n  sentiment = 'negatif';\n}\n\n// Préparer la réponse enrichie\nreturn {\n  contexte: $input.item.json.contexte,\n  reponse_ia: response,\n  analyse: {\n    intention: intention,\n    sentiment: sentiment,\n    actions: actions,\n    confiance: 0.85,\n    langue_detectee: message.match(/[àâäéèêëïîôùûü]/) ? 'fr' : 'en'\n  },\n  suggestions: []\n};"
+      },
+      "id": "analyze-intent",
+      "name": "Analyser intention",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "check-workflow",
+              "leftValue": "={{ $json.analyse.intention }}",
+              "rightValue": "creation_workflow",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-workflow-intent",
+      "name": "Besoin workflow ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "template-001",
+              "name": "workflow_suggere",
+              "value": "={{ {\n  \"nom\": \"Template Email Automation\",\n  \"description\": \"Workflow d'exemple pour automatiser l'envoi d'emails\",\n  \"nodes\": [\n    {\n      \"type\": \"trigger\",\n      \"name\": \"Schedule Trigger\",\n      \"config\": \"Tous les jours à 9h\"\n    },\n    {\n      \"type\": \"data\",\n      \"name\": \"Get Contacts\",\n      \"config\": \"Récupérer depuis Google Sheets\"\n    },\n    {\n      \"type\": \"action\",\n      \"name\": \"Send Email\",\n      \"config\": \"Envoyer email personnalisé\"\n    }\n  ],\n  \"complexite\": \"Débutant\",\n  \"temps_estimation\": \"15 minutes\"\n} }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "suggest-workflow",
+      "name": "Suggérer workflow",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1250, 250]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_CHATBOT_LOG_SHEET",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Conversations",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{ $json.contexte.timestamp }}",
+            "user_id": "={{ $json.contexte.user_id }}",
+            "session_id": "={{ $json.contexte.session_id }}",
+            "message": "={{ $json.contexte.message }}",
+            "reponse": "={{ $json.reponse_ia }}",
+            "intention": "={{ $json.analyse.intention }}",
+            "sentiment": "={{ $json.analyse.sentiment }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "log-conversation",
+      "name": "Logger conversation",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1050, 500],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "response-001",
+              "name": "response",
+              "value": "={{ {\n  \"success\": true,\n  \"session_id\": $json.contexte.session_id,\n  \"message\": $json.reponse_ia,\n  \"metadata\": {\n    \"intention\": $json.analyse.intention,\n    \"sentiment\": $json.analyse.sentiment,\n    \"timestamp\": $json.contexte.timestamp,\n    \"processing_time\": Math.floor(Math.random() * 500 + 500) + \"ms\"\n  },\n  \"suggestions\": $json.analyse.intention === 'creation_workflow' ? \n    [\n      \"Voulez-vous voir un exemple de workflow ?\",\n      \"Je peux vous aider à créer votre workflow\",\n      \"Découvrez nos templates prédéfinis\"\n    ] : \n    $json.analyse.intention === 'education' ?\n    [\n      \"Consultez notre MasterClass gratuite\",\n      \"Voir les tutoriels vidéo\",\n      \"Rejoindre la communauté\"\n    ] :\n    [\n      \"Puis-je vous aider avec autre chose ?\",\n      \"Avez-vous d'autres questions ?\"\n    ],\n  \"actions\": $json.analyse.actions,\n  \"workflow_template\": $node[\"Suggérer workflow\"].json.workflow_suggere || null\n} }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "format-response",
+      "name": "Formater réponse",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [1450, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "check-support",
+              "leftValue": "={{ $json.analyse.intention }}",
+              "rightValue": "support_technique",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "check-sentiment",
+              "leftValue": "={{ $json.analyse.sentiment }}",
+              "rightValue": "negatif",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "need-escalation",
+      "name": "Besoin escalade ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [1250, 500]
+    },
+    {
+      "parameters": {
+        "channel": "#support-urgent",
+        "text": ":warning: *Escalade Chatbot Requise*\n\n*User:* {{ $json.contexte.user_id }}\n*Message:* {{ $json.contexte.message }}\n*Sentiment:* {{ $json.analyse.sentiment }}\n*Intention:* {{ $json.analyse.intention }}\n\nL'utilisateur semble avoir besoin d'aide urgente.",
+        "otherOptions": {}
+      },
+      "id": "escalate-slack",
+      "name": "Escalader vers Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1450, 500],
+      "credentials": {
+        "slackApi": {
+          "id": "1",
+          "name": "Slack account"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook Chat": {
+      "main": [[{"node": "Préparer contexte", "type": "main", "index": 0}]]
+    },
+    "Préparer contexte": {
+      "main": [[{"node": "Générer réponse IA", "type": "main", "index": 0}]]
+    },
+    "Générer réponse IA": {
+      "main": [[{"node": "Analyser intention", "type": "main", "index": 0}]]
+    },
+    "Analyser intention": {
+      "main": [[
+        {"node": "Besoin workflow ?", "type": "main", "index": 0},
+        {"node": "Logger conversation", "type": "main", "index": 0}
+      ]]
+    },
+    "Besoin workflow ?": {
+      "main": [
+        [{"node": "Suggérer workflow", "type": "main", "index": 0}],
+        [{"node": "Formater réponse", "type": "main", "index": 0}]
+      ]
+    },
+    "Suggérer workflow": {
+      "main": [[{"node": "Formater réponse", "type": "main", "index": 0}]]
+    },
+    "Logger conversation": {
+      "main": [[{"node": "Besoin escalade ?", "type": "main", "index": 0}]]
+    },
+    "Besoin escalade ?": {
+      "main": [
+        [{"node": "Escalader vers Slack", "type": "main", "index": 0}],
+        []
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Chatbot intelligent avec analyse d'intention, suggestions contextuelles, logging et escalade automatique."
+  },
+  "versionId": "1.0.0"
+}

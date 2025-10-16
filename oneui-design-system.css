@@ -1,0 +1,558 @@
+/**
+ * AutomateHub OneUI 5 Design System
+ * =====================================
+ * Système de design basé sur Samsung OneUI 5 pour AutomateHub
+ * Optimisé pour les tableaux de bord d'automatisation et analytics
+ */
+
+/* =============================================================================
+   1. COULEURS ONEUI 5
+   ============================================================================= */
+
+:root {
+  /* Couleurs primaires OneUI 5 */
+  --oneui-primary: #007ACC;
+  --oneui-primary-light: #0099FF;
+  --oneui-primary-dark: #005A99;
+  --oneui-primary-gradient: linear-gradient(135deg, #007ACC 0%, #0099FF 100%);
+  
+  /* Couleurs secondaires */
+  --oneui-secondary: #4285F4;
+  --oneui-secondary-light: #66A3FF;
+  --oneui-secondary-dark: #1976D2;
+  --oneui-accent-gradient: linear-gradient(135deg, #4285F4 0%, #1976D2 100%);
+  
+  /* Couleurs système */
+  --oneui-success: #34C759;
+  --oneui-warning: #FF9500;
+  --oneui-error: #FF3B30;
+  --oneui-info: #007ACC;
+  
+  /* Couleurs de surface OneUI */
+  --oneui-surface-primary: #FFFFFF;
+  --oneui-surface-secondary: #F8F9FA;
+  --oneui-surface-tertiary: #E5E8EB;
+  --oneui-surface-gradient: linear-gradient(180deg, #F8F9FA 0%, #FFFFFF 100%);
+  
+  /* Couleurs de texte OneUI */
+  --oneui-text-primary: #1C1E21;
+  --oneui-text-secondary: #65676B;
+  --oneui-text-tertiary: #8A8D91;
+  --oneui-text-inverse: #FFFFFF;
+  
+  /* Couleurs de bordure */
+  --oneui-border-light: #E4E6EA;
+  --oneui-border-medium: #CED0D4;
+  --oneui-border-strong: #8A8D91;
+  
+  /* Couleurs spécifiques AutomateHub */
+  --automatehub-workflow-active: #34C759;
+  --automatehub-workflow-paused: #FF9500;
+  --automatehub-workflow-error: #FF3B30;
+  --automatehub-execution-success: #007ACC;
+}
+
+/* =============================================================================
+   2. TYPOGRAPHIE ONEUI 5
+   ============================================================================= */
+
+:root {
+  /* Famille de polices OneUI */
+  --oneui-font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --oneui-font-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', monospace;
+  
+  /* Échelle typographique OneUI */
+  --oneui-text-xs: 12px;
+  --oneui-text-sm: 14px;
+  --oneui-text-base: 16px;
+  --oneui-text-lg: 18px;
+  --oneui-text-xl: 20px;
+  --oneui-text-2xl: 24px;
+  --oneui-text-3xl: 28px;
+  --oneui-text-4xl: 32px;
+  --oneui-text-5xl: 40px;
+  
+  /* Poids de police OneUI */
+  --oneui-font-light: 300;
+  --oneui-font-regular: 400;
+  --oneui-font-medium: 500;
+  --oneui-font-semibold: 600;
+  --oneui-font-bold: 700;
+  
+  /* Hauteur de ligne OneUI */
+  --oneui-leading-tight: 1.25;
+  --oneui-leading-normal: 1.5;
+  --oneui-leading-relaxed: 1.75;
+}
+
+/* Classes typographiques OneUI */
+.oneui-text-display {
+  font-family: var(--oneui-font-family);
+  font-size: var(--oneui-text-5xl);
+  font-weight: var(--oneui-font-bold);
+  line-height: var(--oneui-leading-tight);
+  color: var(--oneui-text-primary);
+}
+
+.oneui-text-headline {
+  font-family: var(--oneui-font-family);
+  font-size: var(--oneui-text-3xl);
+  font-weight: var(--oneui-font-semibold);
+  line-height: var(--oneui-leading-tight);
+  color: var(--oneui-text-primary);
+}
+
+.oneui-text-title {
+  font-family: var(--oneui-font-family);
+  font-size: var(--oneui-text-xl);
+  font-weight: var(--oneui-font-semibold);
+  line-height: var(--oneui-leading-normal);
+  color: var(--oneui-text-primary);
+}
+
+.oneui-text-body {
+  font-family: var(--oneui-font-family);
+  font-size: var(--oneui-text-base);
+  font-weight: var(--oneui-font-regular);
+  line-height: var(--oneui-leading-normal);
+  color: var(--oneui-text-primary);
+}
+
+.oneui-text-caption {
+  font-family: var(--oneui-font-family);
+  font-size: var(--oneui-text-sm);
+  font-weight: var(--oneui-font-regular);
+  line-height: var(--oneui-leading-normal);
+  color: var(--oneui-text-secondary);
+}
+
+.oneui-text-label {
+  font-family: var(--oneui-font-family);
+  font-size: var(--oneui-text-xs);
+  font-weight: var(--oneui-font-medium);
+  line-height: var(--oneui-leading-normal);
+  color: var(--oneui-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* =============================================================================
+   3. ESPACEMENT ONEUI 5
+   ============================================================================= */
+
+:root {
+  /* Système d'espacement OneUI basé sur 8px */
+  --oneui-space-1: 4px;
+  --oneui-space-2: 8px;
+  --oneui-space-3: 12px;
+  --oneui-space-4: 16px;
+  --oneui-space-5: 20px;
+  --oneui-space-6: 24px;
+  --oneui-space-8: 32px;
+  --oneui-space-10: 40px;
+  --oneui-space-12: 48px;
+  --oneui-space-16: 64px;
+  --oneui-space-20: 80px;
+  
+  /* Rayons de bordure OneUI */
+  --oneui-radius-sm: 8px;
+  --oneui-radius-md: 12px;
+  --oneui-radius-lg: 16px;
+  --oneui-radius-xl: 20px;
+  --oneui-radius-full: 9999px;
+  
+  /* Ombres OneUI */
+  --oneui-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.06);
+  --oneui-shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --oneui-shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.12);
+  --oneui-shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.15);
+}
+
+/* =============================================================================
+   4. COMPOSANTS ONEUI 5
+   ============================================================================= */
+
+/* Cards OneUI */
+.oneui-card {
+  background: var(--oneui-surface-primary);
+  border-radius: var(--oneui-radius-lg);
+  box-shadow: var(--oneui-shadow-md);
+  padding: var(--oneui-space-6);
+  border: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.oneui-card:hover {
+  box-shadow: var(--oneui-shadow-lg);
+  transform: translateY(-2px);
+}
+
+.oneui-card-header {
+  margin-bottom: var(--oneui-space-4);
+  padding-bottom: var(--oneui-space-4);
+  border-bottom: 1px solid var(--oneui-border-light);
+}
+
+.oneui-card-title {
+  font-family: var(--oneui-font-family);
+  font-size: var(--oneui-text-xl);
+  font-weight: var(--oneui-font-semibold);
+  color: var(--oneui-text-primary);
+  margin: 0;
+}
+
+.oneui-card-subtitle {
+  font-family: var(--oneui-font-family);
+  font-size: var(--oneui-text-sm);
+  font-weight: var(--oneui-font-regular);
+  color: var(--oneui-text-secondary);
+  margin: var(--oneui-space-1) 0 0 0;
+}
+
+/* Boutons OneUI */
+.oneui-button {
+  font-family: var(--oneui-font-family);
+  font-size: var(--oneui-text-base);
+  font-weight: var(--oneui-font-semibold);
+  padding: var(--oneui-space-3) var(--oneui-space-6);
+  border-radius: var(--oneui-radius-full);
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--oneui-space-2);
+  min-height: 48px;
+}
+
+.oneui-button-primary {
+  background: var(--oneui-primary-gradient);
+  color: var(--oneui-text-inverse);
+  box-shadow: var(--oneui-shadow-sm);
+}
+
+.oneui-button-primary:hover {
+  box-shadow: var(--oneui-shadow-md);
+  transform: translateY(-1px);
+}
+
+.oneui-button-secondary {
+  background: var(--oneui-surface-primary);
+  color: var(--oneui-primary);
+  border: 2px solid var(--oneui-primary);
+}
+
+.oneui-button-secondary:hover {
+  background: var(--oneui-primary);
+  color: var(--oneui-text-inverse);
+}
+
+.oneui-button-tertiary {
+  background: var(--oneui-surface-secondary);
+  color: var(--oneui-text-secondary);
+}
+
+.oneui-button-tertiary:hover {
+  background: var(--oneui-surface-tertiary);
+  color: var(--oneui-text-primary);
+}
+
+/* États des statuts AutomateHub */
+.oneui-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--oneui-space-2);
+  padding: var(--oneui-space-1) var(--oneui-space-3);
+  border-radius: var(--oneui-radius-full);
+  font-size: var(--oneui-text-sm);
+  font-weight: var(--oneui-font-medium);
+}
+
+.oneui-status-active {
+  background: rgba(52, 199, 89, 0.1);
+  color: var(--oneui-success);
+}
+
+.oneui-status-paused {
+  background: rgba(255, 149, 0, 0.1);
+  color: var(--oneui-warning);
+}
+
+.oneui-status-error {
+  background: rgba(255, 59, 48, 0.1);
+  color: var(--oneui-error);
+}
+
+.oneui-status-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.oneui-status-active .oneui-status-indicator {
+  background: var(--oneui-success);
+}
+
+.oneui-status-paused .oneui-status-indicator {
+  background: var(--oneui-warning);
+}
+
+.oneui-status-error .oneui-status-indicator {
+  background: var(--oneui-error);
+}
+
+/* Métriques OneUI */
+.oneui-metric {
+  text-align: center;
+}
+
+.oneui-metric-value {
+  font-family: var(--oneui-font-family);
+  font-size: var(--oneui-text-4xl);
+  font-weight: var(--oneui-font-bold);
+  color: var(--oneui-text-primary);
+  line-height: var(--oneui-leading-tight);
+  margin: 0;
+}
+
+.oneui-metric-label {
+  font-family: var(--oneui-font-family);
+  font-size: var(--oneui-text-sm);
+  font-weight: var(--oneui-font-medium);
+  color: var(--oneui-text-secondary);
+  margin: var(--oneui-space-1) 0 0 0;
+}
+
+.oneui-metric-change {
+  font-family: var(--oneui-font-family);
+  font-size: var(--oneui-text-xs);
+  font-weight: var(--oneui-font-medium);
+  margin: var(--oneui-space-1) 0 0 0;
+}
+
+.oneui-metric-change.positive {
+  color: var(--oneui-success);
+}
+
+.oneui-metric-change.negative {
+  color: var(--oneui-error);
+}
+
+.oneui-metric-change.neutral {
+  color: var(--oneui-text-secondary);
+}
+
+/* Navigation OneUI */
+.oneui-nav {
+  background: var(--oneui-surface-primary);
+  border-bottom: 1px solid var(--oneui-border-light);
+  padding: var(--oneui-space-4) 0;
+}
+
+.oneui-nav-item {
+  font-family: var(--oneui-font-family);
+  font-size: var(--oneui-text-base);
+  font-weight: var(--oneui-font-medium);
+  color: var(--oneui-text-secondary);
+  text-decoration: none;
+  padding: var(--oneui-space-3) var(--oneui-space-4);
+  border-radius: var(--oneui-radius-md);
+  transition: all 0.2s ease-in-out;
+  display: inline-block;
+}
+
+.oneui-nav-item:hover {
+  background: var(--oneui-surface-secondary);
+  color: var(--oneui-text-primary);
+}
+
+.oneui-nav-item.active {
+  background: var(--oneui-primary);
+  color: var(--oneui-text-inverse);
+}
+
+/* Iconographie OneUI */
+.oneui-icon {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.oneui-icon-sm {
+  width: 16px;
+  height: 16px;
+}
+
+.oneui-icon-lg {
+  width: 32px;
+  height: 32px;
+}
+
+.oneui-icon-xl {
+  width: 48px;
+  height: 48px;
+}
+
+/* =============================================================================
+   5. LAYOUT ONEUI 5
+   ============================================================================= */
+
+.oneui-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--oneui-space-6);
+}
+
+.oneui-grid {
+  display: grid;
+  gap: var(--oneui-space-6);
+}
+
+.oneui-grid-2 {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.oneui-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.oneui-grid-4 {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.oneui-flex {
+  display: flex;
+  gap: var(--oneui-space-4);
+}
+
+.oneui-flex-center {
+  align-items: center;
+  justify-content: center;
+}
+
+.oneui-flex-between {
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* =============================================================================
+   6. RESPONSIVE ONEUI 5
+   ============================================================================= */
+
+@media (max-width: 768px) {
+  .oneui-grid-2,
+  .oneui-grid-3,
+  .oneui-grid-4 {
+    grid-template-columns: 1fr;
+  }
+  
+  .oneui-container {
+    padding: 0 var(--oneui-space-4);
+  }
+  
+  .oneui-card {
+    padding: var(--oneui-space-4);
+  }
+  
+  .oneui-text-display {
+    font-size: var(--oneui-text-4xl);
+  }
+  
+  .oneui-text-headline {
+    font-size: var(--oneui-text-2xl);
+  }
+}
+
+/* =============================================================================
+   7. ANIMATIONS ONEUI 5
+   ============================================================================= */
+
+@keyframes oneui-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes oneui-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.oneui-animate-fade-in {
+  animation: oneui-fade-in 0.3s ease-out;
+}
+
+.oneui-animate-scale-in {
+  animation: oneui-scale-in 0.2s ease-out;
+}
+
+/* =============================================================================
+   8. UTILITAIRES ONEUI 5
+   ============================================================================= */
+
+.oneui-text-center { text-align: center; }
+.oneui-text-left { text-align: left; }
+.oneui-text-right { text-align: right; }
+
+.oneui-hidden { display: none; }
+.oneui-visible { display: block; }
+
+.oneui-cursor-pointer { cursor: pointer; }
+
+.oneui-select-none { user-select: none; }
+
+/* Marges et paddings utilitaires */
+.oneui-m-0 { margin: 0; }
+.oneui-m-1 { margin: var(--oneui-space-1); }
+.oneui-m-2 { margin: var(--oneui-space-2); }
+.oneui-m-4 { margin: var(--oneui-space-4); }
+.oneui-m-6 { margin: var(--oneui-space-6); }
+
+.oneui-p-0 { padding: 0; }
+.oneui-p-1 { padding: var(--oneui-space-1); }
+.oneui-p-2 { padding: var(--oneui-space-2); }
+.oneui-p-4 { padding: var(--oneui-space-4); }
+.oneui-p-6 { padding: var(--oneui-space-6); }
+
+.oneui-mt-2 { margin-top: var(--oneui-space-2); }
+.oneui-mt-4 { margin-top: var(--oneui-space-4); }
+.oneui-mb-2 { margin-bottom: var(--oneui-space-2); }
+.oneui-mb-4 { margin-bottom: var(--oneui-space-4); }
+
+/* =============================================================================
+   9. THÈME SOMBRE ONEUI 5
+   ============================================================================= */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --oneui-surface-primary: #1C1E21;
+    --oneui-surface-secondary: #242527;
+    --oneui-surface-tertiary: #3A3B3C;
+    
+    --oneui-text-primary: #E4E6EA;
+    --oneui-text-secondary: #B0B3B8;
+    --oneui-text-tertiary: #8A8D91;
+    
+    --oneui-border-light: #3A3B3C;
+    --oneui-border-medium: #4E4F50;
+    --oneui-border-strong: #6A6D71;
+  }
+  
+  .oneui-card {
+    background: var(--oneui-surface-primary);
+    border: 1px solid var(--oneui-border-light);
+  }
+}

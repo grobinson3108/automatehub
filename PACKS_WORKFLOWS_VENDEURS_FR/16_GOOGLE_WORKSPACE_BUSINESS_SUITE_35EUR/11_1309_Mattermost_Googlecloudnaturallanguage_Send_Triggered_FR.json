@@ -1,0 +1,134 @@
+{
+  "id": "133",
+  "name": "Analyser le sentiment des retours et envoyer un message sur Mattermost",
+  "nodes": [
+    {
+      "name": "Déclencheur Typeform",
+      "type": "n8n-nodes-base.typeformTrigger",
+      "position": [
+        510,
+        260
+      ],
+      "webhookId": "ad8a87ef-d293-4e48-8d36-838d69ebce0f",
+      "parameters": {
+        "formId": ""
+      },
+      "credentials": {
+        "typeformApi": "typeform"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Google Cloud Natural Language",
+      "type": "n8n-nodes-base.googleCloudNaturalLanguage",
+      "position": [
+        710,
+        260
+      ],
+      "parameters": {
+        "content": "={{$node[\"Typeform Trigger\"].json[\"Que pensez-vous de l'événement ?\"]}}",
+        "options": {}
+      },
+      "credentials": {
+        "googleCloudNaturalLanguageOAuth2Api": "cloud"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "SI",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        910,
+        260
+      ],
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{$node[\"Google Cloud Natural Language\"].json[\"documentSentiment\"][\"score\"]}}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Mattermost",
+      "type": "n8n-nodes-base.mattermost",
+      "position": [
+        1110,
+        160
+      ],
+      "parameters": {
+        "message": "=Vous avez reçu un nouveau retour avec un score de {{$node[\"Google Cloud Natural Language\"].json[\"documentSentiment\"][\"score\"]}}. Voici ce qu'il dit :{{$node[\"Typeform Trigger\"].json[\"Que pensez-vous de l'événement ?\"]}}",
+        "channelId": "4h1bz64cyifwxnzojkzh8hxh4a",
+        "attachments": [],
+        "otherOptions": {}
+      },
+      "credentials": {
+        "mattermostApi": "mattermost"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "NoOp",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        1110,
+        360
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    }
+  ],
+  "active": false,
+  "settings": {},
+  "connections": {
+    "SI": {
+      "main": [
+        [
+          {
+            "node": "Mattermost",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "NoOp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déclencheur Typeform": {
+      "main": [
+        [
+          {
+            "node": "Google Cloud Natural Language",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Cloud Natural Language": {
+      "main": [
+        [
+          {
+            "node": "SI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

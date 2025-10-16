@@ -1,0 +1,19 @@
+{
+  "name": "Pack_Integration_Pro",
+  "type": "Special",
+  "description": "\ud83d\udd17 Connectez tous vos outils ensemble",
+  "prix": 149,
+  "workflow_count": 100,
+  "workflows": [
+    "Telegram-Triggered_AI_Chat_with_Gmail_Integration.json",
+    "Typeform_to_Sheets_with_Slack_and_Email_Notifications_1.json",
+    "webhook_communicate_slack_emailsend_1.json",
+    "Log_New_Gmail_Messages_to_Google_Sheets_Automatically.json",
+    "HubSpot_Lead_Enrichment_from_Email_Analysis.json",
+    "Angie,_Personal_AI_Assistant_with_Telegram_Voice_and_Text_complex_15nodes.json",
+    "Typeform_to_Sheets_with_Slack_and_Email_Notifications.json",
+    "Email-Triggered_Slack_Notifications_for_Delivery_Accounting.json",
+    "webhook_automation_gmail_telegram_complex_17nodes.json",
+    "webhook_process_telegram_googlecalendartool_complex_15nodes.json"
+  ]
+}

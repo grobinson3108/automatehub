@@ -1,0 +1,19 @@
+{
+  "name": "Test Simple Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "text": "Cliquez ici pour commencer",
+        "value": "ENTREZ VOTRE CLÉ API ICI"
+      },
+      "name": "Test Node",
+      "type": "manual"
+    }
+  ],
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

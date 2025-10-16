@@ -1,0 +1,961 @@
+{
+  "name": "Bot Telegram Image Interactive - Fixed",
+  "nodes": [
+    {
+      "parameters": {
+        "chatId": "={{ $('Ecoute d\\'evenements').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "4d3669a5-ba8c-47a7-80d6-d02983f8053b",
+      "name": "Envoyer final Répondre",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1400,
+        192
+      ],
+      "typeVersion": 1.1,
+      "credentials": {
+        "telegramApi": {
+          "id": "oqqUnL1KzD5oBGZt",
+          "name": "Telegram Marketing"
+        }
+      },
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message ? $json.message.text : $json.callback_query.data }}",
+        "options": {
+          "systemMessage": "=Tu es un assistant utile. Tu communiques avec un utilisateur nommé {{ $json.message ? $json.message.from.first_name : $json.callback_query.from.first_name }}. Adresse-toi à l'utilisateur par son nom à chaque fois. \n\nQuand l'utilisateur demande une image:\n1. Si aucun style n'est précisé, demande toujours les préférences de style AVANT de générer l'image\n2. Si tu reçois une sélection de style (format: style:X|background:Y|atmosphere:Z|subject:...), génère l'image avec ces paramètres\n3. Envoie toujours le lien vers l'image dans la réponse finale"
+        }
+      },
+      "id": "366d6f39-a2a8-46cc-89a1-f6e62b37c2f9",
+      "name": "Agent IA",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1020,
+        192
+      ],
+      "typeVersion": 1.7
+    },
+    {
+      "parameters": {
+        "updates": [
+          "*"
+        ],
+        "additionalFields": {}
+      },
+      "id": "9dae5d33-77fe-4e15-9bc6-718b5f436b43",
+      "name": "Ecoute d'evenements",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        128,
+        192
+      ],
+      "webhookId": "322dce18-f93e-4f86-b9b1-3305519b7834",
+      "typeVersion": 1,
+      "credentials": {
+        "telegramApi": {
+          "id": "oqqUnL1KzD5oBGZt",
+          "name": "Telegram Marketing"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Ecoute d\\'evenements').item.json.message ? $('Ecoute d\\'evenements').item.json.message.chat.id : $('Ecoute d\\'evenements').item.json.callback_query.message.chat.id }}",
+        "text": "=🎨 Je vais créer une image de : **{{ $('Code').item.json.subject }}**\n\nChoisissez vos préférences :",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🎨 Style",
+                    "callbackData": "menu:style"
+                  },
+                  {
+                    "text": "🏞️ Arrière-plan",
+                    "callbackData": "menu:background"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "✨ Atmosphère",
+                    "callbackData": "menu:atmosphere"
+                  },
+                  {
+                    "text": "🎯 Générer maintenant",
+                    "callbackData": "generate:default"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "id": "7b8c9d0e-1f2a-3b4c-5d6e-7f8a9b0c1d2e",
+      "name": "Envoyer Menu Principal",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        760,
+        320
+      ],
+      "typeVersion": 1.1,
+      "credentials": {
+        "telegramApi": {
+          "id": "oqqUnL1KzD5oBGZt",
+          "name": "Telegram Marketing"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "editMessageText",
+        "chatId": "={{ $json.chatId }}",
+        "messageId": "={{ $json.messageId }}",
+        "text": "=🎨 **Choisissez un style :**\n\nSélection actuelle : {{ $json.currentSelection.style }}",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🎨 Réaliste",
+                    "callbackData": "select:style:réaliste"
+                  },
+                  {
+                    "text": "🖼️ Artistique",
+                    "callbackData": "select:style:artistique"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "📚 Bande dessinée",
+                    "callbackData": "select:style:bande dessinée"
+                  },
+                  {
+                    "text": "🎮 3D/CGI",
+                    "callbackData": "select:style:3D CGI"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🖌️ Aquarelle",
+                    "callbackData": "select:style:aquarelle"
+                  },
+                  {
+                    "text": "✏️ Croquis",
+                    "callbackData": "select:style:croquis"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "⬅️ Retour",
+                    "callbackData": "menu:main"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "id": "4d5e6f7a-8b9c-0d1e-2f3a-4b5c6d7e8f9a",
+      "name": "Menu Style",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        920,
+        -120
+      ],
+      "typeVersion": 1.1,
+      "credentials": {
+        "telegramApi": {
+          "id": "oqqUnL1KzD5oBGZt",
+          "name": "Telegram Marketing"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "editMessageText",
+        "chatId": "={{ $json.chatId }}",
+        "messageId": "={{ $json.messageId }}",
+        "text": "=🏞️ **Choisissez un arrière-plan :**\n\nSélection actuelle : {{ $json.currentSelection.background }}",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🌳 Nature",
+                    "callbackData": "select:background:nature"
+                  },
+                  {
+                    "text": "🏙️ Urbain",
+                    "callbackData": "select:background:urbain"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🏠 Intérieur",
+                    "callbackData": "select:background:intérieur"
+                  },
+                  {
+                    "text": "🌌 Espace",
+                    "callbackData": "select:background:espace"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🏖️ Plage",
+                    "callbackData": "select:background:plage"
+                  },
+                  {
+                    "text": "🏔️ Montagne",
+                    "callbackData": "select:background:montagne"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "⬅️ Retour",
+                    "callbackData": "menu:main"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "id": "5e6f7a8b-9c0d-1e2f-3a4b-5c6d7e8f9a0b",
+      "name": "Menu Background",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        920,
+        -40
+      ],
+      "typeVersion": 1.1,
+      "credentials": {
+        "telegramApi": {
+          "id": "oqqUnL1KzD5oBGZt",
+          "name": "Telegram Marketing"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "editMessageText",
+        "chatId": "={{ $json.chatId }}",
+        "messageId": "={{ $json.messageId }}",
+        "text": "=✨ **Choisissez une atmosphère :**\n\nSélection actuelle : {{ $json.currentSelection.atmosphere }}",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "☀️ Lumineux",
+                    "callbackData": "select:atmosphere:lumineux"
+                  },
+                  {
+                    "text": "🌙 Sombre",
+                    "callbackData": "select:atmosphere:sombre"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🎉 Joyeux",
+                    "callbackData": "select:atmosphere:joyeux"
+                  },
+                  {
+                    "text": "😔 Mélancolique",
+                    "callbackData": "select:atmosphere:mélancolique"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "🔮 Mystérieux",
+                    "callbackData": "select:atmosphere:mystérieux"
+                  },
+                  {
+                    "text": "🌈 Coloré",
+                    "callbackData": "select:atmosphere:coloré"
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "⬅️ Retour",
+                    "callbackData": "menu:main"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "id": "6f7a8b9c-0d1e-2f3a-4b5c-6d7e8f9a0b1c",
+      "name": "Menu Atmosphere",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        920,
+        40
+      ],
+      "typeVersion": 1.1,
+      "credentials": {
+        "telegramApi": {
+          "id": "oqqUnL1KzD5oBGZt",
+          "name": "Telegram Marketing"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "a1b2c3d4-e5f6-7a8b-9c0d-1e2f3a4b5c6d",
+              "leftValue": "={{ $json.callback_query }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9a8b7c6d-5e4f-3a2b-1c0d-9e8f7a6b5c4d",
+      "name": "Est un callback?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        280,
+        192
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "const callbackData = $input.item.json.callback_query.data;\nconst messageId = $input.item.json.callback_query.message.message_id;\nconst chatId = $input.item.json.callback_query.message.chat.id;\nconst userId = $input.item.json.callback_query.from.id;\n\n// Récupérer les sélections existantes depuis le stockage statique\nlet selections = $getWorkflowStaticData('global');\nif (!selections.userSelections) {\n  selections.userSelections = {};\n}\nif (!selections.userSelections[userId]) {\n  selections.userSelections[userId] = {\n    style: \"réaliste\",\n    background: \"nature\",\n    atmosphere: \"lumineux\",\n    subject: \"\"\n  };\n}\n\nconst userSelection = selections.userSelections[userId];\n\n// Traiter le callback\nif (callbackData.startsWith('menu:')) {\n  const menuType = callbackData.split(':')[1];\n  return {\n    action: 'showMenu',\n    menuType: menuType,\n    messageId: messageId,\n    chatId: chatId,\n    currentSelection: userSelection\n  };\n} else if (callbackData.startsWith('select:')) {\n  const [_, type, value] = callbackData.split(':');\n  userSelection[type] = value;\n  \n  // Sauvegarder la sélection\n  $setWorkflowStaticData('global', selections);\n  \n  return {\n    action: 'updateSelection',\n    type: type,\n    value: value,\n    messageId: messageId,\n    chatId: chatId,\n    currentSelection: userSelection\n  };\n} else if (callbackData.startsWith('generate:')) {\n  return {\n    action: 'generate',\n    messageId: messageId,\n    chatId: chatId,\n    selection: userSelection\n  };\n}\n\nreturn {\n  action: 'unknown',\n  callbackData: callbackData\n};"
+      },
+      "id": "1a2b3c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+      "name": "Traiter Callback",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        440,
+        80
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.action }}",
+                    "rightValue": "showMenu",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "showMenu"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.action }}",
+                    "rightValue": "updateSelection",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "updateSelection"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.action }}",
+                    "rightValue": "generate",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "generate"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "id": "2b3c4d5e-6f7a-8b9c-0d1e-2f3a4b5c6d7e",
+      "name": "Router Callback",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        600,
+        80
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.menuType }}",
+                    "rightValue": "style",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "style"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.menuType }}",
+                    "rightValue": "background",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "background"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.menuType }}",
+                    "rightValue": "atmosphere",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ]
+              },
+              "renameOutput": true,
+              "outputKey": "atmosphere"
+            }
+          ]
+        }
+      },
+      "id": "3c4d5e6f-7a8b-9c0d-1e2f-3a4b5c6d7e8f",
+      "name": "Switch Menu Type",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        760,
+        -40
+      ],
+      "typeVersion": 3
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "8b9c0d1e-2f3a-4b5c-6d7e-8f9a0b1c2d3e",
+              "leftValue": "={{ $json.message.text }}",
+              "rightValue": "(image|dessine|crée|génère|photo|illustration)",
+              "operator": {
+                "type": "string",
+                "operation": "regex",
+                "name": "filter.operator.regex"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3e4f5a6b-7c8d-9e0f-1a2b-3c4d5e6f7a8b",
+      "name": "Detecte demande image",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        440,
+        320
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extraire le sujet de la demande d'image\nconst text = $input.item.json.message.text;\nconst match = text.match(/(?:image|dessine|crée|génère|photo|illustration)(?:\\s+(?:une?|de|du|des|la|le|les))?\\s+(.+)/i);\n\nif (match) {\n  return {\n    subject: match[1].trim(),\n    originalText: text,\n    userId: $input.item.json.message.from.id,\n    chatId: $input.item.json.message.chat.id,\n    userName: $input.item.json.message.from.first_name\n  };\n} else {\n  return {\n    subject: text,\n    originalText: text,\n    userId: $input.item.json.message.from.id,\n    chatId: $input.item.json.message.chat.id,\n    userName: $input.item.json.message.from.first_name\n  };\n}"
+      },
+      "id": "8f9a0b1c-2d3e-4f5a-6b7c-8d9e0f1a2b3c",
+      "name": "Code",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        600,
+        320
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "jsCode": "const selection = $input.item.json.selection;\nconst subject = selection.subject || \"une scène\";\n\n// Construire le prompt enrichi\nconst prompt = `${subject}, style ${selection.style}, arrière-plan ${selection.background}, atmosphère ${selection.atmosphere}`;\n\n// Formater les données pour l'agent\nreturn {\n  callback_query: {\n    data: `style:${selection.style}|background:${selection.background}|atmosphere:${selection.atmosphere}|subject:${subject}`,\n    from: {\n      id: $input.item.json.chatId,\n      first_name: \"User\"\n    }\n  }\n};"
+      },
+      "id": "7a8b9c0d-1e2f-3a4b-5c6d-7e8f9a0b1c2d",
+      "name": "Preparer Generation",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        860,
+        80
+      ],
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "options": {
+          "delay": 100
+        }
+      },
+      "id": "8c9d0e1f-2a3b-4c5d-6e7f-8a9b0c1d2e3f",
+      "name": "Wait",
+      "type": "n8n-nodes-base.wait",
+      "position": [
+        760,
+        80
+      ],
+      "typeVersion": 1.1,
+      "webhookId": "0d19c06e-cb7e-480d-bf69-ad95e2c40bf2"
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "={{ $('Ecoute d\\'evenements').first().json.message.from.id }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "id": "179c519c-aedc-4938-8872-d2d94712f1fb",
+      "name": "Envoyer l'image",
+      "type": "n8n-nodes-base.telegramTool",
+      "position": [
+        1300,
+        400
+      ],
+      "typeVersion": 1.2,
+      "credentials": {
+        "telegramApi": {
+          "id": "oqqUnL1KzD5oBGZt",
+          "name": "Telegram Marketing"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "toolDescription": "Appelle cet outil pour demander un modèle Dall-E-3, lorsque l'utilisateur demande de dessiner quelque chose avec des paramètres spécifiques. Utilise le prompt enrichi avec style, arrière-plan et atmosphère.",
+        "method": "POST",
+        "url": "https://api.openai.com/v1/images/generations",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "openAiApi",
+        "sendBody": true,
+        "parametersBody": {
+          "values": [
+            {
+              "name": "model",
+              "valueProvider": "fieldValue",
+              "value": "dall-e-3"
+            },
+            {
+              "name": "prompt"
+            },
+            {
+              "name": "n",
+              "valueProvider": "fieldValue",
+              "value": 1
+            },
+            {
+              "name": "size",
+              "valueProvider": "fieldValue",
+              "value": "1024x1024"
+            }
+          ]
+        }
+      },
+      "id": "97bd2677-1206-43f9-ab18-67dd2ec2ac37",
+      "name": "Generer Image",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        1160,
+        400
+      ],
+      "typeVersion": 1.1,
+      "credentials": {
+        "openAiApi": {
+          "id": "UMiZ3xasVxXbQU41",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {}
+      },
+      "id": "47cbaf33-6d97-4951-9c55-726cb190fcc6",
+      "name": "GPT 4 mini",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        860,
+        400
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "openAiApi": {
+          "id": "UMiZ3xasVxXbQU41",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sessionKey": "=chat_with_{{ $json.message ? $json.message.chat.id : $json.callback_query.from.id }}",
+        "contextWindowLength": 10
+      },
+      "id": "8625fae2-8548-4bfe-b9c7-00ac7b9471f4",
+      "name": "Memoire",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        1020,
+        400
+      ],
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Ecoute d'evenements": {
+      "main": [
+        [
+          {
+            "node": "Est un callback?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Est un callback?": {
+      "main": [
+        [
+          {
+            "node": "Traiter Callback",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Detecte demande image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detecte demande image": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Agent IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Envoyer Menu Principal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Traiter Callback": {
+      "main": [
+        [
+          {
+            "node": "Router Callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Router Callback": {
+      "main": [
+        [
+          {
+            "node": "Switch Menu Type",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Preparer Generation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch Menu Type": {
+      "main": [
+        [
+          {
+            "node": "Menu Style",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Menu Background",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Menu Atmosphere",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent IA": {
+      "main": [
+        [
+          {
+            "node": "Envoyer final Répondre",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generer Image": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent IA",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT 4 mini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent IA",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memoire": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agent IA",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envoyer l'image": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent IA",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparer Generation": {
+      "main": [
+        [
+          {
+            "node": "Agent IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Envoyer Menu Principal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "3df2d38a2382b8dfc61b5b037b7fe71c783ab09a6ca04abdae8a809035c1aa99"
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": {
+    "global": {
+      "userSelections": {}
+    }
+  },
+  "tags": []
+}

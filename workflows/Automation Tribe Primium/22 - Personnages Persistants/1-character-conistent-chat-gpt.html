@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Generate Consistent Characters — n8n + Canvas</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <meta name="color-scheme" content="light dark" />
+  <style>
+    .drop-active { border-color: rgb(59 130 246); background-color: rgba(59,130,246,.05); }
+    .visually-hidden { position:absolute; clip:rect(0 0 0 0); width:1px; height:1px; margin:-1px; overflow:hidden; }
+    .prose-pre { max-height: 240px; overflow:auto; }
+    canvas { image-rendering: -webkit-optimize-contrast; }
+    a.link { text-decoration: underline; text-underline-offset: 2px; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 antialiased">
+  <main class="max-w-4xl mx-auto px-4 py-10">
+    <!-- Header -->
+    <header class="mb-8 text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 text-amber-700 text-xs font-semibold tracking-wide uppercase">Automation Tribe</div>
+      <h1 class="mt-3 text-3xl font-semibold tracking-tight">Generate Consistent Characters</h1>
+      <p class="text-gray-600 mt-2">Step 1: expand an idea into prompts or use your idea directly. Step 2: choose size, upload an image, and generate.</p>
+    </header>
+
+    <!-- Alert -->
+    <div id="alert" class="hidden mb-6 rounded-lg border border-red-200 bg-red-50 text-red-800 px-4 py-3 text-sm" role="alert" aria-live="polite"></div>
+
+    <!-- Step 1 -->
+    <section id="step1" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="inline-flex items-center justify-center size-7 rounded-full bg-blue-100 text-blue-700 text-sm font-medium">1</span>
+        <h2 class="text-xl font-semibold">Initial Idea & Prompt Expansion</h2>
+      </div>
+
+      <label for="idea" class="block text-sm font-medium text-gray-700 mb-2">Your simple idea</label>
+      <textarea id="idea" rows="5" class="w-full resize-y rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 p-4 text-[15px]" placeholder="Enter a simple idea, e.g., 'a cyberpunk detective in a rainy city'..."></textarea>
+      <div class="mt-2 flex items-center justify-between text-xs text-gray-500">
+        <span id="charCount">0 characters</span>
+        <span>Tip: be concise; we’ll expand it into detailed prompts.</span>
+      </div>
+
+      <div class="mt-5 flex flex-wrap gap-3">
+        <button id="btnGenerateIdeas" class="inline-flex items-center gap-2 rounded-xl bg-blue-600 text-white px-5 py-3 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-blue-700 transition-all" disabled>
+          <svg id="spin1" class="hidden animate-spin size-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 008 12H4z"></path>
+          </svg>
+          <span>Generate Ideas</span>
+        </button>
+
+        <!-- Bypass: Use This Prompt -->
+        <button id="btnUseThisPrompt" class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 text-white px-5 py-3 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-indigo-700 transition-all" disabled title="Use your idea as the final prompt and jump to image upload">
+          <svg class="size-4" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Use This Prompt</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Step 2 -->
+    <section id="step2" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6 hidden">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="inline-flex items-center justify-center size-7 rounded-full bg-emerald-100 text-emerald-700 text-sm font-medium">2</span>
+        <h2 class="text-xl font-semibold">Select Prompt, Size, Upload Image & Generate</h2>
+      </div>
+
+      <!-- Selected prompt banner when bypassing list / after selection -->
+      <div id="selectedPromptBanner" class="hidden mb-4 rounded-xl border border-blue-100 bg-blue-50 p-3">
+        <div class="text-xs uppercase tracking-wide text-blue-700 font-semibold mb-1">Selected Prompt</div>
+        <pre id="selectedPromptText" class="whitespace-pre-wrap text-sm text-blue-900"></pre>
+      </div>
+
+      <!-- Prompt choices (rendered after expansion) -->
+      <div id="promptBlock" class="mb-6">
+        <p class="text-sm font-medium text-gray-700 mb-2">Select one prompt</p>
+        <div id="promptList" class="grid gap-3"></div>
+      </div>
+
+      <!-- Output size (enum values) -->
+      <div class="grid sm:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label for="sizeSelect" class="block text-sm font-medium text-gray-700 mb-2">Output size</label>
+          <select id="sizeSelect" class="w-full rounded-xl border border-gray-200 p-2.5 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10">
+            <option value="square_hd" selected>square_hd</option>
+            <option value="square">square</option>
+            <option value="portrait_4_3">portrait_4_3</option>
+            <option value="portrait_16_9">portrait_16_9</option>
+            <option value="landscape_4_3">landscape_4_3</option>
+            <option value="landscape_16_9">landscape_16_9</option>
+          </select>
+          <p class="text-xs text-gray-500 mt-1">These values are passed as-is to your n8n workflow.</p>
+        </div>
+      </div>
+
+      <!-- Uploader -->
+      <div>
+        <p class="text-sm font-medium text-gray-700 mb-2">Upload an image (.jpg, .png, .webp)</p>
+        <div id="dropzone" class="rounded-2xl border-2 border-dashed border-gray-300 p-6 text-center cursor-pointer select-none bg-gray-50 hover:bg-gray-100 transition">
+          <input id="fileInput" type="file" accept=".png,.jpg,.jpeg,.webp" class="visually-hidden" />
+          <div class="flex flex-col items-center">
+            <svg class="size-8 text-gray-400 mb-2" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M7 16a4 4 0 118 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <path d="M12 12V4m0 0l-3 3m3-3l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <rect x="3" y="14" width="18" height="7" rx="2" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+            <p class="text-sm text-gray-700"><span class="font-medium">Click to upload</span> or drag & drop</p>
+            <p class="text-xs text-gray-500 mt-1">Max 10 MB • PNG, JPG, WEBP</p>
+          </div>
+        </div>
+
+        <!-- Canvas preview -->
+        <div id="fileMeta" class="hidden mt-3">
+          <div class="flex items-center gap-3 text-sm text-gray-700">
+            <span id="fileName" class="truncate"></span>
+            <button id="fileClear" type="button" class="ml-auto text-gray-500 hover:text-gray-700 underline decoration-dotted">Remove</button>
+          </div>
+          <div class="mt-3 border rounded-xl overflow-hidden">
+            <canvas id="uploadCanvas" class="w-full h-auto block"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <button id="btnGenerateImage" class="inline-flex items-center gap-2 rounded-xl bg-emerald-600 text-white px-5 py-3 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-700 transition-all" disabled>
+          <svg id="spin2" class="hidden animate-spin size-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 008 12H4z"></path>
+          </svg>
+          <span>Generate Image</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Result (canvas) -->
+    <section id="resultCard" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 relative">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="inline-flex items-center justify-center size-7 rounded-full bg-gray-200 text-gray-700 text-sm font-medium">✓</span>
+        <h2 class="text-xl font-semibold">Final Result</h2>
+      </div>
+
+      <div id="resultArea" class="relative min-h-56 border border-dashed border-gray-200 rounded-xl p-4 bg-gray-50">
+        <div id="placeholder" class="text-gray-500 text-sm text-center">Your generated image will appear here.</div>
+        <canvas id="resultCanvas" class="hidden w-full h-auto"></canvas>
+        <div id="overlay" class="hidden absolute inset-0 bg-white/70 backdrop-blur-sm rounded-xl grid place-items-center">
+          <div class="flex items-center gap-3 text-gray-700 text-sm">
+            <svg class="animate-spin size-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 008 12H4z"></path>
+            </svg>
+            <span>Generating image…</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <button id="btnDownload" class="inline-flex items-center gap-2 rounded-xl border border-gray-300 px-4 py-2 text-sm disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+          <svg class="size-4" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v12m0 0l-4-4m4 4l4-4M4 20h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span>Download</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="mt-10 text-center text-sm text-gray-500">
+      Made by <a href="https://www.automation-tribe.com/" target="_blank" rel="noopener" class="link">Automation Tribe</a>.
+    </footer>
+  </main>
+
+  <script>
+    // ========= n8n WEBHOOK =========
+    const WEBHOOK_URL = "https://sumobundle-u31317.vm.elestio.app/webhook-test/7608c48f-8d0c-4583-b010-cbf28a82a7f5";
+
+    // ========= DOM Refs =========
+    const alertBox = document.getElementById("alert");
+    const idea = document.getElementById("idea");
+    const charCount = document.getElementById("charCount");
+    const btnGenerateIdeas = document.getElementById("btnGenerateIdeas");
+    const btnUseThisPrompt = document.getElementById("btnUseThisPrompt");
+    const spin1 = document.getElementById("spin1");
+
+    const step2 = document.getElementById("step2");
+    const promptBlock = document.getElementById("promptBlock");
+    const promptList = document.getElementById("promptList");
+    const selectedPromptBanner = document.getElementById("selectedPromptBanner");
+    const selectedPromptText = document.getElementById("selectedPromptText");
+    const sizeSelect = document.getElementById("sizeSelect");
+
+    const dropzone = document.getElementById("dropzone");
+    const fileInput = document.getElementById("fileInput");
+    const fileMeta = document.getElementById("fileMeta");
+    const fileName = document.getElementById("fileName");
+    const fileClear = document.getElementById("fileClear");
+    const uploadCanvas = document.getElementById("uploadCanvas");
+
+    const btnGenerateImage = document.getElementById("btnGenerateImage");
+    const spin2 = document.getElementById("spin2");
+    const overlay = document.getElementById("overlay");
+    const placeholder = document.getElementById("placeholder");
+    const resultCanvas = document.getElementById("resultCanvas");
+    const btnDownload = document.getElementById("btnDownload");
+
+    // ========= State =========
+    let selectedPrompt = null;
+    let imageFile = null;
+    let lastImageBlob = null;       // for reliable downloads
+    let lastImageRemoteUrl = null;  // fallback if blob not available
+
+    // ========= Utils =========
+    function escapeHtml(str){
+      return String(str).replace(/[&<>"']/g, m => ({
+        "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"
+      })[m]);
+    }
+    function showAlert(msg, details=""){
+      if (!msg && !details){ alertBox.classList.add("hidden"); alertBox.textContent=""; return; }
+      const safe = escapeHtml(msg);
+      const det = details ? `<pre class="mt-1 text-xs prose-pre">${escapeHtml(details)}</pre>` : "";
+      alertBox.innerHTML = `${safe}${det}`;
+      alertBox.classList.remove("hidden");
+      setTimeout(()=>alertBox.classList.add("hidden"), 8000);
+    }
+    function enable(el, on=true){ el.disabled = !on; }
+    function updateGenerateEnabled(){ enable(btnGenerateImage, Boolean(selectedPrompt && imageFile)); }
+    function safeJsonParse(text){ try { return { ok:true, data: JSON.parse(text) }; } catch(e){ return { ok:false, error:e }; } }
+
+    // Canvas helpers
+    function drawToCanvas(canvas, img, maxDim = 4096){
+      const ctx = canvas.getContext("2d");
+      let { width, height } = img;
+      if (Math.max(width, height) > maxDim){
+        const scale = maxDim / Math.max(width, height);
+        width = Math.round(width * scale);
+        height = Math.round(height * scale);
+      }
+      canvas.width = width;
+      canvas.height = height;
+      ctx.clearRect(0,0,width,height);
+      ctx.drawImage(img, 0, 0, width, height);
+    }
+    async function imageBitmapFromFile(file){
+      const buf = await file.arrayBuffer();
+      const blob = new Blob([buf], { type: file.type });
+      return await createImageBitmap(blob);
+    }
+    function canvasToBlob(canvas, type="image/png", quality=0.95){
+      return new Promise((resolve, reject) => {
+        try {
+          canvas.toBlob(b => b ? resolve(b) : reject(new Error("Canvas toBlob failed")), type, quality);
+        } catch (e) { reject(e); }
+      });
+    }
+
+    // Prompt normalization → [{text, title?}]
+    function unwrapIfArray(payload){
+      if (Array.isArray(payload) && payload.length === 1) return payload[0];
+      return payload;
+    }
+    function normalizeToPromptObjects(arr){
+      return arr.map(item => {
+        if (typeof item === "string") return { text: item };
+        if (item && typeof item === "object"){
+          const text = item.text || item.prompt || item.content || item.description || item.title || "";
+          const title = item.title || undefined;
+          return text ? { text: String(text), title: title ? String(title) : undefined } : null;
+        }
+        return null;
+      }).filter(Boolean);
+    }
+    function extractPrompts(payload){
+      payload = unwrapIfArray(payload);
+      const cc = payload?.message?.content?.content;
+      if (cc && Array.isArray(cc.prompts)){
+        const out = normalizeToPromptObjects(cc.prompts);
+        if (out.length) return out;
+      }
+      const c1 = payload?.message?.content;
+      if (Array.isArray(c1?.prompts)){
+        const out = normalizeToPromptObjects(c1.prompts);
+        if (out.length) return out;
+      }
+      if (Array.isArray(payload) && payload.every(x => typeof x === "string")){
+        return normalizeToPromptObjects(payload);
+      }
+      const maybe = payload?.prompts ?? payload?.data?.prompts ?? payload?.result?.prompts;
+      if (Array.isArray(maybe)){
+        const out = normalizeToPromptObjects(maybe);
+        if (out.length) return out;
+      }
+      if (typeof payload?.prompts === "string"){
+        const lines = payload.prompts.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+        if (lines.length) return normalizeToPromptObjects(lines);
+      }
+      if (Array.isArray(payload?.choices)){
+        const lines = payload.choices
+          .map(c => typeof c?.text === "string" ? c.text :
+                    typeof c?.message?.content === "string" ? c.message.content : null)
+          .filter(Boolean)
+          .flatMap(s => s.split(/\r?\n/))
+          .map(s => s.trim()).filter(Boolean);
+        if (lines.length) return normalizeToPromptObjects(lines);
+      }
+      const single = typeof payload === "string" ? payload :
+                     typeof payload?.data === "string" ? payload.data :
+                     typeof payload?.result === "string" ? payload.result : null;
+      if (typeof single === "string"){
+        const lines = single.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+        if (lines.length) return normalizeToPromptObjects(lines);
+      }
+      return [];
+    }
+    function extractImageUrl(payload){
+      const direct = payload?.image_url || payload?.url;
+      if (typeof direct === "string" && direct) return direct;
+      if (typeof payload?.image === "string" && payload.image){
+        if (/^data:image\//i.test(payload.image)) return payload.image;
+        return "data:image/png;base64," + payload.image;
+      }
+      return null;
+    }
+
+    // ========= Step 1: Idea → Prompts =========
+    idea.addEventListener("input",()=>{
+      const n = idea.value.trim().length;
+      charCount.textContent = `${n} characters`;
+      const enabled = n > 0;
+      enable(btnGenerateIdeas, enabled);
+      enable(btnUseThisPrompt, enabled);
+    });
+
+    // Expand idea via webhook
+    btnGenerateIdeas.addEventListener("click", async () => {
+      showAlert("");
+      spin1.classList.remove("hidden");
+      enable(btnGenerateIdeas, false);
+      enable(btnUseThisPrompt, false);
+
+      try{
+        const res = await fetch(WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            action: "generate_prompts",
+            task:   "generate_prompts",
+            initial_prompt: idea.value.trim()
+          })
+        });
+
+        const raw = await res.text();
+        const parsed = safeJsonParse(raw);
+        if (!res.ok){
+          const preview = raw.slice(0, 800);
+          throw new Error(`HTTP ${res.status} ${res.statusText}\n${preview}`);
+        }
+        if (!parsed.ok){
+          const preview = raw.slice(0, 800);
+          throw new Error(`Response was not valid JSON.\n${preview}`);
+        }
+
+        const items = extractPrompts(parsed.data);
+        if (!items.length){
+          const preview = raw.slice(0, 800);
+          throw new Error(`Invalid response: expected prompts.\nPreview: ${preview}`);
+        }
+
+        // Render prompt cards (full text, optional title)
+        step2.classList.remove("hidden");
+        selectedPromptBanner.classList.add("hidden");
+        promptBlock.classList.remove("hidden");
+        promptList.innerHTML = "";
+        items.slice(0, 5).forEach((obj, i) => {
+          const id = `prompt_${i}`;
+          const titleHtml = obj.title ? `<div class="text-sm font-semibold text-gray-800 mb-1">${escapeHtml(obj.title)}</div>` : "";
+          const html = `
+            <label for="${id}" class="block border rounded-xl p-3 cursor-pointer hover:bg-blue-50">
+              <div class="flex items-start gap-3">
+                <input id="${id}" type="radio" name="prompt" value="${i}" class="mt-1.5">
+                <div class="flex-1">
+                  ${titleHtml}
+                  <pre class="whitespace-pre-wrap text-sm text-gray-800 leading-relaxed">${escapeHtml(obj.text)}</pre>
+                </div>
+              </div>
+            </label>`;
+          promptList.insertAdjacentHTML("beforeend", html);
+        });
+
+        const fullTexts = items.map(p => p.text);
+        promptList.querySelectorAll("input[name=prompt]").forEach(inp=>{
+          inp.addEventListener("change",(e)=>{
+            selectedPrompt = fullTexts[Number(e.target.value)] || null;
+            selectedPromptBanner.classList.remove("hidden");
+            selectedPromptText.textContent = selectedPrompt || "";
+            updateGenerateEnabled();
+          });
+        });
+
+        step2.scrollIntoView({ behavior: "smooth", block: "start" });
+      }catch(err){
+        showAlert("Error generating prompts.", String(err?.message || err));
+      }finally{
+        spin1.classList.add("hidden");
+        enable(btnGenerateIdeas, true);
+        enable(btnUseThisPrompt, true);
+      }
+    });
+
+    // Bypass: Use This Prompt
+    btnUseThisPrompt.addEventListener("click", () => {
+      const val = idea.value.trim();
+      if (!val){ showAlert("Please enter a prompt first."); return; }
+      selectedPrompt = val;
+      step2.classList.remove("hidden");
+      promptBlock.classList.add("hidden");
+      selectedPromptBanner.classList.remove("hidden");
+      selectedPromptText.textContent = selectedPrompt;
+      step2.scrollIntoView({ behavior: "smooth", block: "start" });
+      updateGenerateEnabled();
+    });
+
+    // ========= Step 2: File handling =========
+    dropzone.addEventListener("click",()=>fileInput.click());
+    dropzone.addEventListener("dragover",e=>{e.preventDefault();dropzone.classList.add("drop-active");});
+    dropzone.addEventListener("dragleave",()=>dropzone.classList.remove("drop-active"));
+    dropzone.addEventListener("drop",async e=>{
+      e.preventDefault();
+      dropzone.classList.remove("drop-active");
+      const f = e.dataTransfer.files?.[0];
+      if (f) await handleFile(f);
+    });
+    fileInput.addEventListener("change",async ()=>{
+      const f = fileInput.files?.[0];
+      if (f) await handleFile(f);
+    });
+    fileClear.addEventListener("click",()=>{ imageFile=null; fileMeta.classList.add("hidden"); updateGenerateEnabled(); });
+
+    async function handleFile(file){
+      const ACCEPT = ["image/png","image/jpeg","image/jpg","image/webp"];
+      const MAX_MB = 10;
+      if (!ACCEPT.includes(file.type)){ showAlert("Unsupported file type. Please upload PNG, JPG, or WEBP."); return; }
+      if ((file.size/(1024*1024)) > MAX_MB){ showAlert(`File too large. Maximum is ${MAX_MB} MB.`); return; }
+
+      imageFile = file;
+      const bmp = await imageBitmapFromFile(file);
+      drawToCanvas(uploadCanvas, bmp, 1024); // preview
+      fileName.textContent = `${file.name} (${(file.size/1048576).toFixed(2)} MB)`;
+      fileMeta.classList.remove("hidden");
+      updateGenerateEnabled();
+    }
+
+    // ========= Step 2: Generate Image (multipart + binary/JSON response) =========
+    btnGenerateImage.addEventListener("click", async ()=>{
+      if (!selectedPrompt){ showAlert("Please select or set a prompt."); return; }
+      if (!imageFile){ showAlert("Please upload an image."); return; }
+
+      const sizeEnum = sizeSelect.value || "square_hd";
+
+      overlay.classList.remove("hidden");
+      enable(btnGenerateImage, false);
+      enable(btnDownload, false);
+      spin2.classList.remove("hidden");
+
+      try{
+        // Downscale via canvas → send as binary file in multipart/form-data
+        const bmp = await imageBitmapFromFile(imageFile);
+        const off = document.createElement("canvas");
+        drawToCanvas(off, bmp, 2048);
+        const blob = await canvasToBlob(off, "image/png", 0.92);
+        const filename = (imageFile.name?.replace(/\.[^.]+$/,"") || "upload") + ".png";
+
+        const form = new FormData();
+        form.append("data", blob, filename);     // binary field for n8n
+        form.append("final_prompt", selectedPrompt);
+        form.append("size", sizeEnum);
+        form.append("action", "generate_images"); // for your Switch node
+        form.append("task", "generate_images");   // compatibility
+
+        const res = await fetch(WEBHOOK_URL, { method: "POST", body: form });
+
+        if (!res.ok){
+          const preview = await res.text().catch(()=> "");
+          throw new Error(`HTTP ${res.status} ${res.statusText}\n${preview.slice(0,800)}`);
+        }
+
+        const ctype = (res.headers.get("content-type") || "").toLowerCase();
+
+        lastImageBlob = null;
+        lastImageRemoteUrl = null;
+
+        if (ctype.startsWith("image/")) {
+          // n8n Respond to Webhook → Binary File
+          const responseBlob = await res.blob();
+          lastImageBlob = responseBlob;
+          const objUrl = URL.createObjectURL(responseBlob);
+          await drawImageUrlToCanvas(objUrl);
+          URL.revokeObjectURL(objUrl);
+        } else {
+          // JSON fallback: { image_url: "..."} or { image: "data:image..." }
+          const raw = await res.text();
+          const parsed = safeJsonParse(raw);
+          if (!parsed.ok) throw new Error(`Response was not valid JSON.\n${raw.slice(0,800)}`);
+          const url = extractImageUrl(parsed.data);
+          if (!url) throw new Error("Invalid response: expected image_url, url, or image (base64).");
+
+          if (url.startsWith("data:image/")) {
+            // turn data URL into blob for reliable download
+            const b = await (await fetch(url)).blob();
+            lastImageBlob = b;
+          } else {
+            lastImageRemoteUrl = url;
+            // try to fetch as blob (may fail due to CORS)
+            try {
+              const b = await (await fetch(url, { mode: "cors" })).blob();
+              lastImageBlob = b;
+            } catch(_) { /* ignore, we'll keep remote URL only */ }
+          }
+          await drawImageUrlToCanvas(url);
+        }
+
+        enable(btnDownload, true);
+      }catch(err){
+        showAlert("Error generating image.", String(err?.message || err));
+      }finally{
+        overlay.classList.add("hidden");
+        spin2.classList.add("hidden");
+        updateGenerateEnabled();
+      }
+    });
+
+    async function drawImageUrlToCanvas(url){
+      const img = new Image();
+      img.crossOrigin = "anonymous";
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = () => reject(new Error("Failed to load generated image."));
+        img.src = url;
+      });
+      drawToCanvas(resultCanvas, img, 4096);
+      placeholder.classList.add("hidden");
+      resultCanvas.classList.remove("hidden");
+    }
+
+    // Download button → prefers server blob, then canvas, then remote URL fallback
+    btnDownload.addEventListener("click", async ()=>{
+      try{
+        if (lastImageBlob) {
+          const url = URL.createObjectURL(lastImageBlob);
+          triggerDownload(url, "automation-tribe-generated.png");
+          URL.revokeObjectURL(url);
+          return;
+        }
+        // try canvas (may fail if tainted)
+        try {
+          const blob = await canvasToBlob(resultCanvas, "image/png", 0.95);
+          const url = URL.createObjectURL(blob);
+          triggerDownload(url, "automation-tribe-generated.png");
+          URL.revokeObjectURL(url);
+          return;
+        } catch (_) { /* fall through */ }
+
+        // final fallback: open remote URL (download attr may be ignored cross-origin)
+        if (lastImageRemoteUrl) {
+          triggerDownload(lastImageRemoteUrl, "automation-tribe-generated.png");
+          return;
+        }
+
+        showAlert("Could not download image.", "No downloadable image source available.");
+      }catch(e){
+        showAlert("Could not download image.", String(e?.message || e));
+      }
+    });
+
+    function triggerDownload(href, filename){
+      const a = document.createElement("a");
+      a.href = href;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    }
+  </script>
+</body>
+</html>

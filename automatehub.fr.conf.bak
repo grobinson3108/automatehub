@@ -1,0 +1,50 @@
+server {
+    # IP du serveur: 217.154.18.86
+    listen 80;
+    listen [::]:80;
+    server_name automathub.fr www.automathub.fr;
+    
+    # Redirection vers HTTPS sera configurée après l'installation du certificat SSL
+    
+    root /var/www/automatehub/public;
+    index index.php;
+    
+    # Logs
+    access_log /var/log/nginx/automathub.fr.access.log;
+    error_log /var/log/nginx/automathub.fr.error.log;
+    
+    # Règles de réécriture pour Laravel
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+    
+    # Traitement des fichiers PHP
+    location ~ \.php$ {
+        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        include fastcgi_params;
+        fastcgi_buffer_size 16k;
+        fastcgi_buffers 4 16k;
+    }
+    
+    # Cache des ressources statiques
+    location ~* \.(jpg|jpeg|png|gif|ico|css|js|svg|woff|woff2|ttf|eot)$ {
+        expires 30d;
+        add_header Cache-Control "public, no-transform";
+    }
+    
+    # Désactiver l'accès aux fichiers cachés
+    location ~ /\. {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+    
+    # Désactiver l'accès aux fichiers sensibles
+    location ~ (\.env|composer\.json|composer\.lock|package\.json|package-lock\.json|phpunit\.xml|webpack\.mix\.js|yarn\.lock)$ {
+        deny all;
+        access_log off;
+        log_not_found off;
+    }
+}

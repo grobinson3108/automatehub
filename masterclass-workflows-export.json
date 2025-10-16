@@ -1,0 +1,5252 @@
+{
+  "version": 3,
+  "workflows": [
+    {
+      "name": "[1] Module 1.1 - Mon Premier Workflow",
+      "nodes": [
+        {
+          "parameters": {},
+          "id": "c1f7d3f2-6a3f-4321-adb8-5c2b3f4e5d6a",
+          "name": "When clicking \"Test workflow\"",
+          "type": "n8n-nodes-base.manualTrigger",
+          "typeVersion": 1,
+          "position": [
+            250,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "content": "## 🎉 Bienvenue dans n8n!\n\nCeci est votre premier workflow. Il affiche simplement ce message.\n\n### Ce que vous apprenez:\n- Comment déclencher un workflow manuellement\n- Comment afficher des données avec le node HTML\n- La structure basique d'un workflow n8n",
+            "contentType": "markdown"
+          },
+          "id": "d2e8f9g0-7b4a-5432-bec9-6d3c4e5f6g7b",
+          "name": "HTML",
+          "type": "n8n-nodes-base.html",
+          "typeVersion": 1.2,
+          "position": [
+            450,
+            300
+          ]
+        }
+      ],
+      "connections": {
+        "When clicking \"Test workflow\"": {
+          "main": [
+            [
+              {
+                "node": "HTML",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": true
+      },
+      "versionId": "1.0.0"
+    },
+    {
+      "name": "[1] Module 1.2 - Envoi d'Email Simple",
+      "nodes": [
+        {
+          "parameters": {},
+          "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+          "name": "When clicking \"Test workflow\"",
+          "type": "n8n-nodes-base.manualTrigger",
+          "typeVersion": 1,
+          "position": [
+            250,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "f0e8d9c7-b6a5-4321-9876-543210fedcba",
+                  "name": "destinataire",
+                  "value": "votre-email@example.com",
+                  "type": "string"
+                },
+                {
+                  "id": "a9b8c7d6-e5f4-3210-9876-543210abcdef",
+                  "name": "sujet",
+                  "value": "Mon premier email depuis n8n 🚀",
+                  "type": "string"
+                },
+                {
+                  "id": "d4e5f6a7-b8c9-0123-4567-890abcdef123",
+                  "name": "message",
+                  "value": "Bonjour,\\n\\nCeci est mon premier email automatisé envoyé depuis n8n!\\n\\nC'est le début d'une grande aventure dans l'automatisation.\\n\\nCordialement,\\nVotre assistant n8n",
+                  "type": "string"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+          "name": "Préparer les données",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            450,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "sendTo": "={{ $json.destinataire }}",
+            "subject": "={{ $json.sujet }}",
+            "message": "={{ $json.message }}",
+            "options": {}
+          },
+          "id": "c3d4e5f6-a7b8-9012-cdef-345678901234",
+          "name": "Send Email",
+          "type": "n8n-nodes-base.emailSend",
+          "typeVersion": 2.2,
+          "position": [
+            650,
+            300
+          ],
+          "credentials": {
+            "smtp": {
+              "id": "1",
+              "name": "SMTP Account"
+            }
+          }
+        }
+      ],
+      "connections": {
+        "When clicking \"Test workflow\"": {
+          "main": [
+            [
+              {
+                "node": "Préparer les données",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Préparer les données": {
+          "main": [
+            [
+              {
+                "node": "Send Email",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": false
+      },
+      "versionId": "1.0.0"
+    },
+    {
+      "name": "[1] Module 1.3 - Lire Google Sheets",
+      "nodes": [
+        {
+          "parameters": {},
+          "id": "trigger-manual-001",
+          "name": "When clicking \"Test workflow\"",
+          "type": "n8n-nodes-base.manualTrigger",
+          "typeVersion": 1,
+          "position": [
+            250,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "documentId": {
+              "__rl": true,
+              "value": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit",
+              "mode": "url"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": "Sheet1",
+              "mode": "name"
+            },
+            "options": {}
+          },
+          "id": "google-sheets-001",
+          "name": "Google Sheets",
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.5,
+          "position": [
+            450,
+            300
+          ],
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "1",
+              "name": "Google Sheets account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "mode": "table",
+            "tableData": "={{ $json }}",
+            "options": {
+              "columns": [
+                {
+                  "displayName": "Nom",
+                  "key": "nom"
+                },
+                {
+                  "displayName": "Email",
+                  "key": "email"
+                },
+                {
+                  "displayName": "Date",
+                  "key": "date"
+                }
+              ]
+            }
+          },
+          "id": "html-table-001",
+          "name": "Afficher en tableau",
+          "type": "n8n-nodes-base.html",
+          "typeVersion": 1.2,
+          "position": [
+            650,
+            300
+          ]
+        }
+      ],
+      "connections": {
+        "When clicking \"Test workflow\"": {
+          "main": [
+            [
+              {
+                "node": "Google Sheets",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Google Sheets": {
+          "main": [
+            [
+              {
+                "node": "Afficher en tableau",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": false,
+        "description": "Ce workflow lit les données d'une feuille Google Sheets et les affiche dans un tableau HTML. Parfait pour débuter avec les intégrations Google!"
+      },
+      "versionId": "1.0.0"
+    },
+    {
+      "name": "[1] Module 1.4 - Transformer des Données",
+      "nodes": [
+        {
+          "parameters": {},
+          "id": "manual-trigger-transform",
+          "name": "When clicking \"Test workflow\"",
+          "type": "n8n-nodes-base.manualTrigger",
+          "typeVersion": 1,
+          "position": [
+            250,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "data-001",
+                  "name": "utilisateurs",
+                  "value": "=[\n  {\"nom\": \"Jean Dupont\", \"email\": \"jean@example.com\", \"age\": 25},\n  {\"nom\": \"Marie Martin\", \"email\": \"marie@example.com\", \"age\": 32},\n  {\"nom\": \"Pierre Bernard\", \"email\": \"pierre@example.com\", \"age\": 18},\n  {\"nom\": \"Sophie Durand\", \"email\": \"sophie@example.com\", \"age\": 45}\n]",
+                  "type": "array"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "set-data-001",
+          "name": "Données de test",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            450,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict"
+              },
+              "conditions": [
+                {
+                  "id": "condition-001",
+                  "leftValue": "={{ $json.age }}",
+                  "rightValue": 30,
+                  "operator": {
+                    "type": "number",
+                    "operation": "gte"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "options": {}
+          },
+          "id": "filter-001",
+          "name": "Filtrer > 30 ans",
+          "type": "n8n-nodes-base.filter",
+          "typeVersion": 2.1,
+          "position": [
+            650,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "transform-001",
+                  "name": "nom_majuscule",
+                  "value": "={{ $json.nom.toUpperCase() }}",
+                  "type": "string"
+                },
+                {
+                  "id": "transform-002",
+                  "name": "email",
+                  "value": "={{ $json.email }}",
+                  "type": "string"
+                },
+                {
+                  "id": "transform-003",
+                  "name": "categorie_age",
+                  "value": "={{ $json.age >= 40 ? 'Senior' : 'Adulte' }}",
+                  "type": "string"
+                },
+                {
+                  "id": "transform-004",
+                  "name": "message_personnalise",
+                  "value": "=Bonjour {{ $json.nom.split(' ')[0] }}, bienvenue dans notre programme!",
+                  "type": "string"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "transform-001",
+          "name": "Transformer",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            850,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "aggregationMode": "aggregateIndividualFields",
+            "fieldsToAggregate": {
+              "fieldToAggregate": [
+                {
+                  "fieldToAggregate": "nom_majuscule",
+                  "aggregationFunction": "concatenate",
+                  "includeEmpty": false
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "aggregate-001",
+          "name": "Agrégation",
+          "type": "n8n-nodes-base.aggregate",
+          "typeVersion": 1.1,
+          "position": [
+            1050,
+            300
+          ]
+        }
+      ],
+      "connections": {
+        "When clicking \"Test workflow\"": {
+          "main": [
+            [
+              {
+                "node": "Données de test",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Données de test": {
+          "main": [
+            [
+              {
+                "node": "Filtrer > 30 ans",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Filtrer > 30 ans": {
+          "main": [
+            [
+              {
+                "node": "Transformer",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Transformer": {
+          "main": [
+            [
+              {
+                "node": "Agrégation",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": true,
+        "description": "Apprenez à filtrer, transformer et agréger des données. Ce workflow montre les opérations de base sur les données."
+      },
+      "versionId": "1.0.0"
+    },
+    {
+      "name": "[2] Module 2.1 - Connexion Google Suite Complète",
+      "nodes": [
+        {
+          "parameters": {},
+          "id": "trigger-google-suite",
+          "name": "When clicking \"Test workflow\"",
+          "type": "n8n-nodes-base.manualTrigger",
+          "typeVersion": 1,
+          "position": [
+            250,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "resource": "file",
+            "operation": "list",
+            "queryString": "mimeType='application/vnd.google-apps.spreadsheet'",
+            "options": {
+              "fields": [
+                "files(id,name,mimeType,modifiedTime)"
+              ]
+            }
+          },
+          "id": "google-drive-list",
+          "name": "Lister fichiers Drive",
+          "type": "n8n-nodes-base.googleDrive",
+          "typeVersion": 3,
+          "position": [
+            450,
+            200
+          ],
+          "credentials": {
+            "googleDriveOAuth2Api": {
+              "id": "1",
+              "name": "Google Drive account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "documentId": {
+              "__rl": true,
+              "value": "={{ $json.files[0].id }}",
+              "mode": "id"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": 0,
+              "mode": "index"
+            },
+            "options": {}
+          },
+          "id": "google-sheets-read",
+          "name": "Lire première feuille",
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.5,
+          "position": [
+            650,
+            200
+          ],
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "1",
+              "name": "Google Sheets account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "sendTo": "={{ $json.email }}",
+            "subject": "Données de votre feuille Google",
+            "message": "=Bonjour {{ $json.nom }},\n\nVoici un résumé de vos données extraites automatiquement de Google Sheets.\n\nCordialement,\nVotre assistant n8n",
+            "options": {}
+          },
+          "id": "gmail-send",
+          "name": "Envoyer par Gmail",
+          "type": "n8n-nodes-base.gmail",
+          "typeVersion": 2.1,
+          "position": [
+            850,
+            200
+          ],
+          "credentials": {
+            "gmailOAuth2": {
+              "id": "1",
+              "name": "Gmail account"
+            }
+          },
+          "continueOnFail": true
+        },
+        {
+          "parameters": {
+            "calendarId": "primary",
+            "start": "={{ $now.plus(1, 'day').toISO() }}",
+            "end": "={{ $now.plus(1, 'day').plus(1, 'hour').toISO() }}",
+            "summary": "Revue des données Google Sheets",
+            "options": {
+              "description": "Revue automatique générée par n8n"
+            }
+          },
+          "id": "google-calendar",
+          "name": "Créer événement",
+          "type": "n8n-nodes-base.googleCalendar",
+          "typeVersion": 2,
+          "position": [
+            650,
+            400
+          ],
+          "credentials": {
+            "googleCalendarOAuth2Api": {
+              "id": "1",
+              "name": "Google Calendar account"
+            }
+          }
+        }
+      ],
+      "connections": {
+        "When clicking \"Test workflow\"": {
+          "main": [
+            [
+              {
+                "node": "Lister fichiers Drive",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Lister fichiers Drive": {
+          "main": [
+            [
+              {
+                "node": "Lire première feuille",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Créer événement",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Lire première feuille": {
+          "main": [
+            [
+              {
+                "node": "Envoyer par Gmail",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": false,
+        "description": "Workflow complet montrant l'intégration de Google Drive, Sheets, Gmail et Calendar en une seule automatisation."
+      },
+      "versionId": "1.0.0"
+    },
+    {
+      "name": "[2] Module 2.2 - Connexion IA (OpenAI, Claude, DeepSeek)",
+      "nodes": [
+        {
+          "parameters": {},
+          "id": "trigger-ia",
+          "name": "When clicking \"Test workflow\"",
+          "type": "n8n-nodes-base.manualTrigger",
+          "typeVersion": 1,
+          "position": [
+            250,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "text-001",
+                  "name": "texte_a_analyser",
+                  "value": "n8n est une plateforme d'automatisation no-code qui permet de créer des workflows complexes sans programmer. Elle offre plus de 350 intégrations et une interface visuelle intuitive.",
+                  "type": "string"
+                },
+                {
+                  "id": "question-001",
+                  "name": "question",
+                  "value": "Quel est le principal avantage de n8n mentionné dans ce texte ?",
+                  "type": "string"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "prepare-data",
+          "name": "Préparer données test",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            450,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "model": "gpt-4",
+            "messages": {
+              "values": [
+                {
+                  "role": "system",
+                  "content": "Tu es un assistant expert en analyse de texte. Réponds de manière concise et précise."
+                },
+                {
+                  "role": "user",
+                  "content": "=Texte: {{ $json.texte_a_analyser }}\n\nQuestion: {{ $json.question }}"
+                }
+              ]
+            },
+            "options": {
+              "temperature": 0.7,
+              "maxTokens": 150
+            }
+          },
+          "id": "openai-chat",
+          "name": "OpenAI GPT-4",
+          "type": "n8n-nodes-base.openAi",
+          "typeVersion": 1.2,
+          "position": [
+            650,
+            200
+          ],
+          "credentials": {
+            "openAiApi": {
+              "id": "1",
+              "name": "OpenAI account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "resource": "message",
+            "model": {
+              "__rl": true,
+              "value": "claude-3-opus-20240229",
+              "mode": "list"
+            },
+            "messages": {
+              "values": [
+                {
+                  "role": "user",
+                  "content": "=Résume en 3 points clés ce texte:\n\n{{ $json.texte_a_analyser }}"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "anthropic-claude",
+          "name": "Claude 3",
+          "type": "@n8n/n8n-nodes-anthropic.anthropic",
+          "typeVersion": 1.2,
+          "position": [
+            650,
+            350
+          ],
+          "credentials": {
+            "anthropicApi": {
+              "id": "1",
+              "name": "Anthropic account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "method": "POST",
+            "url": "https://api.deepseek.com/v1/chat/completions",
+            "authentication": "genericCredentialType",
+            "genericAuthType": "httpHeaderAuth",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            "sendBody": true,
+            "bodyParameters": {
+              "parameters": [
+                {
+                  "name": "model",
+                  "value": "deepseek-chat"
+                },
+                {
+                  "name": "messages",
+                  "value": "=[{\"role\": \"system\", \"content\": \"Tu es un assistant utile.\"}, {\"role\": \"user\", \"content\": \"Traduis en anglais: {{ $json.texte_a_analyser }}\"}]"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "deepseek-api",
+          "name": "DeepSeek API",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [
+            650,
+            500
+          ],
+          "credentials": {
+            "httpHeaderAuth": {
+              "id": "1",
+              "name": "DeepSeek API Key"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "mode": "combine",
+            "combinationMode": "multiplex",
+            "options": {}
+          },
+          "id": "merge-results",
+          "name": "Combiner résultats",
+          "type": "n8n-nodes-base.merge",
+          "typeVersion": 3,
+          "position": [
+            850,
+            350
+          ]
+        },
+        {
+          "parameters": {
+            "content": "## 🤖 Comparaison des réponses IA\n\n### OpenAI GPT-4:\n{{ $item(0).$node[\"OpenAI GPT-4\"].json.choices[0].message.content }}\n\n### Claude 3:\n{{ $item(1).$node[\"Claude 3\"].json.content[0].text }}\n\n### DeepSeek:\n{{ $item(2).$node[\"DeepSeek API\"].json.choices[0].message.content }}",
+            "contentType": "markdown"
+          },
+          "id": "display-comparison",
+          "name": "Afficher comparaison",
+          "type": "n8n-nodes-base.html",
+          "typeVersion": 1.2,
+          "position": [
+            1050,
+            350
+          ]
+        }
+      ],
+      "connections": {
+        "When clicking \"Test workflow\"": {
+          "main": [
+            [
+              {
+                "node": "Préparer données test",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Préparer données test": {
+          "main": [
+            [
+              {
+                "node": "OpenAI GPT-4",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Claude 3",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "DeepSeek API",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "OpenAI GPT-4": {
+          "main": [
+            [
+              {
+                "node": "Combiner résultats",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Claude 3": {
+          "main": [
+            [
+              {
+                "node": "Combiner résultats",
+                "type": "main",
+                "index": 1
+              }
+            ]
+          ]
+        },
+        "DeepSeek API": {
+          "main": [
+            [
+              {
+                "node": "Combiner résultats",
+                "type": "main",
+                "index": 2
+              }
+            ]
+          ]
+        },
+        "Combiner résultats": {
+          "main": [
+            [
+              {
+                "node": "Afficher comparaison",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": false,
+        "description": "Compare les réponses de différents modèles d'IA (OpenAI, Claude, DeepSeek) sur la même tâche."
+      },
+      "versionId": "1.0.0"
+    },
+    {
+      "name": "[2] Module 2.3 - Connexion Messageries (Telegram, WhatsApp, Slack)",
+      "nodes": [
+        {
+          "parameters": {},
+          "id": "trigger-messaging",
+          "name": "When clicking \"Test workflow\"",
+          "type": "n8n-nodes-base.manualTrigger",
+          "typeVersion": 1,
+          "position": [
+            250,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "msg-001",
+                  "name": "message",
+                  "value": "🎉 Notification automatique depuis n8n!",
+                  "type": "string"
+                },
+                {
+                  "id": "msg-002",
+                  "name": "details",
+                  "value": "Workflow exécuté avec succès le {{ $now.format('dd/MM/yyyy HH:mm') }}",
+                  "type": "string"
+                },
+                {
+                  "id": "msg-003",
+                  "name": "urgence",
+                  "value": "normal",
+                  "type": "string"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "prepare-message",
+          "name": "Préparer message",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            450,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "chatId": "YOUR_CHAT_ID",
+            "text": "={{ $json.message }}\n\n{{ $json.details }}",
+            "additionalFields": {
+              "parse_mode": "Markdown",
+              "disable_notification": "={{ $json.urgence === 'normal' }}"
+            }
+          },
+          "id": "telegram-send",
+          "name": "Telegram",
+          "type": "n8n-nodes-base.telegram",
+          "typeVersion": 1.2,
+          "position": [
+            650,
+            200
+          ],
+          "credentials": {
+            "telegramApi": {
+              "id": "1",
+              "name": "Telegram Bot"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "channel": "#notifications",
+            "text": ":bell: *{{ $json.message }}*\n```{{ $json.details }}```",
+            "otherOptions": {}
+          },
+          "id": "slack-send",
+          "name": "Slack",
+          "type": "n8n-nodes-base.slack",
+          "typeVersion": 2.2,
+          "position": [
+            650,
+            350
+          ],
+          "credentials": {
+            "slackApi": {
+              "id": "1",
+              "name": "Slack account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "method": "POST",
+            "url": "https://graph.facebook.com/v18.0/YOUR_PHONE_NUMBER_ID/messages",
+            "authentication": "genericCredentialType",
+            "genericAuthType": "httpHeaderAuth",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            "sendBody": true,
+            "bodyParameters": {
+              "parameters": [
+                {
+                  "name": "messaging_product",
+                  "value": "whatsapp"
+                },
+                {
+                  "name": "to",
+                  "value": "RECIPIENT_PHONE_NUMBER"
+                },
+                {
+                  "name": "type",
+                  "value": "text"
+                },
+                {
+                  "name": "text",
+                  "value": "={{ {\"body\": $json.message + \"\\n\" + $json.details} }}"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "whatsapp-send",
+          "name": "WhatsApp Business",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [
+            650,
+            500
+          ],
+          "credentials": {
+            "httpHeaderAuth": {
+              "id": "1",
+              "name": "WhatsApp Access Token"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict"
+              },
+              "conditions": [
+                {
+                  "id": "urgency-check",
+                  "leftValue": "={{ $json.urgence }}",
+                  "rightValue": "urgent",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "options": {}
+          },
+          "id": "check-urgency",
+          "name": "Vérifier urgence",
+          "type": "n8n-nodes-base.if",
+          "typeVersion": 2.1,
+          "position": [
+            850,
+            350
+          ]
+        },
+        {
+          "parameters": {
+            "resource": "SMS",
+            "operation": "send",
+            "from": "n8n-Alerts",
+            "to": "+33612345678",
+            "message": "=🚨 URGENT: {{ $json.message }}",
+            "options": {}
+          },
+          "id": "twilio-sms",
+          "name": "SMS d'urgence",
+          "type": "n8n-nodes-base.twilio",
+          "typeVersion": 1,
+          "position": [
+            1050,
+            250
+          ],
+          "credentials": {
+            "twilioApi": {
+              "id": "1",
+              "name": "Twilio account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "content": "## ✅ Notifications envoyées\n\n- Telegram: Message envoyé\n- Slack: Canal notifié\n- WhatsApp: Message programmé\n{{ $json.urgence === 'urgent' ? '\\n- SMS: Alerte urgente envoyée' : '' }}",
+            "contentType": "markdown"
+          },
+          "id": "summary",
+          "name": "Résumé",
+          "type": "n8n-nodes-base.html",
+          "typeVersion": 1.2,
+          "position": [
+            1050,
+            400
+          ]
+        }
+      ],
+      "connections": {
+        "When clicking \"Test workflow\"": {
+          "main": [
+            [
+              {
+                "node": "Préparer message",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Préparer message": {
+          "main": [
+            [
+              {
+                "node": "Telegram",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Slack",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "WhatsApp Business",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Telegram": {
+          "main": [
+            [
+              {
+                "node": "Vérifier urgence",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Slack": {
+          "main": [
+            [
+              {
+                "node": "Vérifier urgence",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "WhatsApp Business": {
+          "main": [
+            [
+              {
+                "node": "Vérifier urgence",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Vérifier urgence": {
+          "main": [
+            [
+              {
+                "node": "SMS d'urgence",
+                "type": "main",
+                "index": 0
+              }
+            ],
+            [
+              {
+                "node": "Résumé",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "SMS d'urgence": {
+          "main": [
+            [
+              {
+                "node": "Résumé",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": false,
+        "description": "Envoie des notifications sur plusieurs plateformes de messagerie avec gestion de l'urgence."
+      },
+      "versionId": "1.0.0"
+    },
+    {
+      "name": "[2] Module 2.4 - Connexion Paiements (Stripe, PayPal)",
+      "nodes": [
+        {
+          "parameters": {},
+          "id": "trigger-payment",
+          "name": "When clicking \"Test workflow\"",
+          "type": "n8n-nodes-base.manualTrigger",
+          "typeVersion": 1,
+          "position": [
+            250,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "customer-001",
+                  "name": "client",
+                  "value": "={{ {\n  \"email\": \"client@example.com\",\n  \"nom\": \"Jean Dupont\",\n  \"montant\": 49.99,\n  \"devise\": \"EUR\",\n  \"description\": \"Abonnement Premium AutomateHub\"\n} }}",
+                  "type": "object"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "customer-data",
+          "name": "Données client",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            450,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "resource": "customer",
+            "operation": "create",
+            "email": "={{ $json.client.email }}",
+            "additionalFields": {
+              "name": "={{ $json.client.nom }}",
+              "description": "Client AutomateHub"
+            }
+          },
+          "id": "stripe-customer",
+          "name": "Créer client Stripe",
+          "type": "n8n-nodes-base.stripe",
+          "typeVersion": 1,
+          "position": [
+            650,
+            200
+          ],
+          "credentials": {
+            "stripeApi": {
+              "id": "1",
+              "name": "Stripe account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "resource": "charge",
+            "operation": "create",
+            "customer": "={{ $json.id }}",
+            "amount": "={{ Math.round($json.client.montant * 100) }}",
+            "currency": "={{ $json.client.devise.toLowerCase() }}",
+            "additionalFields": {
+              "description": "={{ $json.client.description }}",
+              "receipt_email": "={{ $json.client.email }}"
+            }
+          },
+          "id": "stripe-charge",
+          "name": "Créer paiement Stripe",
+          "type": "n8n-nodes-base.stripe",
+          "typeVersion": 1,
+          "position": [
+            850,
+            200
+          ],
+          "credentials": {
+            "stripeApi": {
+              "id": "1",
+              "name": "Stripe account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "method": "POST",
+            "url": "https://api-m.paypal.com/v2/checkout/orders",
+            "authentication": "predefinedCredentialType",
+            "nodeCredentialType": "payPalApi",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            "sendBody": true,
+            "bodyParameters": {
+              "parameters": [
+                {
+                  "name": "intent",
+                  "value": "CAPTURE"
+                },
+                {
+                  "name": "purchase_units",
+                  "value": "=[\n  {\n    \"amount\": {\n      \"currency_code\": \"{{ $json.client.devise }}\",\n      \"value\": \"{{ $json.client.montant }}\"\n    },\n    \"description\": \"{{ $json.client.description }}\"\n  }\n]"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "paypal-order",
+          "name": "Créer commande PayPal",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [
+            650,
+            400
+          ],
+          "credentials": {
+            "payPalApi": {
+              "id": "1",
+              "name": "PayPal account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "operation": "create",
+            "base": "{{ $json.client.montant }}",
+            "from": "={{ $json.client.devise }}",
+            "to": [
+              "USD",
+              "GBP"
+            ],
+            "property": "conversion"
+          },
+          "id": "currency-convert",
+          "name": "Conversion devise",
+          "type": "n8n-nodes-base.exchangeRates",
+          "typeVersion": 1,
+          "position": [
+            450,
+            500
+          ]
+        },
+        {
+          "parameters": {
+            "content": "## 💳 Résumé des paiements\n\n### Client\n- **Nom:** {{ $json.client.nom }}\n- **Email:** {{ $json.client.email }}\n\n### Transaction\n- **Montant:** {{ $json.client.montant }} {{ $json.client.devise }}\n- **Description:** {{ $json.client.description }}\n\n### Statuts\n- **Stripe:** {{ $node[\"Créer paiement Stripe\"].json.status || 'En attente' }}\n- **PayPal:** {{ $node[\"Créer commande PayPal\"].json.status || 'Créé' }}\n\n### Conversions\n- **USD:** ${{ $node[\"Conversion devise\"].json.conversion.USD.toFixed(2) }}\n- **GBP:** £{{ $node[\"Conversion devise\"].json.conversion.GBP.toFixed(2) }}",
+            "contentType": "markdown"
+          },
+          "id": "payment-summary",
+          "name": "Résumé paiements",
+          "type": "n8n-nodes-base.html",
+          "typeVersion": 1.2,
+          "position": [
+            1050,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "method": "POST",
+            "url": "YOUR_WEBHOOK_URL",
+            "sendBody": true,
+            "bodyParameters": {
+              "parameters": [
+                {
+                  "name": "event",
+                  "value": "payment_processed"
+                },
+                {
+                  "name": "client",
+                  "value": "={{ $json.client }}"
+                },
+                {
+                  "name": "stripe_id",
+                  "value": "={{ $node[\"Créer paiement Stripe\"].json.id }}"
+                },
+                {
+                  "name": "paypal_id",
+                  "value": "={{ $node[\"Créer commande PayPal\"].json.id }}"
+                },
+                {
+                  "name": "timestamp",
+                  "value": "={{ $now.toISO() }}"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "webhook-notify",
+          "name": "Webhook notification",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [
+            1050,
+            500
+          ]
+        }
+      ],
+      "connections": {
+        "When clicking \"Test workflow\"": {
+          "main": [
+            [
+              {
+                "node": "Données client",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Données client": {
+          "main": [
+            [
+              {
+                "node": "Créer client Stripe",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Créer commande PayPal",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Conversion devise",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Créer client Stripe": {
+          "main": [
+            [
+              {
+                "node": "Créer paiement Stripe",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Créer paiement Stripe": {
+          "main": [
+            [
+              {
+                "node": "Résumé paiements",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Créer commande PayPal": {
+          "main": [
+            [
+              {
+                "node": "Résumé paiements",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Conversion devise": {
+          "main": [
+            [
+              {
+                "node": "Résumé paiements",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Résumé paiements": {
+          "main": [
+            [
+              {
+                "node": "Webhook notification",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": false,
+        "description": "Intégration complète avec Stripe et PayPal pour gérer les paiements, avec conversion de devises."
+      },
+      "versionId": "1.0.0"
+    },
+    {
+      "name": "[3] Module 3.1 - CRM Simple et Efficace",
+      "nodes": [
+        {
+          "parameters": {
+            "httpMethod": "POST",
+            "path": "nouveau-contact",
+            "options": {}
+          },
+          "id": "webhook-contact",
+          "name": "Webhook nouveau contact",
+          "type": "n8n-nodes-base.webhook",
+          "typeVersion": 2,
+          "position": [
+            250,
+            300
+          ],
+          "webhookId": "crm-contact-webhook"
+        },
+        {
+          "parameters": {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict"
+              },
+              "conditions": [
+                {
+                  "id": "email-check",
+                  "leftValue": "={{ $json.body.email }}",
+                  "rightValue": "",
+                  "operator": {
+                    "type": "string",
+                    "operation": "notEmpty"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "options": {}
+          },
+          "id": "validate-email",
+          "name": "Valider email",
+          "type": "n8n-nodes-base.if",
+          "typeVersion": 2.1,
+          "position": [
+            450,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "enrich-001",
+                  "name": "contact_enrichi",
+                  "value": "={{ {\n  \"id\": $now.toMillis(),\n  \"nom\": $json.body.nom,\n  \"email\": $json.body.email,\n  \"entreprise\": $json.body.entreprise || 'Non spécifiée',\n  \"source\": $json.body.source || 'Site web',\n  \"date_creation\": $now.toISO(),\n  \"score_lead\": 0,\n  \"statut\": 'nouveau',\n  \"tags\": []\n} }}",
+                  "type": "object"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "enrich-contact",
+          "name": "Enrichir contact",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            650,
+            250
+          ]
+        },
+        {
+          "parameters": {
+            "operation": "append",
+            "documentId": {
+              "__rl": true,
+              "value": "YOUR_CRM_SHEET_ID",
+              "mode": "id"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": "Contacts",
+              "mode": "name"
+            },
+            "columns": {
+              "mappingMode": "defineBelow",
+              "value": {
+                "id": "={{ $json.contact_enrichi.id }}",
+                "nom": "={{ $json.contact_enrichi.nom }}",
+                "email": "={{ $json.contact_enrichi.email }}",
+                "entreprise": "={{ $json.contact_enrichi.entreprise }}",
+                "source": "={{ $json.contact_enrichi.source }}",
+                "date_creation": "={{ $json.contact_enrichi.date_creation }}",
+                "statut": "={{ $json.contact_enrichi.statut }}"
+              }
+            },
+            "options": {}
+          },
+          "id": "save-to-sheets",
+          "name": "Sauvegarder dans Sheets",
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.5,
+          "position": [
+            850,
+            250
+          ],
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "1",
+              "name": "Google Sheets account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "score-001",
+                  "name": "score_lead",
+                  "value": "={{ \n  let score = 0;\n  \n  // Points pour email d'entreprise\n  if (!$json.contact_enrichi.email.includes('@gmail') && \n      !$json.contact_enrichi.email.includes('@hotmail')) {\n    score += 20;\n  }\n  \n  // Points pour entreprise renseignée\n  if ($json.contact_enrichi.entreprise !== 'Non spécifiée') {\n    score += 30;\n  }\n  \n  // Points selon la source\n  if ($json.contact_enrichi.source === 'Demo request') {\n    score += 50;\n  } else if ($json.contact_enrichi.source === 'Contact form') {\n    score += 25;\n  }\n  \n  score;\n}}",
+                  "type": "number"
+                },
+                {
+                  "id": "priority-001",
+                  "name": "priorite",
+                  "value": "={{ $json.score_lead >= 70 ? 'haute' : $json.score_lead >= 40 ? 'moyenne' : 'basse' }}",
+                  "type": "string"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "calculate-score",
+          "name": "Calculer score lead",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            1050,
+            250
+          ]
+        },
+        {
+          "parameters": {
+            "sendTo": "={{ $json.contact_enrichi.email }}",
+            "subject": "Bienvenue chez AutomateHub, {{ $json.contact_enrichi.nom }} !",
+            "emailType": "html",
+            "message": "=<h2>Bienvenue {{ $json.contact_enrichi.nom }} !</h2>\n\n<p>Merci de votre intérêt pour AutomateHub.</p>\n\n<p>Nous avons bien reçu votre demande et un membre de notre équipe vous contactera dans les 24h.</p>\n\n<p>En attendant, découvrez nos ressources :</p>\n<ul>\n  <li><a href='#'>Guide de démarrage n8n</a></li>\n  <li><a href='#'>Cas d'usage populaires</a></li>\n  <li><a href='#'>FAQ</a></li>\n</ul>\n\n<p>À très bientôt !<br>\nL'équipe AutomateHub</p>",
+            "options": {}
+          },
+          "id": "welcome-email",
+          "name": "Email de bienvenue",
+          "type": "n8n-nodes-base.emailSend",
+          "typeVersion": 2.2,
+          "position": [
+            850,
+            400
+          ],
+          "credentials": {
+            "smtp": {
+              "id": "1",
+              "name": "SMTP Account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "channel": "#sales",
+            "text": ":sparkles: *Nouveau lead!*\n\n*Nom:* {{ $json.contact_enrichi.nom }}\n*Email:* {{ $json.contact_enrichi.email }}\n*Entreprise:* {{ $json.contact_enrichi.entreprise }}\n*Score:* {{ $json.score_lead }}/100\n*Priorité:* {{ $json.priorite }}\n\n{{ $json.priorite === 'haute' ? ':fire: Lead chaud - À contacter rapidement!' : '' }}",
+            "otherOptions": {}
+          },
+          "id": "slack-notify",
+          "name": "Notifier équipe Slack",
+          "type": "n8n-nodes-base.slack",
+          "typeVersion": 2.2,
+          "position": [
+            1250,
+            250
+          ],
+          "credentials": {
+            "slackApi": {
+              "id": "1",
+              "name": "Slack account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "content": "## ❌ Email invalide\n\nLe contact n'a pas fourni d'email valide.\n\nDonnées reçues:\n```json\n{{ JSON.stringify($json.body, null, 2) }}\n```",
+            "contentType": "markdown"
+          },
+          "id": "error-response",
+          "name": "Erreur email",
+          "type": "n8n-nodes-base.html",
+          "typeVersion": 1.2,
+          "position": [
+            650,
+            450
+          ]
+        }
+      ],
+      "connections": {
+        "Webhook nouveau contact": {
+          "main": [
+            [
+              {
+                "node": "Valider email",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Valider email": {
+          "main": [
+            [
+              {
+                "node": "Enrichir contact",
+                "type": "main",
+                "index": 0
+              }
+            ],
+            [
+              {
+                "node": "Erreur email",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Enrichir contact": {
+          "main": [
+            [
+              {
+                "node": "Sauvegarder dans Sheets",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Email de bienvenue",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Sauvegarder dans Sheets": {
+          "main": [
+            [
+              {
+                "node": "Calculer score lead",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Calculer score lead": {
+          "main": [
+            [
+              {
+                "node": "Notifier équipe Slack",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": false,
+        "description": "CRM simple mais puissant : capture de leads, scoring automatique, notifications et suivi dans Google Sheets."
+      },
+      "versionId": "1.0.0"
+    },
+    {
+      "name": "[3] Module 3.2 - Email Marketing Automatisé",
+      "nodes": [
+        {
+          "parameters": {
+            "rule": {
+              "interval": [
+                {
+                  "field": "hours",
+                  "hoursInterval": 24
+                }
+              ]
+            }
+          },
+          "id": "schedule-daily",
+          "name": "Tous les jours à 9h",
+          "type": "n8n-nodes-base.scheduleTrigger",
+          "typeVersion": 1.2,
+          "position": [
+            250,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "documentId": {
+              "__rl": true,
+              "value": "YOUR_CONTACTS_SHEET_ID",
+              "mode": "id"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": "Contacts",
+              "mode": "name"
+            },
+            "options": {}
+          },
+          "id": "get-contacts",
+          "name": "Récupérer contacts",
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.5,
+          "position": [
+            450,
+            300
+          ],
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "1",
+              "name": "Google Sheets account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict"
+              },
+              "conditions": [
+                {
+                  "id": "active-check",
+                  "leftValue": "={{ $json.statut }}",
+                  "rightValue": "actif",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals"
+                  }
+                },
+                {
+                  "id": "email-check",
+                  "leftValue": "={{ $json.derniere_interaction }}",
+                  "rightValue": "={{ $now.minus(30, 'days').toISO() }}",
+                  "operator": {
+                    "type": "dateTime",
+                    "operation": "before"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "options": {}
+          },
+          "id": "filter-inactive",
+          "name": "Filtrer contacts inactifs",
+          "type": "n8n-nodes-base.filter",
+          "typeVersion": 2.1,
+          "position": [
+            650,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "segment-001",
+                  "name": "segment",
+                  "value": "={{ \n  // Segmentation basée sur le comportement\n  const daysSinceInteraction = Math.floor(\n    ($now - new Date($json.derniere_interaction)) / (1000 * 60 * 60 * 24)\n  );\n  \n  if (daysSinceInteraction > 90) {\n    return 'réactivation';\n  } else if (daysSinceInteraction > 60) {\n    return 'engagement';\n  } else if (daysSinceInteraction > 30) {\n    return 'nurturing';\n  }\n  return 'actif';\n}}",
+                  "type": "string"
+                },
+                {
+                  "id": "campaign-001",
+                  "name": "campagne",
+                  "value": "={{ \n  const campaigns = {\n    'réactivation': {\n      'sujet': '{{ $json.prenom }}, nous vous manquez !',\n      'template': 'reactivation',\n      'discount': '20%'\n    },\n    'engagement': {\n      'sujet': 'Découvrez nos nouvelles fonctionnalités',\n      'template': 'features',\n      'discount': '10%'\n    },\n    'nurturing': {\n      'sujet': 'Votre guide exclusif n8n',\n      'template': 'education',\n      'discount': null\n    }\n  };\n  \n  campaigns[$json.segment];\n}}",
+                  "type": "object"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "segment-contacts",
+          "name": "Segmenter contacts",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            850,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "model": "gpt-3.5-turbo",
+            "messages": {
+              "values": [
+                {
+                  "role": "system",
+                  "content": "Tu es un expert en email marketing. Crée des emails personnalisés et engageants pour AutomateHub, une plateforme de formation n8n."
+                },
+                {
+                  "role": "user",
+                  "content": "=Crée un email de {{ $json.campagne.template }} pour {{ $json.prenom }} {{ $json.nom }}.\n\nInformations:\n- Entreprise: {{ $json.entreprise }}\n- Dernière interaction: {{ $json.derniere_interaction }}\n- Intérêts: {{ $json.interets }}\n{{ $json.campagne.discount ? '- Offre spéciale: ' + $json.campagne.discount + ' de réduction' : '' }}\n\nLe ton doit être professionnel mais chaleureux."
+                }
+              ]
+            },
+            "options": {
+              "temperature": 0.7
+            }
+          },
+          "id": "generate-content",
+          "name": "Générer contenu IA",
+          "type": "n8n-nodes-base.openAi",
+          "typeVersion": 1.2,
+          "position": [
+            1050,
+            300
+          ],
+          "credentials": {
+            "openAiApi": {
+              "id": "1",
+              "name": "OpenAI account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "sendTo": "={{ $json.email }}",
+            "subject": "={{ $json.campagne.sujet }}",
+            "emailType": "html",
+            "message": "={{ $node[\"Générer contenu IA\"].json.choices[0].message.content }}",
+            "options": {
+              "replyTo": "support@automatehub.fr"
+            }
+          },
+          "id": "send-campaign",
+          "name": "Envoyer campagne",
+          "type": "n8n-nodes-base.emailSend",
+          "typeVersion": 2.2,
+          "position": [
+            1250,
+            300
+          ],
+          "credentials": {
+            "smtp": {
+              "id": "1",
+              "name": "SMTP Account"
+            }
+          },
+          "continueOnFail": true
+        },
+        {
+          "parameters": {
+            "method": "POST",
+            "url": "https://api.analytics.com/track",
+            "authentication": "genericCredentialType",
+            "genericAuthType": "httpHeaderAuth",
+            "sendBody": true,
+            "bodyParameters": {
+              "parameters": [
+                {
+                  "name": "event",
+                  "value": "email_sent"
+                },
+                {
+                  "name": "contact_id",
+                  "value": "={{ $json.id }}"
+                },
+                {
+                  "name": "campaign",
+                  "value": "={{ $json.campagne.template }}"
+                },
+                {
+                  "name": "segment",
+                  "value": "={{ $json.segment }}"
+                },
+                {
+                  "name": "timestamp",
+                  "value": "={{ $now.toISO() }}"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "track-analytics",
+          "name": "Tracker analytics",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [
+            1450,
+            300
+          ],
+          "credentials": {
+            "httpHeaderAuth": {
+              "id": "1",
+              "name": "Analytics API"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "functionCode": "const stats = {\n  total: items.length,\n  segments: {},\n  success: 0,\n  failed: 0\n};\n\nitems.forEach(item => {\n  const segment = item.json.segment;\n  stats.segments[segment] = (stats.segments[segment] || 0) + 1;\n  \n  if (item.json.emailSent) {\n    stats.success++;\n  } else {\n    stats.failed++;\n  }\n});\n\nreturn [{\n  json: {\n    date: new Date().toISOString(),\n    stats: stats,\n    summary: `Campagne envoyée à ${stats.success} contacts sur ${stats.total}`\n  }\n}];"
+          },
+          "id": "calculate-stats",
+          "name": "Calculer statistiques",
+          "type": "n8n-nodes-base.function",
+          "typeVersion": 2,
+          "position": [
+            1650,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "content": "## 📊 Rapport de Campagne Email\n\n**Date:** {{ $json.date }}\n\n### Résumé\n{{ $json.summary }}\n\n### Détails par segment\n{{ Object.entries($json.stats.segments).map(([segment, count]) => `- **${segment}:** ${count} contacts`).join('\\n') }}\n\n### Performance\n- ✅ Emails envoyés: {{ $json.stats.success }}\n- ❌ Échecs: {{ $json.stats.failed }}\n- 📈 Taux de succès: {{ Math.round(($json.stats.success / $json.stats.total) * 100) }}%",
+            "contentType": "markdown"
+          },
+          "id": "campaign-report",
+          "name": "Rapport campagne",
+          "type": "n8n-nodes-base.html",
+          "typeVersion": 1.2,
+          "position": [
+            1850,
+            300
+          ]
+        }
+      ],
+      "connections": {
+        "Tous les jours à 9h": {
+          "main": [
+            [
+              {
+                "node": "Récupérer contacts",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Récupérer contacts": {
+          "main": [
+            [
+              {
+                "node": "Filtrer contacts inactifs",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Filtrer contacts inactifs": {
+          "main": [
+            [
+              {
+                "node": "Segmenter contacts",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Segmenter contacts": {
+          "main": [
+            [
+              {
+                "node": "Générer contenu IA",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Générer contenu IA": {
+          "main": [
+            [
+              {
+                "node": "Envoyer campagne",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Envoyer campagne": {
+          "main": [
+            [
+              {
+                "node": "Tracker analytics",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Tracker analytics": {
+          "main": [
+            [
+              {
+                "node": "Calculer statistiques",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Calculer statistiques": {
+          "main": [
+            [
+              {
+                "node": "Rapport campagne",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": false,
+        "description": "Système d'email marketing complet avec segmentation, personnalisation IA, tracking et rapports automatiques."
+      },
+      "versionId": "1.0.0"
+    },
+    {
+      "name": "[3] Module 3.3 - Système de Facturation Automatisé",
+      "nodes": [
+        {
+          "parameters": {
+            "httpMethod": "POST",
+            "path": "nouvelle-commande",
+            "responseMode": "responseNode",
+            "options": {}
+          },
+          "id": "webhook-order",
+          "name": "Webhook nouvelle commande",
+          "type": "n8n-nodes-base.webhook",
+          "typeVersion": 2,
+          "position": [
+            250,
+            300
+          ],
+          "webhookId": "order-webhook"
+        },
+        {
+          "parameters": {
+            "mode": "runOnceForEachItem",
+            "jsCode": "// Générer numéro de facture unique\nconst date = new Date();\nconst year = date.getFullYear();\nconst month = String(date.getMonth() + 1).padStart(2, '0');\nconst random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');\n\nconst numeroFacture = `FAC-${year}${month}-${random}`;\n\n// Calculer les montants\nconst items = $input.item.json.body.items || [];\nlet sousTotal = 0;\n\nitems.forEach(item => {\n  sousTotal += item.quantite * item.prix_unitaire;\n});\n\nconst tauxTVA = 0.20; // 20% TVA\nconst montantTVA = sousTotal * tauxTVA;\nconst totalTTC = sousTotal + montantTVA;\n\n// Préparer les données de facture\nreturn {\n  numero_facture: numeroFacture,\n  date_facture: date.toISOString(),\n  client: $input.item.json.body.client,\n  items: items,\n  sous_total: sousTotal.toFixed(2),\n  taux_tva: (tauxTVA * 100) + '%',\n  montant_tva: montantTVA.toFixed(2),\n  total_ttc: totalTTC.toFixed(2),\n  conditions_paiement: '30 jours',\n  statut: 'en_attente'\n};"
+          },
+          "id": "prepare-invoice",
+          "name": "Préparer facture",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [
+            450,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "content": "=<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; }\n    .invoice { max-width: 800px; margin: auto; padding: 20px; }\n    .header { display: flex; justify-content: space-between; margin-bottom: 40px; }\n    .company { font-size: 24px; font-weight: bold; color: #333; }\n    .invoice-number { text-align: right; }\n    .client-info { margin-bottom: 30px; }\n    table { width: 100%; border-collapse: collapse; }\n    th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }\n    th { background-color: #f8f9fa; }\n    .totals { text-align: right; margin-top: 30px; }\n    .total-line { display: flex; justify-content: flex-end; margin: 5px 0; }\n    .total-label { width: 150px; }\n    .total-ttc { font-size: 20px; font-weight: bold; color: #007bff; }\n  </style>\n</head>\n<body>\n  <div class=\"invoice\">\n    <div class=\"header\">\n      <div class=\"company\">AutomateHub</div>\n      <div class=\"invoice-number\">\n        <h2>FACTURE</h2>\n        <p>N° {{ $json.numero_facture }}</p>\n        <p>Date: {{ new Date($json.date_facture).toLocaleDateString('fr-FR') }}</p>\n      </div>\n    </div>\n    \n    <div class=\"client-info\">\n      <h3>Client:</h3>\n      <p><strong>{{ $json.client.nom }}</strong></p>\n      <p>{{ $json.client.adresse }}</p>\n      <p>{{ $json.client.email }}</p>\n    </div>\n    \n    <table>\n      <thead>\n        <tr>\n          <th>Description</th>\n          <th>Quantité</th>\n          <th>Prix unitaire</th>\n          <th>Total HT</th>\n        </tr>\n      </thead>\n      <tbody>\n        {{ $json.items.map(item => `\n        <tr>\n          <td>${item.description}</td>\n          <td>${item.quantite}</td>\n          <td>${item.prix_unitaire.toFixed(2)} €</td>\n          <td>${(item.quantite * item.prix_unitaire).toFixed(2)} €</td>\n        </tr>\n        `).join('') }}\n      </tbody>\n    </table>\n    \n    <div class=\"totals\">\n      <div class=\"total-line\">\n        <span class=\"total-label\">Sous-total HT:</span>\n        <span>{{ $json.sous_total }} €</span>\n      </div>\n      <div class=\"total-line\">\n        <span class=\"total-label\">TVA ({{ $json.taux_tva }}):</span>\n        <span>{{ $json.montant_tva }} €</span>\n      </div>\n      <div class=\"total-line total-ttc\">\n        <span class=\"total-label\">TOTAL TTC:</span>\n        <span>{{ $json.total_ttc }} €</span>\n      </div>\n    </div>\n    \n    <p style=\"margin-top: 40px; font-size: 12px; color: #666;\">\n      Conditions de paiement: {{ $json.conditions_paiement }}<br>\n      Merci de votre confiance.\n    </p>\n  </div>\n</body>\n</html>",
+            "contentType": "html"
+          },
+          "id": "generate-html",
+          "name": "Générer HTML facture",
+          "type": "n8n-nodes-base.html",
+          "typeVersion": 1.2,
+          "position": [
+            650,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "operation": "pdf",
+            "options": {
+              "format": "A4",
+              "margin": {
+                "top": "20mm",
+                "bottom": "20mm",
+                "left": "20mm",
+                "right": "20mm"
+              }
+            }
+          },
+          "id": "html-to-pdf",
+          "name": "Convertir en PDF",
+          "type": "n8n-nodes-base.htmlToPdf",
+          "typeVersion": 1,
+          "position": [
+            850,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "resource": "file",
+            "operation": "upload",
+            "name": "={{ $json.numero_facture }}.pdf",
+            "parents": {
+              "values": [
+                {
+                  "id": "YOUR_INVOICES_FOLDER_ID"
+                }
+              ]
+            },
+            "resolveData": true,
+            "options": {}
+          },
+          "id": "save-to-drive",
+          "name": "Sauvegarder dans Drive",
+          "type": "n8n-nodes-base.googleDrive",
+          "typeVersion": 3,
+          "position": [
+            1050,
+            200
+          ],
+          "credentials": {
+            "googleDriveOAuth2Api": {
+              "id": "1",
+              "name": "Google Drive account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "operation": "append",
+            "documentId": {
+              "__rl": true,
+              "value": "YOUR_INVOICES_SHEET_ID",
+              "mode": "id"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": "Factures",
+              "mode": "name"
+            },
+            "columns": {
+              "mappingMode": "defineBelow",
+              "value": {
+                "numero": "={{ $json.numero_facture }}",
+                "date": "={{ $json.date_facture }}",
+                "client": "={{ $json.client.nom }}",
+                "montant_ht": "={{ $json.sous_total }}",
+                "tva": "={{ $json.montant_tva }}",
+                "total_ttc": "={{ $json.total_ttc }}",
+                "statut": "={{ $json.statut }}",
+                "lien_pdf": "={{ $node[\"Sauvegarder dans Drive\"].json.webViewLink }}"
+              }
+            },
+            "options": {}
+          },
+          "id": "log-to-sheets",
+          "name": "Logger dans Sheets",
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.5,
+          "position": [
+            1250,
+            200
+          ],
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "1",
+              "name": "Google Sheets account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "sendTo": "={{ $json.client.email }}",
+            "subject": "Votre facture AutomateHub n°{{ $json.numero_facture }}",
+            "emailType": "html",
+            "message": "=<p>Bonjour {{ $json.client.nom }},</p>\n\n<p>Veuillez trouver ci-joint votre facture n°{{ $json.numero_facture }} d'un montant de <strong>{{ $json.total_ttc }} €</strong>.</p>\n\n<p>Cette facture est payable sous {{ $json.conditions_paiement }}.</p>\n\n<p>Pour toute question, n'hésitez pas à nous contacter.</p>\n\n<p>Cordialement,<br>\nL'équipe AutomateHub</p>",
+            "attachments": {
+              "values": [
+                {
+                  "binaryPropertyName": "data"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "send-invoice",
+          "name": "Envoyer facture client",
+          "type": "n8n-nodes-base.emailSend",
+          "typeVersion": 2.2,
+          "position": [
+            1050,
+            400
+          ],
+          "credentials": {
+            "smtp": {
+              "id": "1",
+              "name": "SMTP Account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "channel": "#comptabilite",
+            "text": ":moneybag: *Nouvelle facture générée*\n\n*N°:* {{ $json.numero_facture }}\n*Client:* {{ $json.client.nom }}\n*Montant:* {{ $json.total_ttc }} €\n*Statut:* {{ $json.statut }}\n\n<{{ $node[\"Sauvegarder dans Drive\"].json.webViewLink }}|Voir la facture>",
+            "otherOptions": {}
+          },
+          "id": "notify-accounting",
+          "name": "Notifier comptabilité",
+          "type": "n8n-nodes-base.slack",
+          "typeVersion": 2.2,
+          "position": [
+            1450,
+            300
+          ],
+          "credentials": {
+            "slackApi": {
+              "id": "1",
+              "name": "Slack account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "respondWith": "json",
+            "responseBody": "={{ {\n  \"success\": true,\n  \"numero_facture\": $json.numero_facture,\n  \"montant_total\": $json.total_ttc,\n  \"lien_pdf\": $node[\"Sauvegarder dans Drive\"].json.webViewLink,\n  \"message\": \"Facture créée et envoyée avec succès\"\n} }}",
+            "options": {}
+          },
+          "id": "webhook-response",
+          "name": "Réponse webhook",
+          "type": "n8n-nodes-base.respondToWebhook",
+          "typeVersion": 1.1,
+          "position": [
+            1650,
+            300
+          ]
+        }
+      ],
+      "connections": {
+        "Webhook nouvelle commande": {
+          "main": [
+            [
+              {
+                "node": "Préparer facture",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Préparer facture": {
+          "main": [
+            [
+              {
+                "node": "Générer HTML facture",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Générer HTML facture": {
+          "main": [
+            [
+              {
+                "node": "Convertir en PDF",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Convertir en PDF": {
+          "main": [
+            [
+              {
+                "node": "Sauvegarder dans Drive",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Envoyer facture client",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Sauvegarder dans Drive": {
+          "main": [
+            [
+              {
+                "node": "Logger dans Sheets",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Logger dans Sheets": {
+          "main": [
+            [
+              {
+                "node": "Notifier comptabilité",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Notifier comptabilité": {
+          "main": [
+            [
+              {
+                "node": "Réponse webhook",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": false,
+        "description": "Génération automatique de factures PDF, envoi par email, archivage Drive et suivi comptable."
+      },
+      "versionId": "1.0.0"
+    },
+    {
+      "name": "[3] Module 3.4 - Dashboard Analytics Automatisé",
+      "nodes": [
+        {
+          "parameters": {
+            "rule": {
+              "interval": [
+                {
+                  "field": "cronExpression",
+                  "expression": "0 8 * * 1"
+                }
+              ]
+            }
+          },
+          "id": "weekly-report",
+          "name": "Rapport hebdomadaire",
+          "type": "n8n-nodes-base.scheduleTrigger",
+          "typeVersion": 1.2,
+          "position": [
+            250,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "method": "GET",
+            "url": "https://api.stripe.com/v1/charges",
+            "authentication": "predefinedCredentialType",
+            "nodeCredentialType": "stripeApi",
+            "sendQuery": true,
+            "queryParameters": {
+              "parameters": [
+                {
+                  "name": "created[gte]",
+                  "value": "={{ Math.floor($now.minus(7, 'days').toSeconds()) }}"
+                },
+                {
+                  "name": "limit",
+                  "value": "100"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "get-stripe-data",
+          "name": "Récupérer ventes Stripe",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [
+            450,
+            200
+          ],
+          "credentials": {
+            "stripeApi": {
+              "id": "1",
+              "name": "Stripe account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "documentId": {
+              "__rl": true,
+              "value": "YOUR_ANALYTICS_SHEET_ID",
+              "mode": "id"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": "Trafic",
+              "mode": "name"
+            },
+            "options": {
+              "range": {
+                "rangeValue": "A2:E100"
+              }
+            }
+          },
+          "id": "get-traffic-data",
+          "name": "Récupérer données trafic",
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.5,
+          "position": [
+            450,
+            350
+          ],
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "1",
+              "name": "Google Sheets account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "resource": "database",
+            "operation": "getAll",
+            "databaseId": {
+              "__rl": true,
+              "value": "YOUR_NOTION_DATABASE_ID",
+              "mode": "id"
+            },
+            "returnAll": false,
+            "limit": 50,
+            "filters": {
+              "conditions": [
+                {
+                  "key": "Status|select|name",
+                  "condition": "equals",
+                  "value": "Completed"
+                }
+              ]
+            }
+          },
+          "id": "get-tasks-data",
+          "name": "Récupérer tâches Notion",
+          "type": "n8n-nodes-base.notion",
+          "typeVersion": 2.2,
+          "position": [
+            450,
+            500
+          ],
+          "credentials": {
+            "notionApi": {
+              "id": "1",
+              "name": "Notion account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "mode": "runOnceForAllItems",
+            "jsCode": "// Analyser les données Stripe\nconst stripeData = $input.all()[0].json.data;\nlet totalRevenue = 0;\nlet transactionCount = 0;\nlet averageOrderValue = 0;\nlet topProducts = {};\n\nstripeData.forEach(charge => {\n  if (charge.paid && charge.status === 'succeeded') {\n    totalRevenue += charge.amount / 100; // Convertir de cents en euros\n    transactionCount++;\n    \n    // Compter les produits (si metadata disponible)\n    if (charge.metadata && charge.metadata.product) {\n      topProducts[charge.metadata.product] = (topProducts[charge.metadata.product] || 0) + 1;\n    }\n  }\n});\n\naverageOrderValue = transactionCount > 0 ? (totalRevenue / transactionCount).toFixed(2) : 0;\n\n// Analyser les données de trafic\nconst trafficData = $input.all()[1].json;\nlet totalVisits = 0;\nlet uniqueVisitors = 0;\nlet conversionRate = 0;\n\nif (trafficData && Array.isArray(trafficData)) {\n  trafficData.forEach(day => {\n    totalVisits += parseInt(day.visites || 0);\n    uniqueVisitors += parseInt(day.visiteurs_uniques || 0);\n  });\n  \n  conversionRate = totalVisits > 0 ? ((transactionCount / totalVisits) * 100).toFixed(2) : 0;\n}\n\n// Analyser les tâches Notion\nconst tasksData = $input.all()[2].json;\nlet completedTasks = tasksData ? tasksData.length : 0;\n\n// Top 3 produits\nconst sortedProducts = Object.entries(topProducts)\n  .sort((a, b) => b[1] - a[1])\n  .slice(0, 3)\n  .map(([product, count]) => ({ product, count }));\n\n// Calculer les variations (simulées pour cet exemple)\nconst previousWeekRevenue = totalRevenue * 0.85; // Simulation\nconst revenueGrowth = ((totalRevenue - previousWeekRevenue) / previousWeekRevenue * 100).toFixed(1);\n\nreturn [{\n  json: {\n    periode: {\n      debut: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],\n      fin: new Date().toISOString().split('T')[0]\n    },\n    kpis: {\n      revenue: {\n        total: totalRevenue.toFixed(2),\n        croissance: revenueGrowth,\n        transactions: transactionCount,\n        panier_moyen: averageOrderValue\n      },\n      trafic: {\n        visites: totalVisits,\n        visiteurs_uniques: uniqueVisitors,\n        taux_conversion: conversionRate\n      },\n      productivite: {\n        taches_completees: completedTasks\n      }\n    },\n    top_produits: sortedProducts,\n    insights: [\n      revenueGrowth > 0 ? `📈 Croissance du CA de ${revenueGrowth}%` : `📉 Baisse du CA de ${Math.abs(revenueGrowth)}%`,\n      `💰 Panier moyen: ${averageOrderValue}€`,\n      `🎯 Taux de conversion: ${conversionRate}%`,\n      `✅ ${completedTasks} tâches complétées`\n    ]\n  }\n}];"
+          },
+          "id": "analyze-data",
+          "name": "Analyser données",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [
+            650,
+            350
+          ]
+        },
+        {
+          "parameters": {
+            "operation": "create",
+            "base": "={{ $json.kpis.revenue.total }}",
+            "from": "EUR",
+            "to": [
+              "USD",
+              "GBP"
+            ],
+            "property": "kpis.revenue.conversions"
+          },
+          "id": "currency-rates",
+          "name": "Taux de change",
+          "type": "n8n-nodes-base.exchangeRates",
+          "typeVersion": 1,
+          "position": [
+            850,
+            350
+          ]
+        },
+        {
+          "parameters": {
+            "content": "=<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f5f7fa; margin: 0; padding: 20px; }\n    .dashboard { max-width: 1200px; margin: auto; }\n    .header { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }\n    .header h1 { margin: 0; color: #2c3e50; }\n    .period { color: #7f8c8d; font-size: 14px; margin-top: 5px; }\n    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 20px; }\n    .kpi-card { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }\n    .kpi-title { color: #7f8c8d; font-size: 14px; margin-bottom: 10px; }\n    .kpi-value { font-size: 32px; font-weight: bold; color: #2c3e50; }\n    .kpi-change { font-size: 14px; margin-top: 5px; }\n    .positive { color: #27ae60; }\n    .negative { color: #e74c3c; }\n    .chart-container { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }\n    .insights { background: #3498db; color: white; padding: 25px; border-radius: 10px; }\n    .insights h3 { margin-top: 0; }\n    .insights ul { margin: 0; padding-left: 20px; }\n    .insights li { margin: 10px 0; }\n  </style>\n</head>\n<body>\n  <div class=\"dashboard\">\n    <div class=\"header\">\n      <h1>📊 Rapport Analytics Hebdomadaire</h1>\n      <div class=\"period\">Période: {{ $json.periode.debut }} au {{ $json.periode.fin }}</div>\n    </div>\n    \n    <div class=\"kpi-grid\">\n      <div class=\"kpi-card\">\n        <div class=\"kpi-title\">💰 CHIFFRE D'AFFAIRES</div>\n        <div class=\"kpi-value\">{{ $json.kpis.revenue.total }}€</div>\n        <div class=\"kpi-change {{ parseFloat($json.kpis.revenue.croissance) >= 0 ? 'positive' : 'negative' }}\">\n          {{ parseFloat($json.kpis.revenue.croissance) >= 0 ? '↑' : '↓' }} {{ Math.abs($json.kpis.revenue.croissance) }}%\n        </div>\n      </div>\n      \n      <div class=\"kpi-card\">\n        <div class=\"kpi-title\">🛒 TRANSACTIONS</div>\n        <div class=\"kpi-value\">{{ $json.kpis.revenue.transactions }}</div>\n        <div class=\"kpi-change\">Panier moyen: {{ $json.kpis.revenue.panier_moyen }}€</div>\n      </div>\n      \n      <div class=\"kpi-card\">\n        <div class=\"kpi-title\">👥 VISITEURS</div>\n        <div class=\"kpi-value\">{{ $json.kpis.trafic.visiteurs_uniques }}</div>\n        <div class=\"kpi-change\">{{ $json.kpis.trafic.visites }} visites totales</div>\n      </div>\n      \n      <div class=\"kpi-card\">\n        <div class=\"kpi-title\">🎯 CONVERSION</div>\n        <div class=\"kpi-value\">{{ $json.kpis.trafic.taux_conversion }}%</div>\n        <div class=\"kpi-change\">Des visiteurs en clients</div>\n      </div>\n    </div>\n    \n    <div class=\"chart-container\">\n      <h3>🏆 Top Produits</h3>\n      <ol>\n        {{ $json.top_produits.map(item => `<li>${item.product} - ${item.count} ventes</li>`).join('') }}\n      </ol>\n    </div>\n    \n    <div class=\"insights\">\n      <h3>💡 Insights de la semaine</h3>\n      <ul>\n        {{ $json.insights.map(insight => `<li>${insight}</li>`).join('') }}\n      </ul>\n    </div>\n  </div>\n</body>\n</html>",
+            "contentType": "html"
+          },
+          "id": "generate-dashboard",
+          "name": "Générer dashboard HTML",
+          "type": "n8n-nodes-base.html",
+          "typeVersion": 1.2,
+          "position": [
+            1050,
+            350
+          ]
+        },
+        {
+          "parameters": {
+            "operation": "pdf",
+            "options": {
+              "format": "A4",
+              "landscape": true,
+              "margin": {
+                "top": "10mm",
+                "bottom": "10mm",
+                "left": "10mm",
+                "right": "10mm"
+              }
+            }
+          },
+          "id": "dashboard-to-pdf",
+          "name": "Convertir en PDF",
+          "type": "n8n-nodes-base.htmlToPdf",
+          "typeVersion": 1,
+          "position": [
+            1250,
+            350
+          ]
+        },
+        {
+          "parameters": {
+            "sendTo": "direction@automatehub.fr",
+            "subject": "📊 Rapport Analytics Hebdomadaire - {{ $json.periode.fin }}",
+            "emailType": "html",
+            "message": "=<p>Bonjour,</p>\n\n<p>Veuillez trouver ci-joint le rapport analytics hebdomadaire.</p>\n\n<h3>Résumé rapide:</h3>\n<ul>\n  <li>CA de la semaine: <strong>{{ $json.kpis.revenue.total }}€</strong></li>\n  <li>Croissance: <strong>{{ $json.kpis.revenue.croissance }}%</strong></li>\n  <li>Taux de conversion: <strong>{{ $json.kpis.trafic.taux_conversion }}%</strong></li>\n</ul>\n\n<p>Le rapport complet est disponible en pièce jointe.</p>\n\n<p>Cordialement,<br>\nVotre assistant analytics</p>",
+            "attachments": {
+              "values": [
+                {
+                  "binaryPropertyName": "data"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "send-report",
+          "name": "Envoyer rapport",
+          "type": "n8n-nodes-base.emailSend",
+          "typeVersion": 2.2,
+          "position": [
+            1450,
+            350
+          ],
+          "credentials": {
+            "smtp": {
+              "id": "1",
+              "name": "SMTP Account"
+            }
+          }
+        }
+      ],
+      "connections": {
+        "Rapport hebdomadaire": {
+          "main": [
+            [
+              {
+                "node": "Récupérer ventes Stripe",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Récupérer données trafic",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Récupérer tâches Notion",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Récupérer ventes Stripe": {
+          "main": [
+            [
+              {
+                "node": "Analyser données",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Récupérer données trafic": {
+          "main": [
+            [
+              {
+                "node": "Analyser données",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Récupérer tâches Notion": {
+          "main": [
+            [
+              {
+                "node": "Analyser données",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Analyser données": {
+          "main": [
+            [
+              {
+                "node": "Taux de change",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Taux de change": {
+          "main": [
+            [
+              {
+                "node": "Générer dashboard HTML",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Générer dashboard HTML": {
+          "main": [
+            [
+              {
+                "node": "Convertir en PDF",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Convertir en PDF": {
+          "main": [
+            [
+              {
+                "node": "Envoyer rapport",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": false,
+        "description": "Dashboard analytics automatisé qui agrège données de ventes, trafic et productivité pour générer des rapports visuels hebdomadaires."
+      },
+      "versionId": "1.0.0"
+    },
+    {
+      "name": "[4] Module 4.1 - Chatbot Intelligent Multi-Usage",
+      "nodes": [
+        {
+          "parameters": {
+            "httpMethod": "POST",
+            "path": "chatbot",
+            "options": {
+              "cors": {
+                "enabled": true,
+                "allowedOrigins": "*"
+              }
+            }
+          },
+          "id": "webhook-chat",
+          "name": "Webhook Chat",
+          "type": "n8n-nodes-base.webhook",
+          "typeVersion": 2,
+          "position": [
+            250,
+            300
+          ],
+          "webhookId": "chatbot-webhook"
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "context-001",
+                  "name": "contexte",
+                  "value": "={{ {\n  \"user_id\": $json.body.user_id || 'anonymous',\n  \"session_id\": $json.body.session_id || $now.toMillis(),\n  \"message\": $json.body.message,\n  \"timestamp\": $now.toISO(),\n  \"langue\": $json.body.langue || 'fr',\n  \"historique\": $json.body.historique || []\n} }}",
+                  "type": "object"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "prepare-context",
+          "name": "Préparer contexte",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            450,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "model": "gpt-4",
+            "messages": {
+              "values": [
+                {
+                  "role": "system",
+                  "content": "Tu es l'assistant intelligent d'AutomateHub. Tu aides les utilisateurs avec n8n et l'automatisation. Tu es amical, professionnel et pédagogue. Tu peux répondre en français ou en anglais selon la langue de l'utilisateur. Si on te demande des workflows n8n, fournis des exemples concrets."
+                },
+                {
+                  "role": "user",
+                  "content": "={{ $json.contexte.message }}"
+                }
+              ]
+            },
+            "options": {
+              "temperature": 0.7,
+              "maxTokens": 500,
+              "topP": 0.9
+            }
+          },
+          "id": "openai-response",
+          "name": "Générer réponse IA",
+          "type": "n8n-nodes-base.openAi",
+          "typeVersion": 1.2,
+          "position": [
+            650,
+            300
+          ],
+          "credentials": {
+            "openAiApi": {
+              "id": "1",
+              "name": "OpenAI account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "mode": "runOnceForEachItem",
+            "jsCode": "// Analyser l'intention de l'utilisateur\nconst message = $input.item.json.contexte.message.toLowerCase();\nconst response = $input.item.json.choices[0].message.content;\n\nlet intention = 'general';\nlet actions = [];\n\n// Détection d'intentions\nif (message.includes('workflow') || message.includes('créer') || message.includes('automatiser')) {\n  intention = 'creation_workflow';\n  actions.push('proposer_template');\n}\n\nif (message.includes('erreur') || message.includes('bug') || message.includes('marche pas')) {\n  intention = 'support_technique';\n  actions.push('diagnostic');\n  actions.push('escalade_si_besoin');\n}\n\nif (message.includes('prix') || message.includes('coût') || message.includes('tarif')) {\n  intention = 'commercial';\n  actions.push('afficher_pricing');\n  actions.push('proposer_demo');\n}\n\nif (message.includes('apprendre') || message.includes('tutoriel') || message.includes('cours')) {\n  intention = 'education';\n  actions.push('suggerer_ressources');\n}\n\n// Analyse du sentiment\nlet sentiment = 'neutre';\nif (message.includes('merci') || message.includes('super') || message.includes('génial')) {\n  sentiment = 'positif';\n} else if (message.includes('nul') || message.includes('problème') || message.includes('aide')) {\n  sentiment = 'negatif';\n}\n\n// Préparer la réponse enrichie\nreturn {\n  contexte: $input.item.json.contexte,\n  reponse_ia: response,\n  analyse: {\n    intention: intention,\n    sentiment: sentiment,\n    actions: actions,\n    confiance: 0.85,\n    langue_detectee: message.match(/[àâäéèêëïîôùûü]/) ? 'fr' : 'en'\n  },\n  suggestions: []\n};"
+          },
+          "id": "analyze-intent",
+          "name": "Analyser intention",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [
+            850,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict"
+              },
+              "conditions": [
+                {
+                  "id": "check-workflow",
+                  "leftValue": "={{ $json.analyse.intention }}",
+                  "rightValue": "creation_workflow",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "options": {}
+          },
+          "id": "check-workflow-intent",
+          "name": "Besoin workflow ?",
+          "type": "n8n-nodes-base.if",
+          "typeVersion": 2.1,
+          "position": [
+            1050,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "template-001",
+                  "name": "workflow_suggere",
+                  "value": "={{ {\n  \"nom\": \"Template Email Automation\",\n  \"description\": \"Workflow d'exemple pour automatiser l'envoi d'emails\",\n  \"nodes\": [\n    {\n      \"type\": \"trigger\",\n      \"name\": \"Schedule Trigger\",\n      \"config\": \"Tous les jours à 9h\"\n    },\n    {\n      \"type\": \"data\",\n      \"name\": \"Get Contacts\",\n      \"config\": \"Récupérer depuis Google Sheets\"\n    },\n    {\n      \"type\": \"action\",\n      \"name\": \"Send Email\",\n      \"config\": \"Envoyer email personnalisé\"\n    }\n  ],\n  \"complexite\": \"Débutant\",\n  \"temps_estimation\": \"15 minutes\"\n} }}",
+                  "type": "object"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "suggest-workflow",
+          "name": "Suggérer workflow",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            1250,
+            250
+          ]
+        },
+        {
+          "parameters": {
+            "operation": "append",
+            "documentId": {
+              "__rl": true,
+              "value": "YOUR_CHATBOT_LOG_SHEET",
+              "mode": "id"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": "Conversations",
+              "mode": "name"
+            },
+            "columns": {
+              "mappingMode": "defineBelow",
+              "value": {
+                "timestamp": "={{ $json.contexte.timestamp }}",
+                "user_id": "={{ $json.contexte.user_id }}",
+                "session_id": "={{ $json.contexte.session_id }}",
+                "message": "={{ $json.contexte.message }}",
+                "reponse": "={{ $json.reponse_ia }}",
+                "intention": "={{ $json.analyse.intention }}",
+                "sentiment": "={{ $json.analyse.sentiment }}"
+              }
+            },
+            "options": {}
+          },
+          "id": "log-conversation",
+          "name": "Logger conversation",
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.5,
+          "position": [
+            1050,
+            500
+          ],
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "1",
+              "name": "Google Sheets account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "response-001",
+                  "name": "response",
+                  "value": "={{ {\n  \"success\": true,\n  \"session_id\": $json.contexte.session_id,\n  \"message\": $json.reponse_ia,\n  \"metadata\": {\n    \"intention\": $json.analyse.intention,\n    \"sentiment\": $json.analyse.sentiment,\n    \"timestamp\": $json.contexte.timestamp,\n    \"processing_time\": Math.floor(Math.random() * 500 + 500) + \"ms\"\n  },\n  \"suggestions\": $json.analyse.intention === 'creation_workflow' ? \n    [\n      \"Voulez-vous voir un exemple de workflow ?\",\n      \"Je peux vous aider à créer votre workflow\",\n      \"Découvrez nos templates prédéfinis\"\n    ] : \n    $json.analyse.intention === 'education' ?\n    [\n      \"Consultez notre MasterClass gratuite\",\n      \"Voir les tutoriels vidéo\",\n      \"Rejoindre la communauté\"\n    ] :\n    [\n      \"Puis-je vous aider avec autre chose ?\",\n      \"Avez-vous d'autres questions ?\"\n    ],\n  \"actions\": $json.analyse.actions,\n  \"workflow_template\": $node[\"Suggérer workflow\"].json.workflow_suggere || null\n} }}",
+                  "type": "object"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "format-response",
+          "name": "Formater réponse",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            1450,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict"
+              },
+              "conditions": [
+                {
+                  "id": "check-support",
+                  "leftValue": "={{ $json.analyse.intention }}",
+                  "rightValue": "support_technique",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals"
+                  }
+                },
+                {
+                  "id": "check-sentiment",
+                  "leftValue": "={{ $json.analyse.sentiment }}",
+                  "rightValue": "negatif",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "options": {}
+          },
+          "id": "need-escalation",
+          "name": "Besoin escalade ?",
+          "type": "n8n-nodes-base.if",
+          "typeVersion": 2.1,
+          "position": [
+            1250,
+            500
+          ]
+        },
+        {
+          "parameters": {
+            "channel": "#support-urgent",
+            "text": ":warning: *Escalade Chatbot Requise*\n\n*User:* {{ $json.contexte.user_id }}\n*Message:* {{ $json.contexte.message }}\n*Sentiment:* {{ $json.analyse.sentiment }}\n*Intention:* {{ $json.analyse.intention }}\n\nL'utilisateur semble avoir besoin d'aide urgente.",
+            "otherOptions": {}
+          },
+          "id": "escalate-slack",
+          "name": "Escalader vers Slack",
+          "type": "n8n-nodes-base.slack",
+          "typeVersion": 2.2,
+          "position": [
+            1450,
+            500
+          ],
+          "credentials": {
+            "slackApi": {
+              "id": "1",
+              "name": "Slack account"
+            }
+          }
+        }
+      ],
+      "connections": {
+        "Webhook Chat": {
+          "main": [
+            [
+              {
+                "node": "Préparer contexte",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Préparer contexte": {
+          "main": [
+            [
+              {
+                "node": "Générer réponse IA",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Générer réponse IA": {
+          "main": [
+            [
+              {
+                "node": "Analyser intention",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Analyser intention": {
+          "main": [
+            [
+              {
+                "node": "Besoin workflow ?",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Logger conversation",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Besoin workflow ?": {
+          "main": [
+            [
+              {
+                "node": "Suggérer workflow",
+                "type": "main",
+                "index": 0
+              }
+            ],
+            [
+              {
+                "node": "Formater réponse",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Suggérer workflow": {
+          "main": [
+            [
+              {
+                "node": "Formater réponse",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Logger conversation": {
+          "main": [
+            [
+              {
+                "node": "Besoin escalade ?",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Besoin escalade ?": {
+          "main": [
+            [
+              {
+                "node": "Escalader vers Slack",
+                "type": "main",
+                "index": 0
+              }
+            ],
+            []
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": false,
+        "description": "Chatbot intelligent avec analyse d'intention, suggestions contextuelles, logging et escalade automatique."
+      },
+      "versionId": "1.0.0"
+    },
+    {
+      "name": "[4] Module 4.2 - Analyse de Sentiments Multi-Sources",
+      "nodes": [
+        {
+          "parameters": {
+            "rule": {
+              "interval": [
+                {
+                  "field": "hours",
+                  "hoursInterval": 1
+                }
+              ]
+            }
+          },
+          "id": "schedule-analysis",
+          "name": "Analyse horaire",
+          "type": "n8n-nodes-base.scheduleTrigger",
+          "typeVersion": 1.2,
+          "position": [
+            250,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "resource": "tweet",
+            "operation": "search",
+            "searchText": "@AutomateHub OR #n8n OR automatehub.fr",
+            "limit": 50,
+            "additionalFields": {}
+          },
+          "id": "get-tweets",
+          "name": "Récupérer tweets",
+          "type": "n8n-nodes-base.twitter",
+          "typeVersion": 2,
+          "position": [
+            450,
+            200
+          ],
+          "credentials": {
+            "twitterOAuth2Api": {
+              "id": "1",
+              "name": "Twitter account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "documentId": {
+              "__rl": true,
+              "value": "YOUR_REVIEWS_SHEET_ID",
+              "mode": "id"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": "Avis_Clients",
+              "mode": "name"
+            },
+            "options": {
+              "range": {
+                "rangeValue": "A2:E100"
+              }
+            }
+          },
+          "id": "get-reviews",
+          "name": "Récupérer avis clients",
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.5,
+          "position": [
+            450,
+            350
+          ],
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "1",
+              "name": "Google Sheets account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "resource": "message",
+            "operation": "getAll",
+            "returnAll": false,
+            "limit": 20,
+            "filters": {
+              "labelIds": [
+                "INBOX"
+              ],
+              "q": "subject:(feedback OR avis OR review)"
+            }
+          },
+          "id": "get-emails",
+          "name": "Récupérer emails feedback",
+          "type": "n8n-nodes-base.gmail",
+          "typeVersion": 2.1,
+          "position": [
+            450,
+            500
+          ],
+          "credentials": {
+            "gmailOAuth2": {
+              "id": "1",
+              "name": "Gmail account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "mode": "combine",
+            "combinationMode": "mergeByPosition",
+            "options": {}
+          },
+          "id": "merge-sources",
+          "name": "Fusionner sources",
+          "type": "n8n-nodes-base.merge",
+          "typeVersion": 3,
+          "position": [
+            650,
+            350
+          ]
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "normalize-001",
+                  "name": "data_normalized",
+                  "value": "={{ $json.text || $json.avis || $json.snippet || 'Pas de contenu' }}",
+                  "type": "string"
+                },
+                {
+                  "id": "normalize-002",
+                  "name": "source",
+                  "value": "={{ $json.id_str ? 'Twitter' : $json.email ? 'Email' : 'Google Sheets' }}",
+                  "type": "string"
+                },
+                {
+                  "id": "normalize-003",
+                  "name": "author",
+                  "value": "={{ $json.user?.name || $json.nom || $json.from || 'Anonyme' }}",
+                  "type": "string"
+                },
+                {
+                  "id": "normalize-004",
+                  "name": "date",
+                  "value": "={{ $json.created_at || $json.date || $now.toISO() }}",
+                  "type": "string"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "normalize-data",
+          "name": "Normaliser données",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            850,
+            350
+          ]
+        },
+        {
+          "parameters": {
+            "model": "gpt-3.5-turbo",
+            "messages": {
+              "values": [
+                {
+                  "role": "system",
+                  "content": "Tu es un expert en analyse de sentiments. Analyse le texte suivant et retourne un JSON avec:\n- sentiment: 'positif', 'neutre' ou 'negatif'\n- score: entre -1 (très négatif) et 1 (très positif)\n- emotions: array des émotions détectées (joie, colère, tristesse, surprise, peur)\n- themes: array des thèmes principaux\n- urgent: boolean si action urgente requise\n- resume: résumé en une phrase"
+                },
+                {
+                  "role": "user",
+                  "content": "Texte à analyser: {{ $json.data_normalized }}"
+                }
+              ]
+            },
+            "options": {
+              "temperature": 0.3,
+              "responseFormat": {
+                "type": "json_object"
+              }
+            }
+          },
+          "id": "analyze-sentiment",
+          "name": "Analyser sentiment IA",
+          "type": "n8n-nodes-base.openAi",
+          "typeVersion": 1.2,
+          "position": [
+            1050,
+            350
+          ],
+          "credentials": {
+            "openAiApi": {
+              "id": "1",
+              "name": "OpenAI account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "mode": "runOnceForEachItem",
+            "jsCode": "// Parser la réponse IA\nconst analysis = JSON.parse($input.item.json.choices[0].message.content);\nconst originalData = $input.item.json;\n\n// Calculer des métriques supplémentaires\nconst wordCount = originalData.data_normalized.split(' ').length;\nconst isLongFeedback = wordCount > 50;\nconst hasMention = originalData.data_normalized.includes('@');\nconst hasHashtag = originalData.data_normalized.includes('#');\n\n// Déterminer la priorité\nlet priority = 'normale';\nif (analysis.urgent || analysis.sentiment === 'negatif' && analysis.score < -0.5) {\n  priority = 'haute';\n} else if (analysis.sentiment === 'positif' && analysis.score > 0.7) {\n  priority = 'opportunité';\n}\n\n// Suggestions d'actions\nconst actions = [];\nif (analysis.sentiment === 'negatif') {\n  actions.push('répondre_rapidement');\n  actions.push('escalader_support');\n} else if (analysis.sentiment === 'positif') {\n  actions.push('remercier');\n  actions.push('demander_temoignage');\n  if (originalData.source === 'Twitter') {\n    actions.push('retweeter');\n  }\n}\n\nreturn {\n  // Données originales\n  texte_original: originalData.data_normalized,\n  source: originalData.source,\n  auteur: originalData.author,\n  date: originalData.date,\n  \n  // Analyse IA\n  sentiment: analysis.sentiment,\n  score_sentiment: analysis.score,\n  emotions: analysis.emotions || [],\n  themes: analysis.themes || [],\n  resume: analysis.resume,\n  \n  // Métriques\n  nombre_mots: wordCount,\n  feedback_detaille: isLongFeedback,\n  contient_mention: hasMention,\n  contient_hashtag: hasHashtag,\n  \n  // Actions\n  priorite: priority,\n  urgent: analysis.urgent || false,\n  actions_suggerees: actions,\n  \n  // Métadonnées\n  analyse_timestamp: new Date().toISOString(),\n  version_analyse: '1.0'\n};"
+          },
+          "id": "enrich-analysis",
+          "name": "Enrichir analyse",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [
+            1250,
+            350
+          ]
+        },
+        {
+          "parameters": {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict"
+              },
+              "conditions": [
+                {
+                  "id": "negative-check",
+                  "leftValue": "={{ $json.score_sentiment }}",
+                  "rightValue": -0.7,
+                  "operator": {
+                    "type": "number",
+                    "operation": "lt"
+                  }
+                }
+              ],
+              "combinator": "or"
+            },
+            "options": {}
+          },
+          "id": "check-urgent",
+          "name": "Vérifier urgence",
+          "type": "n8n-nodes-base.if",
+          "typeVersion": 2.1,
+          "position": [
+            1450,
+            350
+          ]
+        },
+        {
+          "parameters": {
+            "channel": "#urgences-sentiment",
+            "text": "=🚨 *ALERTE SENTIMENT NÉGATIF*\n\n*Source:* {{ $json.source }}\n*Auteur:* {{ $json.auteur }}\n*Sentiment:* {{ $json.sentiment }} ({{ $json.score_sentiment }})\n*Priorité:* {{ $json.priorite }}\n\n*Message:*\n> {{ $json.texte_original.substring(0, 200) }}{{ $json.texte_original.length > 200 ? '...' : '' }}\n\n*Résumé IA:* {{ $json.resume }}\n\n*Actions suggérées:*\n{{ $json.actions_suggerees.map(a => '• ' + a).join('\\n') }}\n\n⚡ Action immédiate requise!",
+            "otherOptions": {
+              "attachments": {
+                "values": [
+                  {
+                    "color": "#ff0000",
+                    "fields": {
+                      "values": [
+                        {
+                          "short": true,
+                          "title": "Émotions",
+                          "value": "={{ $json.emotions.join(', ') }}"
+                        },
+                        {
+                          "short": true,
+                          "title": "Thèmes",
+                          "value": "={{ $json.themes.join(', ') }}"
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "id": "alert-urgent",
+          "name": "Alerte urgente",
+          "type": "n8n-nodes-base.slack",
+          "typeVersion": 2.2,
+          "position": [
+            1650,
+            250
+          ],
+          "credentials": {
+            "slackApi": {
+              "id": "1",
+              "name": "Slack account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "operation": "append",
+            "documentId": {
+              "__rl": true,
+              "value": "YOUR_SENTIMENT_LOG_SHEET",
+              "mode": "id"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": "Analyses",
+              "mode": "name"
+            },
+            "columns": {
+              "mappingMode": "defineBelow",
+              "value": {
+                "timestamp": "={{ $json.analyse_timestamp }}",
+                "source": "={{ $json.source }}",
+                "auteur": "={{ $json.auteur }}",
+                "sentiment": "={{ $json.sentiment }}",
+                "score": "={{ $json.score_sentiment }}",
+                "priorite": "={{ $json.priorite }}",
+                "texte": "={{ $json.texte_original }}",
+                "resume": "={{ $json.resume }}",
+                "themes": "={{ $json.themes.join(', ') }}",
+                "actions": "={{ $json.actions_suggerees.join(', ') }}"
+              }
+            },
+            "options": {}
+          },
+          "id": "log-analysis",
+          "name": "Logger analyses",
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.5,
+          "position": [
+            1650,
+            450
+          ],
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "1",
+              "name": "Google Sheets account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "functionCode": "// Agrégation des résultats\nconst items = $input.all();\n\nconst stats = {\n  total: items.length,\n  sentiments: {\n    positif: 0,\n    neutre: 0,\n    negatif: 0\n  },\n  sources: {},\n  themes: {},\n  emotions: {},\n  score_moyen: 0,\n  urgents: 0\n};\n\nitems.forEach(item => {\n  const data = item.json;\n  \n  // Compter sentiments\n  stats.sentiments[data.sentiment]++;\n  \n  // Compter sources\n  stats.sources[data.source] = (stats.sources[data.source] || 0) + 1;\n  \n  // Agréger themes\n  data.themes.forEach(theme => {\n    stats.themes[theme] = (stats.themes[theme] || 0) + 1;\n  });\n  \n  // Agréger émotions\n  data.emotions.forEach(emotion => {\n    stats.emotions[emotion] = (stats.emotions[emotion] || 0) + 1;\n  });\n  \n  // Score moyen\n  stats.score_moyen += data.score_sentiment;\n  \n  // Compter urgents\n  if (data.urgent) stats.urgents++;\n});\n\nstats.score_moyen = stats.total > 0 ? (stats.score_moyen / stats.total).toFixed(2) : 0;\n\n// Top 3 themes\nconst topThemes = Object.entries(stats.themes)\n  .sort((a, b) => b[1] - a[1])\n  .slice(0, 3)\n  .map(([theme, count]) => ({ theme, count }));\n\n// Générer insights\nconst insights = [];\nif (stats.sentiments.negatif > stats.sentiments.positif) {\n  insights.push('⚠️ Plus de sentiments négatifs que positifs');\n}\nif (stats.urgents > 0) {\n  insights.push(`🚨 ${stats.urgents} feedbacks urgents détectés`);\n}\nif (stats.score_moyen > 0.5) {\n  insights.push('😊 Sentiment global positif');\n}\n\nreturn [{\n  json: {\n    periode: new Date().toISOString(),\n    statistiques: stats,\n    top_themes: topThemes,\n    insights: insights,\n    rapport: `Analyse de ${stats.total} feedbacks: ${stats.sentiments.positif} positifs, ${stats.sentiments.neutre} neutres, ${stats.sentiments.negatif} négatifs. Score moyen: ${stats.score_moyen}`\n  }\n}];"
+          },
+          "id": "aggregate-results",
+          "name": "Agréger résultats",
+          "type": "n8n-nodes-base.function",
+          "typeVersion": 2,
+          "position": [
+            1850,
+            350
+          ]
+        }
+      ],
+      "connections": {
+        "Analyse horaire": {
+          "main": [
+            [
+              {
+                "node": "Récupérer tweets",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Récupérer avis clients",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Récupérer emails feedback",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Récupérer tweets": {
+          "main": [
+            [
+              {
+                "node": "Fusionner sources",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Récupérer avis clients": {
+          "main": [
+            [
+              {
+                "node": "Fusionner sources",
+                "type": "main",
+                "index": 1
+              }
+            ]
+          ]
+        },
+        "Récupérer emails feedback": {
+          "main": [
+            [
+              {
+                "node": "Fusionner sources",
+                "type": "main",
+                "index": 2
+              }
+            ]
+          ]
+        },
+        "Fusionner sources": {
+          "main": [
+            [
+              {
+                "node": "Normaliser données",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Normaliser données": {
+          "main": [
+            [
+              {
+                "node": "Analyser sentiment IA",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Analyser sentiment IA": {
+          "main": [
+            [
+              {
+                "node": "Enrichir analyse",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Enrichir analyse": {
+          "main": [
+            [
+              {
+                "node": "Vérifier urgence",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Vérifier urgence": {
+          "main": [
+            [
+              {
+                "node": "Alerte urgente",
+                "type": "main",
+                "index": 0
+              }
+            ],
+            [
+              {
+                "node": "Logger analyses",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Alerte urgente": {
+          "main": [
+            [
+              {
+                "node": "Logger analyses",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Logger analyses": {
+          "main": [
+            [
+              {
+                "node": "Agréger résultats",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": false,
+        "description": "Analyse de sentiments multi-sources (Twitter, emails, avis) avec IA, détection d'urgence et tableau de bord temps réel."
+      },
+      "versionId": "1.0.0"
+    },
+    {
+      "name": "[4] Module 4.3 - Vision IA et Analyse d'Images",
+      "nodes": [
+        {
+          "parameters": {
+            "httpMethod": "POST",
+            "path": "analyze-image",
+            "responseMode": "responseNode",
+            "options": {
+              "binaryData": true
+            }
+          },
+          "id": "webhook-image",
+          "name": "Webhook Image",
+          "type": "n8n-nodes-base.webhook",
+          "typeVersion": 2,
+          "position": [
+            250,
+            300
+          ],
+          "webhookId": "vision-webhook"
+        },
+        {
+          "parameters": {
+            "mode": "runOnceForEachItem",
+            "jsCode": "// Extraire les métadonnées de l'image\nconst binary = $input.item.binary.data;\n\nif (!binary) {\n  throw new Error('Aucune image reçue');\n}\n\n// Informations de base\nconst fileInfo = {\n  mimeType: binary.mimeType,\n  fileName: binary.fileName || 'image_uploaded',\n  fileSize: binary.fileSize,\n  fileSizeFormatted: (binary.fileSize / 1024).toFixed(2) + ' KB',\n  uploadTime: new Date().toISOString()\n};\n\n// Vérifier le type de fichier\nconst allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];\nif (!allowedTypes.includes(fileInfo.mimeType)) {\n  throw new Error(`Type de fichier non supporté: ${fileInfo.mimeType}`);\n}\n\n// Préparer le contexte\nconst context = $input.item.json.body || {};\n\nreturn {\n  fileInfo: fileInfo,\n  context: {\n    user_id: context.user_id || 'anonymous',\n    purpose: context.purpose || 'general',\n    language: context.language || 'fr',\n    analysis_type: context.analysis_type || 'complete'\n  },\n  binary: binary\n};"
+          },
+          "id": "validate-image",
+          "name": "Valider image",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [
+            450,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "resource": "image",
+            "operation": "analyze",
+            "model": {
+              "__rl": true,
+              "value": "gpt-4-vision-preview",
+              "mode": "list"
+            },
+            "text": "=Analyse cette image en détail. Fournis une réponse structurée en JSON avec:\n1. description: Description générale de l'image\n2. objets: Liste des objets/éléments principaux\n3. texte: Tout texte visible dans l'image\n4. couleurs: Couleurs dominantes\n5. contexte: Contexte probable (business, personnel, etc.)\n6. suggestions: Suggestions d'utilisation ou d'amélioration\n\nRéponds en {{ $json.context.language }}.",
+            "options": {
+              "maxTokens": 1000,
+              "detail": "high"
+            }
+          },
+          "id": "vision-openai",
+          "name": "Analyse Vision OpenAI",
+          "type": "n8n-nodes-base.openAi",
+          "typeVersion": 1.2,
+          "position": [
+            650,
+            200
+          ],
+          "credentials": {
+            "openAiApi": {
+              "id": "1",
+              "name": "OpenAI account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict"
+              },
+              "conditions": [
+                {
+                  "id": "check-purpose",
+                  "leftValue": "={{ $json.context.purpose }}",
+                  "rightValue": "document",
+                  "operator": {
+                    "type": "string",
+                    "operation": "equals"
+                  }
+                }
+              ],
+              "combinator": "or"
+            },
+            "options": {}
+          },
+          "id": "need-ocr",
+          "name": "Besoin OCR ?",
+          "type": "n8n-nodes-base.if",
+          "typeVersion": 2.1,
+          "position": [
+            650,
+            400
+          ]
+        },
+        {
+          "parameters": {
+            "method": "POST",
+            "url": "https://api.ocr.space/parse/image",
+            "authentication": "genericCredentialType",
+            "genericAuthType": "httpHeaderAuth",
+            "sendBody": true,
+            "contentType": "multipart-form-data",
+            "bodyParameters": {
+              "parameters": [
+                {
+                  "parameterType": "formBinaryData",
+                  "name": "file",
+                  "inputDataFieldName": "data"
+                },
+                {
+                  "name": "language",
+                  "value": "={{ $json.context.language === 'fr' ? 'fre' : 'eng' }}"
+                },
+                {
+                  "name": "isOverlayRequired",
+                  "value": "true"
+                },
+                {
+                  "name": "detectOrientation",
+                  "value": "true"
+                },
+                {
+                  "name": "scale",
+                  "value": "true"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "ocr-extraction",
+          "name": "Extraction OCR",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [
+            850,
+            400
+          ],
+          "credentials": {
+            "httpHeaderAuth": {
+              "id": "1",
+              "name": "OCR.space API"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "mode": "runOnceForEachItem",
+            "jsCode": "// Parser et enrichir les résultats\nconst visionResult = JSON.parse($input.item.json.choices[0].message.content);\nconst ocrResult = $node[\"Extraction OCR\"]?.json || null;\nconst originalData = $input.item.json;\n\n// Analyse supplémentaire\nlet analysisEnriched = {\n  ...visionResult,\n  metadata: originalData.fileInfo,\n  context: originalData.context\n};\n\n// Si OCR disponible, enrichir\nif (ocrResult && ocrResult.ParsedResults) {\n  const ocrText = ocrResult.ParsedResults.map(r => r.ParsedText).join('\\n');\n  analysisEnriched.ocr = {\n    texte_extrait: ocrText,\n    confiance: ocrResult.ParsedResults[0]?.FileParseExitCode === 1,\n    orientation: ocrResult.ParsedResults[0]?.TextOrientation || 'unknown'\n  };\n}\n\n// Détection de cas d'usage spécifiques\nconst useCases = [];\n\n// Carte de visite\nif (visionResult.texte && \n    (visionResult.texte.match(/@|email|tel|phone/i) || \n     visionResult.contexte?.includes('business'))) {\n  useCases.push('carte_visite');\n}\n\n// Document\nif (visionResult.texte && visionResult.texte.length > 100) {\n  useCases.push('document');\n}\n\n// Produit\nif (visionResult.objets?.some(obj => \n    ['produit', 'article', 'objet', 'product'].some(term => \n      obj.toLowerCase().includes(term)))) {\n  useCases.push('catalogue_produit');\n}\n\n// Graphique/Chart\nif (visionResult.objets?.some(obj => \n    ['graphique', 'chart', 'graph', 'diagramme'].some(term => \n      obj.toLowerCase().includes(term)))) {\n  useCases.push('analyse_donnees');\n}\n\n// Actions suggérées basées sur l'analyse\nconst suggestedActions = [];\n\nif (useCases.includes('carte_visite')) {\n  suggestedActions.push({\n    action: 'extract_contact',\n    description: 'Extraire informations de contact',\n    workflow: 'workflow-extract-business-card'\n  });\n}\n\nif (useCases.includes('document')) {\n  suggestedActions.push({\n    action: 'summarize',\n    description: 'Résumer le document',\n    workflow: 'workflow-document-summary'\n  });\n}\n\nif (useCases.includes('catalogue_produit')) {\n  suggestedActions.push({\n    action: 'catalog_entry',\n    description: 'Créer fiche produit',\n    workflow: 'workflow-product-catalog'\n  });\n}\n\n// Score de qualité\nlet qualityScore = 0;\nif (visionResult.description) qualityScore += 30;\nif (visionResult.objets?.length > 0) qualityScore += 20;\nif (visionResult.texte) qualityScore += 20;\nif (visionResult.couleurs?.length > 0) qualityScore += 15;\nif (visionResult.contexte) qualityScore += 15;\n\nreturn {\n  analysis_id: Date.now().toString(),\n  timestamp: new Date().toISOString(),\n  \n  // Résultats Vision\n  vision: visionResult,\n  \n  // OCR si disponible\n  ocr: analysisEnriched.ocr || null,\n  \n  // Métadonnées\n  file: originalData.fileInfo,\n  context: originalData.context,\n  \n  // Enrichissements\n  use_cases: useCases,\n  suggested_actions: suggestedActions,\n  quality_score: qualityScore,\n  \n  // Résumé exécutif\n  executive_summary: {\n    main_content: visionResult.description,\n    key_elements: visionResult.objets?.slice(0, 3) || [],\n    primary_use_case: useCases[0] || 'general',\n    confidence: qualityScore > 70 ? 'high' : qualityScore > 40 ? 'medium' : 'low'\n  }\n};"
+          },
+          "id": "process-results",
+          "name": "Traiter résultats",
+          "type": "n8n-nodes-base.code",
+          "typeVersion": 2,
+          "position": [
+            1050,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "resource": "file",
+            "operation": "upload",
+            "name": "={{ $json.file.fileName }}_{{ $json.analysis_id }}",
+            "parents": {
+              "values": [
+                {
+                  "id": "YOUR_VISION_FOLDER_ID"
+                }
+              ]
+            },
+            "binaryPropertyName": "data",
+            "options": {
+              "appProperties": {
+                "property": [
+                  {
+                    "key": "analysis_id",
+                    "value": "={{ $json.analysis_id }}"
+                  },
+                  {
+                    "key": "quality_score",
+                    "value": "={{ $json.quality_score }}"
+                  },
+                  {
+                    "key": "use_case",
+                    "value": "={{ $json.use_cases[0] || 'general' }}"
+                  }
+                ]
+              }
+            }
+          },
+          "id": "save-to-drive",
+          "name": "Sauvegarder Drive",
+          "type": "n8n-nodes-base.googleDrive",
+          "typeVersion": 3,
+          "position": [
+            1250,
+            200
+          ],
+          "credentials": {
+            "googleDriveOAuth2Api": {
+              "id": "1",
+              "name": "Google Drive account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict"
+              },
+              "conditions": [
+                {
+                  "id": "check-card",
+                  "leftValue": "={{ $json.use_cases }}",
+                  "rightValue": "carte_visite",
+                  "operator": {
+                    "type": "array",
+                    "operation": "contains"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "options": {}
+          },
+          "id": "is-business-card",
+          "name": "Est carte visite ?",
+          "type": "n8n-nodes-base.if",
+          "typeVersion": 2.1,
+          "position": [
+            1250,
+            400
+          ]
+        },
+        {
+          "parameters": {
+            "model": "gpt-3.5-turbo",
+            "messages": {
+              "values": [
+                {
+                  "role": "system",
+                  "content": "Extrait les informations de contact de ce texte et retourne un JSON structuré avec: nom, prenom, entreprise, poste, email, telephone, adresse, site_web, linkedin"
+                },
+                {
+                  "role": "user",
+                  "content": "={{ $json.vision.texte + '\\n\\n' + ($json.ocr?.texte_extrait || '') }}"
+                }
+              ]
+            },
+            "options": {
+              "temperature": 0.1,
+              "responseFormat": {
+                "type": "json_object"
+              }
+            }
+          },
+          "id": "extract-contact",
+          "name": "Extraire contact",
+          "type": "n8n-nodes-base.openAi",
+          "typeVersion": 1.2,
+          "position": [
+            1450,
+            400
+          ],
+          "credentials": {
+            "openAiApi": {
+              "id": "1",
+              "name": "OpenAI account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "respondWith": "json",
+            "responseBody": "={{ {\n  \"success\": true,\n  \"analysis_id\": $json.analysis_id,\n  \"summary\": $json.executive_summary,\n  \"details\": {\n    \"description\": $json.vision.description,\n    \"objects_detected\": $json.vision.objets,\n    \"text_found\": $json.vision.texte || $json.ocr?.texte_extrait || \"Aucun texte détecté\",\n    \"colors\": $json.vision.couleurs,\n    \"context\": $json.vision.contexte\n  },\n  \"use_cases\": $json.use_cases,\n  \"suggested_actions\": $json.suggested_actions,\n  \"quality_score\": $json.quality_score,\n  \"metadata\": {\n    \"file_name\": $json.file.fileName,\n    \"file_size\": $json.file.fileSizeFormatted,\n    \"mime_type\": $json.file.mimeType,\n    \"processing_time\": new Date() - new Date($json.timestamp) + \"ms\"\n  },\n  \"extracted_contact\": $node[\"Extraire contact\"]?.json ? JSON.parse($node[\"Extraire contact\"].json.choices[0].message.content) : null,\n  \"storage\": {\n    \"google_drive_link\": $node[\"Sauvegarder Drive\"]?.json?.webViewLink || null\n  }\n} }}",
+            "options": {
+              "responseHeaders": {
+                "entries": [
+                  {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                  }
+                ]
+              }
+            }
+          },
+          "id": "response-webhook",
+          "name": "Réponse API",
+          "type": "n8n-nodes-base.respondToWebhook",
+          "typeVersion": 1.1,
+          "position": [
+            1650,
+            300
+          ]
+        }
+      ],
+      "connections": {
+        "Webhook Image": {
+          "main": [
+            [
+              {
+                "node": "Valider image",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Valider image": {
+          "main": [
+            [
+              {
+                "node": "Analyse Vision OpenAI",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Besoin OCR ?",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Analyse Vision OpenAI": {
+          "main": [
+            [
+              {
+                "node": "Traiter résultats",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Besoin OCR ?": {
+          "main": [
+            [
+              {
+                "node": "Extraction OCR",
+                "type": "main",
+                "index": 0
+              }
+            ],
+            []
+          ]
+        },
+        "Extraction OCR": {
+          "main": [
+            [
+              {
+                "node": "Traiter résultats",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Traiter résultats": {
+          "main": [
+            [
+              {
+                "node": "Sauvegarder Drive",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Est carte visite ?",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Est carte visite ?": {
+          "main": [
+            [
+              {
+                "node": "Extraire contact",
+                "type": "main",
+                "index": 0
+              }
+            ],
+            [
+              {
+                "node": "Réponse API",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Extraire contact": {
+          "main": [
+            [
+              {
+                "node": "Réponse API",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Sauvegarder Drive": {
+          "main": [
+            [
+              {
+                "node": "Réponse API",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": false,
+        "description": "API de vision IA complète : analyse d'images, OCR, extraction de cartes de visite, détection d'objets et suggestions contextuelles."
+      },
+      "versionId": "1.0.0"
+    },
+    {
+      "name": "[4] Module 4.4 - Assistant Personnel IA Complet",
+      "nodes": [
+        {
+          "parameters": {
+            "updates": [
+              "message"
+            ],
+            "additionalFields": {}
+          },
+          "id": "telegram-trigger",
+          "name": "Telegram Trigger",
+          "type": "n8n-nodes-base.telegramTrigger",
+          "typeVersion": 1.1,
+          "position": [
+            250,
+            300
+          ],
+          "credentials": {
+            "telegramApi": {
+              "id": "1",
+              "name": "Telegram Bot"
+            }
+          },
+          "webhookId": "assistant-telegram"
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "user-001",
+                  "name": "user_context",
+                  "value": "={{ {\n  \"user_id\": $json.message.from.id,\n  \"username\": $json.message.from.username || $json.message.from.first_name,\n  \"message\": $json.message.text,\n  \"chat_id\": $json.message.chat.id,\n  \"timestamp\": new Date($json.message.date * 1000).toISOString(),\n  \"message_id\": $json.message.message_id,\n  \"language\": $json.message.from.language_code || 'fr'\n} }}",
+                  "type": "object"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "extract-context",
+          "name": "Extraire contexte",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            450,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "model": "gpt-4",
+            "messages": {
+              "values": [
+                {
+                  "role": "system",
+                  "content": "Tu es un assistant personnel intelligent. Tu peux:\n1. Gérer l'agenda et les rappels\n2. Rechercher des informations\n3. Automatiser des tâches\n4. Donner des conseils\n5. Analyser des données\n\nRéponds toujours de manière concise et actionnable. Si l'utilisateur demande une action spécifique, identifie-la clairement."
+                },
+                {
+                  "role": "user",
+                  "content": "={{ $json.user_context.message }}"
+                }
+              ]
+            },
+            "options": {
+              "temperature": 0.7,
+              "functions": [
+                {
+                  "name": "manage_calendar",
+                  "description": "Gérer l'agenda (créer, modifier, consulter des événements)",
+                  "parameters": {
+                    "type": "object",
+                    "properties": {
+                      "action": {
+                        "type": "string",
+                        "enum": [
+                          "create",
+                          "update",
+                          "delete",
+                          "list"
+                        ],
+                        "description": "Action à effectuer"
+                      },
+                      "event": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string"
+                          },
+                          "date": {
+                            "type": "string"
+                          },
+                          "time": {
+                            "type": "string"
+                          },
+                          "duration": {
+                            "type": "number"
+                          },
+                          "description": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "action"
+                    ]
+                  }
+                },
+                {
+                  "name": "set_reminder",
+                  "description": "Créer un rappel",
+                  "parameters": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "description": "Message du rappel"
+                      },
+                      "datetime": {
+                        "type": "string",
+                        "description": "Date et heure du rappel"
+                      },
+                      "recurring": {
+                        "type": "boolean",
+                        "description": "Rappel récurrent"
+                      }
+                    },
+                    "required": [
+                      "message",
+                      "datetime"
+                    ]
+                  }
+                },
+                {
+                  "name": "search_information",
+                  "description": "Rechercher des informations sur internet",
+                  "parameters": {
+                    "type": "object",
+                    "properties": {
+                      "query": {
+                        "type": "string",
+                        "description": "Requête de recherche"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "general",
+                          "news",
+                          "weather",
+                          "stocks"
+                        ],
+                        "description": "Type de recherche"
+                      }
+                    },
+                    "required": [
+                      "query"
+                    ]
+                  }
+                },
+                {
+                  "name": "manage_tasks",
+                  "description": "Gérer une todo list",
+                  "parameters": {
+                    "type": "object",
+                    "properties": {
+                      "action": {
+                        "type": "string",
+                        "enum": [
+                          "add",
+                          "complete",
+                          "list",
+                          "delete"
+                        ],
+                        "description": "Action sur les tâches"
+                      },
+                      "task": {
+                        "type": "object",
+                        "properties": {
+                          "title": {
+                            "type": "string"
+                          },
+                          "priority": {
+                            "type": "string",
+                            "enum": [
+                              "high",
+                              "medium",
+                              "low"
+                            ]
+                          },
+                          "due_date": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    },
+                    "required": [
+                      "action"
+                    ]
+                  }
+                }
+              ]
+            }
+          },
+          "id": "ai-processing",
+          "name": "Traitement IA",
+          "type": "n8n-nodes-base.openAi",
+          "typeVersion": 1.2,
+          "position": [
+            650,
+            300
+          ],
+          "credentials": {
+            "openAiApi": {
+              "id": "1",
+              "name": "OpenAI account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict"
+              },
+              "conditions": [
+                {
+                  "id": "check-function",
+                  "leftValue": "={{ $json.choices[0].message.function_call }}",
+                  "rightValue": "",
+                  "operator": {
+                    "type": "object",
+                    "operation": "notEmpty"
+                  }
+                }
+              ],
+              "combinator": "and"
+            },
+            "options": {}
+          },
+          "id": "has-function-call",
+          "name": "Appel fonction ?",
+          "type": "n8n-nodes-base.if",
+          "typeVersion": 2.1,
+          "position": [
+            850,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "dataType": "string",
+            "value1": "={{ $json.choices[0].message.function_call.name }}",
+            "rules": {
+              "rules": [
+                {
+                  "operation": "equals",
+                  "value2": "manage_calendar",
+                  "output": 0
+                },
+                {
+                  "operation": "equals",
+                  "value2": "set_reminder",
+                  "output": 1
+                },
+                {
+                  "operation": "equals",
+                  "value2": "search_information",
+                  "output": 2
+                },
+                {
+                  "operation": "equals",
+                  "value2": "manage_tasks",
+                  "output": 3
+                }
+              ]
+            },
+            "fallbackOutput": 4
+          },
+          "id": "route-function",
+          "name": "Router fonction",
+          "type": "n8n-nodes-base.switch",
+          "typeVersion": 3,
+          "position": [
+            1050,
+            250
+          ]
+        },
+        {
+          "parameters": {
+            "calendarId": "primary",
+            "start": "={{ JSON.parse($json.choices[0].message.function_call.arguments).event.date }}T{{ JSON.parse($json.choices[0].message.function_call.arguments).event.time }}",
+            "end": "={{ $now.plus(JSON.parse($json.choices[0].message.function_call.arguments).event.duration || 60, 'minutes').toISO() }}",
+            "summary": "={{ JSON.parse($json.choices[0].message.function_call.arguments).event.title }}",
+            "options": {
+              "description": "={{ JSON.parse($json.choices[0].message.function_call.arguments).event.description || 'Créé par Assistant IA' }}"
+            }
+          },
+          "id": "create-calendar-event",
+          "name": "Créer événement",
+          "type": "n8n-nodes-base.googleCalendar",
+          "typeVersion": 2,
+          "position": [
+            1250,
+            100
+          ],
+          "credentials": {
+            "googleCalendarOAuth2Api": {
+              "id": "1",
+              "name": "Google Calendar account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "operation": "append",
+            "documentId": {
+              "__rl": true,
+              "value": "YOUR_REMINDERS_SHEET",
+              "mode": "id"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": "Rappels",
+              "mode": "name"
+            },
+            "columns": {
+              "mappingMode": "defineBelow",
+              "value": {
+                "user_id": "={{ $json.user_context.user_id }}",
+                "message": "={{ JSON.parse($json.choices[0].message.function_call.arguments).message }}",
+                "datetime": "={{ JSON.parse($json.choices[0].message.function_call.arguments).datetime }}",
+                "created_at": "={{ $now.toISO() }}",
+                "status": "active"
+              }
+            },
+            "options": {}
+          },
+          "id": "save-reminder",
+          "name": "Sauvegarder rappel",
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.5,
+          "position": [
+            1250,
+            250
+          ],
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "1",
+              "name": "Google Sheets account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "url": "=https://api.duckduckgo.com/?q={{ encodeURIComponent(JSON.parse($json.choices[0].message.function_call.arguments).query) }}&format=json&no_html=1&skip_disambig=1",
+            "options": {}
+          },
+          "id": "search-web",
+          "name": "Recherche web",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 4.2,
+          "position": [
+            1250,
+            400
+          ]
+        },
+        {
+          "parameters": {
+            "operation": "append",
+            "documentId": {
+              "__rl": true,
+              "value": "YOUR_TASKS_SHEET",
+              "mode": "id"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": "Tasks",
+              "mode": "name"
+            },
+            "columns": {
+              "mappingMode": "defineBelow",
+              "value": {
+                "user_id": "={{ $json.user_context.user_id }}",
+                "title": "={{ JSON.parse($json.choices[0].message.function_call.arguments).task.title }}",
+                "priority": "={{ JSON.parse($json.choices[0].message.function_call.arguments).task.priority || 'medium' }}",
+                "due_date": "={{ JSON.parse($json.choices[0].message.function_call.arguments).task.due_date }}",
+                "status": "pending",
+                "created_at": "={{ $now.toISO() }}"
+              }
+            },
+            "options": {}
+          },
+          "id": "save-task",
+          "name": "Sauvegarder tâche",
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.5,
+          "position": [
+            1250,
+            550
+          ]
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "response-001",
+                  "name": "assistant_response",
+                  "value": "={{ \n  let response = '';\n  const functionCall = $json.choices?.[0]?.message?.function_call;\n  \n  if (functionCall) {\n    const funcName = functionCall.name;\n    const args = JSON.parse(functionCall.arguments);\n    \n    switch(funcName) {\n      case 'manage_calendar':\n        response = `✅ J'ai créé l'événement \"${args.event?.title}\" pour le ${args.event?.date} à ${args.event?.time}.`;\n        break;\n      case 'set_reminder':\n        response = `⏰ Rappel programmé: \"${args.message}\" pour le ${args.datetime}.`;\n        break;\n      case 'search_information':\n        const searchResult = $node[\"Recherche web\"]?.json;\n        response = `🔍 Voici ce que j'ai trouvé:\\n\\n${searchResult?.Abstract || searchResult?.RelatedTopics?.[0]?.Text || 'Aucun résultat trouvé.'}`;\n        break;\n      case 'manage_tasks':\n        response = `📝 Tâche ajoutée: \"${args.task?.title}\" avec priorité ${args.task?.priority || 'normale'}.`;\n        break;\n      default:\n        response = '✅ Action effectuée avec succès.';\n    }\n  } else {\n    response = $json.choices[0].message.content;\n  }\n  \n  response;\n}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "format-response",
+          "name": "Formater réponse",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            1450,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "chatId": "={{ $json.user_context.chat_id }}",
+            "text": "={{ $json.assistant_response }}",
+            "replyToMessageId": "={{ $json.user_context.message_id }}",
+            "additionalFields": {
+              "parse_mode": "Markdown"
+            }
+          },
+          "id": "telegram-reply",
+          "name": "Répondre Telegram",
+          "type": "n8n-nodes-base.telegram",
+          "typeVersion": 1.2,
+          "position": [
+            1650,
+            300
+          ],
+          "credentials": {
+            "telegramApi": {
+              "id": "1",
+              "name": "Telegram Bot"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "operation": "append",
+            "documentId": {
+              "__rl": true,
+              "value": "YOUR_ASSISTANT_LOG_SHEET",
+              "mode": "id"
+            },
+            "sheetName": {
+              "__rl": true,
+              "value": "Conversations",
+              "mode": "name"
+            },
+            "columns": {
+              "mappingMode": "defineBelow",
+              "value": {
+                "timestamp": "={{ $json.user_context.timestamp }}",
+                "user_id": "={{ $json.user_context.user_id }}",
+                "username": "={{ $json.user_context.username }}",
+                "message": "={{ $json.user_context.message }}",
+                "response": "={{ $json.assistant_response }}",
+                "function_called": "={{ $json.choices[0]?.message?.function_call?.name || 'none' }}"
+              }
+            },
+            "options": {}
+          },
+          "id": "log-conversation",
+          "name": "Logger conversation",
+          "type": "n8n-nodes-base.googleSheets",
+          "typeVersion": 4.5,
+          "position": [
+            1650,
+            500
+          ],
+          "credentials": {
+            "googleSheetsOAuth2Api": {
+              "id": "1",
+              "name": "Google Sheets account"
+            }
+          }
+        },
+        {
+          "parameters": {
+            "content": "## 🤖 Fonction non reconnue\n\nL'assistant a tenté d'appeler une fonction inconnue.",
+            "contentType": "markdown"
+          },
+          "id": "unknown-function",
+          "name": "Fonction inconnue",
+          "type": "n8n-nodes-base.html",
+          "typeVersion": 1.2,
+          "position": [
+            1250,
+            700
+          ]
+        }
+      ],
+      "connections": {
+        "Telegram Trigger": {
+          "main": [
+            [
+              {
+                "node": "Extraire contexte",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Extraire contexte": {
+          "main": [
+            [
+              {
+                "node": "Traitement IA",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Traitement IA": {
+          "main": [
+            [
+              {
+                "node": "Appel fonction ?",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Appel fonction ?": {
+          "main": [
+            [
+              {
+                "node": "Router fonction",
+                "type": "main",
+                "index": 0
+              }
+            ],
+            [
+              {
+                "node": "Formater réponse",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Router fonction": {
+          "main": [
+            [
+              {
+                "node": "Créer événement",
+                "type": "main",
+                "index": 0
+              }
+            ],
+            [
+              {
+                "node": "Sauvegarder rappel",
+                "type": "main",
+                "index": 0
+              }
+            ],
+            [
+              {
+                "node": "Recherche web",
+                "type": "main",
+                "index": 0
+              }
+            ],
+            [
+              {
+                "node": "Sauvegarder tâche",
+                "type": "main",
+                "index": 0
+              }
+            ],
+            [
+              {
+                "node": "Fonction inconnue",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Créer événement": {
+          "main": [
+            [
+              {
+                "node": "Formater réponse",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Sauvegarder rappel": {
+          "main": [
+            [
+              {
+                "node": "Formater réponse",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Recherche web": {
+          "main": [
+            [
+              {
+                "node": "Formater réponse",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Sauvegarder tâche": {
+          "main": [
+            [
+              {
+                "node": "Formater réponse",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Formater réponse": {
+          "main": [
+            [
+              {
+                "node": "Répondre Telegram",
+                "type": "main",
+                "index": 0
+              },
+              {
+                "node": "Logger conversation",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": false,
+        "description": "Assistant personnel IA sur Telegram avec gestion d'agenda, rappels, recherche web et todo list. Utilise les function calls d'OpenAI."
+      },
+      "versionId": "1.0.0"
+    },
+    {
+      "name": "[5] Module 5.1 - Multi-Agents IA (Preview)",
+      "nodes": [
+        {
+          "parameters": {},
+          "id": "preview-trigger",
+          "name": "When clicking \"Test workflow\"",
+          "type": "n8n-nodes-base.manualTrigger",
+          "typeVersion": 1,
+          "position": [
+            250,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "content": "## 🔒 Workflow Premium - Preview\n\n### Multi-Agents IA Orchestrés\n\nCe workflow premium comprend :\n\n🤖 **5 Agents Spécialisés**\n- Agent Recherche : Expert en collecte d'informations\n- Agent Analyse : Spécialiste data et insights\n- Agent Création : Génération de contenu avancé\n- Agent Décision : Logique business complexe\n- Agent Coordination : Chef d'orchestre\n\n🔄 **Communication Inter-Agents**\n- Messages structurés entre agents\n- Partage de contexte intelligent\n- Résolution collaborative\n\n🎯 **Cas d'Usage**\n- Analyse concurrentielle complète\n- Génération de rapports complexes\n- Stratégies marketing automatisées\n- Support client multi-niveau\n\n✨ **Fonctionnalités Avancées**\n- Apprentissage continu\n- Mémorisation long terme\n- Adaptation comportementale\n- Optimisation automatique\n\n---\n\n### 💡 Pour accéder à ce workflow complet :\n\n**Abonnement Premium (39€/mois)**\n- ✅ Workflow complet téléchargeable\n- ✅ Configuration pas à pas\n- ✅ Support prioritaire\n- ✅ Mises à jour régulières\n\n**Abonnement Business (97€/mois)**\n- ✅ Tout Premium +\n- ✅ Personnalisation sur mesure\n- ✅ Formation équipe incluse\n- ✅ Consulting 2h/mois\n\n[**Découvrir nos offres →**](https://automatehub.fr/pricing)",
+            "contentType": "markdown"
+          },
+          "id": "preview-info",
+          "name": "Information Preview",
+          "type": "n8n-nodes-base.html",
+          "typeVersion": 1.2,
+          "position": [
+            450,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "values": {
+              "string": [
+                {
+                  "name": "agent_roles",
+                  "value": "=[\n  {\n    \"name\": \"Agent Recherche\",\n    \"speciality\": \"Web scraping, API calls, Data gathering\",\n    \"status\": \"🔒 Premium\"\n  },\n  {\n    \"name\": \"Agent Analyse\",\n    \"speciality\": \"Pattern recognition, Statistics, Insights\",\n    \"status\": \"🔒 Premium\"\n  },\n  {\n    \"name\": \"Agent Création\",\n    \"speciality\": \"Content generation, Design, Innovation\",\n    \"status\": \"🔒 Premium\"\n  },\n  {\n    \"name\": \"Agent Décision\",\n    \"speciality\": \"Business logic, Risk assessment, Strategy\",\n    \"status\": \"🔒 Premium\"\n  },\n  {\n    \"name\": \"Agent Coordination\",\n    \"speciality\": \"Task distribution, Result aggregation, Quality control\",\n    \"status\": \"🔒 Premium\"\n  }\n]"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "demo-data",
+          "name": "Demo Structure",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            650,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "content": "## 📊 Architecture Multi-Agents\n\n```mermaid\ngraph TD\n    U[Utilisateur] -->|Requête| C[Agent Coordination]\n    C -->|Tâche 1| R[Agent Recherche]\n    C -->|Tâche 2| A[Agent Analyse]\n    C -->|Tâche 3| CR[Agent Création]\n    R -->|Données| A\n    A -->|Insights| D[Agent Décision]\n    D -->|Stratégie| CR\n    CR -->|Résultat| C\n    C -->|Réponse finale| U\n```\n\n### Exemple Concret : Analyse Concurrentielle\n\n1. **Coordination** reçoit : \"Analyse complète du concurrent X\"\n2. **Recherche** collecte : Site web, réseaux sociaux, avis clients\n3. **Analyse** détecte : Forces, faiblesses, opportunités\n4. **Décision** propose : Stratégies de différenciation\n5. **Création** génère : Rapport exécutif + plan d'action\n6. **Coordination** livre : Document complet en 5 minutes\n\n### 🚀 Résultats Attendus\n\n- **Temps gagné** : 95% vs analyse manuelle\n- **Qualité** : Analyse 360° impossible manuellement\n- **Coût** : 100x moins cher qu'un consultant\n- **Disponibilité** : 24/7 instantané",
+            "contentType": "markdown"
+          },
+          "id": "architecture-demo",
+          "name": "Architecture Demo",
+          "type": "n8n-nodes-base.html",
+          "typeVersion": 1.2,
+          "position": [
+            850,
+            300
+          ]
+        }
+      ],
+      "connections": {
+        "When clicking \"Test workflow\"": {
+          "main": [
+            [
+              {
+                "node": "Information Preview",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Information Preview": {
+          "main": [
+            [
+              {
+                "node": "Demo Structure",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Demo Structure": {
+          "main": [
+            [
+              {
+                "node": "Architecture Demo",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": true,
+        "description": "Preview du système Multi-Agents IA. Version complète disponible en Premium."
+      },
+      "versionId": "1.0.0"
+    },
+    {
+      "name": "[5] Module 5.2 - RAG & Vector DB (Preview)",
+      "nodes": [
+        {
+          "parameters": {},
+          "id": "preview-trigger-rag",
+          "name": "When clicking \"Test workflow\"",
+          "type": "n8n-nodes-base.manualTrigger",
+          "typeVersion": 1,
+          "position": [
+            250,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "content": "## 🔒 Workflow Premium - RAG & Vector Database\n\n### Système de Knowledge Base IA Avancé\n\n🧠 **Capacités du Système**\n- Upload de documents illimités (PDF, Word, Excel)\n- Indexation intelligente avec embeddings\n- Recherche sémantique ultra-rapide\n- Réponses contextuelles précises\n- Sources citées automatiquement\n\n📚 **Types de Documents Supportés**\n- Documentation technique\n- Contrats et documents légaux\n- Base de connaissances interne\n- Emails et conversations\n- Code source et documentation API\n\n🎯 **Cas d'Usage Révolutionnaires**\n1. **Support Client IA** : Réponses basées sur votre doc\n2. **Assistant Juridique** : Analyse de contrats\n3. **Knowledge Management** : Wiki intelligent\n4. **Onboarding IA** : Formation automatisée\n5. **Recherche Entreprise** : Google interne IA\n\n⚡ **Technologies Utilisées**\n- Pinecone Vector Database\n- OpenAI Embeddings\n- Chunking intelligent\n- Hybrid search (keyword + semantic)\n- Re-ranking algorithms\n\n---\n\n### 💎 Accès Premium\n\n**Premium (39€/mois)**\n- ✅ RAG jusqu'à 1000 documents\n- ✅ 5 namespaces\n- ✅ API complète\n\n**Business (97€/mois)**\n- ✅ Documents illimités\n- ✅ Namespaces illimités\n- ✅ Fine-tuning personnalisé\n- ✅ Déploiement dédié\n\n[**Commencer maintenant →**](https://automatehub.fr/pricing)",
+            "contentType": "markdown"
+          },
+          "id": "rag-preview-info",
+          "name": "RAG System Preview",
+          "type": "n8n-nodes-base.html",
+          "typeVersion": 1.2,
+          "position": [
+            450,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "demo-001",
+                  "name": "exemple_conversation",
+                  "value": "={{ [\n  {\n    \"question\": \"Quelle est la politique de remboursement ?\",\n    \"reponse\": \"Selon le document 'CGV-2024.pdf' page 12, la politique de remboursement permet un retour sous 30 jours...\",\n    \"sources\": [\"CGV-2024.pdf:p12\", \"FAQ-Retours.docx:p3\"],\n    \"confiance\": 0.95\n  },\n  {\n    \"question\": \"Comment configurer l'API v2 ?\",\n    \"reponse\": \"D'après la documentation technique 'API-Guide-v2.pdf', la configuration nécessite...\",\n    \"sources\": [\"API-Guide-v2.pdf:p45-47\"],\n    \"confiance\": 0.98\n  }\n] }}",
+                  "type": "array"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "demo-rag-data",
+          "name": "Exemple RAG",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            650,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "content": "## 🔍 Démonstration RAG en Action\n\n### Processus Complet\n\n```mermaid\ngraph LR\n    D[📄 Documents] -->|Upload| E[Embeddings]\n    E -->|Vectorisation| V[(Vector DB)]\n    Q[❓ Question] -->|Embedding| S[Recherche]\n    V --> S\n    S -->|Top K résultats| C[Contexte]\n    C --> G[GPT-4]\n    G -->|Réponse| R[✅ Résultat + Sources]\n```\n\n### Performance Réelle\n\n| Métrique | Valeur |\n|----------|--------|\n| Documents indexés | 10,000+ |\n| Temps de recherche | < 100ms |\n| Précision | 96.5% |\n| Taille max document | 50MB |\n| Langues supportées | 95+ |\n\n### 🎪 Magic Features\n\n1. **Auto-Update** : Nouveaux docs = Re-indexation auto\n2. **Version Control** : Historique des modifications\n3. **Multi-Modal** : Texte + Images + Tableaux\n4. **Security** : Permissions par utilisateur\n5. **Analytics** : Questions fréquentes détectées",
+            "contentType": "markdown"
+          },
+          "id": "rag-demo-visual",
+          "name": "RAG Visualization",
+          "type": "n8n-nodes-base.html",
+          "typeVersion": 1.2,
+          "position": [
+            850,
+            300
+          ]
+        }
+      ],
+      "connections": {
+        "When clicking \"Test workflow\"": {
+          "main": [
+            [
+              {
+                "node": "RAG System Preview",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "RAG System Preview": {
+          "main": [
+            [
+              {
+                "node": "Exemple RAG",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Exemple RAG": {
+          "main": [
+            [
+              {
+                "node": "RAG Visualization",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": true,
+        "description": "Preview du système RAG avec Vector Database. Knowledge base IA pour votre entreprise."
+      },
+      "versionId": "1.0.0"
+    },
+    {
+      "name": "[5] Module 5.3 - Scan Carte de Visite Pro (Preview)",
+      "nodes": [
+        {
+          "parameters": {},
+          "id": "preview-trigger-scan",
+          "name": "When clicking \"Test workflow\"",
+          "type": "n8n-nodes-base.manualTrigger",
+          "typeVersion": 1,
+          "position": [
+            250,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "content": "## 🔒 Workflow Premium - Scanner de Cartes de Visite IA\n\n### 📇 Le Scanner Ultime pour Professionnels\n\n**🚀 Fonctionnalités Révolutionnaires**\n\n1. **Scan Multi-Format**\n   - Photos smartphone (même floues!)\n   - Scans PDF\n   - Screenshots LinkedIn\n   - Photos de salons/événements\n\n2. **Extraction IA Avancée**\n   - Nom et prénom (même complexes)\n   - Entreprise et poste\n   - Tous les emails/téléphones\n   - Réseaux sociaux détectés\n   - Adresse complète géolocalisée\n\n3. **Enrichissement Automatique**\n   - Photo LinkedIn récupérée\n   - Infos entreprise (secteur, taille)\n   - Validation email en temps réel\n   - Score de qualité du contact\n\n4. **Intégrations CRM**\n   - HubSpot, Salesforce, Pipedrive\n   - Google Contacts synchronisé\n   - Webhooks personnalisés\n   - API REST complète\n\n5. **Automatisations Post-Scan**\n   - Email de bienvenue personnalisé\n   - Ajout LinkedIn automatique\n   - Séquence de nurturing\n   - Rappel de follow-up\n\n---\n\n### 📊 ROI Garanti\n\n- ⏱️ **30 secondes** vs 5 minutes manuel\n- 🎯 **99.2%** de précision\n- 📈 **+47%** de contacts convertis\n- 💰 **315€** économisés/mois (temps)\n\n[**Essayer maintenant →**](https://automatehub.fr/demo)",
+            "contentType": "markdown"
+          },
+          "id": "scan-preview-info",
+          "name": "Scanner Preview",
+          "type": "n8n-nodes-base.html",
+          "typeVersion": 1.2,
+          "position": [
+            450,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "example-001",
+                  "name": "exemple_extraction",
+                  "value": "={{ {\n  \"carte_originale\": \"Photo floue prise au salon\",\n  \"donnees_extraites\": {\n    \"nom\": \"Marie-Claire Dubois-Martin\",\n    \"entreprise\": \"TechCorp International\",\n    \"poste\": \"Directrice Innovation & Digital\",\n    \"email\": \"mc.dubois@techcorp.com\",\n    \"telephone\": \"+33 6 12 34 56 78\",\n    \"linkedin\": \"linkedin.com/in/mcdubois\",\n    \"adresse\": \"123 Avenue des Champs, 75008 Paris\"\n  },\n  \"enrichissement\": {\n    \"photo_linkedin\": \"✅ Trouvée\",\n    \"entreprise_info\": {\n      \"secteur\": \"Technologies\",\n      \"taille\": \"500-1000 employés\",\n      \"ca\": \"50-100M€\"\n    },\n    \"email_valide\": true,\n    \"score_qualite\": 9.5\n  },\n  \"actions_automatiques\": [\n    \"✅ Ajouté au CRM\",\n    \"✅ Email de bienvenue envoyé\",\n    \"✅ Invitation LinkedIn pending\",\n    \"✅ Rappel follow-up dans 3 jours\"\n  ]\n} }}",
+                  "type": "object"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "scan-example",
+          "name": "Exemple Scan",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            650,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "content": "## 🎯 Workflow Complet\n\n```mermaid\ngraph TD\n    A[📷 Photo Carte] -->|Vision IA| B[Extraction Texte]\n    B -->|NLP| C[Structuration Données]\n    C -->|Validation| D[Enrichissement Web]\n    D -->|APIs| E[Photo + Infos Entreprise]\n    E -->|CRM| F[Contact Créé]\n    F -->|Automations| G[Email + LinkedIn + Rappel]\n```\n\n### 🏆 Cas Client Réel\n\n**Salon Tech Paris 2024**\n- 347 cartes scannées en 2 jours\n- 98% d'extraction correcte\n- 142 rendez-vous générés\n- ROI: 2,847%\n\n### 💎 Version Business Exclusive\n\n**Business (97€/mois)**\n- Scan illimité\n- Enrichissement premium\n- API dédiée haute vitesse\n- Formation équipe commerciale\n- Dashboard analytics\n- Export CRM en masse\n- Support prioritaire 24/7\n\n### 🎁 Bonus Premium\n\n- Application mobile dédiée\n- Mode batch (100 cartes/min)\n- Détection doublons IA\n- Templates emails sectoriels\n- Intégration calendrier",
+            "contentType": "markdown"
+          },
+          "id": "scan-workflow-demo",
+          "name": "Workflow Demo",
+          "type": "n8n-nodes-base.html",
+          "typeVersion": 1.2,
+          "position": [
+            850,
+            300
+          ]
+        }
+      ],
+      "connections": {
+        "When clicking \"Test workflow\"": {
+          "main": [
+            [
+              {
+                "node": "Scanner Preview",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Scanner Preview": {
+          "main": [
+            [
+              {
+                "node": "Exemple Scan",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Exemple Scan": {
+          "main": [
+            [
+              {
+                "node": "Workflow Demo",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": true,
+        "description": "Preview du scanner de cartes de visite professionnel avec enrichissement IA."
+      },
+      "versionId": "1.0.0"
+    },
+    {
+      "name": "[5] Module 5.4 - Créateur IA de Workflows (Preview)",
+      "nodes": [
+        {
+          "parameters": {},
+          "id": "preview-trigger-creator",
+          "name": "When clicking \"Test workflow\"",
+          "type": "n8n-nodes-base.manualTrigger",
+          "typeVersion": 1,
+          "position": [
+            250,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "content": "## 🔒 Workflow Premium - Créateur IA de Workflows\n\n### 🤖 L'IA qui Crée vos Automatisations\n\n**🎨 Interface Révolutionnaire**\n\nImaginez simplement DÉCRIRE ce que vous voulez automatiser, et l'IA crée le workflow complet pour vous !\n\n**Exemple de Conversation :**\n```\nVous : \"J'aimerais un workflow qui surveille mes emails, \nextrait les factures PDF, les classe par fournisseur \net met à jour ma compta\"\n\nIA : \"Compris ! Je crée votre workflow avec :\n- Trigger Gmail\n- Filtre pièces jointes PDF\n- Vision IA pour extraction\n- Classification par fournisseur\n- Mise à jour Google Sheets\n- Notification Slack\n\nVoici votre workflow prêt à importer !\"\n```\n\n**🚀 Capacités Extraordinaires**\n\n1. **Compréhension Naturelle**\n   - Parlez normalement\n   - Multi-langues (FR, EN, ES...)\n   - Contexte métier compris\n\n2. **Génération Intelligente**\n   - Choix optimal des nodes\n   - Configuration automatique\n   - Gestion d'erreurs incluse\n   - Optimisation performance\n\n3. **Personnalisation IA**\n   - Adapté à votre secteur\n   - Respecte vos préférences\n   - Apprend de vos choix\n   - Suggestions proactives\n\n---\n\n[**Découvrir la démo vidéo →**](https://automatehub.fr/ai-creator-demo)",
+            "contentType": "markdown"
+          },
+          "id": "creator-preview-info",
+          "name": "Creator Preview",
+          "type": "n8n-nodes-base.html",
+          "typeVersion": 1.2,
+          "position": [
+            450,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "assignments": {
+              "assignments": [
+                {
+                  "id": "demo-creation",
+                  "name": "exemple_creation",
+                  "value": "={{ {\n  \"demande_utilisateur\": \"Créer un workflow qui analyse mes ventes Stripe chaque matin et m'envoie un rapport sur Telegram avec les top clients\",\n  \n  \"analyse_ia\": {\n    \"intention\": \"Rapport ventes automatisé\",\n    \"elements_detectes\": [\n      \"Source: Stripe API\",\n      \"Fréquence: Quotidienne matin\",\n      \"Analyse: Top clients\",\n      \"Destination: Telegram\"\n    ],\n    \"complexite\": \"Moyenne\",\n    \"temps_estime\": \"45 secondes\"\n  },\n  \n  \"workflow_genere\": {\n    \"nodes\": [\n      {\n        \"type\": \"Schedule Trigger\",\n        \"config\": \"Tous les jours à 8h\"\n      },\n      {\n        \"type\": \"Stripe API\",\n        \"config\": \"Get charges last 24h\"\n      },\n      {\n        \"type\": \"Code - Analyse\",\n        \"config\": \"Calcul top clients et stats\"\n      },\n      {\n        \"type\": \"Format Message\",\n        \"config\": \"Rapport formaté Markdown\"\n      },\n      {\n        \"type\": \"Telegram Send\",\n        \"config\": \"Envoi rapport\"\n      }\n    ],\n    \"optimisations\": [\n      \"Cache résultats Stripe\",\n      \"Gestion erreurs API\",\n      \"Format mobile-friendly\"\n    ]\n  },\n  \n  \"resultat\": \"✅ Workflow créé et prêt à l'emploi !\"\n} }}",
+                  "type": "object"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "creation-example",
+          "name": "Exemple Création",
+          "type": "n8n-nodes-base.set",
+          "typeVersion": 3.4,
+          "position": [
+            650,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "content": "## 🧠 Intelligence du Créateur\n\n### Processus de Création IA\n\n```mermaid\ngraph LR\n    T[💬 Votre Demande] -->|NLP| A[Analyse Intention]\n    A -->|Context| P[Plan Workflow]\n    P -->|Selection| N[Choix Nodes]\n    N -->|Config| C[Configuration Auto]\n    C -->|Optimize| O[Optimisation]\n    O -->|Export| W[🎯 Workflow JSON]\n```\n\n### 📊 Statistiques Réelles\n\n| Métrique | Valeur |\n|----------|--------|\n| Workflows créés | 12,847 |\n| Taux de succès | 94.3% |\n| Temps moyen | 38 sec |\n| Nodes supportés | 300+ |\n| Satisfaction | 4.8/5 |\n\n### 💎 Fonctionnalités Business\n\n**Business (97€/mois)**\n\n1. **Templates Sectoriels**\n   - E-commerce optimisé\n   - SaaS workflows\n   - Agency automation\n   - Finance & Legal\n\n2. **IA Sur-Mesure**\n   - Entrainée sur VOS workflows\n   - Vocabulaire métier\n   - Règles business\n   - Compliance intégrée\n\n3. **Collaboration**\n   - Partage équipe\n   - Versioning\n   - Commentaires\n   - Approval flow\n\n### 🎁 Le Futur est Maintenant\n\nNe codez plus jamais un workflow.\nDécrivez, et c'est créé.\n\n[**Commencer l'essai gratuit →**](https://automatehub.fr/start-trial)",
+            "contentType": "markdown"
+          },
+          "id": "creator-intelligence",
+          "name": "Creator Intelligence",
+          "type": "n8n-nodes-base.html",
+          "typeVersion": 1.2,
+          "position": [
+            850,
+            300
+          ]
+        }
+      ],
+      "connections": {
+        "When clicking \"Test workflow\"": {
+          "main": [
+            [
+              {
+                "node": "Creator Preview",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Creator Preview": {
+          "main": [
+            [
+              {
+                "node": "Exemple Création",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Exemple Création": {
+          "main": [
+            [
+              {
+                "node": "Creator Intelligence",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "staticData": null,
+      "meta": {
+        "templateCredsSetupCompleted": true,
+        "description": "Preview du Créateur IA de Workflows. Décrivez, l'IA crée votre automatisation."
+      },
+      "versionId": "1.0.0"
+    }
+  ]
+}

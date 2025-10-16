@@ -1,0 +1,134 @@
+{
+  "name": "Business Intelligence Autonome - Juillet 2025",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789001",
+      "name": "Collecte Horaire Data",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://www.googleapis.com/analytics/v3/data/ga",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "ids",
+              "value": "ga:123456789"
+            },
+            {
+              "name": "start-date",
+              "value": "today"
+            },
+            {
+              "name": "end-date",
+              "value": "today"
+            },
+            {
+              "name": "metrics",
+              "value": "ga:sessions,ga:users,ga:pageviews,ga:bounceRate"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789002",
+      "name": "Google Analytics Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [460, 200]
+    },
+    {
+      "parameters": {
+        "url": "https://api.stripe.com/v1/balance",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789003",
+      "name": "Stripe Balance",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [460, 320]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Consolidation des données\nconst analytics = $input.all()[0]?.json || {};\nconst stripe = $input.all()[1]?.json || {};\n\n// Calcul du Business Health Score\nlet healthScore = 75; // Score par défaut\n\n// Analyse basique\nconst metrics = {\n  revenue: stripe.available?.[0]?.amount || 0,\n  traffic: parseInt(analytics.totalsForAllResults?.['ga:sessions'] || 0),\n  status: 'Opérationnel'\n};\n\nreturn {\n  businessHealth: healthScore,\n  growthTrend: 'Stable',\n  metrics,\n  timestamp: new Date().toISOString()\n};"
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789005",
+      "name": "Consolidation & Scoring",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 320]
+    },
+    {
+      "parameters": {
+        "content": "## 🎯 Business Intelligence Autonome\n### Workflow Juillet 2025\n\n**Configuration requise:**\n1. Google Analytics API\n2. Stripe API Key\n3. OpenAI (optionnel)\n4. Slack/Telegram (alertes)\n\n**Guide complet disponible**",
+        "height": 200,
+        "width": 300
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789019",
+      "name": "Documentation",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [240, -100]
+    }
+  ],
+  "connections": {
+    "Collecte Horaire Data": {
+      "main": [
+        [
+          {
+            "node": "Google Analytics Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Stripe Balance",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Analytics Data": {
+      "main": [
+        [
+          {
+            "node": "Consolidation & Scoring",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stripe Balance": {
+      "main": [
+        [
+          {
+            "node": "Consolidation & Scoring",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "meta": {
+    "instanceId": "237600ca44303ce91fa31ee72babcdc8493f55ee2c0e8aa2b78b3b4ce6f70bd9"
+  },
+  "nodes": [
+    {
+      "id": "cc514d10-89cc-4fcf-8c1f-b65395cd168a",
+      "name": "Sur nouvelle facture dans Clockify",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        460,
+        460
+      ],
+      "webhookId": "8af31ab8-e16a-4401-84b7-b246c65ba6a9",
+      "parameters": {
+        "path": "8af31ab8-e16a-4401-84b7-b246c65ba6a9",
+        "options": {},
+        "httpMethod": "POST"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "ef9e5ce6-cb3e-4cb9-b33d-3b05a2ab589d",
+      "name": "Créer une page de base de données",
+      "type": "n8n-nodes-base.notion",
+      "position": [
+        680,
+        460
+      ],
+      "parameters": {
+        "title": "={{ $json[\"body\"][\"number\"] }}",
+        "resource": "databasePage",
+        "databaseId": "ea3219a7-0a1a-4792-8dd6-ab450204dc06",
+        "propertiesUi": {
+          "propertyValues": [
+            {
+              "key": "Issue date|date",
+              "date": "={{ $json[\"body\"][\"issuedDate\"] }}"
+            },
+            {
+              "key": "Due date|date",
+              "date": "={{ $json[\"body\"][\"dueDate\"] }}"
+            },
+            {
+              "key": "Amount|number",
+              "numberValue": "={{ $json[\"body\"][\"amount\"] }}"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "notionApi": {
+          "id": "9",
+          "name": "[UPDATE ME]"
+        }
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "e2ecb86f-2f0c-4fe7-8919-e9095abdb5a0",
+      "name": "Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -60,
+        240
+      ],
+      "parameters": {
+        "width": 462,
+        "height": 595,
+        "content": "## Envoyer une nouvelle facture Clockify à la base de données Notion\n### Comment ça fonctionne\n1. Le nœud webhook `On new invoice in Clockify` se déclenchera lorsqu'une nouvelle facture sera créée dans Clockify. La configuration est nécessaire.\n2. Le nœud Notion `Create database page` créera une page de base de données avec les informations spécifiées à partir du déclencheur Clockify. Vous pouvez ajouter des champs supplémentaires si nécessaire en suivant la configuration.\n\n### Configuration\n1. Créez un webhook Clockify en vous rendant dans la [section webhooks de Clockify](https://app.clockify.me/webhooks).\n2. Créez le webhook en spécifiant l'événement \"Invoice created\" et collez l'URL fournie par l'étape webhook `On new invoice in Clockify`.\n3. Maintenant, allez dans Notion et créez une nouvelle base de données où nous stockerons nos factures Clockify.\n4. Dans la nouvelle base de données Notion, créez les champs suivants :\n    - Numéro de facture (renommé à partir du champ \"Name\")\n    - Date d'émission (champ date)\n    - Date d'échéance (champ date)\n    - Montant (champ numérique)\n5. Si vous souhaitez ajouter plus de champs à Notion, créez ces champs dans Notion et mappez-les en conséquence dans le nœud `Create database page`."
+      },
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Sur nouvelle facture dans Clockify": {
+      "main": [
+        [
+          {
+            "node": "Créer une page de base de données",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

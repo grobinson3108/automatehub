@@ -1,0 +1,119 @@
+{
+  "workflow_path": "/var/www/automatehub/workflows_traduits/FR/AutomationTribe/2-Tout automatiser/N8N Ai Agent/Sub Workflows/Sub_workflow_Translate.json",
+  "texts_map": {
+    "$text_1": {
+      "original": "Sous-flux Traduire",
+      "path": "name",
+      "context": "workflow_name"
+    },
+    "$text_2": {
+      "original": "Déclencheur d'entrée de flux de travail",
+      "path": "nodes[0].name",
+      "context": "node_name"
+    },
+    "$text_3": {
+      "original": "OpenAI",
+      "path": "nodes[1].name",
+      "context": "node_name"
+    },
+    "$text_4": {
+      "original": "Translate the following text {{ $json.translate }} Use the language asked by the user. Please output only the text. I do not need any details. ",
+      "path": "nodes[1].parameters.messages.values[0].content",
+      "context": "message",
+      "has_prefix": true
+    }
+  },
+  "modified_workflow": {
+    "name": "$text_1",
+    "nodes": [
+      {
+        "parameters": {
+          "workflowInputs": {
+            "values": [
+              {
+                "name": "translate",
+                "type": "any"
+              }
+            ]
+          }
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          0,
+          0
+        ],
+        "id": "f4a47fd7-04c0-481a-80dc-619d5e09d9c1",
+        "name": "$text_2"
+      },
+      {
+        "parameters": {
+          "modelId": {
+            "__rl": true,
+            "value": "gpt-4o-mini",
+            "mode": "list",
+            "cachedResultName": "GPT-4O-MINI"
+          },
+          "messages": {
+            "values": [
+              {
+                "content": "=$text_4"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.openAi",
+        "typeVersion": 1.8,
+        "position": [
+          220,
+          0
+        ],
+        "id": "11db94af-d33d-4de5-88a0-f57b958b27b4",
+        "name": "$text_3",
+        "credentials": {
+          "openAiApi": {
+            "id": "wMKWK2pxtmnFBWY4",
+            "name": "OpenAi account"
+          }
+        }
+      }
+    ],
+    "pinData": {},
+    "connections": {
+      "Workflow Input Trigger": {
+        "main": [
+          [
+            {
+              "node": "OpenAI",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "active": false,
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "versionId": "9e4fdfa7-5fb6-4021-ae90-90990eed6d0b",
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+    },
+    "id": "9fU1FkGuKDO6AG0e",
+    "tags": [
+      {
+        "name": "Sub",
+        "id": "CPRt0ZbNT5D3WcXo",
+        "createdAt": "2025-01-25T20:24:17.305Z",
+        "updatedAt": "2025-01-25T20:24:17.305Z"
+      },
+      {
+        "id": "1",
+        "name": "Audelalia"
+      }
+    ]
+  }
+}

@@ -1,0 +1,1997 @@
+{
+  "id": "dDAqkobn2pqgdl2N",
+  "meta": {
+    "instanceId": "9e331a89ae45a204c6dee51c77131d32a8c962ec20ccf002135ea60bd285dba9"
+  },
+  "name": "Extracteur de feuilles de logos IA vers Airtable",
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "f7ecadb8-dc5d-4e8c-96b8-52c1dbad49b6",
+      "name": "Lors de la soumission du formulaire",
+      "type": "n8n-nodes-base.formTrigger",
+      "position": [
+        -660,
+        -220
+      ],
+      "webhookId": "43837a27-f752-40a8-852a-d5d63d647bfd",
+      "parameters": {
+        "options": {
+          "path": "logo-sheet-feeder"
+        },
+        "formTitle": "AI Logo Sheet Feeder",
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "file",
+              "fieldLabel": "The Logo-Sheet as Image",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Addional Prompt (e.g.: What the meaning of the graphic?) *optional but helps from time to time.",
+              "placeholder": "It's a graph chart comparing AI Tools"
+            }
+          ]
+        },
+        "formDescription": "Provide a Image with multiple Logos comparing or bringing multiple Tools into Context with one another."
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "b1530578-bde9-4ee3-9cdb-545a621cdb84",
+      "name": "Agent de récupération et d'analyse",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        -180,
+        -220
+      ],
+      "parameters": {
+        "options": {
+          "systemMessage": "Votre tâche est de récupérer les informations à partir de l'entrée donnée. Extrayez les catégories et attributs de tous les outils, logiciels ou produits donnés et affichés que vous avez reçus de l'utilisateur.\n\nFournissez le tableau de sortie des outils avec la structure suivante en JSON :\n\n[{\n\"name\": \"Nom de l'outil, logiciel, etc.\",\n\"attributes\": [\"Une catégorie ou un attribut\", \"autre chose que vous pouvez voir dans le contexte ou l'image\"],\n\"similar\": [\"outil, produit, etc. similaire issu du contexte affiché\", \"un autre logiciel, produit, outil similaire issu du contexte\"]\n},{\n\"name\": \"Nom d'un autre outil, logiciel, etc.\",\n\"attributes\": [\"Une catégorie, sous-catégorie ou attribut général\", \"autre chose que vous pouvez voir dans le contexte ou l'image\"],\n\"similar\": [\"outil, produit, etc. similaire issu du contexte affiché\", \"un autre logiciel, produit, outil similaire issu du contexte\"]\n}]\n\nListez cette structure pour tous les produits que vous voyez !\n\nVoici une description des champs JSON :\n\"name\" : juste le nom du logiciel.\n\"attribute\" : transformez toute information du contexte ou de l'image en plusieurs attributs utiles pour cet outil. Cela peut être une catégorie, une fonctionnalité, etc. Essayez de diviser cette information en plusieurs attributs ou catégories spécifiques.\n\"similar\" : si plusieurs outils sont affichés et peuvent être comparés à celui-ci (comme au même niveau ou dans la même catégorie), listez-les ici.\n\nPrenez une grande inspiration et réfléchissez étape par étape.\nEssayez d'extraire chaque outil mentionné. Il y en a certainement plusieurs listés.",
+          "passthroughBinaryImages": true
+        },
+        "hasOutputParser": true
+      },
+      "typeVersion": 1.7
+    },
+    {
+      "id": "51642a02-51a4-4894-adf0-f364736dabc1",
+      "name": "Convertir en JSON",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        220,
+        -220
+      ],
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": "={{ $json.output }}"
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "ec0f0575-eb33-48a9-b3fe-c4f5b71ff548",
+      "name": "Analyseur de sortie structurée",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        40,
+        20
+      ],
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"tools\": [{\n\"name\": \"Name of the Tool, Software, etc.\",\n\"attributes\": [\"Some category or attribute\", \"something else you can see from the context or image\"],\n\"similar\": [\"similar tool, product, etc. from shown context\", \"another similar software, product, tool from context\"]\n},{\n\"name\": \"Name of anotherTool, Software, etc.\",\n\"attributes\": [\"Some category, subcategory or general attribute\", \"something else you can see from the context or image\"],\n\"similar\": [\"similar tool, product, etc. from shown context\", \"another similar software, product, tool from context\"]\n}]}"
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "6d78005e-7277-40a9-9f10-e3d8e475cbaf",
+      "name": "Vérifier si l'attribut existe",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        1380,
+        0
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appq0gcmxHAZQhswW",
+          "cachedResultUrl": "https://airtable.com/appq0gcmxHAZQhswW",
+          "cachedResultName": "AI Tools"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "tblX2rj8yNAZZRhwt",
+          "cachedResultUrl": "https://airtable.com/appq0gcmxHAZQhswW/tblX2rj8yNAZZRhwt",
+          "cachedResultName": "Attributes"
+        },
+        "columns": {
+          "value": {
+            "Name": "={{$json.attributes}}"
+          },
+          "schema": [
+            {
+              "id": "id",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "id": "Name",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tools",
+              "type": "array",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Tools",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "Name"
+          ]
+        },
+        "options": {},
+        "operation": "upsert"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "jMqH6HkKUYTgyHVm",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "1c468a4b-4563-4f78-ba1b-138b18ac4821",
+      "name": "Fusionner",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        1620,
+        80
+      ],
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combineBy": "combineByPosition"
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "4f597962-48e5-4367-a329-bc07d42ff86d",
+      "name": "Mapper l'ID de l'attribut",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1840,
+        80
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "675510b1-97e7-4a71-9c9e-d3ee792d9919",
+              "name": "id",
+              "type": "string",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "id": "87cc9086-effd-4f4e-84c1-9adec5774e94",
+              "name": "attribute",
+              "type": "string",
+              "value": "={{ $json.attributes }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "11679757-360c-468f-b624-a9f6853e29f4",
+      "name": "Boucler sur les attributs",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        720,
+        -40
+      ],
+      "parameters": {
+        "options": {}
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "835a09ae-2e51-488c-b0b3-d895696a135e",
+      "name": "Tous les attributs",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        940,
+        -60
+      ],
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": "={{ $json }}"
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "b8ca6d98-ab37-4393-8a2c-561912aeff2b",
+      "name": "Attendre la création de l'attribut",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        1120,
+        -200
+      ],
+      "parameters": {
+        "mode": "chooseBranch"
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "9eaf87d4-910b-4a6e-9cdf-ee51ff4180cc",
+      "name": "Changer chaque attribut pour le RecID correspondant",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        1340,
+        -200
+      ],
+      "parameters": {
+        "jsCode": "let knownAttributesOutput = $('All Attributes').all();\nlet knownAttributes = new Map();\nknownAttributesOutput.forEach((nodeOutput)=>{\nknownAttributes.set(nodeOutput.json.attribute.toString().trim(), nodeOutput.json.id);\n});\n\n\nfor (const item of $input.all()) {\n  item.json.attributes.forEach((attribute, index)=>{\n    item.json.attributes[index] = knownAttributes.get(attribute.toString().trim());\n  });\n}\n\nreturn $input.all();"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "ecfedff4-f6f9-429e-8514-cf8208e70048",
+      "name": "Note adhésive",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        600,
+        -280
+      ],
+      "parameters": {
+        "color": 5,
+        "width": 1460,
+        "height": 600,
+        "content": "## Création d'attributs et mappage des IDs créés ou existants"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "ad2fafed-0a42-4615-a882-01306af7caf5",
+      "name": "Note Autocollante1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -260,
+        -360
+      ],
+      "parameters": {
+        "color": 6,
+        "width": 420,
+        "height": 540,
+        "content": "## Traitez les images fournies, extrayez les informations sous forme de liste \"Outil -> Attributs\"."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "5eb89e50-7a2f-415c-82f2-99eb8a7ff82f",
+      "name": "Séparer les Outils",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        440,
+        -220
+      ],
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "tools"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "680dfb4b-dde4-4d8f-852d-c3eba82e6607",
+      "name": "Séparer chaque chaîne d'Attribut",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        1140,
+        100
+      ],
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "attributes"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "a33465e9-d469-498f-9178-7c30e15d2782",
+      "name": "Note Autocollante2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2120,
+        -280
+      ],
+      "parameters": {
+        "color": 4,
+        "width": 880,
+        "height": 600,
+        "content": "## Créez les Outils (s'ils n'existent pas)"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "5b5ab9f2-d4ac-437f-ab0a-b113a8af34ab",
+      "name": "Générer un Hash Unique pour le Nom",
+      "type": "n8n-nodes-base.crypto",
+      "position": [
+        2180,
+        -200
+      ],
+      "parameters": {
+        "value": "={{ $json.name.toLowerCase().trim() }}",
+        "dataPropertyName": "hash"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "ea8f7e6f-9004-4271-80d3-333701cce488",
+      "name": "Créer si N'existe Pas",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        2400,
+        -100
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appq0gcmxHAZQhswW",
+          "cachedResultUrl": "https://airtable.com/appq0gcmxHAZQhswW",
+          "cachedResultName": "AI Tools"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "tblrikRHbX1N6P2JI",
+          "cachedResultUrl": "https://airtable.com/appq0gcmxHAZQhswW/tblrikRHbX1N6P2JI",
+          "cachedResultName": "Tools"
+        },
+        "columns": {
+          "value": {
+            "Hash": "={{$json.hash}}",
+            "Name": "={{$json.name}}"
+          },
+          "schema": [
+            {
+              "id": "id",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "id": "Name",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Description",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Website",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Website",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "type": "array",
+              "display": true,
+              "options": [],
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Category",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Attributes",
+              "type": "array",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Attributes",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hash",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Hash",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "Hash"
+          ]
+        },
+        "options": {},
+        "operation": "upsert"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "jMqH6HkKUYTgyHVm",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "85ac3cbb-4103-4184-b686-9e5b8d48f421",
+      "name": "Fusionner les Anciennes Données + RecID",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        2820,
+        -180
+      ],
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "fieldsToMatchString": "hash"
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "29d6369f-f233-46f8-8bee-aa3be854bb0c",
+      "name": "Seulement ce dont nous avons besoin",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2600,
+        -100
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0ff954ec-1d71-429b-b2e8-dca17ff0478d",
+              "name": "hash",
+              "type": "string",
+              "value": "={{ $json.fields.Hash }}"
+            },
+            {
+              "id": "a7f4c2e7-fa63-45d7-ad22-ce8c3aaae4d6",
+              "name": "id",
+              "type": "string",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "id": "081a7613-7c06-4578-8aa4-25d21952b727",
+              "name": "existingAttributes",
+              "type": "array",
+              "value": "={{ $json.fields.Attributes ? $json.fields.Attributes : [] }}"
+            },
+            {
+              "id": "e3ace89b-d818-4448-8328-b36cdf08da2a",
+              "name": "existingSimilars",
+              "type": "array",
+              "value": "={{ $json.fields.Similar ? $json.fields.Similar : [] }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "bdf9c435-3994-4c25-9520-8dfa76e625eb",
+      "name": "Déterminer les Attributs à sauvegarder",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        3040,
+        -180
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "let savingAttributes = $input.item.json.existingAttributes ? $input.item.json.existingAttributes : [];\n$input.item.json.attributes.forEach((attrId)=>{\nif($input.item.json.existingAttributes.indexOf(attrId) == -1) savingAttributes.push(attrId);\n});\n\n$input.item.json.savingAttributes = savingAttributes;\n\nreturn $input.item;"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "88e9f499-87d3-46e2-b3ea-1833c14aaa1b",
+      "name": "Séparer les similaires",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        3300,
+        20
+      ],
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "similar"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "733a8d0c-c6ea-4386-9fd1-075980289e9c",
+      "name": "Fusion1",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        3960,
+        0
+      ],
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "combineBy": "combineByPosition"
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "dabb7e11-b4de-44d9-a80f-3302f49194fb",
+      "name": "Générer un hash unique pour les similaires",
+      "type": "n8n-nodes-base.crypto",
+      "position": [
+        3520,
+        -100
+      ],
+      "parameters": {
+        "value": "={{ $json.similar.toLowerCase().trim() }}",
+        "dataPropertyName": "hash"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "a1bbda24-f75c-4316-b2bd-645827d7af1f",
+      "name": "Cela doit exister",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        3740,
+        -100
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appq0gcmxHAZQhswW",
+          "cachedResultUrl": "https://airtable.com/appq0gcmxHAZQhswW",
+          "cachedResultName": "AI Tools"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "tblrikRHbX1N6P2JI",
+          "cachedResultUrl": "https://airtable.com/appq0gcmxHAZQhswW/tblrikRHbX1N6P2JI",
+          "cachedResultName": "Tools"
+        },
+        "columns": {
+          "value": {
+            "Hash": "={{$json.hash}}",
+            "Name": "={{$json.similar}}"
+          },
+          "schema": [
+            {
+              "id": "id",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "id": "Name",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Description",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Website",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Website",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "type": "array",
+              "display": true,
+              "options": [],
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Category",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Attributes",
+              "type": "array",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Attributes",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hash",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Hash",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "Hash"
+          ]
+        },
+        "options": {},
+        "operation": "upsert"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "jMqH6HkKUYTgyHVm",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "9853b85d-fcb9-4183-8fe4-6e32d318ab01",
+      "name": "Tous les similaires",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        4180,
+        0
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "675510b1-97e7-4a71-9c9e-d3ee792d9919",
+              "name": "id",
+              "type": "string",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "id": "87cc9086-effd-4f4e-84c1-9adec5774e94",
+              "name": "similar",
+              "type": "string",
+              "value": "={{ $json.similar }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "0e98acd2-4aa5-4df0-b36b-6ac1a8a2263b",
+      "name": "Fusion2",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        4400,
+        -160
+      ],
+      "parameters": {
+        "mode": "chooseBranch"
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "ed94900a-78cd-4f61-a705-30f7cb8eb9b8",
+      "name": "Note adhésive3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3200,
+        -280
+      ],
+      "parameters": {
+        "color": 2,
+        "width": 1600,
+        "height": 600,
+        "content": "## Cartographier les concurrents"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "74f0f703-ce73-457c-9137-88d613d2e480",
+      "name": "Changer chaque similaire par le RecID correspondant",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        4600,
+        -160
+      ],
+      "parameters": {
+        "jsCode": "let knownSimilarsOutput = $('All Similar').all();\nlet knownSimilars = new Map();\nknownSimilarsOutput.forEach((nodeOutput)=>{\n  knownSimilars.set(nodeOutput.json.similar.toString().trim(), nodeOutput.json.id);\n});\n\nfor (const item of $input.all()) {\n  item.json.similar.forEach((similar, index)=>{\n    item.json.similar[index] = knownSimilars.get(similar.toString().trim());\n  });\n}\n\nreturn $input.all();"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "c9187902-f67f-4639-906b-d6b14ace6a0e",
+      "name": "Déterminer les similaires que nous devons sauvegarder",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        4880,
+        -160
+      ],
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "let savingSimilar = $input.item.json.existingSimilars ? $input.item.json.existingSimilars : [];\n$input.item.json.similar.forEach((simId)=>{\nif($input.item.json.existingSimilars.indexOf(simId) == -1) savingSimilar.push(simId);\n});\n\n$input.item.json.savingSimilars = savingSimilar;\n\nreturn $input.item;"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "e925a388-05e2-49e4-92ad-984517f44057",
+      "name": "Sauvegarder toutes ces données précieuses",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        5120,
+        -160
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appq0gcmxHAZQhswW",
+          "cachedResultUrl": "https://airtable.com/appq0gcmxHAZQhswW",
+          "cachedResultName": "AI Tools"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "tblrikRHbX1N6P2JI",
+          "cachedResultUrl": "https://airtable.com/appq0gcmxHAZQhswW/tblrikRHbX1N6P2JI",
+          "cachedResultName": "Tools"
+        },
+        "columns": {
+          "value": {
+            "Hash": "={{$json.hash}}",
+            "Name": "={{$json.name}}",
+            "Similar": "={{ $json.savingSimilars }}",
+            "Attributes": "={{ $json.savingAttributes }}"
+          },
+          "schema": [
+            {
+              "id": "id",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "id": "Name",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Description",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Website",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Website",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Category",
+              "type": "array",
+              "display": true,
+              "options": [],
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Category",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Attributes",
+              "type": "array",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Attributes",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Hash",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Hash",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Similar",
+              "type": "array",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Similar",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "Hash"
+          ]
+        },
+        "options": {},
+        "operation": "upsert"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "jMqH6HkKUYTgyHVm",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "d2532094-9c71-4fc0-8195-fb2e29169086",
+      "name": "Mapper l'entrée de l'agent",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -440,
+        -220
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "ace29464-a2a1-44a1-87f9-255fbde042cf",
+              "name": "chatInput",
+              "type": "string",
+              "value": "={{$json.Prompt}}"
+            }
+          ]
+        },
+        "includeOtherFields": true
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "8fa7273b-ebc8-40e4-9f11-e4b26784f60d",
+      "name": "gpt-4o",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        -200,
+        20
+      ],
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "25",
+          "name": "Key 3 vom 15. Jan. 2023\t"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "fb282ffe-4871-4560-97ce-43cc381db874",
+      "name": "Note3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1440,
+        -580
+      ],
+      "parameters": {
+        "width": 668,
+        "height": 786,
+        "content": "## Instructions\n\nCette automatisation vous permet simplement de télécharger n'importe quelle image (via formulaire) d'une feuille de logos, contenant plusieurs images de produits, très probablement et les mettant en contexte les unes par rapport aux autres.\n\nAprès soumission, un agent IA analyse **cette feuille de logos**, la transformant en une liste de \"Nom du produit\" et \"Attributs\", vérifiant également si les outils sont similaires entre eux, selon le contexte de l'image.\n\nNous utilisons pour cela les capacités de vision IA. **REMARQUE :** Il se peut qu'il ne puisse pas extraire toutes les informations. Pour un workflow \"télécharger et oublier\", cela fonctionne pour moi. Vous pouvez même l'exécuter plusieurs fois, pour être sûr.\n\nMais si vous devez vous assurer qu'il extrait **tout**, vous devrez peut-être envisager une configuration multi-agent avec des étapes d'agent de validation.\n\nUne fois que l'agent termine l'extraction, il ajoute traditionnellement et de manière déterministe ces attributs à Airtable (**les crée** s'ils n'existent pas déjà) et fait également un **upsert** des informations sur l'outil.\n\nIl utilise des **hashs** MD5 pour transformer les noms de produits en... quelque chose de vraiment sophistiqué, vous pourriez aussi l'utiliser sans cela, mais je voulais avoir quelque chose qui ressemble au moins à un ID.\n\n### Configuration\n\n1. Configurez Airtable comme indiqué ci-dessous.\n2. Mettez à jour et définissez les identifiants pour tous les nœuds Airtable.\n3. Vérifiez ou ajustez l'invite de l'agent correspondant à votre cas d'utilisation.\n4. Activez le workflow.\n5. Ouvrez le formulaire (par défaut : https://your-n8n.io/form/logo-sheet-feeder)\n6. Profitez de la croissance de votre Airtable.\n\n![Image](https://cloud.let-the-work-flow.com/logo-64.png)  \nProfitez du workflow ! ❤️  \n[let the workf low](https://let-the-work-flow.com) — Automatisation & développement de workflows"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "9ea45b9b-ac2a-4498-b96f-5f5de50acade",
+      "name": "Table : Outils",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        -1340,
+        340
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "6dfbc02e-36b3-4640-b9f2-940c7cd6f86e",
+      "name": "Table : Attributs",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        -1000,
+        340
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "d8ffeff8-8df7-4fc0-9f18-49a44d10eb7d",
+      "name": "Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1440,
+        240
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 668,
+        "height": 786,
+        "content": "## Structure Airtable\n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "7023be89-ee1d-41e6-bcf5-ee28f1284e07",
+      "name": "Note Autocollante4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1420,
+        580
+      ],
+      "parameters": {
+        "color": 5,
+        "width": 300,
+        "height": 320,
+        "content": "### Champs de la Table Outils\n\n**Requis :**\nNom (singleLineText) \nAttributs (multipleRecordLinks=Lien vers la Table Attributs) \nHash (singleLineText) \nSimilaire (multipleRecordLinks=Lien vers la même Table : \"Outils\") \n\n_Description (multilineText)_ \n_Site web (url)_\n_Catégorie (multipleSelects)_"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "0c999f6f-11fb-472a-aa10-0915fbcd1254",
+      "name": "faire une liste lisible",
+      "type": "n8n-nodes-base.html",
+      "disabled": true,
+      "position": [
+        -420,
+        800
+      ],
+      "parameters": {
+        "html": ""
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "ae351db3-5c47-4e53-bf9e-e34434ad9522",
+      "name": "Obtenir le Schéma",
+      "type": "n8n-nodes-base.airtable",
+      "disabled": true,
+      "position": [
+        -640,
+        800
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appq0gcmxHAZQhswW",
+          "cachedResultUrl": "https://airtable.com/appq0gcmxHAZQhswW",
+          "cachedResultName": "AI Tools"
+        },
+        "resource": "base",
+        "operation": "getSchema"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "jMqH6HkKUYTgyHVm",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "9da286e2-2a06-4d2a-bd5b-b6c828683ff2",
+      "name": "Note1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -720,
+        660
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 488,
+        "height": 366,
+        "content": "## Assistant pour la Documentation (ignorer ou en profiter)\n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "901a0c48-82a9-4fd3-a007-8f4b257348d3",
+      "name": "Note Autocollante5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1080,
+        580
+      ],
+      "parameters": {
+        "color": 5,
+        "width": 280,
+        "height": 320,
+        "content": "### Champs du tableau des attributs\n\n**Requis :**\nNom (singleLineText)\nOutils (multipleRecordLinks=Link to Tools Table) "
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "966243fa-a1a3-4201-9df7-6a01aa762ae8",
+      "name": "Note adhésive6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        -460
+      ],
+      "parameters": {
+        "color": 3,
+        "width": 220,
+        "height": 80,
+        "content": "### Vous voudrez peut-être ajuster l'invite selon votre « cas d'utilisation » 🤖"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "1a4e5b87-68a6-499e-9374-e067fae12c84",
+      "name": "Note4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -2440,
+        -580
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 968,
+        "height": 646,
+        "content": "## Exemple de feuille de logos\n### Pour ce type de feuilles, l'invite est conçue par défaut\n\n![Image](https://cloud.let-the-work-flow.com/workflow-data/example-ai-logo-sheet.jpg)  "
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": true,
+  "pinData": {
+    "Retrieve and Parser Agent": [
+      {
+        "json": {
+          "output": {
+            "tools": [
+              {
+                "name": "airOps",
+                "similar": [
+                  "Cognition",
+                  "Gradial"
+                ],
+                "attributes": [
+                  "Agentic Application",
+                  "AI infrastructure"
+                ]
+              },
+              {
+                "name": "Cognition",
+                "similar": [
+                  "airOps",
+                  "Gradial"
+                ],
+                "attributes": [
+                  "Agentic Application",
+                  "AI infrastructure"
+                ]
+              },
+              {
+                "name": "Gradial",
+                "similar": [
+                  "Cognition",
+                  "airOps"
+                ],
+                "attributes": [
+                  "Agentic Application",
+                  "AI infrastructure"
+                ]
+              },
+              {
+                "name": "Cognosys",
+                "similar": [
+                  "FIXIE",
+                  "continuia"
+                ],
+                "attributes": [
+                  "Agentic Application",
+                  "AI infrastructure"
+                ]
+              },
+              {
+                "name": "FIXIE",
+                "similar": [
+                  "Cognosys",
+                  "continuia"
+                ],
+                "attributes": [
+                  "Agentic Application",
+                  "AI infrastructure"
+                ]
+              },
+              {
+                "name": "continuia",
+                "similar": [
+                  "Cognosys",
+                  "FIXIE"
+                ],
+                "attributes": [
+                  "Agentic Application",
+                  "AI infrastructure"
+                ]
+              },
+              {
+                "name": "Agentlabs",
+                "similar": [
+                  "OpenAI",
+                  "LangChain"
+                ],
+                "attributes": [
+                  "Presentation Tool",
+                  "Utilizes OpenAI and LangChain"
+                ]
+              },
+              {
+                "name": "TINY FISH",
+                "similar": [
+                  "Superagent",
+                  "basepilot"
+                ],
+                "attributes": [
+                  "UI Automation",
+                  "Agent as a Service"
+                ]
+              },
+              {
+                "name": "Superagent",
+                "similar": [
+                  "TINY FISH",
+                  "basepilot"
+                ],
+                "attributes": [
+                  "UI Automation",
+                  "Agent as a Service"
+                ]
+              },
+              {
+                "name": "basepilot",
+                "similar": [
+                  "TINY FISH",
+                  "Superagent"
+                ],
+                "attributes": [
+                  "UI Automation",
+                  "Agent as a Service"
+                ]
+              },
+              {
+                "name": "Browserbase",
+                "similar": [
+                  "browsersless",
+                  "APIFY"
+                ],
+                "attributes": [
+                  "Browser Infrastructure",
+                  "Web services"
+                ]
+              },
+              {
+                "name": "browsersless",
+                "similar": [
+                  "Browserbase",
+                  "APIFY"
+                ],
+                "attributes": [
+                  "Browser Infrastructure",
+                  "Web services"
+                ]
+              },
+              {
+                "name": "APIFY",
+                "similar": [
+                  "Browserbase",
+                  "browsersless"
+                ],
+                "attributes": [
+                  "Browser Infrastructure",
+                  "Web services"
+                ]
+              },
+              {
+                "name": "Cloudflare",
+                "similar": [
+                  "bright data",
+                  "platform.sh"
+                ],
+                "attributes": [
+                  "Browser Infrastructure",
+                  "Web services"
+                ]
+              },
+              {
+                "name": "bright data",
+                "similar": [
+                  "Cloudflare",
+                  "platform.sh"
+                ],
+                "attributes": [
+                  "Browser Infrastructure",
+                  "Web services"
+                ]
+              },
+              {
+                "name": "platform.sh",
+                "similar": [
+                  "Cloudflare",
+                  "bright data"
+                ],
+                "attributes": [
+                  "Browser Infrastructure",
+                  "Web services"
+                ]
+              },
+              {
+                "name": "ingest",
+                "similar": [
+                  "hatchet",
+                  "Trigger.dev"
+                ],
+                "attributes": [
+                  "Persistence Tool",
+                  "Data management"
+                ]
+              },
+              {
+                "name": "hatchet",
+                "similar": [
+                  "ingest",
+                  "Trigger.dev"
+                ],
+                "attributes": [
+                  "Persistence Tool",
+                  "Data management"
+                ]
+              },
+              {
+                "name": "Trigger.dev",
+                "similar": [
+                  "ingest",
+                  "hatchet"
+                ],
+                "attributes": [
+                  "Persistence Tool",
+                  "Data management"
+                ]
+              },
+              {
+                "name": "DSPy",
+                "similar": [
+                  "AutoGen",
+                  "Scma4.ai"
+                ],
+                "attributes": [
+                  "Orchestration Tool",
+                  "AI Workflow Management"
+                ]
+              },
+              {
+                "name": "AutoGen",
+                "similar": [
+                  "DSPy",
+                  "Scma4.ai"
+                ],
+                "attributes": [
+                  "Orchestration Tool",
+                  "AI Workflow Management"
+                ]
+              },
+              {
+                "name": "Scma4.ai",
+                "similar": [
+                  "DSPy",
+                  "AutoGen"
+                ],
+                "attributes": [
+                  "Orchestration Tool",
+                  "AI Workflow Management"
+                ]
+              },
+              {
+                "name": "WhyHowAI",
+                "similar": [
+                  "Graphlit",
+                  "LangMem"
+                ],
+                "attributes": [
+                  "Personalization Tool",
+                  "Memory management"
+                ]
+              },
+              {
+                "name": "Graphlit",
+                "similar": [
+                  "WhyHowAI",
+                  "LangMem"
+                ],
+                "attributes": [
+                  "Personalization Tool",
+                  "Memory management"
+                ]
+              },
+              {
+                "name": "LangMem",
+                "similar": [
+                  "WhyHowAI",
+                  "Graphlit"
+                ],
+                "attributes": [
+                  "Personalization Tool",
+                  "Memory management"
+                ]
+              },
+              {
+                "name": "Pinecone",
+                "similar": [
+                  "Chroma",
+                  "Weaviate"
+                ],
+                "attributes": [
+                  "Storage Tool",
+                  "Memory management"
+                ]
+              },
+              {
+                "name": "Chroma",
+                "similar": [
+                  "Pinecone",
+                  "Weaviate"
+                ],
+                "attributes": [
+                  "Storage Tool",
+                  "Memory management"
+                ]
+              },
+              {
+                "name": "Weaviate",
+                "similar": [
+                  "Pinecone",
+                  "Chroma"
+                ],
+                "attributes": [
+                  "Storage Tool",
+                  "Memory management"
+                ]
+              },
+              {
+                "name": "MongoDB",
+                "similar": [
+                  "WhiteLodge",
+                  "Chroma"
+                ],
+                "attributes": [
+                  "Context Management",
+                  "Data storage"
+                ]
+              },
+              {
+                "name": "LangServe",
+                "similar": [
+                  "E2B",
+                  "Ollama"
+                ],
+                "attributes": [
+                  "Agent Hosting",
+                  "Deployment platform"
+                ]
+              },
+              {
+                "name": "E2B",
+                "similar": [
+                  "LangServe",
+                  "Ollama"
+                ],
+                "attributes": [
+                  "Agent Hosting",
+                  "Deployment platform"
+                ]
+              },
+              {
+                "name": "Ollama",
+                "similar": [
+                  "LangServe",
+                  "E2B"
+                ],
+                "attributes": [
+                  "Agent Hosting",
+                  "Deployment platform"
+                ]
+              },
+              {
+                "name": "LangGraph",
+                "similar": [
+                  "Semantic Kernel",
+                  "LlamaIndex"
+                ],
+                "attributes": [
+                  "Framework Tool",
+                  "Graph Management"
+                ]
+              },
+              {
+                "name": "LlamaIndex",
+                "similar": [
+                  "LangGraph",
+                  "Semantic Kernel"
+                ],
+                "attributes": [
+                  "Framework Tool",
+                  "Graph Management"
+                ]
+              },
+              {
+                "name": "Semantic Kernel",
+                "similar": [
+                  "LangGraph",
+                  "LlamaIndex"
+                ],
+                "attributes": [
+                  "Framework Tool",
+                  "Graph Management"
+                ]
+              },
+              {
+                "name": "agentops",
+                "similar": [
+                  "context",
+                  "LangSmith"
+                ],
+                "attributes": [
+                  "Agent Evaluation Tool",
+                  "Performance Assessment"
+                ]
+              },
+              {
+                "name": "context",
+                "similar": [
+                  "agentops",
+                  "LangSmith"
+                ],
+                "attributes": [
+                  "Agent Evaluation Tool",
+                  "Performance Assessment"
+                ]
+              },
+              {
+                "name": "LangSmith",
+                "similar": [
+                  "agentops",
+                  "context"
+                ],
+                "attributes": [
+                  "Agent Evaluation Tool",
+                  "Performance Assessment"
+                ]
+              },
+              {
+                "name": "WHYLabs",
+                "similar": [
+                  "griptape",
+                  "braintrust"
+                ],
+                "attributes": [
+                  "Developer Tools",
+                  "Data Management"
+                ]
+              },
+              {
+                "name": "griptape",
+                "similar": [
+                  "WHYLabs",
+                  "braintrust"
+                ],
+                "attributes": [
+                  "Developer Tools",
+                  "Data Management"
+                ]
+              },
+              {
+                "name": "braintrust",
+                "similar": [
+                  "WHYLabs",
+                  "griptape"
+                ],
+                "attributes": [
+                  "Developer Tools",
+                  "Data Management"
+                ]
+              }
+            ]
+          }
+        }
+      }
+    ]
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "cd74efad-4f0c-45ea-bc7e-3f7c5554c204",
+  "connections": {
+    "Fusionner": {
+      "main": [
+        [
+          {
+            "node": "Mapper l'ID de l'attribut",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fusion1": {
+      "main": [
+        [
+          {
+            "node": "Tous les similaires",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fusion2": {
+      "main": [
+        [
+          {
+            "node": "Changer chaque similaire par le RecID correspondant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "gpt-4o": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent de récupération et d'analyse",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convertir en JSON": {
+      "main": [
+        [
+          {
+            "node": "Séparer les Outils",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir le Schéma": {
+      "main": [
+        [
+          {
+            "node": "faire une liste lisible",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tous les similaires": {
+      "main": [
+        [
+          {
+            "node": "Fusion2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Table : Outils": {
+      "main": [
+        [
+          {
+            "node": "Table : Outils",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Table : Attributs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tous les attributs": {
+      "main": [
+        [
+          {
+            "node": "Attendre la création de l'attribut",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Mapper l'entrée de l'agent": {
+      "main": [
+        [
+          {
+            "node": "Agent de récupération et d'analyse",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Séparer les Outils": {
+      "main": [
+        [
+          {
+            "node": "Boucler sur les attributs",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Attendre la création de l'attribut",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cela doit exister": {
+      "main": [
+        [
+          {
+            "node": "Fusion1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mapper l'ID de l'attribut": {
+      "main": [
+        [
+          {
+            "node": "Boucler sur les attributs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Seulement ce dont nous avons besoin": {
+      "main": [
+        [
+          {
+            "node": "Fusionner les Anciennes Données + RecID",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Séparer les similaires": {
+      "main": [
+        [
+          {
+            "node": "Générer un hash unique pour les similaires",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fusion1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Table : Attributs": {
+      "main": [
+        []
+      ]
+    },
+    "Lors de la soumission du formulaire": {
+      "main": [
+        [
+          {
+            "node": "Mapper l'entrée de l'agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Créer si N'existe Pas": {
+      "main": [
+        [
+          {
+            "node": "Seulement ce dont nous avons besoin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Boucler sur les attributs": {
+      "main": [
+        [
+          {
+            "node": "Tous les attributs",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Séparer chaque chaîne d'Attribut",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fusionner les Anciennes Données + RecID": {
+      "main": [
+        [
+          {
+            "node": "Déterminer les Attributs à sauvegarder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyseur de sortie structurée": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Agent de récupération et d'analyse",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vérifier si l'attribut existe": {
+      "main": [
+        [
+          {
+            "node": "Fusionner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent de récupération et d'analyse": {
+      "main": [
+        [
+          {
+            "node": "Convertir en JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Attendre la création de l'attribut": {
+      "main": [
+        [
+          {
+            "node": "Changer chaque attribut pour le RecID correspondant",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Générer un Hash Unique pour le Nom": {
+      "main": [
+        [
+          {
+            "node": "Créer si N'existe Pas",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fusionner les Anciennes Données + RecID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Séparer chaque chaîne d'Attribut": {
+      "main": [
+        [
+          {
+            "node": "Vérifier si l'attribut existe",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fusionner",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Déterminer les similaires que nous devons sauvegarder": {
+      "main": [
+        [
+          {
+            "node": "Sauvegarder toutes ces données précieuses",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Générer un hash unique pour les similaires": {
+      "main": [
+        [
+          {
+            "node": "Cela doit exister",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déterminer les Attributs à sauvegarder": {
+      "main": [
+        [
+          {
+            "node": "Séparer les similaires",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fusion2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Changer chaque similaire par le RecID correspondant": {
+      "main": [
+        [
+          {
+            "node": "Déterminer les similaires que nous devons sauvegarder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Changer chaque attribut pour le RecID correspondant": {
+      "main": [
+        [
+          {
+            "node": "Générer un Hash Unique pour le Nom",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

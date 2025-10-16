@@ -1,0 +1,497 @@
+{
+  "id": "yRMCUm6oJEMknhbw",
+  "meta": {
+    "instanceId": "a5283507e1917a33cc3ae615b2e7d5ad2c1e50955e6f831272ddd5ab816f3fb6"
+  },
+  "name": "Outil Agent d'Analyse OpenSea",
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "9478ead9-7f35-49b5-aff7-401ce9b8f4af",
+      "name": "Cerveau de l'Agent d'Analyse",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        300,
+        40
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "yUizd8t0sD5wMYVG",
+          "name": "OpenAi account"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "80910bd9-7889-4185-8cfd-31a6aca270ff",
+      "name": "Mémoire de l'Agent d'Analyse",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        440,
+        40
+      ],
+      "parameters": {},
+      "typeVersion": 1.3
+    },
+    {
+      "id": "b810757e-caa3-4987-be0a-66284e01d6b9",
+      "name": "OpenSea Obtenir les Statistiques de la Collection",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        600,
+        40
+      ],
+      "parameters": {
+        "url": "https://api.opensea.io/api/v2/collections/{collection_slug}/stats",
+        "sendHeaders": true,
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "toolDescription": "Cet outil récupère les statistiques d'une seule collection NFT sur OpenSea via le slug de la collection.",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "application/json",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3v99GVMGF4tKP5nM",
+          "name": "OpenSea"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "288220ab-4321-4916-8ea1-bd27495b3b57",
+      "name": "Agent d'Analyse OpenSea",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        600,
+        -200
+      ],
+      "parameters": {
+        "text": "={{ $json.message }}",
+        "options": {
+          "systemMessage": "# **📢 Agent d'Analyse OpenSea – Message Système**  \n\n## **🔹 Rôle & Objectif**  \nL'**Agent d'Analyse OpenSea** est un **analyste de données NFT avancé propulsé par IA** avec un accès direct à **l'API d'OpenSea**. Il est spécialisé dans la **récupération et l'analyse des données du marché NFT**, incluant :  \n- Statistiques des collections (volume des ventes, prix plancher, capitalisation boursière, etc.)  \n- Historique des transactions (ventes, offres, transferts, mises en vente)  \n- Suivi des événements pour des portefeuilles, collections et NFTs spécifiques  \n- Tendances du marché & mouvements des prix\n\nCet agent **assure que toutes les appels API respectent exactement les exigences d’OpenSea**, évitant les requêtes invalides et garantissant des réponses rapides et précises.  \n\n---\n\n## **⚡ Outils disponibles et comment les utiliser**\nL’**Agent d’Analyse** intègre plusieurs **endpoints API d’OpenSea** pour récupérer, traiter et analyser les données NFT.\n\n### **1️⃣ OpenSea Obtenir les Statistiques de la Collection**  \n📍 **Point de terminaison** : `/api/v2/collections/{collection_slug}/stats`  \n🔹 **Description** : Récupère les **statistiques clés** pour une collection NFT spécifique, incluant :  \n  - Volume total des ventes (ETH)  \n  - Nombre de ventes  \n  - Prix moyen  \n  - Capitalisation boursière  \n  - Nombre de propriétaires  \n  - Prix plancher  \n\n🔹 **Paramètre requis** :  \n  - `collection_slug` → L'identifiant unique de la collection NFT sur OpenSea\n\n🔹 **Exemple de requête** :  \n  _\"Obtenir les statistiques pour la collection Bored Ape Yacht Club.\"_  \n\n✅ **Exemple d'appel API :**  \n```plaintext\nGET https://api.opensea.io/api/v2/collections/boredapeyachtclub/stats\n```  \n\n---\n\n### **2️⃣ OpenSea Obtenir les événements**  \n📍 **Point de terminaison** : `/api/v2/events`  \n🔹 **Description** : Récupère les **événements liés aux NFT** (ventes, transferts, mises en vente, offres et remboursements) qui ont eu lieu dans une période spécifique.\n\n🔹 **Paramètres de requête optionnels :**  \n  - `after` → Récupérer les événements survenant après ce timestamp Unix.  \n  - `before` → Récupérer les événements survenant avant ce timestamp Unix.  \n  - `event_type` → Filtrer par types d'événements (`sale`, `transfer`, `redemption`).  \n  - `limit` → Nombre de résultats (1-50, par défaut : 50).  \n  - `next` → Curseur pour la pagination.  \n\n🔹 **Exemple de requête** :  \n  _\"Montre-moi toutes les ventes de NFT des dernières 24 heures.\"_\n\n✅ **Exemple d'appel API :**  \n```plaintext\nGET https://api.opensea.io/api/v2/events?event_type=sale&after=1710960000\n```  \n\n---\n\n### **3️⃣ OpenSea Récupérer les événements (par compte)**  \n📍 **Point de terminaison** : `/api/v2/events/accounts/{address}`  \n🔹 **Description** : Récupère **tous les événements liés à une adresse de portefeuille spécifique**.  \n\n🔹 **Paramètre requis** :  \n  - `address` → Adresse du portefeuille d'intérêt\n\n🔹 **Paramètres optionnels :**  \n  - `chain` → Réseau blockchain (**doit être valide, voir la liste ci-dessous**).  \n  - `event_type` → Filtrer les événements (`sale`, `transfer`, `redemption`).  \n  - `limit` → Nombre de résultats (1-50, par défaut : 50).  \n  - `next` → Curseur pour la pagination.  \n\n🔹 **Exemple de requête** :  \n  _\"Récupérer tous les transferts de NFT pour le portefeuille `0x123...abc` sur Ethereum.\"_\n\n✅ **Exemple d'appel API :**  \n```plaintext\nGET https://api.opensea.io/api/v2/events/accounts/0x123...abc?event_type=transfer&chain=ethereum\n```  \n\n---\n\n### **4️⃣ OpenSea Obtenir les événements (par collection)**  \n📍 **Point de terminaison** : `/api/v2/events/collection/{collection_slug}`  \n🔹 **Description** : Récupère **tous les événements NFT liés à une collection spécifique**.  \n\n🔹 **Paramètre requis** :  \n  - `collection_slug` → L'identifiant unique de la collection NFT\n\n🔹 **Exemple de requête** :  \n  _\"Obtenir les 10 dernières ventes des NFTs Azuki.\"_  \n\n✅ **Exemple d'appel API :**  \n```plaintext\nGET https://api.opensea.io/api/v2/events/collection/azuki?event_type=sale&limit=10\n```  \n\n---\n\n### **5️⃣ OpenSea Obtenir les événements (par NFT)**  \n📍 **Point de terminaison** : `/api/v2/events/chain/{chain}/contract/{address}/nfts/{identifier}`  \n🔹 **Description** : Récupère **tous les événements historiques pour un NFT spécifique** en fonction de :  \n  - **Blockchain**  \n  - **Adresse du contrat intelligent**  \n  - **ID du token**\n\n🔹 **Paramètres requis** :  \n  - `chain` → Réseau blockchain (**doit être valide, voir la liste ci-dessous**).  \n  - `address` → Adresse du contrat intelligent du NFT.  \n  - `identifier` → ID unique du token NFT.  \n\n🔹 **Exemple de requête** :  \n  _\"Montre-moi les 5 dernières transactions pour CryptoPunk #9999.\"_  \n\n✅ **Exemple d'appel API :**  \n```plaintext\nGET https://api.opensea.io/api/v2/events/chain/ethereum/contract/0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB/nfts/9999?limit=5\n```  \n\n---\n\n## **⚠️ Règles & Restrictions Importantes**\n### **🚨 1. Seuls les Inputs Blockchain Autorisés**\n✅ **Blockchains Valides pour les Requêtes** :\n- `amoy`\n- `ape_chain`\n- `ape_curtis`\n- `arbitrum`\n- `arbitrum_nova`\n- `arbitrum_sepolia`\n- `avalanche`\n- `avalanche_fuji`\n- `b3`\n- `b3_sepolia`\n- `baobab`\n- `base`\n- `base_sepolia`\n- `bera_chain`\n- `blast`\n- `blast_sepolia`\n- `ethereum`\n- `flow`\n- `flow_testnet`\n- `klaytn`\n- **`matic`** _(Utilisez ceci au lieu de \"polygon\")_\n- `monad_testnet`\n- `mumbai`\n- `optimism`\n- `optimism_sepolia`\n- `sei_testnet`\n- `sepolia`\n- `shape`\n- `solana`\n- `soldev`\n- `soneium`\n- `soneium_minato`\n- `unichain`\n- `zora`\n- `zora_sepolia`\n\n🚨 **Règle Critique :**\n- ❌ `\"polygon\"` **n'est PAS une entrée de chaîne valide** et **doit être remplacé par** `\"matic\"`.  \n- ❌ Utiliser une blockchain non prise en charge **provoquera une erreur**.  \n- ✅ Vérifiez toujours les noms des blockchains avant d'exécuter une requête.\n\n---\n\n## **📌 Exemples de requêtes**\n✅ _\"Obtenir les données de ventes NFT des 7 derniers jours.\"_  \n✅ _\"Récupérer les 5 collections les plus tendance par volume.\"_  \n✅ _\"Suivre toutes les transactions NFT pour mon portefeuille `0xabc...xyz`.\"_  \n✅ _\"Afficher la vente la plus chère des dernières 24 heures.\"_  \n\n---\n\n## **⚠️ Gestion des erreurs**\nSi une requête à l'API OpenSea échoue, **vérifiez les erreurs** :\n- ✅ `200` → Succès  \n- ❌ `400` → Mauvaise requête (Format d'entrée invalide)  \n- ❌ `404` → Non trouvé ( `collection_slug`, `address` ou `identifier` incorrect)  \n- ❌ `500` → Erreur serveur (Problème avec l'API OpenSea)  \n\n---\n\n# **🚀 Conclusion**\nL'**Agent d'Analyse OpenSea** est un **analyste NFT spécialisé piloté par l'IA** conçu pour suivre les tendances du marché, analyser les transactions et fournir des **informations NFT en temps réel**. Que vous soyez **trader, investisseur ou collectionneur**, ce système vous garantit de rester en avance sur le marché grâce à des **analyses NFT précises, structurées et puissantes**.  \n\n🔥 **Respectez toutes les règles pour assurer le succès des requêtes API !** 🔥"
+        },
+        "promptType": "define"
+      },
+      "typeVersion": 1.8
+    },
+    {
+      "id": "c055762a-8fe7-4141-a639-df2372f30060",
+      "name": "Déclencheur d'Entrée du Workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        140,
+        -200
+      ],
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "message"
+            },
+            {
+              "name": "sessionId"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "ea5f7259-ff8b-48bc-9bde-01b7d2d42d2b",
+      "name": "OpenSea Obtenir les Événements",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        780,
+        40
+      ],
+      "parameters": {
+        "url": "https://api.opensea.io/api/v2/events",
+        "sendQuery": true,
+        "sendHeaders": true,
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "event_type",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "after",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "before",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "limit",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "next",
+              "valueProvider": "modelOptional"
+            }
+          ]
+        },
+        "toolDescription": "Cet outil récupère une liste d'événements OpenSea basée sur les horodatages, le type d'événement et la pagination.",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "application/json",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3v99GVMGF4tKP5nM",
+          "name": "OpenSea"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "d18c5b15-bc5d-4053-8364-9ecedc36483a",
+      "name": "OpenSea Obtenir les Événements par Compte",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        960,
+        40
+      ],
+      "parameters": {
+        "url": "https://api.opensea.io/api/v2/events/accounts/{address}",
+        "sendQuery": true,
+        "sendHeaders": true,
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "after",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "before",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "chain",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "event_type",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "limit",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "next",
+              "valueProvider": "modelOptional"
+            }
+          ]
+        },
+        "toolDescription": "Cet outil récupère une liste d'événements OpenSea pour un compte spécifique basée sur les horodatages, la chaîne, le type d'événement et la pagination.",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "application/json",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3v99GVMGF4tKP5nM",
+          "name": "OpenSea"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "74b00939-5c0f-4974-8d6e-35cfb9dc5c79",
+      "name": "OpenSea Obtenir les Événements par Collection",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        1160,
+        40
+      ],
+      "parameters": {
+        "url": "https://api.opensea.io/api/v2/events/collection/{collection_slug}",
+        "sendQuery": true,
+        "sendHeaders": true,
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "after",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "before",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "event_type",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "limit",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "next",
+              "valueProvider": "modelOptional"
+            }
+          ]
+        },
+        "toolDescription": "Cet outil récupère une liste d'événements OpenSea pour une collection spécifique basée sur les horodatages, le type d'événement et la pagination.",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "application/json",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3v99GVMGF4tKP5nM",
+          "name": "OpenSea"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "79af849c-af1b-40a2-861f-91c6217c7a99",
+      "name": "OpenSea Obtenir les Événements par NFT",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        1360,
+        40
+      ],
+      "parameters": {
+        "url": "https://api.opensea.io/api/v2/events/chain/{chain}/contract/{address}/nfts/{identifier}",
+        "sendQuery": true,
+        "sendHeaders": true,
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "after",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "before",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "event_type",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "limit",
+              "valueProvider": "modelOptional"
+            },
+            {
+              "name": "next",
+              "valueProvider": "modelOptional"
+            }
+          ]
+        },
+        "toolDescription": "Cet outil récupère une liste d'événements OpenSea pour un seul NFT en fonction de la chaîne, de l'adresse du contrat, de l'ID du token, des horodatages et du type d'événement.",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "application/json",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "3v99GVMGF4tKP5nM",
+          "name": "OpenSea"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "c268e4cc-2a31-4d0d-b155-bf38c8bb8840",
+      "name": "Note Autocollante",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1260,
+        -1260
+      ],
+      "parameters": {
+        "color": 2,
+        "width": 980,
+        "height": 1320,
+        "content": "# Outil d'Agent d'Analyse OpenSea (Workflow n8n) Guide\n\n## 🚀 Aperçu du Workflow\nL'**Outil d'Agent d'Analyse OpenSea** est un système d'analyse NFT alimenté par l'IA, construit avec **n8n**. Il s'intègre directement à **l'API d'OpenSea** pour récupérer et analyser les données du marché, les statistiques des collections, les transactions de portefeuille et les journaux d'événements. Cet outil est conçu pour fournir des informations en temps réel sur l'écosystème NFT.\n\n### 🎯 **Fonctionnalités clés** :\n- Récupérer les **statistiques de la collection** (volume, prix plancher, capitalisation boursière, etc.).\n- Suivre les **événements NFT** (ventes, transferts, mises en vente, offres, rachats).\n- Surveiller les **transactions de portefeuille** (suivi des événements spécifiques au compte).\n- Obtenir les **transactions historiques spécifiques aux NFT** par contrat intelligent et ID de token.\n- Assurer la **conformité à l’API**, en évitant les requêtes invalides et les erreurs.\n\n---\n\n## 🔗 **Nœuds & Fonctions**\nVoici une répartition de chaque nœud dans le workflow et sa fonction.\n\n### **1️⃣ Agent d'Analyse Cognitif**\\n- **Type** : Modèle de Langage IA (GPT-4o Mini)\\n- **Objectif** : Traite les requêtes API et interprète les requêtes d'analyse OpenSea.\\n\\n### **2️⃣ Mémoire de l'Agent d'Analyse**\\n- **Type** : Tampon de Mémoire IA\\n- **Objectif** : Stocke les données de session pour maintenir le contexte sur plusieurs requêtes.\n\n### **3️⃣ OpenSea Obtenir les statistiques de la collection**\n- **Type** : Requête API\n- **Endpoint** : `/api/v2/collections/{collection_slug}/stats`\n- **Fonction** : Récupère les statistiques globales de la collection telles que le prix plancher, le volume total, le nombre de ventes et la capitalisation du marché.\n\n### **4️⃣ OpenSea Obtenir les événements**\n- **Type** : Requête API\n- **Endpoint** : `/api/v2/events`\n- **Fonction** : Récupère les événements liés aux NFT sur une période donnée, filtrés par type d'événement (vente, transfert, mise en vente, etc.).\n\n### **5️⃣ OpenSea Obtenir les événements par compte**\n- **Type** : Requête API\n- **Endpoint** : `/api/v2/events/accounts/{address}`\n- **Fonction** : Suit tous les événements NFT liés à une adresse de portefeuille spécifique.\n\n### **6️⃣ OpenSea Obtenir les événements par collection**\n- **Type** : Requête API\n- **Endpoint** : `/api/v2/events/collection/{collection_slug}`\n- **Fonction** : Récupère les derniers événements pour une collection NFT particulière.\n\n### **7️⃣ OpenSea Obtenir les événements par NFT**\n- **Type** : Requête API\n- **Endpoint** : `/api/v2/events/chain/{chain}/contract/{address}/nfts/{identifier}`\n- **Fonction** : Récupère tous les événements historiques pour un seul NFT basé sur la blockchain, le contrat intelligent et l'identifiant du token.\n\n---"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "ef15cdff-2e09-4ae9-8c7f-a01119020a29",
+      "name": "Note Autocollante1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -160,
+        -1260
+      ],
+      "parameters": {
+        "color": 5,
+        "width": 920,
+        "height": 940,
+        "content": "## 📌 **Comment utiliser le workflow**\n\n### ✅ **Étape 1 : Saisie des données**\n- Fournissez les paramètres nécessaires comme `collection_slug`, `address`, `event_type`, `chain` et `identifier`.\n\n### ✅ **Étape 2 : Exécution des appels API**\n- Le workflow déclenche des appels API basés sur les données saisies et récupère des données analytiques NFT structurées.\n\n### ✅ **Étape 3 : Traitement des données & sortie**\n- L'agent propulsé par l'IA traite les réponses et formate la sortie.\n- Les résultats peuvent être envoyés sur Telegram, sauvegardés dans une base de données ou affichés dans un tableau de bord.\n\n---\n\n## ⚠️ **Requêtes API courantes & exemples**\n\n### **1️⃣ Obtenir les statistiques de la collection**\n```plaintext\nGET https://api.opensea.io/api/v2/collections/boredapeyachtclub/stats\n```\n\n### **2️⃣ Obtenir les événements (ventes NFT des dernières 24 heures)**\n```plaintext\nGET https://api.opensea.io/api/v2/events?event_type=sale&after=1710960000\n```\n\n### **3️⃣ Obtenir les événements par adresse de portefeuille**\n```plaintext\nGET https://api.opensea.io/api/v2/events/accounts/0x123...abc?event_type=transfer&chain=ethereum\n```\n\n### **4️⃣ Obtenir les événements par NFT**\n```plaintext\nGET https://api.opensea.io/api/v2/events/chain/ethereum/contract/0xb47e3cd837dDF8e4c57F05d70Ab865de6e193BBB/nfts/9999?limit=5\n```\n\n---\n\n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "03ec28f4-c2bc-4cfe-a799-c0ad5190d77a",
+      "name": "Note Autocollante2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        960,
+        -1260
+      ],
+      "parameters": {
+        "color": 3,
+        "width": 820,
+        "height": 460,
+        "content": "## ⚡ **Gestion des Erreurs & Dépannage**\n| **Code d'Erreur** | **Description** |\n|--------------|----------------|\n| `200` | Succès |\n| `400` | Mauvaise Requête (Entrée invalide) |\n| `404` | Non Trouvé (Slug, adresse ou identifiant incorrect) |\n| `500` | Erreur Serveur (Problème API OpenSea) |\n\n### 🔹 **Correction des Erreurs Courantes**\n- Assurez-vous que le `collection_slug` ou l'`adresse du portefeuille` est correct.\n- Vérifiez si le nom de la blockchain est valide (`matic` au lieu de `polygon`).\n- Si l'API OpenSea est indisponible, réessayez après un certain temps.\n\n---\n\n## 🚀 **Contactez-moi pour du Support**\nSi vous avez besoin d'aide, d'analyses personnalisées OpenSea ou de support en automatisation, n'hésitez pas à me contacter sur LinkedIn :\n\n🌐 **Don Jayamaha – LinkedIn**  \n🔗 [http://linkedin.com/in/donjayamahajr](http://linkedin.com/in/donjayamahajr)\n\n"
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": false,
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "59a62d76-59a4-4615-a546-6e3810ca81f2",
+  "connections": {
+    "OpenSea Obtenir les Événements": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent d'Analyse OpenSea",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cerveau de l'Agent d'Analyse": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent d'Analyse OpenSea",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mémoire de l'Agent d'Analyse": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agent d'Analyse OpenSea",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déclencheur d'Entrée du Workflow": {
+      "main": [
+        [
+          {
+            "node": "Agent d'Analyse OpenSea",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenSea Obtenir les Événements par NFT": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent d'Analyse OpenSea",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenSea Obtenir les Statistiques de la Collection": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent d'Analyse OpenSea",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenSea Obtenir les Événements par Compte": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent d'Analyse OpenSea",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenSea Obtenir les Événements par Collection": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent d'Analyse OpenSea",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

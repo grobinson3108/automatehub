@@ -1,0 +1,21 @@
+🌐 TRADUCTION EN MASSE DES WORKFLOWS N8N - VERSION 3
+============================================================
+Ce script va:
+  1. Traduire tous les workflows en français
+  2. Les mettre dans un dossier 'FR'
+  3. Traduire les noms de fichiers (version améliorée)
+  4. Ajouter le tag 'Audelalia' à tous les workflows
+
+👀 Voulez-vous voir quelques exemples de traduction de noms? (o/n): 
+Répertoires sources:
+  - /var/www/automatehub/200_automations_n8n: 4052 workflows
+  - /var/www/automatehub/github_workflows: 2346 workflows
+
+Les workflows traduits seront sauvegardés dans:
+  - /var/www/automatehub/workflows_traduits/FR/
+
+🎯 Options:
+  1. Tester sur 10 fichiers seulement
+  2. Traduire TOUS les workflows
+
+Votre choix (1 ou 2): Choix invalide. Annulé.

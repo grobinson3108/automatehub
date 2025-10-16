@@ -1,0 +1,1747 @@
+{
+  "name": "Afficheur automatique de carte",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        -440
+      ],
+      "id": "6b39de9b-f850-48e1-b586-db3396bf73e4",
+      "name": "Déclencheur de planification"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "data[0].b64_json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        640,
+        -440
+      ],
+      "id": "8aba1eeb-5d1a-4de1-bcee-156f62824b74",
+      "name": "Convertir en binaire"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/images/generations",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer sk-ENTER YOUR API HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-image-1"
+            },
+            {
+              "name": "prompt",
+              "value": "={{ $json.content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        420,
+        -440
+      ],
+      "id": "5261349f-7d05-4c61-a8a5-217d16c5be6a",
+      "name": "Générer Image1"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appmA1QweJv9K10U9",
+          "mode": "list",
+          "cachedResultName": "Media Poster",
+          "cachedResultUrl": "https://airtable.com/appmA1QweJv9K10U9"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl7kDz3LEqu0vmPL",
+          "mode": "list",
+          "cachedResultName": "Ideas",
+          "cachedResultUrl": "https://airtable.com/appmA1QweJv9K10U9/tbl7kDz3LEqu0vmPL"
+        },
+        "filterByFormula": "NOT({Status} = 'Posted')",
+        "returnAll": false,
+        "limit": 1,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -1380,
+        -440
+      ],
+      "id": "ff8e3519-3664-48f0-a5e5-6c622b615b54",
+      "name": "Airtable",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appmA1QweJv9K10U9",
+          "mode": "list",
+          "cachedResultName": "Media Poster",
+          "cachedResultUrl": "https://airtable.com/appmA1QweJv9K10U9"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl7kDz3LEqu0vmPL",
+          "mode": "list",
+          "cachedResultName": "Ideas",
+          "cachedResultUrl": "https://airtable.com/appmA1QweJv9K10U9/tbl7kDz3LEqu0vmPL"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Airtable').item.json.id }}",
+            "Image": "=$text_6",
+            "Status": "Posted",
+            "Caption": "={{ $json.message.content }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Content type",
+              "displayName": "Content type",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Recepies",
+                  "value": "Recepies"
+                },
+                {
+                  "name": "Quotes",
+                  "value": "Quotes"
+                },
+                {
+                  "name": "Tutorials",
+                  "value": "Tutorials"
+                },
+                {
+                  "name": "Fitness Guides",
+                  "value": "Fitness Guides"
+                },
+                {
+                  "name": "Travel Cards",
+                  "value": "Travel Cards"
+                },
+                {
+                  "name": "Motivational Posts",
+                  "value": "Motivational Posts"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Image",
+              "displayName": "Image",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Caption",
+              "displayName": "Caption",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Posted",
+                  "value": "Posted"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1560,
+        -440
+      ],
+      "id": "6ba21ff4-4df5-41a8-a5e6-ebafde9c773e",
+      "name": "Airtable1",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Airtable').item.json.Name }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1dtY5XoTbi2GFilUQLQLRXYVqyORQe8Nf",
+          "mode": "list",
+          "cachedResultName": "24-Media-Poster",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1dtY5XoTbi2GFilUQLQLRXYVqyORQe8Nf"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        860,
+        -440
+      ],
+      "id": "b57145fb-9b82-471b-b565-3998201bb060",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "GP2Td0vsw7OxPZcD",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1040,
+        -440
+      ],
+      "id": "493b48dc-37f1-4a91-a057-ac9189e456da",
+      "name": "Google Drive1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "GP2Td0vsw7OxPZcD",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "=Recepies",
+                    "rightValue": "={{ $json['Content type'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "2a15e068-413d-4030-acb7-62d73c38d1db"
+                  }
+                ],
+                "combinator": "et"
+              },
+              "renameOutput": true,
+              "outputKey": "Recepies"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5aa67199-f2ad-44ca-88a4-5c3cb9f2e924",
+                    "leftValue": "Quotes",
+                    "rightValue": "={{ $json['Content type'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "et"
+              },
+              "renameOutput": true,
+              "outputKey": "Quotes"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2669364c-a943-4881-8c58-0c728b3f2c00",
+                    "leftValue": "Tutorials",
+                    "rightValue": "={{ $json['Content type'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "et"
+              },
+              "renameOutput": true,
+              "outputKey": "Tutorials"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d6bb4957-bfc7-4406-987e-2a8eb95e681e",
+                    "leftValue": "Fitness Guides",
+                    "rightValue": "={{ $json['Content type'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "et"
+              },
+              "renameOutput": true,
+              "outputKey": "Fitness Guides"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "dec629f7-f7fc-4028-8077-f9383a0774c8",
+                    "leftValue": "Travel Cards",
+                    "rightValue": "={{ $json['Content type'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "et"
+              },
+              "renameOutput": true,
+              "outputKey": "Travel Cards"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e19956e8-27bb-4426-860c-bde4b822b2d6",
+                    "leftValue": "Motivational Posts",
+                    "rightValue": "={{ $json['Content type'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "et"
+              },
+              "renameOutput": true,
+              "outputKey": "Motivational Posts"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1160,
+        -500
+      ],
+      "id": "667f6672-1ef5-4bb3-8e1a-47f97981869d",
+      "name": "Type de contenu"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI-2025-04-14"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Vous êtes un générateur de cartes JSON spécialisé dans les guides de fitness et les entraînements.\\n\\nJe vais fournir un nom d'entraînement ou de domaine de concentration : {{ $json.Name }}.\\n\\nEn fonc..."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -720,
+        -340
+      ],
+      "id": "f1d52290-3f21-4905-a6ff-cfc15932e177",
+      "name": "Guide de fitness",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI-2025-04-14"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Vous êtes un générateur de cartes JSON.\\n\\nJe vais fournir un nom de destination : {{ $json.Name }}.\\n\\nGénérez un objet JSON valide pour un travel_template, formaté pour une carte visuelle Instagram.\\n..."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -720,
+        -140
+      ],
+      "id": "f91f98ac-a9e0-4d6d-bc49-4c47c534d73d",
+      "name": "Cartes de voyage",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI-2025-04-14"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Vous êtes un générateur de cartes JSON spécialisé dans les recettes.\\n\\nJe vais vous fournir le nom du plat : {{ $json.Name }}.\\n\\nSur cette base, générez un objet JSON valide correspondant à la struct..."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -720,
+        -940
+      ],
+      "id": "81274125-d057-4e22-b8e8-402f551cad3e",
+      "name": "Recette",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/media",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $('Airtable1').item.json.fields.Image[0].url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2020,
+        -440
+      ],
+      "id": "5e8f6726-c49a-45da-990c-b5e43340ecf1",
+      "name": "Requête HTTP"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=$text_19",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -1340
+      ],
+      "id": "9a7adcdc-19b3-4180-b367-74d423e34b36",
+      "name": "Instagram"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=$text_20",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        260
+      ],
+      "id": "d077b11e-d5d6-497f-ab0f-31537bb395f1",
+      "name": "Pinterest",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## Images uniquement\\n**Vous pouvez télécharger uniquement des images sur Pinterest et Bluesky",
+        "height": 340,
+        "width": 200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3260,
+        260
+      ],
+      "typeVersion": 1,
+      "id": "998c2526-3400-4a03-9371-732138cc93ca",
+      "name": "Note autocollante",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=$text_22",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -1140
+      ],
+      "id": "4fecdf2b-8b8f-49b9-a9bc-e032cbf0fc09",
+      "name": "Twitter"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=$text_23",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -940
+      ],
+      "id": "a5ddfde3-8041-4265-a714-3f27af6e052d",
+      "name": "LinkedIn"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=$text_24",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -740
+      ],
+      "id": "946fd818-1c43-4b7e-b81d-925b731ac95f",
+      "name": "Page LinkedIn",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=$text_25",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -540
+      ],
+      "id": "1aa18e88-6c16-4cbe-ab88-71c4d775c4cc",
+      "name": "Compte Fb",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=$text_26",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -340
+      ],
+      "id": "9b7d0a3e-46c6-4f51-a26f-a9f5f05de482",
+      "name": "Tiktok",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=$text_27",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        60
+      ],
+      "id": "bd602232-4f47-4af3-afd5-92e465c3e4f8",
+      "name": "Threads",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=$text_28",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        460
+      ],
+      "id": "09e07704-42a7-4c6a-a194-fe7e734655b0",
+      "name": "Bluesky",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=$text_29",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -140
+      ],
+      "id": "f210c98b-6b07-4138-ac67-9eae2ed34a28",
+      "name": "Youtube",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/instagram.png?v=1742473316)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        -1340
+      ],
+      "typeVersion": 1,
+      "id": "74dee922-4aba-42b3-b5e2-41ddf2a6b763",
+      "name": "Note autocollante1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/x.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        -1140
+      ],
+      "typeVersion": 1,
+      "id": "82624274-3661-4383-8226-7c31027ca28f",
+      "name": "Note autocollante2",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/linkedin.png?v=1742473318)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        -940
+      ],
+      "typeVersion": 1,
+      "id": "d66c74c1-1c5d-42a9-ba5b-1de8a5372b19",
+      "name": "Note autocollante3",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/linkedin.png?v=1742473318)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        -720
+      ],
+      "typeVersion": 1,
+      "id": "f3bfffe8-a58b-4a3d-994f-b06eb6f9433d",
+      "name": "Note autocollante4",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/facebook.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        -520
+      ],
+      "typeVersion": 1,
+      "id": "24609a94-2d40-4d65-a60a-cc7285bc149e",
+      "name": "Note autocollante5",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/tiktok.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        -320
+      ],
+      "typeVersion": 1,
+      "id": "b95c0900-df27-457e-bf7c-da5760eabb1c",
+      "name": "Note autocollante6",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/youtube.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        -140
+      ],
+      "typeVersion": 1,
+      "id": "09b95f9d-f4ec-41f3-9a39-c9490562f646",
+      "name": "Note autocollante7",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/threads.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        60
+      ],
+      "typeVersion": 1,
+      "id": "fc93eeb9-c42f-461c-864d-da39fdfa2012",
+      "name": "Note autocollante8",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/pinterest.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        260
+      ],
+      "typeVersion": 1,
+      "id": "56fbcbe8-5584-4585-ba3b-3324b079d939",
+      "name": "Note autocollante9",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/bluesky.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        460
+      ],
+      "typeVersion": 1,
+      "id": "348687ec-4a6a-4531-b67f-8192d24936d1",
+      "name": "Note autocollante10",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "$text_30",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1800,
+        -440
+      ],
+      "id": "493df611-2295-4133-ba91-6dac11113362",
+      "name": "Définir ID"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI-2025-04-14"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Vous êtes un rédacteur de contenu pour les réseaux sociaux.\n\nVous recevrez un objet JSON contenant une carte de contenu (recette, citation, tutoriel, guide de fitness, astuce de voyage ou post moti..."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1220,
+        -440
+      ],
+      "id": "9eb85cf0-ae90-4855-a59f-5c31ac8c6424",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Guide de configuration de Blotato\n\nPour utiliser cette automatisation, vous aurez besoin d'un compte Blotato.  \n👉 [Inscrivez-vous ici](https://dub.sh/blotato)\n\nAprès vous être inscrit, regardez cette courte vidéo pour voir comment tout fonctionne :  \n...",
+        "height": 520,
+        "width": 520,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1720,
+        -740
+      ],
+      "typeVersion": 1,
+      "id": "5c6a4f71-394c-4e7a-afb7-dcabd8ccc6d1",
+      "name": "Note autocollante11",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## Définissez votre jeton Bearer  \nEntrez votre propre jeton Bearer OpenAI dans le nœud HTTP `Générer une image`.\n\nVous pouvez l'obtenir à partir de :  \n[https://platform.openai.com/account/api-keys](https://platform.openai.com/a...",
+        "height": 520,
+        "width": 440
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        360,
+        -740
+      ],
+      "typeVersion": 1,
+      "id": "532f78f6-ee04-47af-b204-7e8c312f726d",
+      "name": "Note autocollante13"
+    },
+    {
+      "parameters": {
+        "content": "## Ce que fait cette automatisation\n\nCe workflow prend un titre et un type de contenu d'Airtable et automatiquement :\n- Détecte le type de contenu (Recette, Citation, Tutoriel, Guide de Fitness, Carte de Voyage ou Motiv...",
+        "height": 500,
+        "width": 780,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1720,
+        -1200
+      ],
+      "typeVersion": 1,
+      "id": "e51f926f-cf31-4145-a91c-8c530333fd3b",
+      "name": "Note autocollante12"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    content: $json.message.content\n  }\n}]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -360,
+        -940
+      ],
+      "id": "250ffe5a-2585-485a-9b05-e0249ec8dbd5",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    content: $json.message.content\n  }\n}]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -360,
+        -740
+      ],
+      "id": "0046c8d3-294a-4b42-a577-5c6ca53b8dd8",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI-2025-04-14"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Vous êtes un générateur de cartes JSON spécialisé dans les citations.\n\nJe fournirai un titre ou un thème : {{ $json.Name }}.\n\nEn fonction de cela, générez un objet JSON valide formaté exactement co..."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -720,
+        -740
+      ],
+      "id": "7094f213-42e2-4a5d-b84b-dfbfc44a8aa0",
+      "name": "Citations",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    content: $json.message.content\n  }\n}]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -360,
+        -540
+      ],
+      "id": "4a6e9d9c-a523-431e-a371-96eb62ac9972",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    content: $json.message.content\n  }\n}]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -360,
+        -340
+      ],
+      "id": "317e57af-230f-4d1c-80ca-f47587e05454",
+      "name": "Code3"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI-2025-04-14"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Vous êtes un générateur de cartes JSON spécialisé dans les tutoriels et les guides pratiques.\n\nJe vais fournir un nom de sujet : {{ $json.Name }}.\n\nSur cette base, générez un objet JSON valide corr..."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -720,
+        -540
+      ],
+      "id": "8155c505-b7ff-4fd3-b871-e8582340a59a",
+      "name": "Tutoriels",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    content: $json.message.content\n  }\n}]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -360,
+        -140
+      ],
+      "id": "a73b05dc-82f7-4fef-9031-ab974868a437",
+      "name": "Code4"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    content: $json.message.content\n  }\n}]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -360,
+        60
+      ],
+      "id": "33341d49-2014-46fe-b4f1-6eb62617ae68",
+      "name": "Code5"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI-2025-04-14"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Vous êtes un générateur de cartes JSON spécialisé dans les publications motivationnelles et affirmatives.\n\nJe fournirai un sujet ou un mot d'autonomisation : {{ $json.Name }}.\n\nSur cette base, géné..."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -720,
+        60
+      ],
+      "id": "7e320fd9-8290-44bb-9673-85e48665f936",
+      "name": "Publications motivantes",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 6
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        180,
+        -500
+      ],
+      "id": "9ffdf6ba-a2df-44a9-a500-ffc247175093",
+      "name": "Fusionner"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Image1": {
+      "main": [
+        [
+          {
+            "node": "Convertir en binaire",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable": {
+      "main": [
+        [
+          {
+            "node": "Content Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to Binary": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Google Drive1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive1": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Type": {
+      "main": [
+        [
+          {
+            "node": "Recepie",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Quotes",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tutorials",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fitness Guide",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Travel Cards",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Motivational Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fitness Guide": {
+      "main": [
+        [
+          {
+            "node": "Code3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Travel Cards": {
+      "main": [
+        [
+          {
+            "node": "Code4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recepie": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Instagram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Pinterest",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Twitter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LinkedIn",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LinkedIn Page",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fb Account",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Tiktok",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Threads",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Bluesky",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Youtube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set ID": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Airtable1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable1": {
+      "main": [
+        [
+          {
+            "node": "Set ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Quotes": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Code3": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Tutorials": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code4": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Code5": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Motivational Posts": {
+      "main": [
+        [
+          {
+            "node": "Code5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Générer Image1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3fff1011-98d0-40df-9102-81ff3c472eb4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+  },
+  "id": "rhPCuuWNWIGhtdVo",
+  "tags": [
+    {
+      "createdAt": "2025-04-21T20:09:06.554Z",
+      "updatedAt": "2025-04-21T20:09:06.554Z",
+      "id": "3dOSqJMqC8FlNnE3",
+      "name": "Automation-Tribe"
+    },
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

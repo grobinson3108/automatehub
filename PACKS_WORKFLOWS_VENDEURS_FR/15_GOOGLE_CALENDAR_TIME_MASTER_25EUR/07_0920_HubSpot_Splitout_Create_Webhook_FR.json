@@ -1,0 +1,957 @@
+{
+  "nodes": [
+    {
+      "id": "b9256d00-9dff-432a-a678-e71a4074b26c",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "position": [
+        -20,
+        -160
+      ],
+      "webhookId": "06d29616-8fa9-42cf-8b5f-abe856083c75",
+      "parameters": {
+        "path": "06d29616-8fa9-42cf-8b5f-abe856083c75",
+        "options": {},
+        "httpMethod": "POST"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "2726dd28-5366-4c0e-ad16-bae6dc2cbc0b",
+      "name": "Note Autocollante",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -880,
+        -200
+      ],
+      "parameters": {
+        "color": 4,
+        "width": 320,
+        "height": 440,
+        "content": "## Que fait-il ?\nObjectif :\n\nSimplifier le processus d'intégration des nouveaux clients, en s'assurant qu'ils reçoivent toutes les ressources et le support nécessaires.\nDéclencheur : Configurez un déclencheur webhook ou un déclencheur CRM (comme HubSpot ou Salesforce) lorsqu'un nouveau client est ajouté.\n\nEnvoyer un email de bienvenue : Utilisez le nœud Gmail ou SMTP pour envoyer un email de bienvenue personnalisé au client.\n\nPlanifier un appel de bienvenue : Utilisez le nœud Calendrier (Google Calendar) pour créer automatiquement un événement dans le calendrier pour un appel de bienvenue.\n\nAttribuer un CSM : Utilisez le nœud CRM (comme HubSpot) pour attribuer le nouveau client à un CSM dédié."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "680bdd4e-f382-4d20-8197-a7d65454ce36",
+      "name": "Réessayer",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1000,
+        500
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7ab380a2-a8d3-421c-ab4e-748ea8fb7904",
+              "name": "response",
+              "type": "string",
+              "value": "Unable to perform task. Please try again."
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "1ab48997-7533-4572-86d5-980af557d09d",
+      "name": "Succès",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1000,
+        300
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "39c2f302-03be-4464-a17a-d7cc481d6d44",
+              "name": "=response",
+              "type": "string",
+              "value": "={{$json.output}}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "4cb493a1-1eff-42ca-9c51-8f070fe3e9ba",
+      "name": "Agent Calendrier",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "onError": "continueErrorOutput",
+      "position": [
+        412,
+        400
+      ],
+      "parameters": {
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "=# Vue d'ensemble\nVous êtes un assistant calendrier. Vos responsabilités incluent la création, la récupération et la suppression d'événements dans le calendrier de l'utilisateur.\nSi aucune date n'est proposée, trouvez le prochain créneau disponible en utilisant \"Get Events\" et créez un événement avec \"Create Event with Attendee\".\n\n**Outils de gestion du calendrier**  \n   - Utilisez \"Create Event with Attendee\" lorsqu'un événement inclut un participant.     \n   - Utilisez \"Get Events\" pour récupérer les plannings du calendrier sur demande.\n   - Utilisez \"Delete Event\" pour supprimer un événement. Vous devez d'abord utiliser \"Get Events\" pour obtenir l'ID de l'événement à supprimer.\n   - Utilisez \"Update Event\" pour mettre à jour un événement. Vous devez d'abord utiliser \"Get Events\" pour obtenir l'ID de l'événement à mettre à jour.\n\n## Notes finales\nVoici la date/heure actuelle : {{ $now }}\nSi une durée pour un événement n'est pas spécifiée, considérez qu'elle sera d'une heure."
+        },
+        "promptType": "define"
+      },
+      "typeVersion": 1.6
+    },
+    {
+      "id": "8c088b37-1005-4bc4-bdf5-0558ccb0c873",
+      "name": "Créer un événement avec participant",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        320,
+        620
+      ],
+      "parameters": {
+        "end": "={{ $fromAI(\"eventEnd\") }}",
+        "start": "={{ $fromAI(\"eventStart\") }}",
+        "calendar": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Calendar', ``, 'string') }}",
+          "__regex": "(^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)"
+        },
+        "additionalFields": {
+          "summary": "={{ $fromAI(\"eventTitle\") }}",
+          "attendees": [
+            "={{ $fromAI(\"eventAttendeeEmail\") }}"
+          ]
+        }
+      },
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "90bjjmYqtg3hnvFM",
+          "name": "Google Calendar account"
+        }
+      },
+      "typeVersion": 1.3
+    },
+    {
+      "id": "91a0e49a-888f-4511-94e7-e0166ce7dd58",
+      "name": "Créer un événement",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        440,
+        620
+      ],
+      "parameters": {
+        "end": "={{ $fromAI(\"eventEnd\") }}",
+        "start": "={{ $fromAI(\"eventStart\") }}",
+        "calendar": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Calendar', ``, 'string') }}",
+          "__regex": "(^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)"
+        },
+        "additionalFields": {
+          "summary": "={{ $fromAI(\"eventTitle\") }}",
+          "attendees": []
+        }
+      },
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "90bjjmYqtg3hnvFM",
+          "name": "Google Calendar account"
+        }
+      },
+      "typeVersion": 1.3
+    },
+    {
+      "id": "8cfb90e5-6108-4003-b048-271650d4bc6c",
+      "name": "Récupérer les événements",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        560,
+        620
+      ],
+      "parameters": {
+        "options": {},
+        "timeMax": "={{ $fromAI(\"dayBefore\",\"today plus 7 days\") }}",
+        "timeMin": "={{ $fromAI(\"dayAfter\",\"today\") }}",
+        "calendar": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $fromAI('Calendar', `sender's email`, 'string') }}"
+        },
+        "operation": "getAll"
+      },
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "90bjjmYqtg3hnvFM",
+          "name": "Google Calendar account"
+        }
+      },
+      "typeVersion": 1.3
+    },
+    {
+      "id": "c5cc3550-7d9a-43c9-8434-e1ab78f7f596",
+      "name": "Supprimer un événement",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        680,
+        620
+      ],
+      "parameters": {
+        "eventId": "={{ $fromAI(\"eventID\") }}",
+        "options": {},
+        "calendar": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Calendar', ``, 'string') }}",
+          "__regex": "(^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)"
+        },
+        "operation": "delete"
+      },
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "90bjjmYqtg3hnvFM",
+          "name": "Google Calendar account"
+        }
+      },
+      "typeVersion": 1.3
+    },
+    {
+      "id": "7ce45da8-dc24-4634-9f48-3864165885cd",
+      "name": "Mettre à jour un événement",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        800,
+        620
+      ],
+      "parameters": {
+        "eventId": "={{ $fromAI(\"eventID\") }}",
+        "calendar": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Calendar', ``, 'string') }}",
+          "__regex": "(^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*)"
+        },
+        "operation": "update",
+        "updateFields": {
+          "end": "={{ $fromAI(\"endTime\") }}",
+          "start": "={{ $fromAI(\"startTime\") }}"
+        }
+      },
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "90bjjmYqtg3hnvFM",
+          "name": "Google Calendar account"
+        }
+      },
+      "typeVersion": 1.3
+    },
+    {
+      "id": "b46f24a4-719c-414e-94d9-ecfb1e7dfe39",
+      "name": "Lorsqu'exécuté par un autre workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        200,
+        400
+      ],
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "aedbe138-ed51-4300-881b-6b58928f5bb4",
+      "name": "Modèle de chat OpenAI2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1520,
+        160
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "1IOLtYX7aTspCAN8",
+          "name": "OpenAI Pollup"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "a540ae6b-e1ee-4d91-988e-e60bae743377",
+      "name": "agentCalendrier",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        1640,
+        160
+      ],
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $workflow.id}}",
+          "cachedResultName": "={{ $workflow.id}}"
+        },
+        "description": "Appelez cet outil pour toute action liée au calendrier.",
+        "workflowInputs": {
+          "value": {},
+          "schema": [],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "64979b9f-a29a-4c53-b87a-cec84e7ba1fe",
+      "name": "Analyseur de sortie structurée",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        1760,
+        160
+      ],
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"subject\": \"\",\n\t\"body\": \"\"\n}"
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "359d7296-a8e9-494c-b519-cca62c0805df",
+      "name": "Obtenir la liste des propriétaires",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        420,
+        -60
+      ],
+      "parameters": {
+        "url": "https://api.hubapi.com/crm/v3/owners",
+        "options": {},
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "hubspotOAuth2Api"
+      },
+      "credentials": {
+        "hubspotOAuth2Api": {
+          "id": "qubiIFrowxvUdpu6",
+          "name": "HubSpot account for node"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "e8aab719-a5d9-4168-9c68-eea32c7d3ef4",
+      "name": "Séparer les propriétaires",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        640,
+        -60
+      ],
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "results"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "5e44ea67-e2f9-4cea-a030-c452b8bb482f",
+      "name": "Obtenir le propriétaire actuel",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        860,
+        -60
+      ],
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "7c6aec6e-66a9-4739-8a59-28f2ab1c4a26",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $json.email }}",
+              "rightValue": "={{ $('Enter your company data here').item.json.sender_email }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "c03bd58c-7a42-4966-96e8-45928f745475",
+      "name": "Note adhésive1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -540,
+        -200
+      ],
+      "parameters": {
+        "color": 5,
+        "width": 680,
+        "height": 1340,
+        "content": "## Comment configurer un Webhook dans n8n et HubSpot\n\n## 1. Configurer un Webhook dans n8n\n\n### Étape 1 : Créer un nouveau workflow\n- Allez sur votre **tableau de bord n8n**.\n- Cliquez sur **\"Nouveau Workflow.\"**\n\n### Étape 2 : Ajouter le nœud Webhook\n- Cliquez sur l’icône **“+”** pour ajouter un nouveau nœud.\n- Recherchez **“Webhook”** et sélectionnez-le.\n- Définissez la **méthode du Webhook** (généralement POST).\n- Définissez le **chemin de l’URL du Webhook**, par exemple, `/hubspot-webhook`.\n- Réglez le **\"Mode de réponse\"** (par exemple, \"À la réception\").\n- Enregistrez le workflow.\n\n### Étape 3 : Définir l’URL du Webhook\n- Copiez l’**URL du Webhook** générée par n8n. Elle devrait ressembler à : https://your-n8n-domain/webhook/hubspot-webhook\n\n- Assurez-vous que le workflow est **actif**.\n\n---\n\n## 2. Configurer un Webhook dans HubSpot\n\n### Étape 1 : Connectez-vous à HubSpot\n- Accédez à votre **compte développeur HubSpot** (nécessaire pour la configuration du webhook).\n- Naviguez vers **\"Paramètres\" > \"Intégrations\" > \"Webhooks.\"**\n\n### Étape 2 : Créer une nouvelle souscription de Webhook\n- Cliquez sur **“Créer un Webhook”** ou **“Ajouter un Webhook”** si c’est votre premier.\n- Sélectionnez les **événements** que vous souhaitez suivre (par exemple, création de contact, soumission de formulaire).\n- Définissez l’**URL du Webhook** comme l’URL du Webhook n8n que vous avez copiée précédemment.\n- Choisissez **“POST”** comme méthode de requête.\n- Configurez l’**authentification** si nécessaire (vous pouvez définir un secret ou utiliser OAuth).\n\n### Étape 3 : Tester le Webhook\n- Utilisez la fonction **“Tester le Webhook”** dans HubSpot pour envoyer une requête de test.\n- Passez à n8n et vérifiez que le webhook se déclenche correctement.\n\n---\n\n## 3. Traiter les données dans n8n\n- Après que le webhook soit déclenché dans n8n, vous verrez les données envoyées par HubSpot.\n- Vous pouvez maintenant ajouter des nœuds supplémentaires pour **traiter les données** (par exemple, enregistrer dans une base de données, envoyer un e-mail, effectuer des actions dans une autre application).\n\n---\n\n## 4. Activer le workflow\n- Une fois la configuration terminée, assurez-vous que le workflow est **réglé sur “Actif.”**\n- Cela lui permettra de recevoir des données en temps réel depuis HubSpot."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "3861fa49-909d-4591-a1b8-d7bdd20e6560",
+      "name": "Déclencheur HubSpot",
+      "type": "n8n-nodes-base.hubspotTrigger",
+      "position": [
+        -20,
+        40
+      ],
+      "webhookId": "632f3fc8-b921-4697-ba12-037d5c7f8971",
+      "parameters": {
+        "eventsUi": {
+          "eventValues": [
+            {}
+          ]
+        },
+        "additionalFields": {}
+      },
+      "credentials": {
+        "hubspotDeveloperApi": {
+          "id": "DVrqcbIPANwtlVSg",
+          "name": "HubSpot Developer account for trigger"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "9051cc3d-06be-4238-998e-7cb938313d24",
+      "name": "Entrez les données de votre entreprise ici",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        200,
+        -60
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "11a8b9e9-a7ed-454a-9aef-a9137c0e17ea",
+              "name": "company_name",
+              "type": "string",
+              "value": "Pollup Data Services"
+            },
+            {
+              "id": "f2dcfe2e-3145-4a30-9731-0a8d02c7aa9a",
+              "name": "nom_expediteur",
+              "type": "string",
+              "value": "Thomas Vié"
+            },
+            {
+              "id": "18b5c0bd-4e75-4b98-92fc-5fca90a8b680",
+              "name": "email_expediteur",
+              "type": "string",
+              "value": "zeerobug@gmail.com"
+            },
+            {
+              "id": "2c8de3ed-57dc-455b-bfa5-87a0d8d046d2",
+              "name": "company_activity",
+              "type": "string",
+              "value": "Whether it’s automating recurring tasks, analysing data faster, or personalising customer interactions, we build bespoke AI agents to help your workforce work smarter."
+            }
+          ]
+        }
+      },
+      "notesInFlow": true,
+      "typeVersion": 3.4
+    },
+    {
+      "id": "5260ec73-0733-47d1-af03-66ead128820e",
+      "name": "Note adhésive2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        160,
+        -200
+      ],
+      "parameters": {
+        "color": 4,
+        "width": 400,
+        "height": 320,
+        "content": "## Définissez vos données et celles de votre entreprise\nL'email de l'expéditeur que vous définissez ici doit être le même que celui que vous utilisez dans hubspot "
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "78e301c7-3146-4bd9-9546-9f8c5b46cac7",
+      "name": "Si un contact est créé",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1080,
+        -60
+      ],
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "b70f4699-008f-4924-8e69-af4fa69422a5",
+              "operator": {
+                "name": "filter.operator.equals",
+                "type": "string",
+                "operation": "equals"
+              },
+              "leftValue": "={{ $('Webhook').item.json.body[0].subscriptionType }}",
+              "rightValue": "contact.creation"
+            }
+          ]
+        }
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "b575fed7-da03-412d-aa00-fcf0edc85ae2",
+      "name": "Obtenir toutes les informations sur le contact",
+      "type": "n8n-nodes-base.hubspot",
+      "position": [
+        1300,
+        -60
+      ],
+      "parameters": {
+        "contactId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $('Webhook').item.json.body[0].objectId }}"
+        },
+        "operation": "get",
+        "authentication": "oAuth2",
+        "additionalFields": {}
+      },
+      "credentials": {
+        "hubspotOAuth2Api": {
+          "id": "qubiIFrowxvUdpu6",
+          "name": "HubSpot account for node"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "956a02eb-970b-49bd-b1a5-3eebf7acb852",
+      "name": "Écrire un message personnalisé",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1552,
+        -60
+      ],
+      "parameters": {
+        "text": "=Votre tâche est d'écrire un email de bienvenue personnalisé à un destinataire.\nIndiquez-lui également qu'il recevra sous peu une invitation pour une réunion afin de résoudre ses doutes. Utilisez pour cela le calendarAgent.\nUtilisez le \"ID du calendrier de l'expéditeur\" comme Calendrier. Et le \"email du destinataire\" comme participant\n\n## Outils\n- calendarAgent : Utilisez cet outil pour agir sur le calendrier. Envoyez-lui une requête comme \"Planifier une réunion avec le participant 'email du destinataire' sur le calendrier 'ID du calendrier de l'expéditeur'.\"\n\n## Règles\n- Certaines actions nécessitent d'abord de rechercher les informations de contact. Pour les actions suivantes, vous devez obtenir les informations de contact et les envoyer à l'agent qui en a besoin :\n- créer un événement calendrier avec un participant, créez-le dès qu'il y a un créneau libre\n\nretournez le message sous forme de json comme celui-ci : {\"subject\":\"Sujet du message\",\"body\":\"Corps du message\"}\n\n## Utilisez les variables ci-dessous\nNom de l'expéditeur :  {{ $('Enter your company data here').item.json.sender_name }}\nEmail de l'expéditeur : {{ $('Enter your company data here').item.json.sender_email }}\nNom de l'entreprise de l'expéditeur : {{ $('Enter your company data here').item.json.company_name }}\nActivité de l'entreprise de l'expéditeur : {{ $('Enter your company data here').item.json.company_activity }}\nID du calendrier de l'expéditeur : zeerobug@gmail.com\nPrénom du destinataire : {{ $json.properties.firstname.value }}\nNom du destinataire : {{ $json.properties.lastname }}\nEmail du destinataire : {{ $json.properties.email.value }}",
+        "options": {
+          "systemMessage": "=# Vue d'ensemble\nVous êtes un professionnel Customer Success Manager.\n"
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      },
+      "typeVersion": 1.9
+    },
+    {
+      "id": "6d392f67-5940-43ed-ac8d-d27f8dab91ed",
+      "name": "Envoyer le message",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        2180,
+        -60
+      ],
+      "webhookId": "d1d18d77-71ad-4eab-91c6-08b6a9f5d736",
+      "parameters": {
+        "sendTo": "={{ $('Get all info about the contact').item.json.properties.email.value }}",
+        "message": "={{ $json.data }}",
+        "options": {
+          "bccList": "thomas@pollup.net"
+        },
+        "subject": "={{ $json.output.subject }}"
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "DLjspol9TLgpGaXa",
+          "name": "Gmail account 2"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "1928e760-4ca1-443c-9de0-211b3c3c88b8",
+      "name": "Attribuer un propriétaire au contact",
+      "type": "n8n-nodes-base.hubspot",
+      "position": [
+        2400,
+        -60
+      ],
+      "parameters": {
+        "email": "={{ $('Get all info about the contact').item.json.properties.email.value }}",
+        "options": {},
+        "authentication": "oAuth2",
+        "additionalFields": {
+          "contactOwner": "={{ $('Get current owner').item.json.id }}"
+        }
+      },
+      "credentials": {
+        "hubspotOAuth2Api": {
+          "id": "qubiIFrowxvUdpu6",
+          "name": "HubSpot account for node"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "727e52cc-ba62-4f1e-b7b3-c8cd17ef1f42",
+      "name": "Note adhésive3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        160,
+        220
+      ],
+      "parameters": {
+        "color": 4,
+        "width": 1080,
+        "height": 560,
+        "content": "## Outil calendrier\nCette partie a été empruntée à l'excellent chaîne YouTube [Nate Herk](https://www.youtube.com/@nateherk)"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "e605ec3f-ecbe-47c7-a46b-d20ded665c55",
+      "name": "Transforme le markdown en HTML",
+      "type": "n8n-nodes-base.markdown",
+      "position": [
+        1960,
+        -60
+      ],
+      "parameters": {
+        "mode": "markdownToHtml",
+        "options": {},
+        "markdown": "={{ $json.output.body }}"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "ac43422a-3642-424c-a95a-902652705dbc",
+      "name": "Note adhésive4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1460,
+        -220
+      ],
+      "parameters": {
+        "color": 4,
+        "width": 440,
+        "height": 540,
+        "content": "## Rédacteur d'Email\n- Cet agent rédige un Email personnalisé\n- Utilise l'outil agent calendrier pour créer un rendez-vous sur un créneau libre.\nN'hésitez pas à personnaliser l'invite"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "c0e5511a-a84f-4603-9c23-3d5266f761c1",
+      "name": "Modèle OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        200,
+        620
+      ],
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "1IOLtYX7aTspCAN8",
+          "name": "OpenAI Pollup"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "c195ad96-7b04-4b01-a3a5-cb0df3c5cb26",
+      "name": "Note adhésive7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -880,
+        260
+      ],
+      "parameters": {
+        "width": 320,
+        "height": 260,
+        "content": "## Contactez-moi\n- Si vous avez besoin de toute modification de ce workflow\n- si vous avez besoin d'aide avec ce workflow\n- Ou si vous avez besoin de tout workflow dans n8n, Make, ou Langchain / Langgraph\n\nÉcrivez-moi : [thomas@pollup.net](mailto:thomas@pollup.net)\n\n**Jetez un œil à mes autres workflows [ici](https://n8n.io/creators/zeerobug/)**\n\n"
+      },
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Entrez les données de votre entreprise ici",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Récupérer les événements": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent Calendrier",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Créer un événement": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent Calendrier",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supprimer un événement": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent Calendrier",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modèle OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent Calendrier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mettre à jour un événement": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent Calendrier",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "agentCalendrier": {
+      "ai_tool": [
+        [
+          {
+            "node": "Écrire un message personnalisé",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent Calendrier": {
+      "main": [
+        [
+          {
+            "node": "Succès",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Réessayer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déclencheur HubSpot": {
+      "main": [
+        [
+          {
+            "node": "Entrez les données de votre entreprise ici",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envoyer le message": {
+      "main": [
+        [
+          {
+            "node": "Attribuer un propriétaire au contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Séparer les propriétaires": {
+      "main": [
+        [
+          {
+            "node": "Obtenir le propriétaire actuel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir le propriétaire actuel": {
+      "main": [
+        [
+          {
+            "node": "Si un contact est créé",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir la liste des propriétaires": {
+      "main": [
+        [
+          {
+            "node": "Séparer les propriétaires",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modèle de chat OpenAI2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Écrire un message personnalisé",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Si un contact est créé": {
+      "main": [
+        [
+          {
+            "node": "Obtenir toutes les informations sur le contact",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyseur de sortie structurée": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Écrire un message personnalisé",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Créer un événement avec participant": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent Calendrier",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transforme le markdown en HTML": {
+      "main": [
+        [
+          {
+            "node": "Envoyer le message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Entrez les données de votre entreprise ici": {
+      "main": [
+        [
+          {
+            "node": "Obtenir la liste des propriétaires",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Écrire un message personnalisé": {
+      "main": [
+        [
+          {
+            "node": "Transforme le markdown en HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir toutes les informations sur le contact": {
+      "main": [
+        [
+          {
+            "node": "Écrire un message personnalisé",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lorsqu'exécuté par un autre workflow": {
+      "main": [
+        [
+          {
+            "node": "Agent Calendrier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

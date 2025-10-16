@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elegant Blog Interface</title>
+    <style>
+        /* --- Styles (Keep existing CSS) --- */
+        :root {
+            --primary-color: #007aff; --primary-hover-color: #005ecb; --secondary-color: #6c757d; --light-grey-color: #f8f9fa;
+            --border-color: #dee2e6; --text-color: #212529; --heading-color: #343a40; --background-color: #ffffff; --page-background: #f1f3f5;
+            --success-color: #28a745; --danger-color: #dc3545; --warning-color: #ffc107; --link-color: #007aff;
+            --border-radius: 6px; --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); --box-shadow-light: 0 2px 6px rgba(0, 0, 0, 0.06);
+            --spacing-xs: 4px; --spacing-sm: 8px; --spacing-md: 16px; --spacing-lg: 24px; --spacing-xl: 32px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 16px; scroll-behavior: smooth; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; line-height: 1.6; padding: var(--spacing-lg); background-color: var(--page-background); color: var(--text-color); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+        .container { max-width: 1100px; margin: var(--spacing-lg) auto; background: var(--background-color); padding: var(--spacing-xl) var(--spacing-xl); border-radius: var(--border-radius); box-shadow: var(--box-shadow); }
+        section { margin-bottom: var(--spacing-xl); padding-bottom: var(--spacing-lg); border-bottom: 1px solid var(--border-color); }
+        section:last-child { margin-bottom: 0; border-bottom: none; }
+        h1 { text-align: center; margin-bottom: var(--spacing-xl); color: var(--heading-color); font-weight: 600; }
+        h2 { color: var(--heading-color); margin-bottom: var(--spacing-lg); border-bottom: 1px solid var(--border-color); padding-bottom: var(--spacing-sm); font-weight: 600; font-size: 1.6rem; }
+        h3 { color: var(--heading-color); margin-bottom: var(--spacing-md); font-weight: 600; font-size: 1.3rem; }
+        h4 { color: var(--secondary-color); margin-bottom: var(--spacing-sm); font-weight: 600; font-size: 1rem; }
+        label { display: block; margin-bottom: var(--spacing-sm); font-weight: 500; color: var(--heading-color); font-size: 0.9rem; }
+        input[type="text"], input[type="url"], textarea, select { width: 100%; padding: var(--spacing-sm) var(--spacing-md); margin-bottom: var(--spacing-md); border: 1px solid var(--border-color); border-radius: var(--border-radius); font-size: 1rem; background-color: var(--background-color); color: var(--text-color); transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+        input[type="text"]::placeholder, input[type="url"]::placeholder, textarea::placeholder { color: #adb5bd; opacity: 1; }
+        input[type="text"]:focus, input[type="url"]:focus, textarea:focus, select:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15); outline: none; }
+        input[readonly], textarea[readonly] { background-color: var(--light-grey-color); cursor: default; color: var(--secondary-color); }
+        select { appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%236c757d%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right var(--spacing-md) center; background-size: .6em auto; padding-right: calc(var(--spacing-md) * 2.5); }
+        #html-editor { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace; font-size: 0.9rem; min-height: 350px; background-color: var(--light-grey-color); color: var(--heading-color); border: 1px solid var(--border-color); border-radius: 0 0 var(--border-radius) var(--border-radius); resize: vertical; margin-top: -1px; padding: var(--spacing-md); }
+        button { display: inline-block; background-color: var(--primary-color); color: white; padding: var(--spacing-sm) var(--spacing-lg); border: none; border-radius: var(--border-radius); cursor: pointer; font-size: 0.95rem; font-weight: 500; transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease; vertical-align: middle; text-align: center; }
+        button:hover { background-color: var(--primary-hover-color); box-shadow: var(--box-shadow-light); transform: translateY(-1px); }
+        button:active { transform: translateY(0px); box-shadow: none; }
+        button:disabled { background-color: #a0cfff; cursor: not-allowed; box-shadow: none; transform: none; opacity: 0.65; }
+        #toggle-html-btn { background-color: var(--secondary-color); padding: 6px 12px; font-size: 0.8rem; }
+        #toggle-html-btn:hover { background-color: #5a6268; }
+        #generate-image-prompt-btn { margin-top: var(--spacing-md); background-color: var(--secondary-color); font-size: 0.9rem; } /* Suggest Prompt Button */
+        #generate-image-prompt-btn:hover { background-color: #5a6268; }
+        #idea-input-group { margin-bottom: var(--spacing-md); display: flex; gap: var(--spacing-sm); align-items: flex-end; }
+        #idea-input-group label { margin-bottom: var(--spacing-xs); flex-grow: 0; width: auto; }
+        #idea-input-group > div { flex-grow: 1; }
+        #idea-input-group input { margin-bottom: 0; }
+        #idea-input-group button { margin-bottom: 0; flex-shrink: 0; }
+        #generated-ideas { margin-top: var(--spacing-md); min-height: 30px; padding-left: 0; list-style: none; }
+        #generated-ideas li { margin-bottom: var(--spacing-sm); padding: var(--spacing-sm) var(--spacing-md); border: 1px solid var(--border-color); border-radius: var(--border-radius); background-color: var(--background-color); counter-increment: idea-counter; display: flex; align-items: center; gap: var(--spacing-sm); }
+        #generated-ideas li::before { content: counter(idea-counter); background-color: var(--primary-color); color: white; font-size: 0.8rem; font-weight: bold; border-radius: 50%; width: 24px; height: 24px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .idea-link { color: var(--primary-color); text-decoration: none; cursor: pointer; flex-grow: 1; transition: color 0.2s ease; }
+        .idea-link:hover { color: var(--primary-hover-color); text-decoration: underline; }
+        #selected-title-input { font-weight: 600; background-color: #e9ecef; margin-bottom: var(--spacing-lg); }
+        .prompt-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--spacing-md); margin-bottom: var(--spacing-lg); }
+        .prompt-options > div { }
+        .prompt-options label { margin-bottom: var(--spacing-xs); }
+        .prompt-options select { margin-bottom: 0; }
+        #post-generator > div > label { margin-top: var(--spacing-sm); }
+        #post-generator > div > input[type="url"] { margin-bottom: var(--spacing-lg); }
+        .editor-container { position: relative; border: 1px solid var(--border-color); border-radius: 0 0 var(--border-radius) var(--border-radius); margin-top: -1px; }
+        .editor-controls { display: flex; justify-content: space-between; align-items: center; background-color: var(--light-grey-color); border: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); border-radius: var(--border-radius) var(--border-radius) 0 0; padding: var(--spacing-sm); }
+        .editor-toolbar { margin-bottom: 0; display: flex; gap: var(--spacing-sm); flex-wrap: wrap; flex-grow: 1; }
+        .toolbar-button { background-color: var(--background-color); border: 1px solid var(--border-color); padding: var(--spacing-xs) var(--spacing-sm); cursor: pointer; border-radius: var(--border-radius); color: var(--text-color); transition: background-color 0.2s ease, border-color 0.2s ease; height: 34px; display: inline-flex; align-items: center; justify-content: center; min-width: 34px; font-size: 0.9rem; }
+        .toolbar-button b, .toolbar-button i, .toolbar-button u { font-size: 1em; }
+        .toolbar-button svg { height: 1.1em; width: 1.1em; vertical-align: middle; fill: currentColor; }
+        .toolbar-button:hover { background-color: #e9ecef; border-color: #adb5bd; }
+        .toolbar-button:disabled { background-color: var(--light-grey-color); border-color: var(--border-color); color: #adb5bd; cursor: not-allowed; opacity: 0.7; }
+        #blog-content-editor { min-height: 400px; border: none; padding: var(--spacing-lg); border-radius: 0; outline: none; background-color: var(--background-color); line-height: 1.7; font-size: 1rem; position: relative; color: var(--text-color); word-wrap: break-word; overflow-wrap: break-word; overflow-y: auto; }
+        #blog-content-editor:focus { box-shadow: none; }
+        #blog-content-editor a { color: var(--link-color); text-decoration: underline; text-decoration-color: rgba(0, 123, 255, 0.3); cursor: pointer; }
+        #blog-content-editor a:hover { text-decoration-color: var(--link-color); }
+        #blog-content-editor[contenteditable=true]:empty:before { content: attr(data-placeholder); color: #adb5bd; position: absolute; left: var(--spacing-lg); top: var(--spacing-lg); pointer-events: none; display: block; font-style: italic; }
+        #blog-content-editor img { max-width: 100%; height: auto; display: block; margin: var(--spacing-md) auto; border-radius: var(--border-radius); box-shadow: var(--box-shadow-light); }
+        #word-count-display { padding: var(--spacing-xs) var(--spacing-lg) var(--spacing-sm); font-size: 0.8rem; color: var(--secondary-color); text-align: right; display: block; border-top: 1px solid var(--border-color); }
+        #suggested-prompt-output { margin-top: var(--spacing-sm); resize: vertical; font-size: 0.9rem;}
+        #prompt-enhancers { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--spacing-md); margin-top: var(--spacing-md); margin-bottom: var(--spacing-md); }
+        #prompt-enhancers label { margin-bottom: var(--spacing-xs); }
+        #prompt-enhancers select { margin-bottom: 0; }
+        #generate-thumbnail-from-prompt-btn { background-color: var(--success-color); }
+        #generate-thumbnail-from-prompt-btn:hover { background-color: #218838; }
+        #generated-thumbnail-preview-step3 { margin-top: var(--spacing-md); min-height: 50px; text-align: center; }
+        #generated-thumbnail-preview-step3 img { max-width: 500px; height: auto; margin-top: var(--spacing-sm); border: 1px solid var(--border-color); border-radius: var(--border-radius); display: inline-block; vertical-align: top; }
+        #set-thumbnail-from-step3-btn { margin-top: var(--spacing-md); background-color: var(--warning-color); color: #333; }
+        #set-thumbnail-from-step3-btn:hover { background-color: #e0a800; }
+        #current-thumbnail-display { font-style: normal; color: var(--secondary-color); margin-top: calc(-1 * var(--spacing-sm)); margin-bottom: var(--spacing-md); font-size: 0.9em; display: flex; align-items: center; min-height: 30px; flex-wrap: wrap; }
+        #current-thumbnail-display img { max-width: 60px; max-height: 45px; vertical-align: middle; margin-right: var(--spacing-sm); border: 1px solid var(--border-color); border-radius: 4px; flex-shrink: 0; }
+        .remove-thumbnail-btn { margin-left: var(--spacing-sm); color: var(--danger-color); cursor: pointer; font-size: 0.9em; font-weight: normal; text-decoration: underline; display: inline-block; vertical-align: middle; line-height: 1; white-space: nowrap; }
+        .remove-thumbnail-btn:hover { color: #a71d2a; }
+        #promotion-section { margin-top: var(--spacing-xl); padding: var(--spacing-lg); border-top: 1px solid var(--border-color); background-color: var(--light-grey-color); border-radius: var(--border-radius); }
+        .social-share-buttons { display: flex; gap: var(--spacing-md); flex-wrap: wrap; margin-bottom: var(--spacing-lg); }
+        .social-share-buttons a { display: inline-flex; align-items: center; justify-content: center; padding: var(--spacing-sm) var(--spacing-md); color: white !important; text-decoration: none; border-radius: var(--border-radius); font-size: 0.9rem; text-align: center; transition: opacity 0.2s ease; box-shadow: var(--box-shadow-light); }
+        .social-share-buttons a:hover { opacity: 0.85; box-shadow: none; }
+        .share-twitter { background-color: #1DA1F2; } .share-linkedin { background-color: #0A66C2; } .share-facebook { background-color: #1877F2; }
+        #social-share-text { margin-top: var(--spacing-md); padding: 0; background-color: transparent; border: none; }
+        #social-share-text h4 { margin-bottom: var(--spacing-sm); }
+        #social-share-text pre { white-space: pre-wrap; word-wrap: break-word; font-size: 0.9em; background: var(--background-color); padding: var(--spacing-md); border-radius: var(--border-radius); border: 1px solid var(--border-color); color: var(--text-color); line-height: 1.5; }
+        .hidden { display: none !important; }
+        .spinner { border: 3px solid rgba(0, 123, 255, 0.2); width: 16px; height: 16px; border-radius: 50%; border-left-color: var(--primary-color); animation: spin 1s linear infinite; display: inline-block; margin-left: var(--spacing-sm); vertical-align: middle; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .error-message { color: var(--danger-color); font-size: 0.85em; margin-top: var(--spacing-sm); min-height: 1.2em; }
+        .success-message { color: var(--success-color); font-size: 0.85em; margin-top: var(--spacing-sm); }
+        /* Style for Blast Off button */
+        #blast-off-btn { margin-bottom: var(--spacing-sm); background-color: var(--warning-color); color: #333; }
+        #blast-off-btn:hover { background-color: #e0a800; }
+
+        /* Media Queries */
+        @media (max-width: 768px) { body { padding: var(--spacing-md); } .container { padding: var(--spacing-lg); margin: var(--spacing-md) auto; } h1 { font-size: 1.8rem; } h2 { font-size: 1.4rem; } #idea-input-group { flex-direction: column; align-items: stretch; } #idea-input-group > div { width: 100%; } #idea-input-group button { width: 100%; } .prompt-options, #prompt-enhancers { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); } }
+        @media (max-width: 600px) { body { padding: var(--spacing-sm); } .container { padding: var(--spacing-md); } .prompt-options, #prompt-enhancers { grid-template-columns: 1fr; gap: var(--spacing-md);} button:not(.toolbar-button) { width: 100%; margin-bottom: var(--spacing-md); padding: var(--spacing-md); } .editor-controls { flex-direction: column-reverse; align-items: stretch; } #toggle-html-btn { margin-left: 0; margin-top: var(--spacing-sm); width: 100%;} .editor-toolbar { justify-content: flex-start; gap: var(--spacing-xs); } .toolbar-button { padding: var(--spacing-xs) var(--spacing-sm); } .social-share-buttons a { flex-grow: 1; font-size: 0.9rem; padding: var(--spacing-sm);} }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Blog Post Creator - Automation-Tribe</h1>
+
+        <!-- Sections 1, 2, 3 -->
+        <section id="idea-generator">
+            <h2>Step 1: Generate Blog Ideas</h2>
+            <div id="idea-input-group"><div><label for="idea-prompt">Topic / Keyword:</label><input type="text" id="idea-prompt" placeholder="e.g., 'AI Content Creation'"></div><button id="generate-ideas-btn">Generate Ideas <span id="idea-spinner" class="spinner hidden"></span></button></div>
+            <ol id="generated-ideas"></ol><p id="idea-error" class="error-message"></p>
+        </section>
+
+        <section id="post-generator" class="hidden">
+            <h2>Step 2: Configure & Generate Post</h2>
+            <label for="selected-title-input">Selected Title:</label><input type="text" id="selected-title-input" readonly>
+            <div class="prompt-options"><div><label for="select-tone">Tone:</label><select id="select-tone"><option value="informative" selected>Informative</option><option value="engaging">Engaging</option><option value="professional">Professional</option><option value="casual">Casual</option><option value="witty">Witty</option><option value="persuasive">Persuasive</option></select></div><div><label for="select-audience">Audience:</label><select id="select-audience"><option value="General Audience" selected>General Audience</option><option value="Tech Enthusiasts">Tech Enthusiasts</option><option value="Small Business Owners">Small Business Owners</option><option value="Marketers">Marketers</option><option value="Beginners">Beginners</option><option value="Experts">Experts</option></select></div><div><label for="select-length">Approx. Length:</label><select id="select-length"><option value="500">Short (~500 words)</option><option value="1000" selected>Medium (~1000 words)</option><option value="1500">Long (~1500 words)</option><option value="2000">Longer (~2000 words)</option><option value="2500">Very Long (~2500 words)</option></select></div></div>
+            <div><label for="link-url-1">Reference Link 1:</label><input type="url" id="link-url-1" placeholder="Optional: http://example.com/source1"></div>
+            <div><label for="link-url-2">Reference Link 2:</label><input type="url" id="link-url-2" placeholder="Optional: http://example.com/source2"></div>
+            <div><label for="image-url-1">Context Image URL 1:</label><input type="url" id="image-url-1" placeholder="Optional: http://example.com/image1.jpg"></div>
+            <div><label for="image-url-2">Context Image URL 2:</label><input type="url" id="image-url-2" placeholder="Optional: http://example.com/image2.png"></div>
+            <button id="generate-post-btn">Generate Post Content <span id="post-spinner" class="spinner hidden"></span></button><p id="post-error" class="error-message"></p>
+        </section>
+
+        <section id="post-creator" class="hidden">
+            <h2>Step 3: Write, Edit & Generate Thumbnail</h2>
+             <div class="editor-controls"><div class="editor-toolbar"><button class="toolbar-button" data-command="bold" title="Bold"><b>B</b></button><button class="toolbar-button" data-command="italic" title="Italic"><i>I</i></button><button class="toolbar-button" data-command="underline" title="Underline"><u>U</u></button><button class="toolbar-button" data-command="createLink" title="Create Link"><svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 24 24" width="1em"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M17 7h-4v1.9h4c1.71 0 3.1 1.39 3.1 3.1 0 1.71-1.39 3.1-3.1 3.1h-4V17h4c2.76 0 5-2.24 5-5s-2.24-5-5-5zm-6 8H7c-1.71 0-3.1-1.39-3.1-3.1S5.29 8.9 7 8.9h4V7H7c-2.76 0-5 2.24-5 5s2.24 5 5 5h4v-1.9zM8 13h8v-2H8v2z"/></svg></button></div><button id="toggle-html-btn" title="View/Edit HTML Source">View HTML</button></div>
+             <div class="editor-container"><div id="blog-content-editor" contenteditable="true" data-placeholder="Start writing or generate content above..."></div><textarea id="html-editor" class="hidden" placeholder="Edit HTML code here..."></textarea><span id="word-count-display">0 words</span></div>
+             <p id="editor-error" class="error-message"></p>
+             <button id="generate-image-prompt-btn" class="hidden">Suggest Image Prompt from Article <span id="image-prompt-spinner" class="spinner hidden"></span></button>
+             <p id="image-prompt-error" class="error-message"></p>
+             <label for="suggested-prompt-output" class="hidden" style="margin-top: var(--spacing-md); font-weight: 600;">Edit Image Prompt:</label>
+             <textarea id="suggested-prompt-output" rows="4" class="hidden" placeholder="Edit the suggested prompt here or write your own..."></textarea>
+             <div id="prompt-enhancers" class="hidden">
+                 <div> <label for="select-image-style">Style:</label> <select id="select-image-style"> <option value="" selected>Default</option> <option value="photorealistic">Photorealistic</option> <option value="illustration">Illustration</option> <option value="cartoon">Cartoon</option> <option value="abstract">Abstract</option> <option value="minimalist">Minimalist</option> <option value="3d render">3D Render</option> <option value="watercolor">Watercolor</option> <option value="line art">Line Art</option> <option value="cinematic">Cinematic</option> <option value="low poly">Low Poly</option> </select> </div>
+                 <div> <label for="select-resolution">Resolution:</label> <select id="select-resolution"> <option value="1024x1024" selected>1024x1024 (Square)</option> <option value="1792x1024">1792x1024 (Widescreen)</option> <option value="1024x1792">1024x1792 (Tall)</option> </select> </div>
+                 <div> <label for="select-image-mood">Mood:</label> <select id="select-image-mood"> <option value="" selected>Default</option> <option value="vibrant">Vibrant</option> <option value="dark">Dark</option> <option value="professional">Professional</option> <option value="playful">Playful</option> <option value="calm">Calm</option> <option value="energetic">Energetic</option> <option value="futuristic">Futuristic</option> <option value="nostalgic">Nostalgic</option> <option value="dramatic">Dramatic</option> <option value="serene">Serene</option> </select> </div>
+             </div>
+             <button id="generate-thumbnail-from-prompt-btn" class="hidden">Generate Thumbnail <span id="thumbnail-spinner-step3" class="spinner hidden"></span></button>
+             <p id="thumbnail-generation-error-step3" class="error-message"></p>
+             <div id="generated-thumbnail-preview-step3" class="hidden"></div>
+             <button id="set-thumbnail-from-step3-btn" class="hidden">Set as Thumbnail</button>
+        </section>
+
+        <!-- Section 5: Publishing -->
+        <section id="publishing" class="hidden">
+            <h2>Step 5: Publish Your Post</h2>
+            <form id="publish-form">
+                <label for="post-title">Blog Post Title:</label>
+                <input type="text" id="post-title" required>
+
+                <label for="post-description">Meta Description (for SEO):</label>
+                <textarea id="post-description" rows="3" maxlength="160" required placeholder="A brief summary for search engines (max 160 chars)"></textarea>
+
+                <label>Thumbnail:</label>
+                <div id="current-thumbnail-display">No thumbnail selected.</div>
+                <input type="hidden" id="post-thumbnail-url">
+
+                <label for="post-tags">Tags (comma-separated):</label>
+                <input type="text" id="post-tags" placeholder="e.g., tech, ai, blogging">
+
+                <!-- Publish Button: Type is now "button" -->
+                <button type="button" id="publish-btn">Publish Post <span id="publish-spinner" class="spinner hidden"></span></button>
+
+            </form>
+             <p id="publish-success" class="success-message"></p>
+             <p id="publish-error" class="error-message"></p>
+        </section>
+
+        <!-- Section 6: Promotion -->
+        <section id="promotion-section" class="hidden">
+            <h2>Published! Promote Your Post</h2>
+
+            <!-- URL Display & Copy Button -->
+            <div id="published-url-container" class="hidden" style="margin-bottom: var(--spacing-lg); padding: var(--spacing-md); border: 1px solid var(--border-color); border-radius: var(--border-radius); background-color: var(--light-grey-color);">
+                <label for="published-url-link-input" style="margin-bottom: var(--spacing-sm); font-weight:600; color: var(--heading-color); display: block;">Published URL:</label>
+                <div style="display: flex; gap: var(--spacing-sm); align-items: center;">
+                    <input type="text" id="published-url-link-input" readonly style="flex-grow: 1; margin-bottom: 0; background-color: var(--background-color); cursor: text; font-size: 0.9em;">
+                    <button type="button" id="copy-url-btn" title="Copy URL to Clipboard" style="flex-shrink: 0; padding: var(--spacing-xs) var(--spacing-md); font-size: 0.85rem; background-color: var(--secondary-color);">Copy</button>
+                </div>
+                <span id="copy-url-feedback" style="font-size: 0.8em; color: var(--success-color); display: block; margin-top: var(--spacing-xs); min-height: 1.1em;"></span>
+            </div>
+
+            <h3>Share on Social Media:</h3>
+             <div class="social-share-buttons"><a href="#" id="share-twitter" class="share-twitter" target="_blank" rel="noopener noreferrer" title="Share on Twitter">Twitter</a><a href="#" id="share-linkedin" class="share-linkedin" target="_blank" rel="noopener noreferrer" title="Share on LinkedIn">LinkedIn</a><a href="#" id="share-facebook" class="share-facebook" target="_blank" rel="noopener noreferrer" title="Share on Facebook">Facebook</a></div>
+             <div id="social-share-text"><h4>Suggested Share Text:</h4><pre id="share-text-content"></pre></div>
+
+            <!-- Multi-Platform Share -->
+            <hr style="margin: var(--spacing-lg) 0; border: none; border-top: 1px solid var(--border-color);">
+            <h3>Amplify Across Platforms:</h3>
+            <button type="button" id="blast-off-btn" class="hidden" style="background-color: var(--warning-color); color: #333;">
+                Blast Off! (Share Everywhere) <span id="blast-off-spinner" class="spinner hidden"></span>
+            </button>
+            <p id="blast-off-error" class="error-message"></p>
+            <p id="blast-off-success" class="success-message"></p>
+
+        </section>
+
+    </div><!-- /container -->
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const webhookUrl = 'https://sumobundle-u31317.vm.elestio.app/webhook/d70e2726-3293-48ba-9675-bfd23cde889c'; // Replace if needed
+
+            // --- DOM Elements ---
+            const ideaGeneratorSection = document.getElementById('idea-generator'); const ideaPromptInput = document.getElementById('idea-prompt'); const generateIdeasBtn = document.getElementById('generate-ideas-btn'); const generatedIdeasContainer = document.getElementById('generated-ideas'); const ideaSpinner = document.getElementById('idea-spinner'); const ideaError = document.getElementById('idea-error');
+            const postGeneratorSection = document.getElementById('post-generator'); const selectedTitleInput = document.getElementById('selected-title-input'); const selectTone = document.getElementById('select-tone'); const selectAudience = document.getElementById('select-audience'); const selectLength = document.getElementById('select-length'); const linkUrl1Input = document.getElementById('link-url-1'); const linkUrl2Input = document.getElementById('link-url-2'); const imageUrl1Input = document.getElementById('image-url-1'); const imageUrl2Input = document.getElementById('image-url-2'); const generatePostBtn = document.getElementById('generate-post-btn'); const postSpinner = document.getElementById('post-spinner'); const postError = document.getElementById('post-error');
+            const postCreatorSection = document.getElementById('post-creator'); const editorControls = document.querySelector('.editor-controls'); const editorContainer = document.querySelector('.editor-container'); const editor = document.getElementById('blog-content-editor'); const htmlEditor = document.getElementById('html-editor'); const toolbar = document.querySelector('.editor-toolbar'); const toggleHtmlBtn = document.getElementById('toggle-html-btn'); const generateImagePromptBtn = document.getElementById('generate-image-prompt-btn'); const imagePromptSpinner = document.getElementById('image-prompt-spinner'); const imagePromptError = document.getElementById('image-prompt-error'); const suggestedPromptOutput = document.getElementById('suggested-prompt-output'); const suggestedPromptLabel = document.querySelector('label[for="suggested-prompt-output"]'); const promptEnhancersContainer = document.getElementById('prompt-enhancers'); const selectImageStyle = document.getElementById('select-image-style');
+            const selectResolution = document.getElementById('select-resolution'); const selectImageMood = document.getElementById('select-image-mood'); const generateThumbnailFromPromptBtn = document.getElementById('generate-thumbnail-from-prompt-btn'); const thumbnailSpinnerStep3 = document.getElementById('thumbnail-spinner-step3'); const generatedThumbnailPreviewStep3 = document.getElementById('generated-thumbnail-preview-step3'); const setThumbnailFromStep3Btn = document.getElementById('set-thumbnail-from-step3-btn'); const thumbnailGenerationErrorStep3 = document.getElementById('thumbnail-generation-error-step3'); const editorError = document.getElementById('editor-error'); const wordCountDisplay = document.getElementById('word-count-display'); let isHtmlView = false;
+            const publishingSection = document.getElementById('publishing'); const publishForm = document.getElementById('publish-form'); const postTitleInput = document.getElementById('post-title'); const postDescriptionInput = document.getElementById('post-description'); const postThumbnailUrlInput = document.getElementById('post-thumbnail-url'); const currentThumbnailDisplay = document.getElementById('current-thumbnail-display'); const postTagsInput = document.getElementById('post-tags');
+            const publishBtn = document.getElementById('publish-btn'); const publishSpinner = document.getElementById('publish-spinner'); const publishSuccess = document.getElementById('publish-success'); const publishError = document.getElementById('publish-error');
+            const promotionSection = document.getElementById('promotion-section');
+            // URL Display/Copy Elements
+            const publishedUrlContainer = document.getElementById('published-url-container');
+            const publishedUrlInput = document.getElementById('published-url-link-input');
+            const copyUrlBtn = document.getElementById('copy-url-btn');
+            const copyUrlFeedback = document.getElementById('copy-url-feedback');
+            // Social Share Elements
+            const shareTwitterBtn = document.getElementById('share-twitter'); const shareLinkedinBtn = document.getElementById('share-linkedin'); const shareFacebookBtn = document.getElementById('share-facebook'); const shareTextContent = document.getElementById('share-text-content');
+            // *** ADDED Blast Off Elements ***
+            const blastOffBtn = document.getElementById('blast-off-btn');
+            const blastOffSpinner = document.getElementById('blast-off-spinner');
+            const blastOffError = document.getElementById('blast-off-error');
+            const blastOffSuccess = document.getElementById('blast-off-success');
+            // *** END ADDED ***
+            // --- Variables ---
+            let publishedPostUrl = '';
+            let generatedImageUrl = null;
+
+            // --- Helper Functions ---
+            const sendWebhookRequest = async (action, data, button, spinner, errorElement) => {
+                console.log(`Sending webhook request: action=${action}`, data);
+                if (button) button.disabled = true; if (spinner) spinner.classList.remove('hidden'); if (errorElement) errorElement.textContent = '';
+                let response; let responseText = '';
+                try {
+                    response = await fetch(webhookUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action, ...data }), });
+                    responseText = await response.text();
+                    const contentType = response.headers.get("content-type");
+                    console.log(`Webhook response status: ${response.status}`); console.log(`Webhook response Content-Type: ${contentType}`); console.log(`Webhook response text (first 1000 chars): ${responseText.substring(0, 1000)}${responseText.length > 1000 ? '...' : ''}`);
+                    if (!response.ok) { let errorMsg = `HTTP error! Status: ${response.status}`; try { const errData = JSON.parse(responseText); errorMsg += ` - ${errData.message || JSON.stringify(errData)}`; } catch (e) { errorMsg += ` - ${responseText}`; } throw new Error(errorMsg); }
+                    try { const jsonData = JSON.parse(responseText); console.log("Successfully parsed response as JSON."); return jsonData; }
+                    catch (parseError) { console.error(`JSON PARSE FAILED for successful HTTP response (Status: ${response.status}). Action: ${action}.`, parseError); console.error("--- Start of Response Text that failed parsing ---"); console.error(responseText.substring(0, 1500) + (responseText.length > 1500 ? "\n... (truncated)" : "")); console.error("--- End of Response Text ---"); if (action === 'generate_image' && contentType && (contentType.startsWith('text/plain') || contentType.startsWith('text/html'))) { const potentialUrl = responseText.trim(); if (potentialUrl.startsWith('http://') || potentialUrl.startsWith('https://')) { console.log("Handling as plain text image URL fallback:", potentialUrl); return { image_url: potentialUrl }; } } throw new Error(`Failed to parse server response as JSON. Check console for details and response text.`); }
+                } catch (error) {
+                    console.error(`Webhook error (${action}):`, error); let displayError = `Error: ${error.message || 'Unknown fetch error'}. Check console.`; if (error.message.includes("Failed to fetch") || (error instanceof TypeError && !response)) { displayError = `Network Error: Could not connect. Check connection/URL/CORS/server status.`; } else if (error.message.includes("Failed to parse server response as JSON")) { displayError = `Error: Server response was not valid JSON. Check console for response text.`; } else if (response && !response.ok) { displayError = `Server Error: ${error.message}`; } else if (error.message.includes("Unexpected response format")) { displayError = `Error: Unexpected response format from server. Check console.`; } if (errorElement) errorElement.textContent = displayError; return null;
+                } finally { if (button) button.disabled = false; if (spinner) spinner.classList.add('hidden'); }
+            };
+
+            const updateWordCount = () => { /* Keep existing logic */ let text = ''; if (isHtmlView) { text = htmlEditor.value.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' '); } else { const tempDiv = document.createElement('div'); tempDiv.innerHTML = editor.innerHTML; tempDiv.querySelectorAll('img').forEach(img => img.parentNode.replaceChild(document.createTextNode(' '), img)); text = tempDiv.textContent || tempDiv.innerText || ''; } const words = text.trim().split(/\s+/).filter(Boolean); wordCountDisplay.textContent = `${words.length} words`; };
+            const toggleHtmlView = () => { /* Keep existing logic */ isHtmlView = !isHtmlView; if (isHtmlView) { htmlEditor.value = editor.innerHTML; editor.classList.add('hidden'); htmlEditor.classList.remove('hidden'); toggleHtmlBtn.textContent = 'View Editor'; toolbar.querySelectorAll('button').forEach(el => el.disabled = true); generateImagePromptBtn.disabled = true; generateThumbnailFromPromptBtn.disabled = true; htmlEditor.focus(); } else { editor.innerHTML = htmlEditor.value; htmlEditor.classList.add('hidden'); editor.classList.remove('hidden'); toggleHtmlBtn.textContent = 'View HTML'; toolbar.querySelectorAll('button').forEach(el => el.disabled = false); generateImagePromptBtn.disabled = false; generateThumbnailFromPromptBtn.disabled = !suggestedPromptOutput.value; editor.focus(); } updateWordCount(); };
+
+             const resetUI = (startStep = 1) => {
+                 generatedIdeasContainer.innerHTML = ''; editor.innerHTML = ''; htmlEditor.value = ''; isHtmlView = false; editor.classList.remove('hidden'); htmlEditor.classList.add('hidden'); toggleHtmlBtn.textContent = 'View HTML'; toolbar.querySelectorAll('button').forEach(el => el.disabled = false); generateImagePromptBtn.disabled = false;
+                 updateWordCount(); currentThumbnailDisplay.innerHTML = 'No thumbnail selected.'; shareTextContent.textContent = ''; publishSuccess.textContent = '';
+                 ideaPromptInput.value = ''; selectedTitleInput.value = ''; linkUrl1Input.value = ''; linkUrl2Input.value = ''; imageUrl1Input.value = ''; imageUrl2Input.value = '';
+                 postTitleInput.value = ''; postDescriptionInput.value = ''; postTagsInput.value = ''; postThumbnailUrlInput.value = '';
+                 if (suggestedPromptOutput) { suggestedPromptOutput.value = ''; suggestedPromptOutput.classList.add('hidden'); }
+                 if (suggestedPromptLabel) suggestedPromptLabel.classList.add('hidden');
+                 if (promptEnhancersContainer) promptEnhancersContainer.classList.add('hidden');
+                 if (selectImageStyle) selectImageStyle.value = '';
+                 if (selectResolution) selectResolution.value = '1024x1024';
+                 if (selectImageMood) selectImageMood.value = '';
+                 if (generateThumbnailFromPromptBtn) generateThumbnailFromPromptBtn.classList.add('hidden');
+                 if (generatedThumbnailPreviewStep3) { generatedThumbnailPreviewStep3.innerHTML = ''; generatedThumbnailPreviewStep3.classList.add('hidden');}
+                 if (setThumbnailFromStep3Btn) setThumbnailFromStep3Btn.classList.add('hidden');
+                 selectTone.value = 'informative'; selectAudience.value = 'General Audience'; selectLength.value = '1000';
+                 ideaError.textContent = ''; postError.textContent = ''; editorError.textContent = ''; imagePromptError.textContent = ''; thumbnailGenerationErrorStep3.textContent = ''; publishError.textContent = '';
+                 postGeneratorSection.classList.add('hidden'); postCreatorSection.classList.add('hidden'); publishingSection.classList.add('hidden'); promotionSection.classList.add('hidden');
+                 generateImagePromptBtn.classList.add('hidden');
+                 generatedImageUrl = null; publishedPostUrl = '';
+                 // Reset published URL display
+                 if (publishedUrlContainer) publishedUrlContainer.classList.add('hidden');
+                 if (publishedUrlInput) { publishedUrlInput.value = ''; }
+                 if (copyUrlFeedback) { copyUrlFeedback.textContent = ''; }
+                 // *** ADDED: Reset Blast Off elements ***
+                 if(blastOffBtn) blastOffBtn.classList.add('hidden');
+                 if(blastOffError) blastOffError.textContent = '';
+                 if(blastOffSuccess) blastOffSuccess.textContent = '';
+                 // *** END ADDED ***
+                 // Re-enable publish form elements
+                 publishForm.querySelectorAll('input, textarea, button').forEach(el => el.disabled = false);
+                 ideaGeneratorSection.classList.remove('hidden'); window.scrollTo(0, 0);
+             };
+
+            const removeSelectedThumbnail = () => {
+                console.log("Removing thumbnail");
+                postThumbnailUrlInput.value = '';
+                currentThumbnailDisplay.innerHTML = 'No thumbnail selected.';
+            };
+
+
+            // --- Event Listeners ---
+
+            // 1. Idea Generator
+            generateIdeasBtn.addEventListener('click', async () => { /* Existing logic */ const prompt = ideaPromptInput.value.trim(); if (!prompt) { ideaError.textContent = 'Please enter a topic or keyword.'; return; } ideaError.textContent = ''; generatedIdeasContainer.innerHTML = '<li>Generating...</li>'; const data = await sendWebhookRequest('generate_ideas', { prompt }, generateIdeasBtn, ideaSpinner, ideaError); generatedIdeasContainer.innerHTML = ''; if (data && data.message && data.message.content && Array.isArray(data.message.content.ideas)) { const ideasArray = data.message.content.ideas; if (ideasArray.length === 0) { generatedIdeasContainer.innerHTML = '<li>No ideas generated. Try a different topic.</li>'; return; } const list = document.createElement('ol'); list.style.listStyle = 'none'; list.style.paddingLeft = '0'; list.style.counterReset = 'idea-counter'; ideasArray.forEach(ideaObject => { const title = ideaObject.title; if (title && typeof title === 'string') { const li = document.createElement('li'); const link = document.createElement('a'); link.href = '#post-generator'; link.classList.add('idea-link'); link.textContent = title; link.addEventListener('click', (e) => { e.preventDefault(); postTitleInput.value = title; selectedTitleInput.value = title; generatedIdeasContainer.innerHTML = ''; ideaGeneratorSection.classList.add('hidden'); postGeneratorSection.classList.remove('hidden'); postGeneratorSection.scrollIntoView({ behavior: 'smooth', block: 'start' }); }); li.appendChild(link); list.appendChild(li); } else { console.warn("Skipping invalid idea object:", ideaObject); } }); generatedIdeasContainer.appendChild(list); } else if (data) { ideaError.textContent = 'Received unexpected data format for titles.'; console.error("Raw data (ideas):", data); generatedIdeasContainer.innerHTML = '<li>Error loading ideas.</li>'; } else { generatedIdeasContainer.innerHTML = '<li>Could not generate ideas.</li>'; } });
+
+            // 2. Generate Post Content, Meta Description, and Tags (Handles Mixed Structure)
+            generatePostBtn.addEventListener('click', async () => {
+                 const titleToGenerate = selectedTitleInput.value.trim(); if (!titleToGenerate) { postError.textContent = 'Selected title is missing.'; return; }
+                 postError.textContent = ''; editor.innerHTML = '<p><i>Generating content, meta description, and tags... Please wait.</i></p>'; updateWordCount(); postDescriptionInput.value = ''; postTagsInput.value = '';
+                 postCreatorSection.classList.remove('hidden'); publishingSection.classList.remove('hidden');
+                 const postConfigData = { title: titleToGenerate, tone: selectTone.value, audience: selectAudience.value, post_length: selectLength.value, reference_link_1: linkUrl1Input.value.trim() || null, reference_link_2: linkUrl2Input.value.trim() || null, context_image_url_1: imageUrl1Input.value.trim() || null, context_image_url_2: imageUrl2Input.value.trim() || null };
+                 const data = await sendWebhookRequest( 'generate_post_content', postConfigData, generatePostBtn, postSpinner, postError );
+                 editor.innerHTML = '';
+                 if (data) {
+                     console.log("Received raw post generation response:", data);
+                     const responseItem = Array.isArray(data) && data.length > 0 ? data[0] : data;
+                     if (typeof responseItem.post_content === 'string') { editor.innerHTML = responseItem.post_content; if (isHtmlView) { htmlEditor.value = responseItem.post_content; } updateWordCount(); generateImagePromptBtn.classList.remove('hidden'); if (!isHtmlView) { postCreatorSection.scrollIntoView({ behavior: 'smooth', block: 'start' }); setTimeout(() => editor.focus(), 150); } else { htmlEditor.focus(); } } else { postError.textContent = 'Failed to generate main post content (content missing in response).'; console.error("Missing or invalid post_content in response item:", responseItem); editor.innerHTML = '<p style="color: var(--danger-color);">Error generating main content.</p>'; generateImagePromptBtn.classList.add('hidden'); }
+                     let seoData = null; if (typeof responseItem.meta_description === 'string' || Array.isArray(responseItem.tags) || typeof responseItem.tags === 'string') { seoData = responseItem; console.log("Found SEO data directly in response item:", seoData); } else if (responseItem.message && typeof responseItem.message.content === 'object' && responseItem.message.content !== null) { seoData = responseItem.message.content; console.log("Found SEO data in nested message.content:", seoData); }
+                     if (seoData) { if (typeof seoData.meta_description === 'string') { postDescriptionInput.value = seoData.meta_description.trim(); console.log("Populated Meta Description:", postDescriptionInput.value); } else { console.warn("Meta description not found/invalid in SEO data:", seoData.meta_description); } if (Array.isArray(seoData.tags) && seoData.tags.length > 0) { postTagsInput.value = seoData.tags.join(', '); console.log("Populated Tags (from array):", postTagsInput.value); } else if (typeof seoData.tags === 'string' && seoData.tags.trim() !== '') { postTagsInput.value = seoData.tags.trim(); console.log("Populated Tags (from string):", postTagsInput.value); } else { console.warn("Tags not found/invalid in SEO data:", seoData.tags); } } else { console.warn("Could not find SEO data (meta_description or tags) in the response structure:", responseItem); }
+                 } else { generateImagePromptBtn.classList.add('hidden'); editor.innerHTML = '<p style="color: var(--danger-color);">Error generating content, description, and tags.</p>'; }
+                 postCreatorSection.classList.remove('hidden'); publishingSection.classList.remove('hidden');
+            });
+
+
+            // 3. Post Creator Toolbar/Editor
+            toolbar.addEventListener('click', (e) => { /* Existing logic */ const target = e.target.closest('[data-command]'); if (!target || isHtmlView) return; const command = target.dataset.command; editorError.textContent = ''; editor.focus(); let success = false; const selection = window.getSelection(); if ((command === 'createLink' || command === 'unlink') && (!selection || selection.rangeCount === 0 || selection.isCollapsed)) { editorError.textContent = `Please select text to apply '${command}'.`; return; } try { if (command === 'createLink') { let currentUrl = 'https://'; let node = selection.getRangeAt(0).commonAncestorContainer; if (node.nodeType !== Node.ELEMENT_NODE) node = node.parentNode; const existingLink = node.closest('a'); if (existingLink) currentUrl = existingLink.href; let url = prompt('Enter the URL:', currentUrl); if (url && url.trim() !== '') { const range = selection.getRangeAt(0); let ancestor = range.commonAncestorContainer; if(ancestor.nodeType !== Node.ELEMENT_NODE) ancestor = ancestor.parentNode; if(ancestor && ancestor.closest('a')) document.execCommand('unlink', false, null); selection.removeAllRanges(); selection.addRange(range); success = document.execCommand(command, false, url.trim()); } else { success = false; if (url !== null) editorError.textContent = 'Link creation cancelled or invalid URL.'; } } else { success = document.execCommand(command, false, null); } if (!success && !editorError.textContent) { editorError.textContent = `Failed to apply formatting: ${command}.`; } } catch (error) { console.error(`Error executing command ${command}:`, error); editorError.textContent = `Error applying formatting: ${command}. Check console.`; } updateWordCount(); });
+            toggleHtmlBtn.addEventListener('click', toggleHtmlView);
+            htmlEditor.addEventListener('input', updateWordCount);
+            editor.addEventListener('input', updateWordCount);
+
+            // Suggest Image Prompt Button
+            generateImagePromptBtn.addEventListener('click', async () => { /* Existing logic */ const blogContent = isHtmlView ? htmlEditor.value.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim() : editor.innerText.trim(); if (!blogContent || blogContent.length < 30) { imagePromptError.textContent = 'Please write more content first (at least 30 characters).'; return; } imagePromptError.textContent = ''; thumbnailGenerationErrorStep3.textContent = ''; if(suggestedPromptOutput) { suggestedPromptOutput.value = ''; suggestedPromptOutput.classList.add('hidden'); } if(suggestedPromptLabel) suggestedPromptLabel.classList.add('hidden'); if(promptEnhancersContainer) promptEnhancersContainer.classList.add('hidden'); if(generateThumbnailFromPromptBtn) generateThumbnailFromPromptBtn.classList.add('hidden'); if(generatedThumbnailPreviewStep3) { generatedThumbnailPreviewStep3.innerHTML=''; generatedThumbnailPreviewStep3.classList.add('hidden');} if(setThumbnailFromStep3Btn) setThumbnailFromStep3Btn.classList.add('hidden'); const data = await sendWebhookRequest( 'generate_image_prompt', { content: blogContent }, generateImagePromptBtn, imagePromptSpinner, imagePromptError); if (data && typeof data.image_prompt === 'string') { if (suggestedPromptOutput) { suggestedPromptOutput.value = data.image_prompt; suggestedPromptOutput.classList.remove('hidden'); } if (suggestedPromptLabel) suggestedPromptLabel.classList.remove('hidden'); if (promptEnhancersContainer) promptEnhancersContainer.classList.remove('hidden'); if (generateThumbnailFromPromptBtn) generateThumbnailFromPromptBtn.classList.remove('hidden'); suggestedPromptOutput.scrollIntoView({ behavior: 'smooth', block: 'center' }); } else if (data) { imagePromptError.textContent = 'Failed to generate prompt: Invalid response format.'; console.error('Invalid image prompt response:', data); } /* Error handled by sendWebhookRequest */ });
+
+            // Generate Thumbnail Button (Step 3 - No Overlay)
+             generateThumbnailFromPromptBtn.addEventListener('click', async () => {
+                 console.log("Generate Thumbnail button clicked."); const promptText = suggestedPromptOutput.value.trim(); if (!promptText) { thumbnailGenerationErrorStep3.textContent = 'Please enter or suggest an image prompt.'; return; }
+                 const style = selectImageStyle.value || null; const resolution = selectResolution.value; const mood = selectImageMood.value || null;
+                 thumbnailGenerationErrorStep3.textContent = ''; generatedThumbnailPreviewStep3.innerHTML = ''; generatedThumbnailPreviewStep3.classList.add('hidden'); setThumbnailFromStep3Btn.classList.add('hidden'); generatedImageUrl = null;
+                 const imageData = { prompt: promptText, style, resolution, mood }; const data = await sendWebhookRequest( 'generate_image', imageData, generateThumbnailFromPromptBtn, thumbnailSpinnerStep3, thumbnailGenerationErrorStep3 );
+                 console.log("Received data from generate_image webhook:", data);
+                 if (data && data.image_url && (data.image_url.startsWith('http://') || data.image_url.startsWith('https://'))) {
+                     generatedImageUrl = data.image_url; console.log("Stored generatedImageUrl:", generatedImageUrl); console.log("Showing regular preview."); const img = document.createElement('img');
+                     img.onload = () => { console.log("Regular preview image loaded successfully."); setThumbnailFromStep3Btn.classList.remove('hidden'); generatedThumbnailPreviewStep3.classList.remove('hidden'); generatedThumbnailPreviewStep3.scrollIntoView({ behavior: 'smooth', block: 'center' }); img.onload = null; img.onerror = null; };
+                     img.onerror = (ev) => { console.error('Error loading regular preview image. URL:', img.src, 'Event:', ev); thumbnailGenerationErrorStep3.textContent = 'Error loading generated image preview. Check console/URL.'; setThumbnailFromStep3Btn.classList.add('hidden'); generatedThumbnailPreviewStep3.classList.add('hidden'); generatedImageUrl = null; img.onload = null; img.onerror = null; };
+                     img.src = generatedImageUrl; img.alt = 'Generated Thumbnail Preview'; generatedThumbnailPreviewStep3.innerHTML = ''; generatedThumbnailPreviewStep3.appendChild(img);
+                 } else { const errorMsg = `Image generation failed or returned invalid URL. Check console.`; console.error(errorMsg, "Received data:", data); if (!thumbnailGenerationErrorStep3.textContent) { thumbnailGenerationErrorStep3.textContent = errorMsg; } generatedImageUrl = null; generatedThumbnailPreviewStep3.classList.add('hidden'); setThumbnailFromStep3Btn.classList.add('hidden'); }
+            });
+
+            // Set Thumbnail button (Step 3)
+            setThumbnailFromStep3Btn.addEventListener('click', () => {
+                 console.log("Set Thumbnail button clicked. generatedImageUrl:", generatedImageUrl); if (generatedImageUrl) { postThumbnailUrlInput.value = generatedImageUrl; const displayImg = document.createElement('img'); displayImg.src = generatedImageUrl; displayImg.alt = 'Selected Thumbnail'; const removeBtn = document.createElement('span'); removeBtn.className = 'remove-thumbnail-btn'; removeBtn.textContent = '(Remove)'; removeBtn.title = 'Remove this thumbnail'; removeBtn.onclick = removeSelectedThumbnail; currentThumbnailDisplay.innerHTML = ''; currentThumbnailDisplay.appendChild(displayImg); currentThumbnailDisplay.appendChild(document.createTextNode(" ")); currentThumbnailDisplay.appendChild(removeBtn); console.log("Thumbnail set in Step 5 display.");
+                 publishingSection.scrollIntoView({ behavior: 'smooth' });
+                 } else { console.error("Set Thumbnail (Step 3) clicked but generatedImageUrl is invalid or null."); alert("Cannot set thumbnail - image URL is missing or invalid."); removeSelectedThumbnail(); }
+            });
+
+            // 5. Publishing Event Listener (Attached to Button Click, NO AUTO RESET)
+            publishBtn.addEventListener('click', async (e) => {
+                 e.preventDefault();
+                 publishSuccess.textContent = '';
+                 publishError.textContent = '';
+
+                 let finalContent = isHtmlView ? htmlEditor.value : editor.innerHTML;
+                 const title = postTitleInput.value.trim();
+                 const description = postDescriptionInput.value.trim();
+                 const thumbnail = postThumbnailUrlInput.value.trim();
+                 const tags = postTagsInput.value.split(',').map(tag => tag.trim()).filter(Boolean);
+                 const content = finalContent;
+                 const thumbnailPrompt = suggestedPromptOutput.value.trim();
+
+                 if (!title || !description || !content || content.trim() === '' || content === '<p><br></p>') {
+                     publishError.textContent = 'Please ensure Title, Description, and valid Content are present.';
+                     return;
+                 }
+                 if (!thumbnail && !confirm("Warning: No thumbnail set. Publish anyway?")) { return; }
+
+                 const postData = { title, description, content, thumbnail_url: thumbnail || null, tags, thumbnail_prompt: thumbnailPrompt || null };
+                 console.log("Sending publish data:", postData);
+
+                 const data = await sendWebhookRequest('publish', { data: postData }, publishBtn, publishSpinner, publishError);
+
+                 if (data) {
+                     console.log("Received publish response:", data);
+                     let potentialUrl = null;
+                     if (Array.isArray(data) && data.length > 0 && typeof data[0].post_content === 'string') { potentialUrl = data[0].post_content.trim(); console.log("Extracted URL from post_content in array response."); }
+                     else if (data.success && typeof data.live_url === 'string') { potentialUrl = data.live_url.trim(); console.log("Extracted URL from live_url in direct object response."); }
+                     else if (Array.isArray(data) && data.length > 0 && typeof data[0].live_url === 'string') { potentialUrl = data[0].live_url.trim(); console.log("Extracted URL from live_url in array response."); }
+
+                     if (potentialUrl && (potentialUrl.startsWith('http://') || potentialUrl.startsWith('https://'))) {
+                         publishedPostUrl = potentialUrl; // Store the valid URL
+                         console.log("Publish successful. URL:", publishedPostUrl);
+
+                         if (publishedUrlInput) publishedUrlInput.value = publishedPostUrl;
+                         if (publishedUrlContainer) publishedUrlContainer.classList.remove('hidden');
+                         publishSuccess.textContent = `Post published successfully!`;
+
+                         setupPromotion(title, publishedPostUrl);
+                         promotionSection.classList.remove('hidden');
+                         // *** Show Blast Off Button on successful publish ***
+                         if(blastOffBtn) blastOffBtn.classList.remove('hidden');
+                         // *** End Show Blast Off Button ***
+                         promotionSection.scrollIntoView({ behavior: 'smooth' });
+
+                         publishForm.querySelectorAll('input, textarea, button').forEach(el => el.disabled = true); // Disable publish form
+                         // NO AUTOMATIC RESET
+                     } else {
+                         publishError.textContent = `Publishing seemed to succeed, but the final URL was not found in the response.`;
+                         console.error("Could not extract URL from publish response:", data);
+                     }
+                 } else {
+                     if (!publishError.textContent) { publishError.textContent = `Publishing failed. Check console for details.`; }
+                 }
+            });
+
+            // Copy URL Button Listener
+            copyUrlBtn.addEventListener('click', () => {
+                if (!publishedUrlInput || !publishedUrlInput.value) return;
+                navigator.clipboard.writeText(publishedUrlInput.value).then(() => {
+                    console.log('URL copied to clipboard'); copyUrlFeedback.textContent = 'Copied!'; copyUrlBtn.textContent = 'Copied!'; copyUrlBtn.disabled = true;
+                    setTimeout(() => { copyUrlFeedback.textContent = ''; copyUrlBtn.textContent = 'Copy'; copyUrlBtn.disabled = false; }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy URL: ', err); copyUrlFeedback.textContent = 'Copy failed!'; copyUrlFeedback.style.color = 'var(--danger-color)';
+                    setTimeout(() => { copyUrlFeedback.textContent = ''; copyUrlFeedback.style.color = 'var(--success-color)'; }, 3000);
+                });
+            });
+
+            // --- *** ADDED: Blast Off Button Listener *** ---
+            blastOffBtn.addEventListener('click', async () => {
+                console.log("Blast Off button clicked.");
+                blastOffError.textContent = '';
+                blastOffSuccess.textContent = '';
+
+                // Ensure we have the necessary data (especially the published URL)
+                if (!publishedPostUrl) {
+                    blastOffError.textContent = 'Cannot share, the published URL is missing.';
+                    return;
+                }
+
+                // Gather all data to send
+                const title = postTitleInput.value.trim();
+                const description = postDescriptionInput.value.trim();
+                const tags = postTagsInput.value.split(',').map(tag => tag.trim()).filter(Boolean);
+                const thumbnail = postThumbnailUrlInput.value.trim();
+                const thumbnailPrompt = suggestedPromptOutput.value.trim();
+
+                const shareData = {
+                    title: title,
+                    description: description, // Good for summaries on platforms like LI/FB
+                    live_url: publishedPostUrl, // The crucial published link
+                    thumbnail_url: thumbnail || null,
+                    tags: tags,
+                    thumbnail_prompt: thumbnailPrompt || null
+                    // Note: We are NOT sending the full 'content' here as it's usually too long
+                    // The backend webhook needs to fetch the page or use the description/title/image/URL
+                };
+
+                console.log("Sending multi-platform share data:", shareData);
+
+                // Call the new webhook action
+                const data = await sendWebhookRequest('share_multi_platform', shareData, blastOffBtn, blastOffSpinner, blastOffError);
+
+                if (data && data.success) {
+                    blastOffSuccess.textContent = data.message || 'Sharing initiated successfully!'; // Display message from webhook or generic one
+                    blastOffBtn.disabled = true; // Optionally disable after success
+                } else if (data) {
+                     // Handle specific error message from webhook if provided
+                    blastOffError.textContent = `Sharing failed: ${data.message || 'Unknown server error.'}`;
+                    console.error("Multi-platform share error data:", data);
+                }
+                // If data is null, sendWebhookRequest already showed network/parse error in blastOffError
+            });
+            // --- *** END ADDED *** ---
+
+
+            // 6. Promotion Setup
+            const setupPromotion = (title, url) => {
+                 const encodedUrl = encodeURIComponent(url);
+                 // Generate a concise share text using title and URL
+                 const shareText = `Check out this post: "${title}" ${url}`;
+                 const encodedShareText = encodeURIComponent(shareText);
+                 shareTwitterBtn.href = `https://twitter.com/intent/tweet?text=${encodedShareText}`;
+                 shareLinkedinBtn.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
+                 shareFacebookBtn.href = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+                 // Update the pre-filled share text example
+                 shareTextContent.textContent = shareText;
+             };
+
+            // --- Initial UI State ---
+             resetUI(1);
+             console.log("Initial UI Reset Complete.");
+
+        }); // End DOMContentLoaded
+    </script>
+
+</body>
+</html>

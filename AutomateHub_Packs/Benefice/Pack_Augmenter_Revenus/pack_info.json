@@ -1,0 +1,19 @@
+{
+  "name": "Pack_Augmenter_Revenus",
+  "type": "Benefice",
+  "description": "\ud83d\udcb0 Boostez votre CA avec l'automatisation intelligente",
+  "prix": 199,
+  "workflow_count": 100,
+  "workflows": [
+    "HubSpot_Lead_Enrichment_from_Email_Analysis.json",
+    "Lead_Tracking_Google_Sheets_to_HubSpot_with_Email_Alerts.json",
+    "Process_Invoices_and_Send_Notifications_via_Email_and_Slack.json",
+    "Form_to_Discord_Email_Leads_and_Update_Sheets.json",
+    "Image_Conversion_and_Google_Drive_Update_Automation.json",
+    "Email_Analysis_Question_to_SQL_Query_Conversion.json",
+    "AI-Powered_Leaderboard_for_Popular_n8n_Workflows.json",
+    "Shopify_Order_Processing_with_CRM_and_Task_Updates.json",
+    "Stripe_Payment_Order_Sync_\u2013_Auto_Retrieve_Customer_&_Product_Purchased.json",
+    "Enrich_Pipedrive_Leads_with_Clearbit_and_Filter.json"
+  ]
+}

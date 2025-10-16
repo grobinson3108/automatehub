@@ -1,0 +1,343 @@
+{
+  "meta": {
+    "instanceId": "dbd383feb42b0206c833e3d762df280d0cce35cf96037fb2d6f3533c171dc540"
+  },
+  "nodes": [
+    {
+      "id": "b605b875-85cf-4210-8027-ce7b9b7069b9",
+      "name": "CRON",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "notes": "Every Monday @ 8:30am",
+      "position": [
+        820,
+        360
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "30 8 * * MON"
+            }
+          ]
+        }
+      },
+      "notesInFlow": true,
+      "typeVersion": 1.1
+    },
+    {
+      "id": "edd9d7b6-9ac4-4acf-8f4b-4cbe943dfd34",
+      "name": "Get User's Playlists",
+      "type": "n8n-nodes-base.spotify",
+      "position": [
+        1060,
+        360
+      ],
+      "parameters": {
+        "resource": "playlist",
+        "operation": "getUserPlaylists",
+        "returnAll": true
+      },
+      "credentials": {
+        "spotifyOAuth2Api": {
+          "id": "",
+          "name": "Placeholder"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "98cf8fdc-556a-452a-8df6-16a98c17613e",
+      "name": "Switch",
+      "type": "n8n-nodes-base.switch",
+      "notes": "Find Discover and Archive playlist by name",
+      "position": [
+        1280,
+        360
+      ],
+      "parameters": {
+        "rules": {
+          "rules": [
+            {
+              "value2": "Discover Weekly",
+              "outputKey": "disc"
+            },
+            {
+              "value2": "Discover Weekly Archive",
+              "outputKey": "arch"
+            }
+          ]
+        },
+        "value1": "={{ $json.name }}",
+        "dataType": "string"
+      },
+      "notesInFlow": true,
+      "typeVersion": 2
+    },
+    {
+      "id": "d27ee5c1-86d8-4a6a-adcb-90bf59280550",
+      "name": "Get Discover Tracks",
+      "type": "n8n-nodes-base.spotify",
+      "position": [
+        1560,
+        240
+      ],
+      "parameters": {
+        "id": "={{ $json.uri }}",
+        "resource": "playlist",
+        "operation": "getTracks",
+        "returnAll": true
+      },
+      "credentials": {
+        "spotifyOAuth2Api": {
+          "id": "",
+          "name": "Placeholder"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "e276dce6-d3d2-41a0-96b6-68e115ed198e",
+      "name": "Get Archive Tracks",
+      "type": "n8n-nodes-base.spotify",
+      "position": [
+        1560,
+        460
+      ],
+      "parameters": {
+        "id": "={{ $json.uri }}",
+        "resource": "playlist",
+        "operation": "getTracks",
+        "returnAll": true
+      },
+      "credentials": {
+        "spotifyOAuth2Api": {
+          "id": "",
+          "name": "Placeholder"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "c619085b-424d-4ff5-b3eb-fa0eed05ce0d",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        1840,
+        360
+      ],
+      "parameters": {
+        "mode": "combine",
+        "options": {},
+        "joinMode": "keepNonMatches",
+        "mergeByFields": {
+          "values": [
+            {
+              "field1": "track.uri",
+              "field2": "track.uri"
+            }
+          ]
+        },
+        "outputDataFrom": "input1"
+      },
+      "typeVersion": 2.1,
+      "alwaysOutputData": true
+    },
+    {
+      "id": "6981f3b3-e1d4-415b-b2c2-d05646271270",
+      "name": "Note adhésive",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1760,
+        180
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 262,
+        "height": 354,
+        "content": "#### Purpose\n\nCompares tracks using `Combine` operation to output **non-matching** Discover Weekly tracks to ensure that duplicates are not appended to the Archive playlist"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "65a9ef93-afac-4f86-9203-73e24bcdb500",
+      "name": "Check if tracks to add is NOT empty",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        2100,
+        360
+      ],
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "81f9e3a7-eef0-462c-9d82-db894b19a110",
+              "operator": {
+                "type": "object",
+                "operation": "notEmpty",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json }}",
+              "rightValue": ""
+            }
+          ]
+        }
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "604717ae-90ab-412b-bc83-15399d18c0d4",
+      "name": "Add tracks to Archive playlist",
+      "type": "n8n-nodes-base.spotify",
+      "position": [
+        2360,
+        220
+      ],
+      "parameters": {
+        "id": "={{ $('Switch').all(1).first().json.uri }}",
+        "trackID": "={{ $json.track.uri }}",
+        "resource": "playlist",
+        "additionalFields": {}
+      },
+      "credentials": {
+        "spotifyOAuth2Api": {
+          "id": "",
+          "name": "Placeholder"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "34ddb49e-ebfe-46ff-a348-959befe5e86c",
+      "name": "Note adhésive1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2580,
+        280
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 634,
+        "height": 190,
+        "content": "### Do anything else here\n\nFor example, in my personneal workflow, after the tracks have been added to to my Archive playlist, I send a https://docs.ntfy.sh) request to my self-hosted [NTFY](`POST` server to notify me that my Discover Weekly playlist has refreshed, and I also provide the links to easily open the playlists avecin the notification that is sent.\n\nThe possibilities are endless avec n8n!"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "c5c18f22-2c1f-4e65-83fc-7f89c5e44828",
+      "name": "Note adhésive2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        820,
+        -418.42807424594014
+      ],
+      "parameters": {
+        "color": 4,
+        "width": 605.1751740139206,
+        "height": 733.4280742459401,
+        "content": "## README\n\nThis workflow will automatically archive your Spotify https://docs.n8n.io/courses/level-two/chapter-4/). playlist to a separate playlist. One additional caveat this workflow adrobees is it will compare the refreshed https://n8n.io/workflows/696-send-email-via-gmail-on-workflow-error/) tracks against your archive playlist's existing tracks to ensure only unique tracks are added to your archive playlist. This helps rougeuce clutter avecin the archive playlist. \n\n### Définirup Instructions (Requirouge)\n1. **Within your Spotify account, créer a new playlist**\n  You may name this playlist whatever you like. The default name avecin the workflow is https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.scheduletrigger/#generate-a-custom-cron-expression).. If you decide on another name, ensure you update the https://docs.n8n.io/integrations/builtin/credentials/spotify/) nœud output avec the key of `GENERIC_TIMEZONE` to the name of the playlist you set.\n\n2. **Create your Spotify crougeential(s) and update each Spotify nœud avec your créerd crougeential**\n  Follow the instructions avecin the [n8n docs](`Switch` to créer your Spotify crougeential, then select the crougeential in the `Schedule`, `Schedule`, `Add tracks to Archive playlist`, and `Get Archive Tracks` nœuds.\n\n3. **Activate the workflow to run workflow based on the Cron expression set in the `Get Discover Tracks` trigger nœud.**\n\n### Optional Définirup\n- Update the Cron expression avecin the `Get User's Playlists` trigger nœud avec an earlier or later time if your `arch` is set. You may also consider setting the workflow timezone as well. For assistance avec Cron expressions, refer to the [n8n docs](`Discover Weekly Archive`\n- Add nœuds to the end of the workflow to send notifications, update a spreadsheet, or any other operation/action you'd like to perform in conjunction avec archiving your Discover Weekly tracks\n- Définirup a error workflow to handle any thing that goes wrong avecin the workflow. You can find an example [here](`Discover Weekly` or more information concerning handling errors avecin the [n8n docs](`Discover Weekly`\n"
+      },
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "CRON": {
+      "main": [
+        [
+          {
+            "node": "Get User's Playlists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Check if tracks to add is NOT empty",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Get Discover Tracks",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Archive Tracks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Archive Tracks": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Get Discover Tracks": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get User's Playlists": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if tracks to add is NOT empty": {
+      "main": [
+        [
+          {
+            "node": "Add tracks to Archive playlist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

@@ -1,0 +1,135 @@
+{
+  "nodes": [
+    {
+      "name": "AWS SQS",
+      "type": "n8n-nodes-base.awsSqs",
+      "position": [
+        1050,
+        360
+      ],
+      "parameters": {
+        "queue": "",
+        "options": {}
+      },
+      "credentials": {
+        "aws": "AWS SQS Credentials"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Définir",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        850,
+        360
+      ],
+      "parameters": {
+        "values": {
+          "number": [
+            {
+              "name": "Latitude",
+              "value": "={{$node[\"HTTP Request\"].json[\"0\"][\"latitude\"]}}"
+            },
+            {
+              "name": "Longitude",
+              "value": "={{$node[\"HTTP Request\"].json[\"0\"][\"longitude\"]}}"
+            },
+            {
+              "name": "Timestamp",
+              "value": "={{$node[\"HTTP Request\"].json[\"0\"][\"timestamp\"]}}"
+            }
+          ],
+          "string": [
+            {
+              "name": "Name",
+              "value": "={{$node[\"HTTP Request\"].json[\"0\"][\"name\"]}}"
+            }
+          ]
+        },
+        "options": {},
+        "keepOnlySet": true
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Requête HTTP",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        650,
+        360
+      ],
+      "parameters": {
+        "url": "https://api.wheretheiss.at/v1/satellites/25544/positions",
+        "options": {},
+        "queryParametersUi": {
+          "parameter": [
+            {
+              "name": "timestamps",
+              "value": "={{Date.now();}}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Cron",
+      "type": "n8n-nodes-base.cron",
+      "position": [
+        450,
+        360
+      ],
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Définir": {
+      "main": [
+        [
+          {
+            "node": "AWS SQS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cron": {
+      "main": [
+        [
+          {
+            "node": "Requête HTTP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Requête HTTP": {
+      "main": [
+        [
+          {
+            "node": "Définir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

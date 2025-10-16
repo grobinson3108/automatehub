@@ -1,0 +1,381 @@
+{
+  "id": "4AG83ybt0S3WQbkS",
+  "meta": {
+    "instanceId": "a943fc71a4dfb51cc3424882233bcd72e7a73857958af1cf464f7c21580c726e",
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Traduction et résumé quotidiens des actualités IA avec GPT-4 et livraison via Telegram",
+  "tags": [
+    {
+      "id": "WuWMTipHMvadNrvh",
+      "name": "Other",
+      "createdAt": "2025-04-18T13:34:41.761Z",
+      "updatedAt": "2025-04-18T13:34:41.761Z"
+    },
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "894ceed6-8fcd-484e-bf6f-9c3eee81119e",
+      "name": "Aperçu du workflow",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -40,
+        200
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 720,
+        "height": 600,
+        "content": "### Configuration\n\n1. **Ajouter les clés API NewsAPI et GNews**\n    - Inscrivez-vous sur [NewsAPI.org](https://newsapi.org/) et [GNews](https://gnews.io/) pour obtenir vos clés API.\n    - Saisissez votre clé NewsAPI directement dans le nœud `Fetch NewsAPI articles`.\n    - Saisissez votre clé API GNews dans le nœud `Fetch GNews articles`.\n2. **Configurer votre Bot Telegram**\n    - Créez un Bot Telegram via [BotFather](https://core.telegram.org/bots#6-botfather) et copiez le jeton du Bot généré.\n    - Dans n8n, créez des identifiants Telegram Bot en utilisant ce jeton.\n    - Dans le nœud `Send summary to Telegram`, entrez l’ID du chat de l’utilisateur, groupe ou canal cible pour recevoir les messages.\n3. **Configurer les identifiants OpenAI**\n    - Dans n8n, créez un nouvel identifiant en utilisant votre clé API OpenAI.\n    - Assignez cet identifiant au nœud `GPT-4.1 Model` (ou aux nœuds OpenAI/IA équivalents).\n\nAprès avoir complété ces étapes, votre workflow est entièrement configuré pour récupérer, résumer et livrer automatiquement les actualités quotidiennes de l’IA à votre chat Telegram sélectionné.\n\n### Comment personnaliser ce workflow\n\n- **Changer le sujet :** Mettez à jour les mots-clés dans les nœuds NewsAPI et GNews pour d’autres sujets (par exemple, « blockchain », « informatique quantique »).\n- **Ajuster l’heure de livraison :** Modifiez le déclencheur programmé à l’heure de votre choix.\n- **Modifier le style ou la langue du résumé :** Affinez le prompt dans le nœud de résumé IA pour différents tons ou traduisez-le dans d’autres langues selon vos besoins."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "9de68856-a2e1-4b06-a738-92e8db23f9ea",
+      "name": "Déclencheur à 8h tous les jours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        760,
+        520
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 8
+            }
+          ]
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "d2a13562-9f21-4f99-8698-d5ba58245b02",
+      "name": "Récupérer les articles GNews",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        980,
+        420
+      ],
+      "parameters": {
+        "url": "https://gnews.io/api/v4/search",
+        "options": {},
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "AI"
+            },
+            {
+              "name": "lang",
+              "value": "en"
+            },
+            {
+              "name": "apikey"
+            }
+          ]
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "0895bda6-5268-4454-a49f-732a3025947b",
+      "name": "Récupérer les articles NewsAPI",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        980,
+        620
+      ],
+      "parameters": {
+        "url": "https://newsapi.org/v2/everything",
+        "options": {},
+        "sendQuery": true,
+        "sendHeaders": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "AI"
+            },
+            {
+              "name": "language",
+              "value": "en"
+            },
+            {
+              "name": "sortBy",
+              "value": "publishedAt"
+            },
+            {
+              "name": "pageSize",
+              "value": "20"
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-Api-Key"
+            }
+          ]
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "3cd42b1a-348a-486d-8217-592ce2b35e6c",
+      "name": "GNews : Mapper vers les articles",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1200,
+        420
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "articles",
+              "type": "string",
+              "value": "={{ $json.articles }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "40692e2f-9289-448b-a5cb-ce4846b20264",
+      "name": "NewsAPI : Mapper vers les articles",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1200,
+        620
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "name": "articles",
+              "type": "string",
+              "value": "={{ $json.articles }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "d42b4e2d-87f4-4a0e-a6c3-ab1b3501bcfa",
+      "name": "Fusionner GNews & NewsAPI",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        1420,
+        520
+      ],
+      "parameters": {},
+      "typeVersion": 3.1
+    },
+    {
+      "id": "985ec49b-b127-44b9-8f63-62486d0bf864",
+      "name": "Épinglé : APIs d'actualités",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        900,
+        210
+      ],
+      "parameters": {
+        "color": 5,
+        "width": 480,
+        "height": 570,
+        "content": "### Nœuds source de données\n- `Récupérer les articles GNews` et `Récupérer les articles NewsAPI` obtiennent chacun jusqu'à 20 dernières actualités en anglais liées à l'IA depuis deux APIs différentes en utilisant vos clés API.\n- Les deux sources sont standardisées en une propriété `articles` pour la fusion.\n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "430c8ddc-948e-4770-b816-591c6c43c617",
+      "name": "Résumé et traduction IA",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1640,
+        520
+      ],
+      "parameters": {
+        "text": "=Vous êtes un assistant d'actualités IA. Vos tâches :\n1. Sélectionner les 15 articles les plus pertinents sur les progrès et applications de la technologie IA parmi {{$json.articles}}.\n2. Les traduire en chinois traditionnel précis ; ne pas traduire les termes techniques anglais couramment utilisés.\n3. Veiller à inclure l'URL de l'article pour chaque élément.\n4. Commencer la sortie par la date d'aujourd'hui (ex. : '早安，這是 {{ $now.format('yyyy/MM/dd') }} 的 AI 新聞：')\nNe produire que le résumé.",
+        "options": {},
+        "promptType": "define"
+      },
+      "typeVersion": 1.8
+    },
+    {
+      "id": "5dfacf8a-25d4-43fd-9b96-a34eeed45d39",
+      "name": "Modèle GPT-4.1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1728,
+        740
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "RjawTJt2ILjgM4Wx",
+          "name": "[Template] OpenAi account"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "66fedd82-5fbf-4d17-a7f5-78c41d7d5949",
+      "name": "Épinglé : Traitement IA",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1568,
+        300
+      ],
+      "parameters": {
+        "color": 2,
+        "width": 400,
+        "height": 580,
+        "content": "### Logique de l'assistant IA\nLe résumé utilise le dernier modèle GPT-4.1 pour sélectionner, traduire et enrichir les 15 meilleurs liens d'actualités IA provenant à la fois de GNews et de NewsAPI. Contrôlé par une invite personnalisée pour un rendu concis et lisible."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "7a742531-4a08-408e-8b2c-558be75c1a8f",
+      "name": "Envoyer le résumé sur Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2016,
+        520
+      ],
+      "webhookId": "21eb8e1c-87de-45af-888d-699fbd443bc8",
+      "parameters": {
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "tpF8PHPxMfdld3NA",
+          "name": "[Template] Telegram Bot"
+        }
+      },
+      "typeVersion": 1.2
+    }
+  ],
+  "active": false,
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "deee909a-9cfe-409d-8201-b9b7194ec9bc",
+  "connections": {
+    "Modèle GPT-4.1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Résumé et traduction IA",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Récupérer les articles GNews": {
+      "main": [
+        [
+          {
+            "node": "GNews : Mapper vers les articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déclencheur à 8h tous les jours": {
+      "main": [
+        [
+          {
+            "node": "Récupérer les articles GNews",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Récupérer les articles NewsAPI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fusionner GNews & NewsAPI": {
+      "main": [
+        [
+          {
+            "node": "Résumé et traduction IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Récupérer les articles NewsAPI": {
+      "main": [
+        [
+          {
+            "node": "NewsAPI : Mapper vers les articles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GNews : Mapper vers les articles": {
+      "main": [
+        [
+          {
+            "node": "Fusionner GNews & NewsAPI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NewsAPI : Mapper vers les articles": {
+      "main": [
+        [
+          {
+            "node": "Fusionner GNews & NewsAPI",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Résumé et traduction IA": {
+      "main": [
+        [
+          {
+            "node": "Envoyer le résumé sur Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

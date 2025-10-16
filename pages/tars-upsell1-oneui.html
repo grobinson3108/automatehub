@@ -1,0 +1,372 @@
+<!doctype html>
+<html lang="fr" class="remember-theme">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <title>🛑 ATTENDEZ ! Offre Spéciale TARS Premium | AutomateHub</title>
+
+    <meta name="description" content="Offre exclusive TARS Premium - Passez au niveau supérieur de l'automatisation">
+    <meta name="author" content="AutomateHub">
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Icons -->
+    <link rel="shortcut icon" href="../OneUI/01 OneUI Source (HTML)/src/assets/media/favicons/favicon.png">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" id="css-main" href="../OneUI/01 OneUI Source (HTML)/src/assets/css/oneui.min.css">
+
+    <!-- Custom TARS styles -->
+    <style>
+      .stop-header {
+        background: linear-gradient(135deg, var(--bs-danger) 0%, var(--bs-warning) 100%);
+        color: white;
+        padding: 2rem 0;
+      }
+
+      .premium-offer {
+        background: linear-gradient(135deg, var(--bs-success) 0%, var(--bs-info) 100%);
+        color: white;
+        border-radius: 15px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .premium-offer::before {
+        content: '🏆';
+        position: absolute;
+        top: -20px;
+        right: -20px;
+        font-size: 6rem;
+        opacity: 0.2;
+        transform: rotate(15deg);
+      }
+
+      .offer-comparison {
+        border-radius: 15px;
+        transition: transform 0.3s ease;
+      }
+
+      .offer-comparison:hover {
+        transform: translateY(-5px);
+      }
+
+      .recommended-badge {
+        background: var(--bs-warning);
+        color: var(--bs-dark);
+        border-radius: 50px;
+        padding: 0.5rem 1rem;
+        font-weight: bold;
+        position: absolute;
+        top: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      }
+
+      .bonus-section {
+        background: linear-gradient(45deg, var(--bs-warning), var(--bs-orange));
+        color: white;
+        border-radius: 15px;
+      }
+
+      .urgency-timer {
+        background: var(--bs-danger);
+        color: white;
+        border-radius: 10px;
+        animation: urgent-pulse 1.5s infinite;
+      }
+
+      @keyframes urgent-pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.02); opacity: 0.9; }
+      }
+
+      .countdown-display {
+        font-family: 'Courier New', monospace;
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--bs-warning);
+      }
+
+      .testimonial-premium {
+        background: var(--bs-light);
+        border-left: 5px solid var(--bs-success);
+        border-radius: 10px;
+      }
+
+      .price-comparison {
+        font-size: 3rem;
+        font-weight: bold;
+      }
+
+      .old-price {
+        text-decoration: line-through;
+        opacity: 0.6;
+        font-size: 0.6em;
+      }
+
+      .feature-checkmark {
+        color: var(--bs-success);
+        font-weight: bold;
+      }
+
+      .skip-link {
+        color: var(--bs-secondary);
+        text-decoration: underline;
+        opacity: 0.8;
+      }
+
+      .skip-link:hover {
+        opacity: 1;
+        color: var(--bs-dark);
+      }
+    </style>
+
+    <!-- Load theme -->
+    <script src="../OneUI/01 OneUI Source (HTML)/src/assets/js/setTheme.js"></script>
+  </head>
+
+  <body>
+    <!-- Page Container -->
+    <div id="page-container" class="main-content-boxed">
+
+      <!-- Stop Header -->
+      <div class="stop-header">
+        <div class="content text-center">
+          <h1 class="h2 fw-bold mb-3">🛑 ATTENDEZ !</h1>
+          <p class="fs-lg mb-3">Offre exclusive avant finalisation</p>
+          <div class="badge bg-light text-dark fs-6 p-2">
+            Cette offre disparaît dans quelques secondes...
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <main id="main-container">
+        <div class="content">
+          <div class="row justify-content-center">
+            <div class="col-lg-10">
+
+              <!-- Success Message -->
+              <div class="block block-rounded border-success mb-4">
+                <div class="block-content text-center py-4" style="background: linear-gradient(135deg, var(--bs-success), var(--bs-info)); color: white;">
+                  <h3 class="fw-bold mb-3">🎊 Félicitations ! Vous avez accès à l'offre TARS PREMIUM</h3>
+                  <p class="fs-lg mb-0">
+                    Puisque vous venez d'acheter le Pack TARS, je vous offre une opportunité UNIQUE de compléter votre arsenal d'automatisation...
+                  </p>
+                </div>
+              </div>
+
+              <!-- Offer Comparison -->
+              <div class="row g-4 mb-5">
+                <div class="col-lg-6">
+                  <div class="offer-comparison card h-100 border-secondary">
+                    <div class="card-header bg-secondary text-white text-center">
+                      <h4 class="mb-0">Ce que vous avez</h4>
+                    </div>
+                    <div class="card-body text-center p-4">
+                      <div class="price-comparison text-secondary mb-4">29€</div>
+
+                      <ul class="list-unstyled text-start">
+                        <li class="mb-2"><span class="feature-checkmark">✅</span> 30 workflows Marketing</li>
+                        <li class="mb-2"><span class="feature-checkmark">✅</span> Documentation de base</li>
+                        <li class="mb-2"><span class="feature-checkmark">✅</span> Support email</li>
+                      </ul>
+
+                      <button class="btn btn-secondary w-100 mt-4" onclick="skipOffer()">
+                        Non merci, je continue
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="offer-comparison premium-offer card h-100 border-0 position-relative">
+                    <div class="recommended-badge">🏆 RECOMMANDÉ</div>
+
+                    <div class="card-header bg-transparent text-center border-0 pt-5">
+                      <h4 class="mb-0 fw-bold">TARS PREMIUM</h4>
+                    </div>
+
+                    <div class="card-body text-center p-4">
+                      <div class="price-comparison mb-4">
+                        <div class="old-price">149€</div>
+                        67€
+                      </div>
+
+                      <ul class="list-unstyled text-start">
+                        <li class="mb-2"><span class="feature-checkmark">✅</span> <strong>TOUT du pack à 29€ +</strong></li>
+                        <li class="mb-2"><span class="feature-checkmark">✅</span> 50 workflows Compta/Gestion</li>
+                        <li class="mb-2"><span class="feature-checkmark">✅</span> 30 workflows E-commerce</li>
+                        <li class="mb-2"><span class="feature-checkmark">✅</span> Formation vidéo exclusive (3h)</li>
+                        <li class="mb-2"><span class="feature-checkmark">✅</span> Support prioritaire 30 jours</li>
+                        <li class="mb-2"><span class="feature-checkmark">🎁</span> BONUS : Templates emails</li>
+                        <li class="mb-2"><span class="feature-checkmark">🎁</span> BONUS : Checklist déploiement</li>
+                      </ul>
+
+                      <button class="btn btn-warning btn-lg w-100 mt-4 fw-bold" onclick="upgradeToPremium()">
+                        🚀 JE PASSE AU PREMIUM - 67€
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bonus Section -->
+              <div class="bonus-section card p-5 text-center mb-5">
+                <h3 class="fw-bold mb-4">🎁 BONUS EXCLUSIFS si vous agissez maintenant :</h3>
+                <div class="row g-4">
+                  <div class="col-md-6">
+                    <div class="p-3 bg-white bg-opacity-10 rounded">
+                      <h5>✨ Accès VIP Communauté Skool</h5>
+                      <p class="mb-0">Valeur 67€/mois - OFFERT</p>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="p-3 bg-white bg-opacity-10 rounded">
+                      <h5>📧 50 Templates d'emails</h5>
+                      <p class="mb-0">Prêts à convertir</p>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="p-3 bg-white bg-opacity-10 rounded">
+                      <h5>📋 Checklist de déploiement</h5>
+                      <p class="mb-0">Étape par étape</p>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="p-3 bg-white bg-opacity-10 rounded">
+                      <h5>🎯 Consultation gratuite</h5>
+                      <p class="mb-0">30 minutes avec un expert</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="mt-4">
+                  <strong class="fs-lg">Valeur totale : 347€ - OFFERT aujourd'hui !</strong>
+                </div>
+              </div>
+
+              <!-- Urgency Timer -->
+              <div class="urgency-timer card p-4 text-center mb-5">
+                <h4 class="mb-3">⏰ Cette offre expire dans</h4>
+                <div class="countdown-display" id="countdown">05:00</div>
+                <p class="mb-0 mt-3"><strong>Après, le prix repasse à 149€ !</strong></p>
+              </div>
+
+              <!-- Testimonial -->
+              <div class="testimonial-premium card p-4 mb-5">
+                <h5 class="mb-3">💬 Témoignage d'un client PREMIUM :</h5>
+                <blockquote class="mb-3 fs-lg">
+                  "Le pack Premium m'a permis d'automatiser ENTIÈREMENT ma gestion admin. J'ai récupéré 15h par semaine ! Le ROI s'est fait en 1 semaine."
+                </blockquote>
+                <footer class="fw-bold text-success">- Sophie, E-commerce</footer>
+              </div>
+
+              <!-- Final CTA -->
+              <div class="text-center mb-5">
+                <button class="btn btn-success btn-xl fw-bold px-5 py-4 rounded-pill" onclick="upgradeToPremium()" style="font-size: 1.3rem;">
+                  🎯 OUI ! JE VEUX TARS PREMIUM + TOUS LES BONUS - 67€
+                </button>
+                <div class="mt-3 small text-muted">
+                  ✅ Garantie 30 jours satisfait ou remboursé
+                </div>
+              </div>
+
+              <!-- Skip Option -->
+              <div class="text-center">
+                <a href="#" class="skip-link" onclick="skipOffer()">
+                  Non merci, je continue avec mon pack à 29€
+                </a>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </main>
+
+    </div>
+    <!-- END Page Container -->
+
+    <!-- Tracking Script -->
+    <script src="../tracking/tars-tracker.js"></script>
+
+    <!-- OneUI Core JS -->
+    <script src="../OneUI/01 OneUI Source (HTML)/src/assets/js/oneui.app.min.js"></script>
+
+    <!-- Custom JS -->
+    <script>
+      // Initialize TARS Tracker
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.tarsTracker) {
+          window.tarsTracker.trackFunnelUpsell1();
+        }
+      });
+
+      // Countdown timer (5 minutes)
+      let timeLeft = 5 * 60; // 5 minutes in seconds
+
+      function updateCountdown() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById('countdown').textContent =
+          `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+        if (timeLeft > 0) {
+          timeLeft--;
+        } else {
+          document.querySelector('.urgency-timer').innerHTML =
+            '<div class="p-4 text-center"><h4 class="text-warning">⏰ OFFRE EXPIRÉE</h4><p>Prix normal : 149€</p></div>';
+        }
+      }
+
+      setInterval(updateCountdown, 1000);
+
+      function upgradeToPremium() {
+        // Track conversion
+        if (window.tarsTracker) {
+          window.tarsTracker.trackUpsell1Purchase();
+          window.tarsTracker.trackButtonClick('upgrade_premium', { amount: 67 });
+        }
+
+        // Show loading state
+        event.target.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i>Finalisation...';
+        event.target.disabled = true;
+
+        // Redirect to cross-sell
+        setTimeout(() => {
+          window.location.href = 'tars-crossell-oneui.html';
+        }, 1500);
+      }
+
+      function skipOffer() {
+        // Track skip
+        if (window.tarsTracker) {
+          window.tarsTracker.trackButtonClick('skip_upsell1');
+        }
+
+        // Redirect to cross-sell
+        window.location.href = 'tars-crossell-oneui.html';
+      }
+
+      // Exit intent popup
+      let exitIntentShown = false;
+      document.addEventListener('mouseout', function(e) {
+        if (e.clientY < 0 && !exitIntentShown && timeLeft > 0) {
+          exitIntentShown = true;
+
+          // OneUI modal would be better, but for simplicity using confirm
+          if (confirm("🤖 TARS dit : \"Attendez ! Voulez-vous vraiment manquer cette offre unique à 67€ au lieu de 149€ ? Mon taux d'humour chute à 0% si vous partez maintenant... 😢\"")) {
+            upgradeToPremium();
+          }
+        }
+      });
+
+      // TARS personality console messages
+      console.log('🤖 TARS: "Analyzing purchase behavior... 87% likely to upgrade."');
+      console.log('🤖 TARS: "This deal is 99.6% better than anything else out there."');
+      console.log('🤖 TARS: "Humor setting: MAXIMUM. Converting humans since Interstellar."');
+    </script>
+
+  </body>
+</html>

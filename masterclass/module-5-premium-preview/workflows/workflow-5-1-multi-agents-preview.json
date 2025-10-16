@@ -1,0 +1,73 @@
+{
+  "name": "Module 5.1 - Multi-Agents IA (Preview)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "preview-trigger",
+      "name": "When clicking \"Test workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "content": "## 🔒 Workflow Premium - Preview\n\n### Multi-Agents IA Orchestrés\n\nCe workflow premium comprend :\n\n🤖 **5 Agents Spécialisés**\n- Agent Recherche : Expert en collecte d'informations\n- Agent Analyse : Spécialiste data et insights\n- Agent Création : Génération de contenu avancé\n- Agent Décision : Logique business complexe\n- Agent Coordination : Chef d'orchestre\n\n🔄 **Communication Inter-Agents**\n- Messages structurés entre agents\n- Partage de contexte intelligent\n- Résolution collaborative\n\n🎯 **Cas d'Usage**\n- Analyse concurrentielle complète\n- Génération de rapports complexes\n- Stratégies marketing automatisées\n- Support client multi-niveau\n\n✨ **Fonctionnalités Avancées**\n- Apprentissage continu\n- Mémorisation long terme\n- Adaptation comportementale\n- Optimisation automatique\n\n---\n\n### 💡 Pour accéder à ce workflow complet :\n\n**Abonnement Premium (39€/mois)**\n- ✅ Workflow complet téléchargeable\n- ✅ Configuration pas à pas\n- ✅ Support prioritaire\n- ✅ Mises à jour régulières\n\n**Abonnement Business (97€/mois)**\n- ✅ Tout Premium +\n- ✅ Personnalisation sur mesure\n- ✅ Formation équipe incluse\n- ✅ Consulting 2h/mois\n\n[**Découvrir nos offres →**](https://automatehub.fr/pricing)",
+        "contentType": "markdown"
+      },
+      "id": "preview-info",
+      "name": "Information Preview",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "agent_roles",
+              "value": "=[\n  {\n    \"name\": \"Agent Recherche\",\n    \"speciality\": \"Web scraping, API calls, Data gathering\",\n    \"status\": \"🔒 Premium\"\n  },\n  {\n    \"name\": \"Agent Analyse\",\n    \"speciality\": \"Pattern recognition, Statistics, Insights\",\n    \"status\": \"🔒 Premium\"\n  },\n  {\n    \"name\": \"Agent Création\",\n    \"speciality\": \"Content generation, Design, Innovation\",\n    \"status\": \"🔒 Premium\"\n  },\n  {\n    \"name\": \"Agent Décision\",\n    \"speciality\": \"Business logic, Risk assessment, Strategy\",\n    \"status\": \"🔒 Premium\"\n  },\n  {\n    \"name\": \"Agent Coordination\",\n    \"speciality\": \"Task distribution, Result aggregation, Quality control\",\n    \"status\": \"🔒 Premium\"\n  }\n]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "demo-data",
+      "name": "Demo Structure",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "content": "## 📊 Architecture Multi-Agents\n\n```mermaid\ngraph TD\n    U[Utilisateur] -->|Requête| C[Agent Coordination]\n    C -->|Tâche 1| R[Agent Recherche]\n    C -->|Tâche 2| A[Agent Analyse]\n    C -->|Tâche 3| CR[Agent Création]\n    R -->|Données| A\n    A -->|Insights| D[Agent Décision]\n    D -->|Stratégie| CR\n    CR -->|Résultat| C\n    C -->|Réponse finale| U\n```\n\n### Exemple Concret : Analyse Concurrentielle\n\n1. **Coordination** reçoit : \"Analyse complète du concurrent X\"\n2. **Recherche** collecte : Site web, réseaux sociaux, avis clients\n3. **Analyse** détecte : Forces, faiblesses, opportunités\n4. **Décision** propose : Stratégies de différenciation\n5. **Création** génère : Rapport exécutif + plan d'action\n6. **Coordination** livre : Document complet en 5 minutes\n\n### 🚀 Résultats Attendus\n\n- **Temps gagné** : 95% vs analyse manuelle\n- **Qualité** : Analyse 360° impossible manuellement\n- **Coût** : 100x moins cher qu'un consultant\n- **Disponibilité** : 24/7 instantané",
+        "contentType": "markdown"
+      },
+      "id": "architecture-demo",
+      "name": "Architecture Demo",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "When clicking \"Test workflow\"": {
+      "main": [[{"node": "Information Preview", "type": "main", "index": 0}]]
+    },
+    "Information Preview": {
+      "main": [[{"node": "Demo Structure", "type": "main", "index": 0}]]
+    },
+    "Demo Structure": {
+      "main": [[{"node": "Architecture Demo", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "description": "Preview du système Multi-Agents IA. Version complète disponible en Premium."
+  },
+  "versionId": "1.0.0"
+}

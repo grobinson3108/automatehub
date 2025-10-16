@@ -1,0 +1,222 @@
+{
+  "name": "Module 2.4 - Connexion Paiements (Stripe, PayPal)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "trigger-payment",
+      "name": "When clicking \"Test workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "customer-001",
+              "name": "client",
+              "value": "={{ {\n  \"email\": \"client@example.com\",\n  \"nom\": \"Jean Dupont\",\n  \"montant\": 49.99,\n  \"devise\": \"EUR\",\n  \"description\": \"Abonnement Premium AutomateHub\"\n} }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "customer-data",
+      "name": "Données client",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "resource": "customer",
+        "operation": "create",
+        "email": "={{ $json.client.email }}",
+        "additionalFields": {
+          "name": "={{ $json.client.nom }}",
+          "description": "Client AutomateHub"
+        }
+      },
+      "id": "stripe-customer",
+      "name": "Créer client Stripe",
+      "type": "n8n-nodes-base.stripe",
+      "typeVersion": 1,
+      "position": [650, 200],
+      "credentials": {
+        "stripeApi": {
+          "id": "1",
+          "name": "Stripe account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "charge",
+        "operation": "create",
+        "customer": "={{ $json.id }}",
+        "amount": "={{ Math.round($json.client.montant * 100) }}",
+        "currency": "={{ $json.client.devise.toLowerCase() }}",
+        "additionalFields": {
+          "description": "={{ $json.client.description }}",
+          "receipt_email": "={{ $json.client.email }}"
+        }
+      },
+      "id": "stripe-charge",
+      "name": "Créer paiement Stripe",
+      "type": "n8n-nodes-base.stripe",
+      "typeVersion": 1,
+      "position": [850, 200],
+      "credentials": {
+        "stripeApi": {
+          "id": "1",
+          "name": "Stripe account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api-m.paypal.com/v2/checkout/orders",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "payPalApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "intent",
+              "value": "CAPTURE"
+            },
+            {
+              "name": "purchase_units",
+              "value": "=[\n  {\n    \"amount\": {\n      \"currency_code\": \"{{ $json.client.devise }}\",\n      \"value\": \"{{ $json.client.montant }}\"\n    },\n    \"description\": \"{{ $json.client.description }}\"\n  }\n]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "paypal-order",
+      "name": "Créer commande PayPal",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [650, 400],
+      "credentials": {
+        "payPalApi": {
+          "id": "1",
+          "name": "PayPal account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": "{{ $json.client.montant }}",
+        "from": "={{ $json.client.devise }}",
+        "to": [
+          "USD",
+          "GBP"
+        ],
+        "property": "conversion"
+      },
+      "id": "currency-convert",
+      "name": "Conversion devise",
+      "type": "n8n-nodes-base.exchangeRates",
+      "typeVersion": 1,
+      "position": [450, 500]
+    },
+    {
+      "parameters": {
+        "content": "## 💳 Résumé des paiements\n\n### Client\n- **Nom:** {{ $json.client.nom }}\n- **Email:** {{ $json.client.email }}\n\n### Transaction\n- **Montant:** {{ $json.client.montant }} {{ $json.client.devise }}\n- **Description:** {{ $json.client.description }}\n\n### Statuts\n- **Stripe:** {{ $node[\"Créer paiement Stripe\"].json.status || 'En attente' }}\n- **PayPal:** {{ $node[\"Créer commande PayPal\"].json.status || 'Créé' }}\n\n### Conversions\n- **USD:** ${{ $node[\"Conversion devise\"].json.conversion.USD.toFixed(2) }}\n- **GBP:** £{{ $node[\"Conversion devise\"].json.conversion.GBP.toFixed(2) }}",
+        "contentType": "markdown"
+      },
+      "id": "payment-summary",
+      "name": "Résumé paiements",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "YOUR_WEBHOOK_URL",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event",
+              "value": "payment_processed"
+            },
+            {
+              "name": "client",
+              "value": "={{ $json.client }}"
+            },
+            {
+              "name": "stripe_id",
+              "value": "={{ $node[\"Créer paiement Stripe\"].json.id }}"
+            },
+            {
+              "name": "paypal_id", 
+              "value": "={{ $node[\"Créer commande PayPal\"].json.id }}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $now.toISO() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "webhook-notify",
+      "name": "Webhook notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1050, 500]
+    }
+  ],
+  "connections": {
+    "When clicking \"Test workflow\"": {
+      "main": [[{"node": "Données client", "type": "main", "index": 0}]]
+    },
+    "Données client": {
+      "main": [[
+        {"node": "Créer client Stripe", "type": "main", "index": 0},
+        {"node": "Créer commande PayPal", "type": "main", "index": 0},
+        {"node": "Conversion devise", "type": "main", "index": 0}
+      ]]
+    },
+    "Créer client Stripe": {
+      "main": [[{"node": "Créer paiement Stripe", "type": "main", "index": 0}]]
+    },
+    "Créer paiement Stripe": {
+      "main": [[{"node": "Résumé paiements", "type": "main", "index": 0}]]
+    },
+    "Créer commande PayPal": {
+      "main": [[{"node": "Résumé paiements", "type": "main", "index": 0}]]
+    },
+    "Conversion devise": {
+      "main": [[{"node": "Résumé paiements", "type": "main", "index": 0}]]
+    },
+    "Résumé paiements": {
+      "main": [[{"node": "Webhook notification", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Intégration complète avec Stripe et PayPal pour gérer les paiements, avec conversion de devises."
+  },
+  "versionId": "1.0.0"
+}

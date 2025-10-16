@@ -1,0 +1,234 @@
+{
+  "name": "Module 2.3 - Connexion Messageries (Telegram, WhatsApp, Slack)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "trigger-messaging",
+      "name": "When clicking \"Test workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "msg-001",
+              "name": "message",
+              "value": "🎉 Notification automatique depuis n8n!",
+              "type": "string"
+            },
+            {
+              "id": "msg-002",
+              "name": "details",
+              "value": "Workflow exécuté avec succès le {{ $now.format('dd/MM/yyyy HH:mm') }}",
+              "type": "string"
+            },
+            {
+              "id": "msg-003",
+              "name": "urgence",
+              "value": "normal",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "prepare-message",
+      "name": "Préparer message",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "chatId": "YOUR_CHAT_ID",
+        "text": "={{ $json.message }}\n\n{{ $json.details }}",
+        "additionalFields": {
+          "parse_mode": "Markdown",
+          "disable_notification": "={{ $json.urgence === 'normal' }}"
+        }
+      },
+      "id": "telegram-send",
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [650, 200],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "channel": "#notifications",
+        "text": ":bell: *{{ $json.message }}*\n```{{ $json.details }}```",
+        "otherOptions": {}
+      },
+      "id": "slack-send",
+      "name": "Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [650, 350],
+      "credentials": {
+        "slackApi": {
+          "id": "1",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v18.0/YOUR_PHONE_NUMBER_ID/messages",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "messaging_product",
+              "value": "whatsapp"
+            },
+            {
+              "name": "to",
+              "value": "RECIPIENT_PHONE_NUMBER"
+            },
+            {
+              "name": "type",
+              "value": "text"
+            },
+            {
+              "name": "text",
+              "value": "={{ {\"body\": $json.message + \"\\n\" + $json.details} }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "whatsapp-send",
+      "name": "WhatsApp Business",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [650, 500],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "WhatsApp Access Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "urgency-check",
+              "leftValue": "={{ $json.urgence }}",
+              "rightValue": "urgent",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-urgency",
+      "name": "Vérifier urgence",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [850, 350]
+    },
+    {
+      "parameters": {
+        "resource": "SMS",
+        "operation": "send",
+        "from": "n8n-Alerts",
+        "to": "+33612345678",
+        "message": "=🚨 URGENT: {{ $json.message }}",
+        "options": {}
+      },
+      "id": "twilio-sms",
+      "name": "SMS d'urgence",
+      "type": "n8n-nodes-base.twilio",
+      "typeVersion": 1,
+      "position": [1050, 250],
+      "credentials": {
+        "twilioApi": {
+          "id": "1",
+          "name": "Twilio account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## ✅ Notifications envoyées\n\n- Telegram: Message envoyé\n- Slack: Canal notifié\n- WhatsApp: Message programmé\n{{ $json.urgence === 'urgent' ? '\\n- SMS: Alerte urgente envoyée' : '' }}",
+        "contentType": "markdown"
+      },
+      "id": "summary",
+      "name": "Résumé",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [1050, 400]
+    }
+  ],
+  "connections": {
+    "When clicking \"Test workflow\"": {
+      "main": [[{"node": "Préparer message", "type": "main", "index": 0}]]
+    },
+    "Préparer message": {
+      "main": [[
+        {"node": "Telegram", "type": "main", "index": 0},
+        {"node": "Slack", "type": "main", "index": 0},
+        {"node": "WhatsApp Business", "type": "main", "index": 0}
+      ]]
+    },
+    "Telegram": {
+      "main": [[{"node": "Vérifier urgence", "type": "main", "index": 0}]]
+    },
+    "Slack": {
+      "main": [[{"node": "Vérifier urgence", "type": "main", "index": 0}]]
+    },
+    "WhatsApp Business": {
+      "main": [[{"node": "Vérifier urgence", "type": "main", "index": 0}]]
+    },
+    "Vérifier urgence": {
+      "main": [
+        [{"node": "SMS d'urgence", "type": "main", "index": 0}],
+        [{"node": "Résumé", "type": "main", "index": 0}]
+      ]
+    },
+    "SMS d'urgence": {
+      "main": [[{"node": "Résumé", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Envoie des notifications sur plusieurs plateformes de messagerie avec gestion de l'urgence."
+  },
+  "versionId": "1.0.0"
+}

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 ATTENDEZ ! Offre Spéciale TARS Premium</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            padding: 30px 0;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+
+        .stop-banner {
+            background: #e74c3c;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+
+        .offer-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .offer-box {
+            border: 3px solid #ddd;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .offer-box.recommended {
+            border-color: #27ae60;
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .offer-box.recommended::before {
+            content: "🏆 RECOMMANDÉ";
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f39c12;
+            color: white;
+            padding: 5px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+
+        .price {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .old-price {
+            text-decoration: line-through;
+            color: #999;
+            font-size: 0.6em;
+        }
+
+        .feature-list {
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .feature-list li {
+            margin: 10px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .feature-list li::before {
+            content: "✅";
+            position: absolute;
+            left: 0;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 20px 0;
+            transition: transform 0.3s;
+            width: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .cta-button.secondary {
+            background: #95a5a6;
+        }
+
+        .bonus-section {
+            background: #f39c12;
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .urgency {
+            background: #e74c3c;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .social-proof {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .offer-comparison {
+                grid-template-columns: 1fr;
+            }
+            .offer-box.recommended {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛑 ATTENDEZ !</h1>
+            <p>Offre exclusive avant finalisation</p>
+        </div>
+
+        <div class="main-content">
+            <div class="stop-banner">
+                Ne partez pas ! Cette offre disparaît dans quelques secondes...
+            </div>
+
+            <h2 style="text-align: center; margin-bottom: 30px;">
+                Félicitations ! Vous avez accès à l'offre TARS PREMIUM
+            </h2>
+
+            <p style="text-align: center; font-size: 1.1em; margin-bottom: 40px;">
+                Puisque vous venez d'acheter le Pack TARS, je vous offre une opportunité UNIQUE de compléter votre arsenal d'automatisation...
+            </p>
+
+            <div class="offer-comparison">
+                <div class="offer-box">
+                    <h3>Ce que vous avez</h3>
+                    <div class="price">29€</div>
+                    <ul class="feature-list">
+                        <li>30 workflows Marketing</li>
+                        <li>Documentation de base</li>
+                        <li>Support email</li>
+                    </ul>
+                    <button class="cta-button secondary" onclick="skipOffer()">
+                        Non merci, je continue
+                    </button>
+                </div>
+
+                <div class="offer-box recommended">
+                    <h3>TARS PREMIUM</h3>
+                    <div class="price">
+                        <span class="old-price">149€</span><br>
+                        67€
+                    </div>
+                    <ul class="feature-list">
+                        <li><strong>TOUT du pack à 29€ +</strong></li>
+                        <li>50 workflows Compta/Gestion</li>
+                        <li>30 workflows E-commerce</li>
+                        <li>Formation vidéo exclusive (3h)</li>
+                        <li>Support prioritaire 30 jours</li>
+                        <li>🎁 BONUS : Templates emails</li>
+                        <li>🎁 BONUS : Checklist déploiement</li>
+                    </ul>
+                    <button class="cta-button" onclick="upgradeToPremium()">
+                        🚀 JE PASSE AU PREMIUM - 67€
+                    </button>
+                </div>
+            </div>
+
+            <div class="bonus-section">
+                <h3>🎁 BONUS EXCLUSIFS si vous agissez maintenant :</h3>
+                <ul style="text-align: left; margin: 20px 0;">
+                    <li>✨ Accès VIP à ma communauté Skool (valeur 67€/mois)</li>
+                    <li>📧 50 Templates d'emails convertisseurs</li>
+                    <li>📋 Checklist de déploiement étape par étape</li>
+                    <li>🎯 1 consultation gratuite de 30min</li>
+                </ul>
+                <p><strong>Valeur totale : 347€ - OFFERT aujourd'hui !</strong></p>
+            </div>
+
+            <div class="urgency">
+                ⏰ Cette offre expire dans <span id="countdown">05:00</span>
+                <br>Après, le prix repasse à 149€ !
+            </div>
+
+            <div class="social-proof">
+                <h4>💬 Témoignage d'un client PREMIUM :</h4>
+                <blockquote style="font-style: italic; margin: 15px 0;">
+                    "Le pack Premium m'a permis d'automatiser ENTIÈREMENT ma gestion admin. J'ai récupéré 15h par semaine ! Le ROI s'est fait en 1 semaine."
+                    <br><strong>- Sophie, E-commerce</strong>
+                </blockquote>
+            </div>
+
+            <div style="text-align: center; margin: 40px 0;">
+                <button class="cta-button" onclick="upgradeToPremium()" style="font-size: 1.3em; padding: 20px;">
+                    🎯 OUI ! JE VEUX TARS PREMIUM + TOUS LES BONUS - 67€
+                </button>
+                <p style="margin-top: 15px; color: #666;">
+                    <small>Garantie 30 jours satisfait ou remboursé</small>
+                </p>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="#" onclick="skipOffer()" style="color: #666; text-decoration: underline;">
+                    Non merci, je continue avec mon pack à 29€
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Countdown timer (5 minutes)
+        let timeLeft = 5 * 60; // 5 minutes in seconds
+
+        function updateCountdown() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('countdown').textContent =
+                `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+            if (timeLeft > 0) {
+                timeLeft--;
+            } else {
+                document.querySelector('.urgency').innerHTML =
+                    '⏰ <strong>OFFRE EXPIRÉE</strong> - Prix normal : 149€';
+            }
+        }
+
+        setInterval(updateCountdown, 1000);
+
+        function upgradeToPremium() {
+            // Track conversion
+            console.log('Upsell 1 - Premium upgrade accepted');
+            // Redirect to payment or next upsell
+            window.location.href = 'tars-crossell.html';
+        }
+
+        function skipOffer() {
+            // Track skip
+            console.log('Upsell 1 - Declined');
+            // Redirect to cross-sell or thank you page
+            window.location.href = 'tars-crossell.html';
+        }
+
+        // Exit intent popup
+        let exitIntentShown = false;
+        document.addEventListener('mouseout', function(e) {
+            if (e.clientY < 0 && !exitIntentShown) {
+                exitIntentShown = true;
+                if (confirm("Attendez ! Voulez-vous vraiment manquer cette offre unique à 67€ au lieu de 149€ ?")) {
+                    upgradeToPremium();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

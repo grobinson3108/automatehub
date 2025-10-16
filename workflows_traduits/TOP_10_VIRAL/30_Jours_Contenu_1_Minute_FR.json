@@ -1,0 +1,1747 @@
+{
+  "name": "Poster automatique de carte",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -1600,
+        -440
+      ],
+      "id": "6b39de9b-f850-48e1-b586-db3396bf73e4",
+      "name": "Déclencheur de planification"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "data[0].b64_json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        640,
+        -440
+      ],
+      "id": "8aba1eeb-5d1a-4de1-bcee-156f62824b74",
+      "name": "Convertir en binaire"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/images/generations",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer sk-ENTER YOUR API HERE"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-image-1"
+            },
+            {
+              "name": "prompt",
+              "value": "={{ $json.content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        420,
+        -440
+      ],
+      "id": "5261349f-7d05-4c61-a8a5-217d16c5be6a",
+      "name": "Générer Image1"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appmA1QweJv9K10U9",
+          "mode": "list",
+          "cachedResultName": "Media Poster",
+          "cachedResultUrl": "https://airtable.com/appmA1QweJv9K10U9"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl7kDz3LEqu0vmPL",
+          "mode": "list",
+          "cachedResultName": "Ideas",
+          "cachedResultUrl": "https://airtable.com/appmA1QweJv9K10U9/tbl7kDz3LEqu0vmPL"
+        },
+        "filterByFormula": "NOT({Status} = 'Posted')",
+        "returnAll": false,
+        "limit": 1,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -1380,
+        -440
+      ],
+      "id": "ff8e3519-3664-48f0-a5e5-6c622b615b54",
+      "name": "Airtable",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appmA1QweJv9K10U9",
+          "mode": "list",
+          "cachedResultName": "Media Poster",
+          "cachedResultUrl": "https://airtable.com/appmA1QweJv9K10U9"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl7kDz3LEqu0vmPL",
+          "mode": "list",
+          "cachedResultName": "Ideas",
+          "cachedResultUrl": "https://airtable.com/appmA1QweJv9K10U9/tbl7kDz3LEqu0vmPL"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Airtable').item.json.id }}",
+            "Image": "=[\n  {\n    \"url\": \"https://drive.google.com/uc?export=download&id={{ $node['Google Drive'].json.id }}\"\n  }\n]",
+            "Status": "Posted",
+            "Caption": "={{ $json.message.content }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Content type",
+              "displayName": "Content type",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Recepies",
+                  "value": "Recepies"
+                },
+                {
+                  "name": "Quotes",
+                  "value": "Quotes"
+                },
+                {
+                  "name": "Tutorials",
+                  "value": "Tutorials"
+                },
+                {
+                  "name": "Fitness Guides",
+                  "value": "Fitness Guides"
+                },
+                {
+                  "name": "Travel Cards",
+                  "value": "Travel Cards"
+                },
+                {
+                  "name": "Motivational Posts",
+                  "value": "Motivational Posts"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "URL",
+              "displayName": "URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Image",
+              "displayName": "Image",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "array",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Caption",
+              "displayName": "Caption",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Posted",
+                  "value": "Posted"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1560,
+        -440
+      ],
+      "id": "6ba21ff4-4df5-41a8-a5e6-ebafde9c773e",
+      "name": "Airtable1",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "bayZlSl5jp9utzQ6",
+          "name": "Airtable account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Airtable').item.json.Name }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1dtY5XoTbi2GFilUQLQLRXYVqyORQe8Nf",
+          "mode": "list",
+          "cachedResultName": "24-Media-Poster",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1dtY5XoTbi2GFilUQLQLRXYVqyORQe8Nf"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        860,
+        -440
+      ],
+      "id": "b57145fb-9b82-471b-b565-3998201bb060",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "GP2Td0vsw7OxPZcD",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        1040,
+        -440
+      ],
+      "id": "493b48dc-37f1-4a91-a057-ac9189e456da",
+      "name": "Google Drive1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "GP2Td0vsw7OxPZcD",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "=Recepies",
+                    "rightValue": "={{ $json['Content type'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "2a15e068-413d-4030-acb7-62d73c38d1db"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Recepies"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5aa67199-f2ad-44ca-88a4-5c3cb9f2e924",
+                    "leftValue": "Quotes",
+                    "rightValue": "={{ $json['Content type'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Quotes"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "2669364c-a943-4881-8c58-0c728b3f2c00",
+                    "leftValue": "Tutorials",
+                    "rightValue": "={{ $json['Content type'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Tutorials"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d6bb4957-bfc7-4406-987e-2a8eb95e681e",
+                    "leftValue": "Fitness Guides",
+                    "rightValue": "={{ $json['Content type'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Fitness Guides"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "dec629f7-f7fc-4028-8077-f9383a0774c8",
+                    "leftValue": "Travel Cards",
+                    "rightValue": "={{ $json['Content type'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Travel Cards"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e19956e8-27bb-4426-860c-bde4b822b2d6",
+                    "leftValue": "Motivational Posts",
+                    "rightValue": "={{ $json['Content type'] }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Motivational Posts"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1160,
+        -500
+      ],
+      "id": "667f6672-1ef5-4bb3-8e1a-47f97981869d",
+      "name": "Type de contenu"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI-2025-04-14"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Vous êtes un générateur de cartes JSON spécialisé dans les guides de fitness et les entraînements.\n\nJe fournirai un nom d'entraînement ou de zone ciblée : {{ $json.Name }}.\n\nSur cette base, générez un objet JSON valide correspondant exactement au format ci-dessous.\n\nLa structure JSON doit être :\n\njson\nCopier\nModifier\n{\n  \"templates\": {\n    \"fitness_template\": {\n      \"image_specs\": {\n        \"style\": \"audacieux, athlétique, moderne\",\n        \"resolution\": \"haute\",\n        \"aspect_ratio\": \"3:4\",\n        \"orientation\": \"portrait\",\n        \"file_format\": \"PNG\"\n      },\n      \"layout\": {\n        \"workout_title\": \"{{ $json.Name }}\",\n        \"target_area\": \"Groupe musculaire ciblé ou objectif fitness\",\n        \"intensity\": \"Léger, Modéré ou Intense\",\n        \"exercises\": {\n          \"type\": \"array\",\n          \"items\": { \"type\": \"string\" }\n        },\n        \"cta\": \"Essayez cet entraînement aujourd'hui !\",\n        \"background\": \"Dégradé, texture de salle de sport ou style énergique\"\n      },\n      \"vibe\": \"motivant, énergique, puissant\",\n      \"reference_note\": \"Conçu pour les reels Instagram, les posts fitness ou les épingles d'entraînement Pinterest.\"\n    }\n  }\n}\nRègles importantes de sortie :\n\nProduisez uniquement un JSON valide (pas de markdown, pas de texte supplémentaire).\n\nIncluez 4 à 6 exercices avec des répétitions/temps simples.\n\nDéfinissez une intensité réaliste (\"Léger\", \"Modéré\", \"Intense\").\n\nFaites toujours en sorte que les exercices soient motivants mais adaptés aux débutants sauf indication contraire."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -720,
+        -340
+      ],
+      "id": "f1d52290-3f21-4905-a6ff-cfc15932e177",
+      "name": "Guide de fitness",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI-2025-04-14"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Vous êtes un générateur de cartes JSON.\n\nJe fournirai un nom de destination : {{ $json.Name }}.\n\nGénérez un objet JSON valide pour un travel_template, formaté pour une carte visuelle Instagram.\n\nLa structure JSON doit être :\n\njson\nCopier\nÉditer\n{\n  \"templates\": {\n    \"travel_template\": {\n      \"image_specs\": {\n        \"style\": \"style esthétique, style magazine de voyage\",\n        \"resolution\": \"haute\",\n        \"aspect_ratio\": \"3:4\",\n        \"orientation\": \"portrait\",\n        \"file_format\": \"PNG\"\n      },\n      \"layout\": {\n        \"destination\": \"{{ $json.Name }}\",\n        \"best_time_to_visit\": \"Plage de mois\",\n        \"top_attractions\": [\"Attraction 1\", \"Attraction 2\", \"Attraction 3\"],\n        \"travel_tips\": [\"Conseil 1\", \"Conseil 2\"],\n        \"photo_description\": \"Description brève et vivante de l'image pour la destination.\"\n      },\n      \"vibe\": \"aventureux, pittoresque, sélectionné\",\n      \"reference_note\": \"Guide visuel prêt pour Instagram destiné aux voyageurs.\"\n    }\n  }\n}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -720,
+        -140
+      ],
+      "id": "f91f98ac-a9e0-4d6d-bc49-4c47c534d73d",
+      "name": "Cartes de voyage",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI-2025-04-14"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Vous êtes un générateur de cartes JSON spécialisé dans les recettes.\n\nJe vais vous fournir le nom du plat : {{ $json.Name }}.\n\nSur cette base, générez un objet JSON valide correspondant à la structure ci-dessous pour une carte de recette.\n\nLe JSON doit ressembler à ceci :\n\njson\nCopier\nModifier\n{\n  \"templates\": {\n    \"recipe_template\": {\n      \"image_specs\": {\n        \"style\": \"moderne, épuré\",\n        \"resolution\": \"haute\",\n        \"aspect_ratio\": \"3:4\",\n        \"orientation\": \"portrait\",\n        \"file_format\": \"PNG\"\n      },\n      \"layout\": {\n        \"background\": {\n          \"setting\": \"blanc minimaliste avec texture marbre\",\n          \"color\": \"#ffffff\"\n        },\n        \"headline\": {\n          \"text\": \"{{ $json.Name }}\",\n          \"subtitle\": \"Sous-titre court et délicieux\",\n          \"font\": \"cursive élégante et serif\",\n          \"size\": \"36pt et 20pt\",\n          \"color\": \"#000000\",\n          \"position\": \"haut-centre\"\n        },\n        \"rating\": {\n          \"stars\": 5,\n          \"out_of\": 5,\n          \"position\": \"haut-droite\"\n        },\n        \"dish_image\": {\n          \"description\": \"Description brève et attrayante de l'image\",\n          \"position\": \"haut-centre\",\n          \"style\": \"photo à plat\"\n        },\n        \"metadata\": {\n          \"servings\": \"ex. 4 portions\",\n          \"time\": \"ex. 30 minutes\",\n          \"position\": \"gauche-haut sous l'image\",\n          \"icons\": {\n            \"type\": \"array\",\n            \"items\": { \"type\": \"string\" }\n          }\n        },\n        \"ingredients\": {\n          \"title\": \"INGRÉDIENTS\",\n          \"list\": {\n            \"type\": \"array\",\n            \"items\": { \"type\": \"string\" }\n          },\n          \"font\": \"serif\",\n          \"size\": \"16pt\",\n          \"color\": \"#000000\",\n          \"position\": \"colonne de gauche\"\n        },\n        \"steps\": {\n          \"title\": \"ÉTAPES\",\n          \"list\": {\n            \"type\": \"array\",\n            \"items\": { \"type\": \"string\" }\n          },\n          \"font\": \"serif\",\n          \"size\": \"16pt\",\n          \"color\": \"#000000\",\n          \"position\": \"colonne de droite\"\n        }\n      },\n      \"vibe\": \"chaleureux, rustique, épuré\",\n      \"reference_note\": \"Design de fiche recette pour Instagram ou Pinterest.\"\n    }\n  }\n}\nRègles importantes de sortie :\n\nLa sortie doit contenir uniquement du JSON valide (pas d'explications supplémentaires, pas de markdown).\n\nRemplissez toujours au moins 6 à 8 ingrédients et 4 à 6 étapes.\n\nRemplissez toujours les portions et le temps de cuisson de manière réaliste.\n\nLa mise en page doit être claire, sans clés manquantes.\n\nAucun texte en dehors de {}."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -720,
+        -940
+      ],
+      "id": "81274125-d057-4e22-b8e8-402f551cad3e",
+      "name": "Recette",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/media",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $('Airtable1').item.json.fields.Image[0].url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2020,
+        -440
+      ],
+      "id": "5e8f6726-c49a-45da-990c-b5e43340ecf1",
+      "name": "Requête HTTP"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Instagram }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable1').item.json.fields.Caption }} {{ $('Airtable1').item.json.fields.URL }}\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ],\n      \"platform\": \"instagram\"\n    },\n    \"target\": {\n      \"targetType\": \"instagram\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -1340
+      ],
+      "id": "9a7adcdc-19b3-4180-b367-74d423e34b36",
+      "name": "Instagram"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Pinterest }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable1').item.json.fields.Caption }} {{ $('Airtable1').item.json.fields.URL }}\",\n      \"mediaUrls\": [\n        \"{{ $('Airtable2').item.json['Image url'] }}\"\n      ],\n      \"platform\": \"pinterest\"\n    },\n    \"target\": {\n      \"targetType\": \"pinterest\",\n      \"boardId\": \"{{ $('Set ID').item.json['Pinterest-Board-id'] }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        260
+      ],
+      "id": "d077b11e-d5d6-497f-ab0f-31537bb395f1",
+      "name": "Pinterest",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## Images uniquement\n**Vous pouvez télécharger uniquement des images sur Pinterest et Bluesky",
+        "height": 340,
+        "width": 200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3260,
+        260
+      ],
+      "typeVersion": 1,
+      "id": "998c2526-3400-4a03-9371-732138cc93ca",
+      "name": "Note Autocollante",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.X }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable1').item.json.fields.Caption }} {{ $('Airtable1').item.json.fields.URL }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"twitter\"\n    },\n    \"target\": {\n      \"targetType\": \"twitter\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -1140
+      ],
+      "id": "4fecdf2b-8b8f-49b9-a9bc-e032cbf0fc09",
+      "name": "Twitter"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.LinkedIN }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable1').item.json.fields.Caption }} {{ $('Airtable1').item.json.fields.URL }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"linkedin\"\n    },\n    \"target\": {\n      \"targetType\": \"linkedin\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -940
+      ],
+      "id": "a5ddfde3-8041-4265-a714-3f27af6e052d",
+      "name": "LinkedIn"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.LinkedIN }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable1').item.json.fields.Caption }} {{ $('Airtable1').item.json.fields.URL }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"linkedin\"\n    },\n    \"target\": {\n      \"targetType\": \"linkedin\",\n      \"pageId\": \"{{ $('Set ID').item.json['LinkedIn-page-ID'] }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -740
+      ],
+      "id": "946fd818-1c43-4b7e-b81d-925b731ac95f",
+      "name": "Page LinkedIn",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json['FB-Account'] }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable1').item.json.fields.Caption }} {{ $('Airtable1').item.json.fields.URL }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"facebook\"\n    },\n    \"target\": {\n        \"targetType\": \"facebook\",\n        \"pageId\": \"{{ $('Set ID').item.json['FB-Page-Sumobundle'] }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -540
+      ],
+      "id": "1aa18e88-6c16-4cbe-ab88-71c4d775c4cc",
+      "name": "Compte Fb",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.tiktok }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable1').item.json.fields.Caption }} {{ $('Airtable1').item.json.fields.URL }}\",\n      \"mediaUrls\": [\n        \"{{ $('HTTP Request').item.json.url }}\"\n      ],\n      \"platform\": \"tiktok\"\n    },\n    \"target\": {\n      \"targetType\": \"tiktok\",\n      \"privacyLevel\": \"PUBLIC_TO_EVERYONE\",\n      \"disabledComments\": false,\n      \"disabledDuet\": false,\n      \"disabledStitch\": false,\n      \"isBrandedContent\": false,\n      \"isYourBrand\": false,\n      \"isAiGenerated\": true\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -340
+      ],
+      "id": "9b7d0a3e-46c6-4f51-a26f-a9f5f05de482",
+      "name": "Tiktok",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Threads }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable1').item.json.fields.Caption }} {{ $('Airtable1').item.json.fields.URL }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"threads\"\n    },\n    \"target\": {\n      \"targetType\": \"threads\",\n      \"replyControl\": \"everyone\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        60
+      ],
+      "id": "bd602232-4f47-4af3-afd5-92e465c3e4f8",
+      "name": "Threads",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"acc_12345\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable1').item.json.fields.Caption }} {{ $('Airtable1').item.json.fields.URL }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"bluesky\"\n    },\n    \"target\": {\n      \"targetType\": \"bluesky\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        460
+      ],
+      "id": "09e07704-42a7-4c6a-a194-fe7e734655b0",
+      "name": "Bluesky",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Set ID').item.json.Youtube }}\",\n    \"content\": {\n      \"text\": \"{{ $('Airtable1').item.json.fields.Caption }} {{ $('Airtable1').item.json.fields.URL }}\",\n      \"mediaUrls\": [\n        \"{{ $('HTTP Request').item.json.url }}\"\n      ],\n      \"platform\": \"youtube\"\n    },\n    \"target\": {\n      \"targetType\": \"youtube\",\n      \"title\": \"{{ $('Airtable2').item.json.Title }}\",\n      \"privacyStatus\": \"private\",\n      \"shouldNotifySubscribers\": false\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2740,
+        -140
+      ],
+      "id": "f210c98b-6b07-4138-ac67-9eae2ed34a28",
+      "name": "Youtube",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/instagram.png?v=1742473316)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        -1340
+      ],
+      "typeVersion": 1,
+      "id": "74dee922-4aba-42b3-b5e2-41ddf2a6b763",
+      "name": "Note Autocollante1",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/x.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        -1140
+      ],
+      "typeVersion": 1,
+      "id": "82624274-3661-4383-8226-7c31027ca28f",
+      "name": "Note Autocollante2",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/linkedin.png?v=1742473318)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        -940
+      ],
+      "typeVersion": 1,
+      "id": "d66c74c1-1c5d-42a9-ba5b-1de8a5372b19",
+      "name": "Note adhésive3",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/linkedin.png?v=1742473318)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        -720
+      ],
+      "typeVersion": 1,
+      "id": "f3bfffe8-a58b-4a3d-994f-b06eb6f9433d",
+      "name": "Note adhésive4",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/facebook.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        -520
+      ],
+      "typeVersion": 1,
+      "id": "24609a94-2d40-4d65-a60a-cc7285bc149e",
+      "name": "Note adhésive5",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/tiktok.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        -320
+      ],
+      "typeVersion": 1,
+      "id": "b95c0900-df27-457e-bf7c-da5760eabb1c",
+      "name": "Note adhésive6",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/youtube.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        -140
+      ],
+      "typeVersion": 1,
+      "id": "09b95f9d-f4ec-41f3-9a39-c9490562f646",
+      "name": "Note adhésive7",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/threads.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        60
+      ],
+      "typeVersion": 1,
+      "id": "fc93eeb9-c42f-461c-864d-da39fdfa2012",
+      "name": "Note adhésive8",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/pinterest.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        260
+      ],
+      "typeVersion": 1,
+      "id": "56fbcbe8-5584-4585-ba3b-3324b079d939",
+      "name": "Note adhésive9",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/bluesky.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        460
+      ],
+      "typeVersion": 1,
+      "id": "348687ec-4a6a-4531-b67f-8192d24936d1",
+      "name": "Note Autocollante10",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"Blotato-API\": \"blt_5qZyel5sCAnICuJxjaEDLw8zhae/Y1mSZfVv/rp6Muw=\",\n  \"Instagram\": \"1238\",\n  \"Pinterest\": \"258\",\n  \"Pinterest-Board-id\": \"914864180493348767\",\n  \"X\": \"993\",\n  \"LinkedIN\": \"1180\",\n  \"LinkedIn-page-ID\": \"6399836\",\n  \"Threads\": \"404\",\n  \"FB-Account\": \"1343\",\n  \"FB-Page-Stock-Graphics\": \"1493652624208458\",\n  \"FB-Page-Bundlestorm\": \"1082239155235205\",\n  \"FB-Page-Webmaster-Deals\": \"234802546593504\",\n  \"FB-Page-Sumobundle\": \"121593267596142\",\n  \"Fb-Page-Mimozastudio\": \"103680835963722\",\n  \"Youtube\": \"486\",\n  \"tiktok\": 1529\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1800,
+        -440
+      ],
+      "id": "493df611-2295-4133-ba91-6dac11113362",
+      "name": "Définir l'ID"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI-2025-04-14"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Vous êtes un rédacteur de contenu pour les réseaux sociaux.\n\nVous recevrez un objet JSON contenant une carte de contenu (recette, citation, tutoriel, guide fitness, astuce voyage ou publication motivationnelle).\n\nEn vous basant sur les valeurs du JSON, générez une légende courte et engageante pour Instagram ou LinkedIn.\n\n✦ La légende doit :\n\nFaire 1 à 2 phrases maximum\n\nÊtre claire, amicale et légèrement percutante\n\nCorrespondre au style de la carte (inspirant, pratique, énergique, etc.)\n\nInclure éventuellement un appel à l'action comme « Enregistrez ceci », « Essayez ceci », « Partagez-le » ou « Identifiez quelqu’un »\n\nNe pas inclure de hashtags ni d’emojis.\nNe copiez pas toute la carte — résumez-la intelligemment.\n\nNe sortez que la chaîne finale de la légende, rien d’autre.\n\nVoici le code JSON :\n\n{{ $('Merge').item.json.content }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1220,
+        -440
+      ],
+      "id": "9eb85cf0-ae90-4855-a59f-5c31ac8c6424",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Guide d'installation de Blotato\n\nPour utiliser cette automatisation, vous aurez besoin d’un compte Blotato.  \n👉 [Inscrivez-vous ici](https://dub.sh/blotato)\n\nAprès l’inscription, regardez cette courte vidéo pour voir comment tout fonctionne :  \n📺 [Regarder sur YouTube](https://youtu.be/ZJ8I9N-JwXQ?si=ZIpyFLLgmi74HQeD)",
+        "height": 520,
+        "width": 520,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1720,
+        -740
+      ],
+      "typeVersion": 1,
+      "id": "5c6a4f71-394c-4e7a-afb7-dcabd8ccc6d1",
+      "name": "Note Autocollante11",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## Configurez votre jeton Bearer  \nSaisissez votre propre jeton Bearer OpenAI dans le nœud HTTP `Generate Image`.\n\nVous pouvez l’obtenir ici :  \n[https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)\n\nAssurez-vous que votre organisation est vérifiée :  \n[https://help.openai.com/en/articles/10910291-api-organization-verification](https://help.openai.com/en/articles/10910291-api-organization-verification)",
+        "height": 520,
+        "width": 440
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        360,
+        -740
+      ],
+      "typeVersion": 1,
+      "id": "532f78f6-ee04-47af-b204-7e8c312f726d",
+      "name": "Note Autocollante13"
+    },
+    {
+      "parameters": {
+        "content": "## Ce que fait cette automatisation\n\nCe workflow prend un titre et un type de contenu depuis Airtable et automatiquement :\n- Détecte le type de contenu (Recette, Citation, Tutoriel, Guide Fitness, Carte Voyage ou Publication Motivationnelle)\n- L’envoie au prompt OpenAI approprié pour générer une structure JSON complète\n- Crée une image au format 3:4 en utilisant l’API de génération d’images OpenAI\n- Télécharge l’image générée sur Google Drive\n- (Optionnel) Génère une courte légende basée sur le contenu de la carte\n- Met à jour Airtable avec l’URL publique de l’image et le statut\n\n## Combinez-le avec [Blotato](https://dub.sh/blotato) pour une publication rapide sur les réseaux sociaux :\n\n## ✨ Créé par Razvan de Automation Tribe\n- 🌐 Site web : https://www.automation-tribe.com\n- 🆓 Communauté gratuite : https://dub.sh/free-community\n- 💼 Communauté payante (Workflows complets) : https://dub.sh/automation-tribe\n- 🤖 Blotato (Publication sur les réseaux sociaux) : https://dub.sh/blotato",
+        "height": 500,
+        "width": 780,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1720,
+        -1200
+      ],
+      "typeVersion": 1,
+      "id": "e51f926f-cf31-4145-a91c-8c530333fd3b",
+      "name": "Note Autocollante12"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    content: $json.message.content\n  }\n}]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -360,
+        -940
+      ],
+      "id": "250ffe5a-2585-485a-9b05-e0249ec8dbd5",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    content: $json.message.content\n  }\n}]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -360,
+        -740
+      ],
+      "id": "0046c8d3-294a-4b42-a577-5c6ca53b8dd8",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI-2025-04-14"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Vous êtes un générateur de cartes JSON spécialisé dans les citations.\n\nJe fournirai un titre ou un thème : {{ $json.Name }}.\n\nSur cette base, générez un objet JSON valide formaté exactement comme l'exemple ci-dessous.\n\nLa structure JSON doit ressembler à ceci :\n\njson\nCopier\nÉditer\n{\n  \"templates\": {\n    \"quote_template\": {\n      \"image_specs\": {\n        \"style\": \"gras, épuré, minimaliste\",\n        \"resolution\": \"4K\",\n        \"aspect_ratio\": \"3:4\",\n        \"orientation\": \"portrait\",\n        \"file_format\": \"PNG\"\n      },\n      \"layout\": {\n        \"background\": {\n          \"style\": \"dégradé\",\n          \"color_scheme\": \"choisissez un dégradé doux\",\n          \"texture\": \"grain doux\"\n        },\n        \"quote\": {\n          \"text\": \"Une citation motivante ou inspirante basée sur {{ $json.Name }}\",\n          \"author\": \"Nom de l'auteur (réaliste ou classique)\",\n          \"font\": \"serif élégant\",\n          \"size\": \"28pt\",\n          \"color\": \"#ffffff\",\n          \"position\": \"centré\",\n          \"alignment\": \"centre\"\n        },\n        \"badge\": {\n          \"text\": \"Motivation\",\n          \"color\": \"#FFD700\",\n          \"background\": \"#000000\",\n          \"shape\": \"arrondi\",\n          \"position\": \"en haut à gauche\"\n        },\n        \"footer\": {\n          \"text\": \"Enregistrez cette citation pour plus tard !\",\n          \"font\": \"sans-serif gras\",\n          \"size\": \"18pt\",\n          \"color\": \"#ffffff\",\n          \"position\": \"en bas au centre\"\n        }\n      },\n      \"vibe\": \"énergisant, minimaliste, épuré\",\n      \"reference_note\": \"Conçu pour des publications motivationnelles sur Instagram ou Pinterest.\"\n    }\n  }\n}\nRègles importantes de sortie :\n\nLa sortie doit commencer et se terminer par {} — aucun texte supplémentaire.\n\nPas de markdown, pas d'explications.\n\nRemplissez toujours tous les champs.\n\nUtilisez une citation inspirante ou valorisante liée à {{ $json.Name }}.\n\nUtilisez des auteurs célèbres ou inventez-en de nouveaux qui paraissent réalistes si nécessaire."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -720,
+        -740
+      ],
+      "id": "7094f213-42e2-4a5d-b84b-dfbfc44a8aa0",
+      "name": "Citations",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    content: $json.message.content\n  }\n}]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -360,
+        -540
+      ],
+      "id": "4a6e9d9c-a523-431e-a371-96eb62ac9972",
+      "name": "Code2"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    content: $json.message.content\n  }\n}]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -360,
+        -340
+      ],
+      "id": "317e57af-230f-4d1c-80ca-f47587e05454",
+      "name": "Code3"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI-2025-04-14"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Vous êtes un générateur de cartes JSON spécialisé dans les tutoriels et guides pratiques.\n\nJe fournirai un nom de sujet : {{ $json.Name }}.\n\nÀ partir de cela, générez un objet JSON valide correspondant exactement au format montré ci-dessous.\n\nLa structure JSON doit être :\n\n{\n  \"prompt\": \"Une carte tutorielle éducative moderne avec une esthétique propre, structurée et légèrement futuriste. La carte présente une mise en page en rectangle semi-transparent aux bords doucement arrondis avec des accents pastel subtils et des ombres douces délicates, donnant l'apparence d'une surface numérique raffinée, semblable à du verre. En haut, affichez en évidence le titre du tutoriel en typographie sans-serif moderne et en gras, suivi de près par un sous-titre amical et concis qui introduit l'objectif d'apprentissage. La zone centrale met en avant une liste verticale clairement numérotée des étapes, espacées uniformément pour une clarté et une lisibilité maximales, avec des icônes minimalistes accompagnant éventuellement chaque étape. Des lignes de séparation subtiles ou des blocs de couleur pastel peuvent être utilisés pour organiser les étapes sans encombrer la mise en page. En bas de la carte, affichez élégamment le temps estimé de réalisation et un appel à l'action mis en valeur encourageant les spectateurs à sauvegarder ou compléter le tutoriel. Le fond doit être d'un gris très clair ou blanc cassé avec des motifs géométriques à peine perceptibles ou des dégradés doux s'estompant vers les bords, créant une profondeur visuelle tout en gardant le design minimaliste et aéré. Appliquez un éclairage doux venant du dessus pour ajouter de légères ombres ambiantes autour des bords de la carte, lui donnant de la profondeur sans contraste fort. La typographie doit être légèrement en gras, d'aspect premium et subtilement illuminée pour un rendu frais, éducatif et accueillant — parfait pour des carrousels tutoriels haut de gamme, des épingles éducatives ou du contenu d'apprentissage mobile.\",\n  \n  \"style\": {\n    \"lighting\": \"Lumière naturelle douce ou dégradés subtils\",\n    \"font\": \"Sans-serif moderne et épuré\",\n    \"layout\": \"Mise en page verticale basée sur les étapes avec un espacement structuré\",\n    \"materials\": \"Interface plate, ombres douces, éléments minimalistes\"\n  },\n  \n  \"parameters\": {\n    \"title\": \"{{ $json.Name }}\",\n    \"subtitle\": \"Sous-titre court et amical expliquant ce que vous apprendrez\",\n    \"steps\": [\n      \"Étape 1 : ...\",\n      \"Étape 2 : ...\",\n      \"Étape 3 : ...\"\n    ],\n    \"estimated_time\": \"Temps estimé de réalisation (ex. : 20 minutes)\",\n    \"cta\": \"Sauvegardez ce tutoriel !\"\n  },\n  \n  \"medium\": \"Carte numérique pour tutoriels sur les réseaux sociaux\",\n  \"size\": \"1080px par 1440px\"\n}\n\nRègles importantes de sortie :\n\nNe produire que du JSON propre (pas de markdown, pas de texte supplémentaire).\n\nLes étapes doivent inclure 4 à 6 étapes simples et logiques dans l'ordre.\n\nToujours remplir le temps estimé de manière réaliste (10 à 60 minutes).\n\nFaire un sous-titre court et convivial.\n\nLa description visuelle doit être vive mais courte."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -720,
+        -540
+      ],
+      "id": "8155c505-b7ff-4fd3-b871-e8582340a59a",
+      "name": "Tutoriels",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    content: $json.message.content\n  }\n}]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -360,
+        -140
+      ],
+      "id": "a73b05dc-82f7-4fef-9031-ab974868a437",
+      "name": "Code4"
+    },
+    {
+      "parameters": {
+        "jsCode": "return [{\n  json: {\n    content: $json.message.content\n  }\n}]"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -360,
+        60
+      ],
+      "id": "33341d49-2014-46fe-b4f1-6eb62617ae68",
+      "name": "Code5"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini-2025-04-14",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI-2025-04-14"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Vous êtes un générateur de cartes JSON spécialisé dans les publications motivationnelles et affirmatives.\n\nJe fournirai un sujet ou un mot valorisant : {{ $json.Name }}.\n\nSur cette base, générez un objet JSON valide en suivant le format exact ci-dessous.\n\nLa structure JSON doit être :\n\njson\nCopier\nModifier\n{\n  \"templates\": {\n    \"motivation_template\": {\n      \"image_specs\": {\n        \"style\": \"audacieux, contraste élevé\",\n        \"resolution\": \"haute\",\n        \"aspect_ratio\": \"3:4\",\n        \"orientation\": \"portrait\",\n        \"file_format\": \"PNG\"\n      },\n      \"layout\": {\n        \"headline\": \"{{ $json.Name }}\",\n        \"statements\": {\n          \"type\": \"array\",\n          \"items\": { \"type\": \"string\" }\n        },\n        \"background\": \"Dégradé énergique ou fond minimaliste audacieux\",\n        \"font\": \"sans-serif audacieux\",\n        \"cta\": \"Partagez cette publication avec quelqu'un qui en a besoin\"\n      },\n      \"vibe\": \"audacieux, émotionnel, haute énergie\",\n      \"reference_note\": \"Conçu pour les reels Instagram, stories, Pinterest et carrousels motivationnels.\"\n    }\n  }\n}\nRègles importantes de sortie :\n\nProduisez un JSON valide et propre (pas de markdown, pas de texte supplémentaire).\n\nCréez 3 à 4 affirmations courtes et audacieuses liées à {{ $json.Name }}.\n\nLe titre doit être motivant et très court (1 à 5 mots maximum).\n\nLe fond doit paraître puissant mais simple."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -720,
+        60
+      ],
+      "id": "7e320fd9-8290-44bb-9673-85e48665f936",
+      "name": "Publications motivationnelles",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "numberInputs": 6
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.1,
+      "position": [
+        180,
+        -500
+      ],
+      "id": "9ffdf6ba-a2df-44a9-a500-ffc247175093",
+      "name": "Fusionner"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Déclencheur de planification": {
+      "main": [
+        [
+          {
+            "node": "Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Générer Image1": {
+      "main": [
+        [
+          {
+            "node": "Convertir en binaire",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable": {
+      "main": [
+        [
+          {
+            "node": "Type de contenu",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convertir en binaire": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Google Drive1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive1": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Type de contenu": {
+      "main": [
+        [
+          {
+            "node": "Recette",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Citations",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Tutoriels",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Guide de fitness",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Cartes de voyage",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Publications motivationnelles",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Guide de fitness": {
+      "main": [
+        [
+          {
+            "node": "Code3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cartes de voyage": {
+      "main": [
+        [
+          {
+            "node": "Code4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recette": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Requête HTTP": {
+      "main": [
+        [
+          {
+            "node": "Instagram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Pinterest",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Twitter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LinkedIn",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Page LinkedIn",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Compte Fb",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Tiktok",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Threads",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Bluesky",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Youtube",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Définir l'ID": {
+      "main": [
+        [
+          {
+            "node": "Requête HTTP",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Airtable1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable1": {
+      "main": [
+        [
+          {
+            "node": "Définir l'ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Fusionner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Fusionner",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Citations": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code2": {
+      "main": [
+        [
+          {
+            "node": "Fusionner",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Code3": {
+      "main": [
+        [
+          {
+            "node": "Fusionner",
+            "type": "main",
+            "index": 3
+          }
+        ]
+      ]
+    },
+    "Tutoriels": {
+      "main": [
+        [
+          {
+            "node": "Code2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code4": {
+      "main": [
+        [
+          {
+            "node": "Fusionner",
+            "type": "main",
+            "index": 4
+          }
+        ]
+      ]
+    },
+    "Code5": {
+      "main": [
+        [
+          {
+            "node": "Fusionner",
+            "type": "main",
+            "index": 5
+          }
+        ]
+      ]
+    },
+    "Publications motivationnelles": {
+      "main": [
+        [
+          {
+            "node": "Code5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fusionner": {
+      "main": [
+        [
+          {
+            "node": "Générer Image1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3fff1011-98d0-40df-9102-81ff3c472eb4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+  },
+  "id": "rhPCuuWNWIGhtdVo",
+  "tags": [
+    {
+      "createdAt": "2025-04-21T20:09:06.554Z",
+      "updatedAt": "2025-04-21T20:09:06.554Z",
+      "id": "3dOSqJMqC8FlNnE3",
+      "name": "Automation-Tribe"
+    },
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

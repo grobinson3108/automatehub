@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="ktzDVZnqqEa7DwOZeDFUEzIt7qI1SUJbS1m6zkAU">
+
+    <title>Au-dela-l-IA</title>
+    <meta name="description" content="Solutions d'automatisation pour apporter bien-être et sérénité dans votre quotidien professionnel. Gagnez du temps et réduisez votre stress.">
+    
+    <!-- Canonical URL -->
+            <link rel="canonical" href="https://n8n.automatehub.fr" />
+    
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="https://n8n.automatehub.fr/media/favicons/favicon.png">
+    <link rel="icon" sizes="192x192" type="image/png" href="https://n8n.automatehub.fr/media/favicons/favicon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://n8n.automatehub.fr/media/favicons/apple-touch-icon-180x180.png">    
+    
+    <!-- Fonts - optimized loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Only load the weights we actually use in critical CSS -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
+    
+    <!-- Font Awesome - optimized loading -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"></noscript>
+    
+    <!-- Styles et Scripts pour le frontend -->
+    <link rel="preload" as="style" href="https://n8n.automatehub.fr/build/assets/app-zDjPU3fL.css" /><link rel="preload" as="style" href="https://n8n.automatehub.fr/build/assets/levier-components-BB7kdxch.css" /><link rel="modulepreload" href="https://n8n.automatehub.fr/build/assets/frontend-CAm0CjY4.js" /><link rel="modulepreload" href="https://n8n.automatehub.fr/build/assets/bootstrap-eMHK6VFw.js" /><link rel="modulepreload" href="https://n8n.automatehub.fr/build/assets/levier-interactions-DfJf53eY.js" /><link rel="stylesheet" href="https://n8n.automatehub.fr/build/assets/app-zDjPU3fL.css" /><link rel="stylesheet" href="https://n8n.automatehub.fr/build/assets/levier-components-BB7kdxch.css" /><script type="module" src="https://n8n.automatehub.fr/build/assets/frontend-CAm0CjY4.js"></script><script type="module" src="https://n8n.automatehub.fr/build/assets/levier-interactions-DfJf53eY.js"></script>
+    <!-- Critical CSS inline -->
+    <style>
+        /* Critical CSS for above-the-fold content */
+        :root {
+            --infinity-blue: #6ba3c3;
+            --pink-medium: #e8b4b4;
+            --green-service: #54b48d;
+            --warning-service: #e9c46a;
+            --danger-service: #e76f51;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            margin: 0;
+        }
+        
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 10px 0;
+            background-color: #fff;
+        }
+        
+        .navbar-brand img {
+            height: 70px;
+        }
+        
+        .container {
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+        
+        @media (min-width: 576px) {
+            .container {
+                max-width: 540px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .container {
+                max-width: 720px;
+            }
+        }
+        
+        @media (min-width: 992px) {
+            .container {
+                max-width: 960px;
+            }
+        }
+        
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1140px;
+            }
+        }
+        
+        /* Chatbot mobile hiding */
+        @media (max-width: 767px) {
+            #chatbot-container, .chatbot-widget {
+                display: none !important;
+            }
+        }
+    </style>
+    
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+    
+    <!-- Animation on scroll library - deferred -->
+    <link rel="preload" href="https://unpkg.com/aos@2.3.1/dist/aos.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet"></noscript>
+    
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --infinity-blue: #6ba3c3;
+            --pink-medium: #e8b4b4;
+            --green-service: #54b48d;
+            --warning-service: #e9c46a;
+            --danger-service: #e76f51;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        .text-infinity-blue {
+            color: var(--infinity-blue) !important;
+        }
+        
+        .text-pink-medium {
+            color: var(--pink-medium) !important;
+        }
+        
+        .text-green-service {
+            color: var(--green-service) !important;
+        }
+        
+        .btn-primary {
+            background-color: var(--infinity-blue);
+            border-color: var(--infinity-blue);
+        }
+        
+        .btn-primary:hover {
+            background-color: #5a92b2;
+            border-color: #5a92b2;
+        }
+        
+        .btn-secondary {
+            background-color: var(--pink-medium);
+            border-color: var(--pink-medium);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #d9a3a3;
+            border-color: #d9a3a3;
+        }
+        
+        .navbar {
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 10px 0;
+        }
+        
+        .navbar-brand img {
+            transition: all 0.3s ease;
+        }
+        
+        .navbar-nav .nav-link {
+            font-weight: 500;
+            padding: 0.5rem;
+            margin: 0 0.5rem;
+            color: #333;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .navbar-nav .nav-link:hover,
+        .navbar-nav .nav-link.active {
+            color: var(--infinity-blue);
+        }
+
+        .navbar-nav .nav-link i {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 20px;
+            height: 20px;
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover i {
+            transform: scale(1.2);
+        }
+
+        /* Effet de soulignement animé */
+        .navbar-nav .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--infinity-blue);
+            transition: width 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover::after,
+        .navbar-nav .nav-link.active::after {
+            width: 100%;
+        }
+        
+        .social-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background-color: var(--infinity-blue);
+            color: white;
+            border-radius: 50%;
+            margin-right: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon:hover {
+            transform: translateY(-3px);
+            color: white;
+            background-color: #5a92b2;
+        }
+        
+        .footer {
+            background-color: #f8f9fa;
+            padding: 60px 0 30px;
+            position: relative;
+        }
+        
+        .footer:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--infinity-blue), var(--pink-medium), var(--green-service));
+        }
+        
+        /* AOS animations */
+        [data-aos] {
+            pointer-events: auto !important;
+        }
+    </style>
+    
+</head>
+<body class="font-sans antialiased">
+    <div id="app">
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center" href="https://n8n.automatehub.fr">
+                    <img src="https://n8n.automatehub.fr/media/logos/logo-250x175.png" alt="Au-delà l'IA" height="70" class="me-2">
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Left Side Of Navbar -->
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="https://n8n.automatehub.fr">
+                                <i class="fas fa-home"></i>
+                                <span>Accueil</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="https://n8n.automatehub.fr/automatisations">
+                                <i class="fas fa-cogs"></i>
+                                <span>Services</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="https://n8n.automatehub.fr/packs">
+                                <i class="fas fa-cubes"></i>
+                                <span>Packs</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="https://n8n.automatehub.fr/solutions">
+                                <i class="fas fa-lightbulb"></i>
+                                <span>Solutions</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="https://n8n.automatehub.fr/blog">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Blog</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="https://n8n.automatehub.fr/contact">
+                                <i class="fas fa-envelope"></i>
+                                <span>Contact</span>
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <!-- Right Side Of Navbar -->
+                    <ul class="navbar-nav">
+                                                    <li class="nav-item">
+                                <a class="nav-link " href="https://n8n.automatehub.fr/login">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    <span>Connexion</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link " href="https://n8n.automatehub.fr/register">
+                                    <i class="fas fa-user-plus"></i>
+                                    <span>S'inscrire</span>
+                                </a>
+                            </li>
+                                            </ul>
+                </div>
+            </div>
+        </nav>
+
+        <main>
+            
+<style>
+/* Styles forcés avec !important pour garantir qu'ils s'appliquent */
+.bg-blue-service {
+    background-color: #b4d8e8 !important;
+}
+
+.bg-pink-service {
+    background-color: #f3d5d5 !important;
+}
+
+.bg-green-service {
+    background-color: #54b48d !important;
+}
+
+.bg-danger-service {
+    background-color: #e76f51 !important;
+}
+
+.bg-warning-service {
+    background-color: #e9c46a !important;
+}
+
+.bg-blue-medium-service {
+    background-color: #7a9cb5 !important;
+}
+
+.card-header {
+    background: linear-gradient(45deg, #b4d8e8, #6ba3c3);
+    color: white;
+}
+
+.card.premium .card-header {
+    background: linear-gradient(45deg, #f3d5d5, #e8b4b4);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(45deg, #b4d8e8, #6ba3c3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.text-infinity-blue {
+    color: #6ba3c3;
+}
+
+.text-pink-medium {
+    color: #e8b4b4;
+}
+</style>
+
+<!-- Hero Section -->
+<section class="hero-section py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 order-lg-1 order-2" data-aos="fade-up">
+                <h1 class="display-4 fw-bold text-infinity-blue mb-4">
+                    Mettons l'IA<br>à votre service
+                </h1>
+                <p class="lead mb-4">
+                    Ensemble, mettons en place un bien-être informatique,<br>travaillez moins, tout en faisant plus...
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="https://n8n.automatehub.fr/automatisations" class="btn btn-primary btn-lg rounded-pill px-4">
+                        Voir les services
+                    </a>
+                    <a href="https://n8n.automatehub.fr/contact" class="btn btn-outline-primary btn-lg rounded-pill px-4">
+                        Personnaliser
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 order-lg-2 order-1 mb-5 mb-lg-0" data-aos="fade-left" data-aos-delay="200">
+                <img src="https://n8n.automatehub.fr/media/logos/Logo.png" alt="Automatisation bien-être" class="img-fluid rounded-4 shadow">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Bénéfices Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="fw-bold text-infinity-blue">Les automatisations en short</h2>
+            <p class="lead">Voici en quelques mots ce que mes automatisations pourraient vous apporter.</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4 text-center" data-aos="fade-up" data-aos-delay="100">
+                <div class="feature-icon mx-auto">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3 class="h5 fw-bold">Arrêtez la redondance</h3>
+                <p>Libérez jusqu'à 30% de votre temps<br>en automatisant les tâches répétitives et<br>concentrez-vous sur le cœur de votre métier.</p>
+            </div>
+            
+            <div class="col-md-4 text-center" data-aos="fade-up" data-aos-delay="200">
+                <div class="feature-icon mx-auto" style="background: linear-gradient(45deg, #f3d5d5, #e8b4b4);">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3 class="h5 fw-bold">Faites plus avec moins</h3>
+                <p>Améliorez votre efficacité drastiquement<br>en éliminant les erreurs humaines et<br>en standardisant vos processus métier.</p>
+            </div>
+            
+            <div class="col-md-4 text-center" data-aos="fade-up" data-aos-delay="300">
+                <div class="feature-icon mx-auto" style="background: linear-gradient(45deg, #92c1df, #6ba3c3);">
+                    <i class="fas fa-heart"></i>
+                </div>
+                <h3 class="h5 fw-bold">Des employés à votre service</h3>
+                <p>Déléguez les tâches fastidieuses à des systèmes automatisés fiables qui feront le travail à votre place, vous apportant sérénité.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Exemples d'automatisations simples -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="fw-bold text-infinity-blue">Exemples d'automatisations simples & efficaces</h2>
+            <p class="lead">Ce que je pourrais mettre en place pour vous en quelques jours...</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                <i class="fas fa-calendar-check"></i>
+                            </div>
+                            <h4 class="h5 fw-bold mb-0">Scan Cartes de Visites</h4>
+                        </div>
+                        <p class="mb-3">Récoltez les informations de vos clients en un cliché et laissez faire l'IA !</p>
+                        <div class="bg-light p-3 rounded mb-3">
+                            <p class="fw-bold mb-1 text-primary">Avantages & Pertinence :</p>
+                            <ul class="mb-0">
+                                <li>Rapidité d'exécution : Scan, parole ou texte et c'est enregistré.</li>
+                                <li>Image professionnelle : Montrez à vos clients votre modernité.</li>
+                                <li>Impacte instantané : Les RDV tombent d'eux-mêmes...</li>
+                            </ul>
+                        </div>
+                        <a href="https://n8n.automatehub.fr/automatisations#marketing" class="btn btn-sm btn-outline-primary rounded-pill">En savoir plus</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <h4 class="h5 fw-bold mb-0">Emails jusqu'à rendez-vous</h4>
+                        </div>
+                        <p class="mb-3">Séquences d'emails automatiques, envoyés selon le comportement client !</p>
+                        <div class="bg-light p-3 rounded mb-3">
+                            <p class="fw-bold mb-1 text-secondary">Résultats obtenus :</p>
+                            <ul class="mb-0">
+                                <li>Augmentation de 24% du taux de conversion.</li>
+                                <li>Hausse de 15% du panier moyen constatée.</li>
+                                <li>Réduction de 40% du temps de gestion marketing.</li>
+                            </ul>
+                        </div>
+                        <a href="https://n8n.automatehub.fr/automatisations#prospection" class="btn btn-sm btn-outline-secondary rounded-pill">En savoir plus</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="rounded-circle bg-info text-white d-flex align-items-center justify-content-center me-3" style="width: 50px; height: 50px;">
+                                <i class="fas fa-file-invoice"></i>
+                            </div>
+                            <h4 class="h5 fw-bold mb-0">Blog Automatisé</h4>
+                        </div>
+                        <p class="mb-3">Création et mise en ligne d'articles de blog optimisés SEO tous les jours !</p>
+                        <div class="bg-light p-3 rounded mb-3">
+                            <p class="fw-bold mb-1 text-info">Avantages & Puissance :</p>
+                            <ul class="mb-0">
+                                <li>Libérez-vous du stress psychologique de création de contenu.</li>
+                                <li>Une régularité paramétrée à vos souhaits.</li>
+                                <li>Optimisations de vos mots clés, liens internes et externes.</li>
+                            </ul>
+                        </div>
+                        <a href="https://n8n.automatehub.fr/automatisations#seo" class="btn btn-sm btn-outline-info rounded-pill">En savoir plus</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Services Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="fw-bold text-infinity-blue">Mes services d'automatisation</h2>
+            <p class="lead">Des solutions adaptées à tous vos besoins professionnels</p>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <!-- Carte 1 - Prospection automatisée -->
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div style="background: linear-gradient(45deg, #b4d8e8, #6ba3c3);" class="p-4 text-white text-center rounded-top">
+                    <i class="fas fa-search fa-3x mb-3"></i>
+                    <h3 class="h5 fw-bold">Prospection automatisée</h3>
+                </div>
+                <div class="bg-white p-4 shadow rounded-bottom">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><i class="fas fa-check text-primary me-2"></i> Recherches LinkedIn ciblées</li>
+                        <li class="mb-2"><i class="fas fa-check text-primary me-2"></i> Chatbot personnalisé</li>
+                        <li class="mb-2"><i class="fas fa-check text-primary me-2"></i> Qualification auto des leads</li>
+                        <li class="mb-2"><i class="fas fa-check text-primary me-2"></i> Séquences de prospection</li>
+                    </ul>
+                    <div class="text-center mt-4">
+                        <a href="https://n8n.automatehub.fr/automatisations#prospection" class="btn btn-outline-primary rounded-pill">En savoir plus</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carte 2 - SEO et contenu -->
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div style="background: linear-gradient(45deg, #f3d5d5, #e8b4b4);" class="p-4 text-white text-center rounded-top">
+                    <i class="fas fa-chart-line fa-3x mb-3"></i>
+                    <h3 class="h5 fw-bold">SEO et contenu</h3>
+                </div>
+                <div class="bg-white p-4 shadow rounded-bottom">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><i class="fas fa-check text-secondary me-2"></i> Rédaction d'articles de blog</li>
+                        <li class="mb-2"><i class="fas fa-check text-secondary me-2"></i> Posts Fiche Google My Business</li>
+                        <li class="mb-2"><i class="fas fa-check text-secondary me-2"></i> Posts LinkedIn et Facebook</li>
+                        <li class="mb-2"><i class="fas fa-check text-secondary me-2"></i> Optimisation référencement local</li>
+                    </ul>
+                    <div class="text-center mt-4">
+                        <a href="https://n8n.automatehub.fr/automatisations#seo" class="btn btn-outline-secondary rounded-pill">En savoir plus</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carte 3 - Gestion des rendez-vous -->
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div style="background: linear-gradient(45deg, #a9c2d9, #7a9cb5);" class="p-4 text-white text-center rounded-top">
+                    <i class="fas fa-calendar-check fa-3x mb-3"></i>
+                    <h3 class="h5 fw-bold">Gestion des rendez-vous</h3>
+                </div>
+                <div class="bg-white p-4 shadow rounded-bottom">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><i class="fas fa-check text-info me-2"></i> Prise de rendez-vous en ligne</li>
+                        <li class="mb-2"><i class="fas fa-check text-info me-2"></i> Rappels automatiques</li>
+                        <li class="mb-2"><i class="fas fa-check text-info me-2"></i> Synchronisation multi-plateformes</li>
+                        <li class="mb-2"><i class="fas fa-check text-info me-2"></i> Gestion des disponibilités</li>
+                    </ul>
+                    <div class="text-center mt-4">
+                        <a href="https://n8n.automatehub.fr/automatisations#calendrier" class="btn btn-outline-info rounded-pill">En savoir plus</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Carte 4 - Automatisation marketing -->
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div style="background: linear-gradient(45deg, #eca192, #e76f51);" class="p-4 text-white text-center rounded-top">
+                    <i class="fas fa-bullhorn fa-3x mb-3"></i>
+                    <h3 class="h5 fw-bold">Automatisation marketing</h3>
+                </div>
+                <div class="bg-white p-4 shadow rounded-bottom">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><i class="fas fa-check text-danger me-2"></i> Campagnes email automatisées</li>
+                        <li class="mb-2"><i class="fas fa-check text-danger me-2"></i> Retargeting sur réseaux sociaux</li>
+                        <li class="mb-2"><i class="fas fa-check text-danger me-2"></i> Génération de leads</li>
+                        <li class="mb-2"><i class="fas fa-check text-danger me-2"></i> Nurturing clients</li>
+                    </ul>
+                    <div class="text-center mt-4">
+                        <a href="https://n8n.automatehub.fr/automatisations#marketing" class="btn btn-outline-danger rounded-pill">En savoir plus</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Carte 5 - Automatisation administrative -->
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div style="background: linear-gradient(45deg, #92c1df, #6ba3c3);" class="p-4 text-white text-center rounded-top">
+                    <i class="fas fa-file-invoice fa-3x mb-3"></i>
+                    <h3 class="h5 fw-bold">Automatisation administrative</h3>
+                </div>
+                <div class="bg-white p-4 shadow rounded-bottom">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><i class="fas fa-check text-primary me-2"></i> Facturation automatique</li>
+                        <li class="mb-2"><i class="fas fa-check text-primary me-2"></i> Suivi des dépenses</li>
+                        <li class="mb-2"><i class="fas fa-check text-primary me-2"></i> Relances intelligentes</li>
+                        <li class="mb-2"><i class="fas fa-check text-primary me-2"></i> Tableaux de bord personnalisés</li>
+                    </ul>
+                    <div class="text-center mt-4">
+                        <a href="https://n8n.automatehub.fr/automatisations#administration" class="btn btn-outline-primary rounded-pill">En savoir plus</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Carte 6 - Gestion de l'e-réputation -->
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div style="background: linear-gradient(45deg, #f2dfa0, #e9c46a);" class="p-4 text-white text-center rounded-top">
+                    <i class="fas fa-star fa-3x mb-3"></i>
+                    <h3 class="h5 fw-bold">Gestion de l'e-réputation</h3>
+                </div>
+                <div class="bg-white p-4 shadow rounded-bottom">
+                    <ul class="list-unstyled mb-0">
+                        <li class="mb-2"><i class="fas fa-check text-warning me-2"></i> Collecte d'avis clients</li>
+                        <li class="mb-2"><i class="fas fa-check text-warning me-2"></i> Réponses automatisées aux avis</li>
+                        <li class="mb-2"><i class="fas fa-check text-warning me-2"></i> Surveillance des mentions</li>
+                        <li class="mb-2"><i class="fas fa-check text-warning me-2"></i> Analyse de la concurrence locale</li>
+                    </ul>
+                    <div class="text-center mt-4">
+                        <a href="https://n8n.automatehub.fr/automatisations#reputation" class="btn btn-outline-warning rounded-pill">En savoir plus</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-5" data-aos="fade-up">
+            <a href="https://n8n.automatehub.fr/automatisations" class="btn btn-primary btn-lg rounded-pill px-4">
+                Découvrir tous mes services en détail
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Packs Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="fw-bold text-infinity-blue">Mes packs</h2>
+            <p class="lead">Des solutions adaptées à tous les besoins et budgets</p>
+        </div>
+        
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card service-card h-100 border-0 shadow-sm">
+                    <div class="card-header text-center py-4">
+                        <h3 class="fw-bold mb-0">Pack Essentiel</h3>
+                        <p class="text-white mb-0">Pour les entrepreneurs</p>
+                    </div>
+                    <div class="card-body text-center">
+                        <h4 class="display-6 fw-bold text-infinity-blue mb-3">200€<span class="fs-6 fw-normal text-muted">/mois</span></h4>
+                        <p class="mb-4">Mise en place: 800€</p>
+                        <ul class="list-unstyled text-start mb-4">
+                            <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> Prise de rendez-vous en ligne</li>
+                            <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> Facturation automatique basique</li>
+                            <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> Rappels email/SMS</li>
+                            <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> Intégration 2 logiciels</li>
+                        </ul>
+                        <a href="https://n8n.automatehub.fr/packs#essentiel" class="btn btn-primary rounded-pill px-4">Choisir ce pack</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card service-card premium h-100 border-0 shadow">
+                    <div class="card-header text-center py-4">
+                        <span class="badge bg-warning position-absolute top-0 end-0 mt-3 me-3">Populaire</span>
+                        <h3 class="fw-bold mb-0">Pack Business</h3>
+                        <p class="text-white mb-0">Pour les TPE/PME</p>
+                    </div>
+                    <div class="card-body text-center">
+                        <h4 class="display-6 fw-bold text-pink-medium mb-3">350€<span class="fs-6 fw-normal text-muted">/mois</span></h4>
+                        <p class="mb-4">Mise en place: 1000€</p>
+                        <ul class="list-unstyled text-start mb-4">
+                            <li class="mb-3"><i class="fas fa-check text-secondary me-2"></i> <strong>Tout le pack Essentiel</strong></li>
+                            <li class="mb-3"><i class="fas fa-check text-secondary me-2"></i> CRM personnalisé simple</li>
+                            <li class="mb-3"><i class="fas fa-check text-secondary me-2"></i> Automatisation marketing de base</li>
+                            <li class="mb-3"><i class="fas fa-check text-secondary me-2"></i> Suivi des dépenses</li>
+                            <li class="mb-3"><i class="fas fa-check text-secondary me-2"></i> Intégration 4 logiciels</li>
+                        </ul>
+                        <a href="https://n8n.automatehub.fr/packs#business" class="btn btn-secondary rounded-pill px-4">Choisir ce pack</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="card service-card h-100 border-0 shadow-sm">
+                    <div class="card-header text-center py-4">
+                        <h3 class="fw-bold mb-0">Pack Premium</h3>
+                        <p class="text-white mb-0">Pour l'excellence</p>
+                    </div>
+                    <div class="card-body text-center">
+                        <h4 class="display-6 fw-bold text-infinity-blue mb-3">500€<span class="fs-6 fw-normal text-muted">/mois</span></h4>
+                        <p class="mb-4">Mise en place: 1500€</p>
+                        <ul class="list-unstyled text-start mb-4">
+                            <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> <strong>Tout le pack Business</strong></li>
+                            <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> Workflows métier personnalisés</li>
+                            <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> Marketing avancé</li>
+                            <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> Tableaux de bord personnalisés</li>
+                            <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> Intégration 6+ logiciels</li>
+                            <li class="mb-3"><i class="fas fa-check text-primary me-2"></i> Support prioritaire</li>
+                        </ul>
+                        <a href="https://n8n.automatehub.fr/packs#premium" class="btn btn-primary rounded-pill px-4">Choisir ce pack</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-4" data-aos="fade-up">
+            <a href="https://n8n.automatehub.fr/packs" class="btn btn-outline-primary btn-lg rounded-pill mt-4">
+                Découvrir tous mes packs
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Solutions clés-en-main Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="fw-bold text-infinity-blue">Solutions clés-en-main</h2>
+            <p class="lead">Des offres complètes adaptées à votre secteur d'activité</p>
+        </div>
+        
+        <div class="row g-4">
+            <!-- Solution 1 -->
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                    <div style="background: linear-gradient(45deg, #b4d8e8, #6ba3c3);" class="p-4 text-white">
+                        <h3 class="h4 fw-bold mb-2">Solution TPE/PME</h3>
+                        <p class="mb-0">Idéale pour 5 à 20 employés</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <p class="mb-4">Un système complet pour gérer vos processus métier, optimiser votre prospection et simplifier votre administration.</p>
+                        <div class="mb-4">
+                            <h4 class="h6 fw-bold mb-3">Inclut :</h4>
+                            <ul class="mb-0">
+                                <li class="mb-2">Pack Business + modules spécifiques</li>
+                                <li class="mb-2">Intégration CRM complète</li>
+                                <li class="mb-2">Automatisation des workflows</li>
+                                <li class="mb-2">Formation de votre équipe</li>
+                            </ul>
+                        </div>
+                        <a href="https://n8n.automatehub.fr/solutions#tpe-pme" class="btn btn-outline-primary rounded-pill d-block">Découvrir cette solution</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Solution 2 -->
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                    <div style="background: linear-gradient(45deg, #f3d5d5, #e8b4b4);" class="p-4 text-white">
+                        <h3 class="h4 fw-bold mb-2">Solution Cabinets</h3>
+                        <p class="mb-0">Pour professions libérales et cabinets</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <p class="mb-4">Une solution complète pour gérer vos rendez-vous, votre facturation et votre relation client en toute sérénité.</p>
+                        <div class="mb-4">
+                            <h4 class="h6 fw-bold mb-3">Inclut :</h4>
+                            <ul class="mb-0">
+                                <li class="mb-2">Pack Business adapté aux cabinets</li>
+                                <li class="mb-2">Système de rendez-vous avancé</li>
+                                <li class="mb-2">Gestion de la confidentialité</li>
+                                <li class="mb-2">Facturation Tiers-Payant</li>
+                            </ul>
+                        </div>
+                        <a href="https://n8n.automatehub.fr/solutions#cabinets" class="btn btn-outline-secondary rounded-pill d-block">Découvrir cette solution</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Solution 3 -->
+            <div class="col-md-6 col-lg-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="card h-100 border-0 shadow-sm overflow-hidden">
+                    <div style="background: linear-gradient(45deg, #a9c2d9, #7a9cb5);" class="p-4 text-white">
+                        <h3 class="h4 fw-bold mb-2">Solution E-commerce</h3>
+                        <p class="mb-0">Pour les boutiques en ligne</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <p class="mb-4">Optimisez vos ventes en ligne avec une automatisation complète du marketing, du SAV et de la logistique.</p>
+                        <div class="mb-4">
+                            <h4 class="h6 fw-bold mb-3">Inclut :</h4>
+                            <ul class="mb-0">
+                                <li class="mb-2">Pack Premium e-commerce</li>
+                                <li class="mb-2">Marketing automation avancé</li>
+                                <li class="mb-2">Suivi client post-achat</li>
+                                <li class="mb-2">Optimisation des fiches produits</li>
+                            </ul>
+                        </div>
+                        <a href="https://n8n.automatehub.fr/solutions#ecommerce" class="btn btn-outline-info rounded-pill d-block">Découvrir cette solution</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center mt-5" data-aos="fade-up">
+                    <a href="https://n8n.automatehub.fr/solutions" class="btn btn-outline-primary btn-lg rounded-pill">
+                        Découvrir toutes mes solutions clés-en-main
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5" data-aos="fade-up">
+            <h2 class="fw-bold text-infinity-blue">Ce que mes clients disent</h2>
+            <p class="lead">Des entreprises satisfaites par mes solutions de bien-être informatique</p>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                <div class="card h-100 border-0 shadow-sm p-4">
+                    <div class="d-flex mb-3">
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                    </div>
+                    <p class="mb-4">"L'automatisation de ma prise de rendez-vous a transformé mon entreprise. J'ai gagné 10 heures par semaine et réduit les erreurs de planification à zéro."</p>
+                    <div class="d-flex align-items-center mt-auto">
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <span class="fw-bold">C</span>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="mb-0 fw-bold">Corinne</h5>
+                            <p class="text-muted mb-0">Masseuse, Montpellier</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                <div class="card h-100 border-0 shadow-sm p-4">
+                    <div class="d-flex mb-3">
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                    </div>
+                    <p class="mb-4">"Mes campagnes marketing automatisées ont augmenté notre chiffre d'affaires de 15% en seulement 3 mois. Le ROI est incroyable et le service client exceptionnel."</p>
+                    <div class="d-flex align-items-center mt-auto">
+                        <div class="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <span class="fw-bold">T</span>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="mb-0 fw-bold">Thomas</h5>
+                            <p class="text-muted mb-0">Boutique en ligne, Montpellier</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                <div class="card h-100 border-0 shadow-sm p-4">
+                    <div class="d-flex mb-3">
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                        <i class="fas fa-star text-warning"></i>
+                    </div>
+                    <p class="mb-4">"L'automatisation de notre facturation a éliminé les erreurs et accéléré les paiements. J'ai enfin l'esprit tranquille et plus de temps pour développer mon entreprise."</p>
+                    <div class="d-flex align-items-center mt-auto">
+                        <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                            <span class="fw-bold">S</span>
+                        </div>
+                        <div class="ms-3">
+                            <h5 class="mb-0 fw-bold">Sophie</h5>
+                            <p class="text-muted mb-0">Société de Services, Montpellier</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Remplacer la section CTA par le calendrier Cal.com -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card border-0 shadow-lg overflow-hidden" data-aos="fade-up">
+                    <div class="row g-0">
+                        <div class="col-md-5 p-5 d-flex flex-column justify-content-center" style="background: linear-gradient(45deg, #f3d5d5, #e8b4b4);">
+                            <h2 class="fw-bold mb-3 text-white">Prenez rendez-vous dès maintenant (1h)</h2>
+                            <p class="mb-4 text-white">Réservez une consultation gratuite et découvrez comment mes solutions d'automatisation peuvent transformer votre activité professionnelle.</p>
+                        </div>
+                        <div class="col-md-7 p-0">
+                            <!-- Cal inline embed code begins -->
+                            <div style="width:100%;height:750px;overflow:scroll" id="my-cal-inline"></div>
+                            <script type="text/javascript">
+                              (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if(typeof namespace === "string"){cal.ns[namespace] = cal.ns[namespace] || api;p(cal.ns[namespace], ar);p(cal, ["initNamespace", namespace]);} else p(cal, ar); return;} p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+
+                              Cal("init", "automatisations-1h", {origin:"https://app.cal.com"});
+                              
+                              Cal.ns["automatisations-1h"]("inline", {
+                                elementOrSelector:"#my-cal-inline",
+                                config: {"layout":"month_view","theme":"light"},
+                                calLink: "audelalia/automatisations-1h",
+                              });
+                              
+                              Cal.ns["automatisations-1h"]("ui", {
+                                "theme":"light",
+                                "cssVarsPerTheme":{
+                                  "light":{"cal-brand":"#6ba3c3"},
+                                  "dark":{"cal-brand":"#e8b4b4"}
+                                },
+                                "hideEventTypeDetails":true,
+                                "hideBranding":true,
+                                "layout":"month_view"
+                              });
+                            </script>
+                            <!-- Cal inline embed code ends -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+        </main>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 mb-4 mb-md-0">
+                        <h5 class="text-infinity-blue fw-bold">Au-delà l'IA</h5>
+                        <p class="mt-3">J'apporte sérénité et efficacité à votre quotidien professionnel grâce à des solutions d'automatisation sur mesure à Montpellier et partout en France.</p>
+                        <div class="mt-4">
+                            <a href="#" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="social-icon" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                            <a href="#" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-icon" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-4 mb-md-0">
+                        <h5 class="text-infinity-blue fw-bold">Services</h5>
+                        <ul class="list-unstyled mt-3">
+                            <li class="mb-2"><a href="https://n8n.automatehub.fr/automatisations#prospection" class="text-decoration-none text-dark">Prospection automatisée</a></li>
+                            <li class="mb-2"><a href="https://n8n.automatehub.fr/automatisations#seo" class="text-decoration-none text-dark">SEO et contenu</a></li>
+                            <li class="mb-2"><a href="https://n8n.automatehub.fr/automatisations#calendrier" class="text-decoration-none text-dark">Gestion des rendez-vous</a></li>
+                            <li class="mb-2"><a href="https://n8n.automatehub.fr/automatisations#marketing" class="text-decoration-none text-dark">Automatisation marketing</a></li>
+                            <li class="mb-2"><a href="https://n8n.automatehub.fr/automatisations#administration" class="text-decoration-none text-dark">Automatisation administrative</a></li>
+                            <li class="mb-2"><a href="https://n8n.automatehub.fr/automatisations#reputation" class="text-decoration-none text-dark">Gestion e-réputation</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3 mb-4 mb-md-0">
+                        <h5 class="text-infinity-blue fw-bold">Solutions par secteur</h5>
+                        <ul class="list-unstyled mt-3">
+                            <li class="mb-2"><a href="https://n8n.automatehub.fr/solutions#tpe-pme" class="text-decoration-none text-dark">Solutions TPE/PME</a></li>
+                            <li class="mb-2"><a href="https://n8n.automatehub.fr/solutions#cabinets" class="text-decoration-none text-dark">Solutions Cabinets médicaux</a></li>
+                            <li class="mb-2"><a href="https://n8n.automatehub.fr/solutions#ecommerce" class="text-decoration-none text-dark">Solutions E-commerce</a></li>
+                            <li class="mb-2"><a href="https://n8n.automatehub.fr/solutions#artisans" class="text-decoration-none text-dark">Solutions Artisans</a></li>
+                            <li class="mb-2"><a href="https://n8n.automatehub.fr/solutions#immobilier" class="text-decoration-none text-dark">Solutions Immobilier</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-3">
+                        <h5 class="text-infinity-blue fw-bold">Contact</h5>
+                        <ul class="list-unstyled mt-3">
+                            <li class="mb-2"><i class="fas fa-map-marker-alt me-2 text-pink-medium"></i> Montpellier, France</li>
+                            <li class="mb-2"><i class="fas fa-phone me-2 text-pink-medium"></i> <a href="tel:+33651308949" class="text-decoration-none text-dark">+33 6 51 30 89 49</a></li>
+                            <li class="mb-2"><i class="fas fa-envelope me-2 text-pink-medium"></i> <a href="mailto:greg@audelalia.fr" class="text-decoration-none text-dark">greg@audelalia.fr</a></li>
+                        </ul>
+                        <div class="mt-3">
+                            <a href="https://n8n.automatehub.fr/contact" class="btn btn-sm btn-outline-primary rounded-pill">
+                                Demander un devis gratuit
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <div class="border-top pt-4">
+                            <h6 class="text-infinity-blue fw-bold mb-3">Nos automatisations</h6>
+                            <div class="d-flex flex-wrap gap-2">
+                                <a href="https://n8n.automatehub.fr/automatisations#prospection" class="badge bg-light text-dark text-decoration-none">Recherches LinkedIn ciblées</a>
+                                <a href="https://n8n.automatehub.fr/automatisations#prospection" class="badge bg-light text-dark text-decoration-none">Chatbot personnalisé</a>
+                                <a href="https://n8n.automatehub.fr/automatisations#prospection" class="badge bg-light text-dark text-decoration-none">Qualification des leads</a>
+                                <a href="https://n8n.automatehub.fr/automatisations#seo" class="badge bg-light text-dark text-decoration-none">Rédaction de contenu</a>
+                                <a href="https://n8n.automatehub.fr/automatisations#seo" class="badge bg-light text-dark text-decoration-none">Google My Business</a>
+                                <a href="https://n8n.automatehub.fr/automatisations#calendrier" class="badge bg-light text-dark text-decoration-none">Prise de rendez-vous</a>
+                                <a href="https://n8n.automatehub.fr/automatisations#calendrier" class="badge bg-light text-dark text-decoration-none">Rappels automatiques</a>
+                                <a href="https://n8n.automatehub.fr/automatisations#marketing" class="badge bg-light text-dark text-decoration-none">Campagnes email</a>
+                                <a href="https://n8n.automatehub.fr/automatisations#marketing" class="badge bg-light text-dark text-decoration-none">Retargeting</a>
+                                <a href="https://n8n.automatehub.fr/automatisations#administration" class="badge bg-light text-dark text-decoration-none">Facturation automatique</a>
+                                <a href="https://n8n.automatehub.fr/automatisations#administration" class="badge bg-light text-dark text-decoration-none">Suivi des dépenses</a>
+                                <a href="https://n8n.automatehub.fr/automatisations#administration" class="badge bg-light text-dark text-decoration-none">Relances intelligentes</a>
+                                <a href="https://n8n.automatehub.fr/automatisations#reputation" class="badge bg-light text-dark text-decoration-none">Collecte d'avis</a>
+                                <a href="https://n8n.automatehub.fr/automatisations#reputation" class="badge bg-light text-dark text-decoration-none">Réponses automatisées</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr class="mt-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-0">&copy; 2025 Au-delà l'IA. Tous droits réservés. Automatisation et IA à Montpellier.</p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <a href="https://n8n.automatehub.fr/mentions-legales" class="text-decoration-none text-dark me-3">Mentions légales</a>
+                        <a href="https://n8n.automatehub.fr/politique-de-confidentialite" class="text-decoration-none text-dark">Politique de confidentialité</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Scripts deferred -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous" defer></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    
+    <!-- Initialize AOS with delay -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load AOS with a slight delay to prioritize critical content
+            setTimeout(function() {
+                if (typeof AOS !== 'undefined') {
+                    AOS.init({
+                        duration: 800,
+                        easing: 'ease-in-out',
+                        once: true
+                    });
+                }
+            }, 100);
+        });
+    </script>
+    
+    <!-- Optimized chatbot script -->
+    <script src="https://n8n.automatehub.fr/js/chatbot.min.js?v=1751985044" defer></script>
+    
+    </body>
+</html>

@@ -1,0 +1,242 @@
+{
+  "nodes": [
+    {
+      "name": "Au clic sur 'exécuter'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        320,
+        170
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "name": "Fusionner",
+      "type": "n8n-nodes-base.merge",
+      "position": [
+        960,
+        320
+      ],
+      "parameters": {
+        "mode": "mergeByIndex"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Déplacer les données binaires",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "position": [
+        1260,
+        320
+      ],
+      "parameters": {
+        "mode": "jsonToBinary",
+        "options": {
+          "useRawData": false
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Mapper",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        710,
+        320
+      ],
+      "parameters": {
+        "functionCode": "return items[0].json.data.map(item => {\n  return {json: item}\n});"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Obtenir le workflow",
+      "type": "n8n-nodes-base.httpRequest",
+      "notes": "N'oubliez pas d'ajouter vos identifiants pour votre instance n8n dans ce nœud. Utilisez l'authentification basique pour cela.",
+      "position": [
+        830,
+        460
+      ],
+      "parameters": {
+        "url": "=http://localhost:5678/rest/workflows/{{$node[\"Map\"].data[\"id\"]}}",
+        "options": {},
+        "authentication": "basicAuth"
+      },
+      "credentials": {
+        "httpBasicAuth": "n8n Creds"
+      },
+      "notesInFlow": false,
+      "typeVersion": 1
+    },
+    {
+      "name": "Obtenir la liste des workflows",
+      "type": "n8n-nodes-base.httpRequest",
+      "notes": "N'oubliez pas d'ajouter vos identifiants pour votre instance n8n dans ce nœud. Utilisez l'authentification basique pour cela.",
+      "position": [
+        520,
+        320
+      ],
+      "parameters": {
+        "url": "http://localhost:5678/rest/workflows",
+        "options": {},
+        "authentication": "basicAuth"
+      },
+      "credentials": {
+        "httpBasicAuth": "n8n Creds"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "FonctionItem",
+      "type": "n8n-nodes-base.functionItem",
+      "position": [
+        1110,
+        320
+      ],
+      "parameters": {
+        "functionCode": "item = item.data;\nreturn item;"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        1450,
+        320
+      ],
+      "parameters": {
+        "name": "={{$node[\"Merge\"].data[\"name\"]}}.json",
+        "parents": [
+          "Delete this text and put id for folder you want to upload into in this field. The folder ID can be found by opening the folder in your browser and copying the portion after https://drive.google.com/drive/u/0/folders/"
+        ],
+        "binaryData": true,
+        "resolveData": true
+      },
+      "credentials": {
+        "googleApi": "test"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Exécuter quotidiennement à 2h30",
+      "type": "n8n-nodes-base.cron",
+      "position": [
+        330,
+        320
+      ],
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 2,
+              "minute": 30
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Mapper": {
+      "main": [
+        [
+          {
+            "node": "Obtenir le workflow",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fusionner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fusionner": {
+      "main": [
+        [
+          {
+            "node": "FonctionItem",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "FonctionItem": {
+      "main": [
+        [
+          {
+            "node": "Déplacer les données binaires",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir le workflow": {
+      "main": [
+        [
+          {
+            "node": "Fusionner",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Déplacer les données binaires": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir la liste des workflows": {
+      "main": [
+        [
+          {
+            "node": "Mapper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exécuter quotidiennement à 2h30": {
+      "main": [
+        [
+          {
+            "node": "Obtenir la liste des workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Au clic sur 'exécuter'": {
+      "main": [
+        [
+          {
+            "node": "Obtenir la liste des workflows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

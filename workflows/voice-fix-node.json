@@ -1,0 +1,10 @@
+{
+  "parameters": {
+    "jsCode": "// Débugger la structure du message vocal\nconst voiceMessage = $json;\n\n// Afficher la structure complète pour comprendre\nconsole.log('Structure complète:', JSON.stringify(voiceMessage, null, 2));\n\n// Extraire le file_id de différentes façons possibles\nconst fileId = voiceMessage?.voice?.file_id || \n               voiceMessage?.message?.voice?.file_id ||\n               voiceMessage?.file_id ||\n               null;\n\nif (!fileId) {\n  throw new Error('Impossible de trouver le file_id du message vocal');\n}\n\nreturn [{\n  json: {\n    file_id: fileId,\n    original_data: voiceMessage\n  }\n}];"
+  },
+  "type": "n8n-nodes-base.code",
+  "typeVersion": 2,
+  "position": [2512, 5168],
+  "id": "debug-voice",
+  "name": "Debug Voice Message"
+}

@@ -1,0 +1,140 @@
+{
+  "source_file": "/var/www/automatehub/AutomationTribe/Generate_social_post_ideas_or_summaries.json",
+  "total_texts": 14,
+  "texts": {
+    "text_0": {
+      "path": [
+        "name"
+      ],
+      "original": "Generate social post ideas or summaries",
+      "type": "workflow_name"
+    },
+    "text_1": {
+      "path": [
+        "nodes",
+        0,
+        "name"
+      ],
+      "original": "Airtable",
+      "type": "node_name"
+    },
+    "text_2": {
+      "path": [
+        "nodes",
+        1,
+        "name"
+      ],
+      "original": "When clicking ‘Test workflow’",
+      "type": "node_name"
+    },
+    "text_3": {
+      "path": [
+        "nodes",
+        2,
+        "name"
+      ],
+      "original": "Text Classifier",
+      "type": "node_name"
+    },
+    "text_4": {
+      "path": [
+        "nodes",
+        3,
+        "name"
+      ],
+      "original": "OpenAI Chat Model",
+      "type": "node_name"
+    },
+    "text_5": {
+      "path": [
+        "nodes",
+        4,
+        "name"
+      ],
+      "original": "Dumpling Youtube",
+      "type": "node_name"
+    },
+    "text_6": {
+      "path": [
+        "nodes",
+        5,
+        "name"
+      ],
+      "original": "Dumpling Blog",
+      "type": "node_name"
+    },
+    "text_7": {
+      "path": [
+        "nodes",
+        6,
+        "name"
+      ],
+      "original": "OpenAI",
+      "type": "node_name"
+    },
+    "text_8": {
+      "path": [
+        "nodes",
+        6,
+        "parameters",
+        "messages",
+        "values",
+        0,
+        "content"
+      ],
+      "original": "Generate tailored social media posts for LinkedIn, Instagram, Twitter (X), and Facebook based on the given content, which could be either an article summary or a YouTube transcription.\n\t•\tLinkedIn: Write a professional, insightful post summarizing the key takeaways with a formal tone, positioning the content as a valuable resource.\n\t•\tInstagram: Craft a short, engaging caption with a compelling call to action and relevant hashtags to drive interaction.\n\t•\tTwitter (X): Create a concise post under 280 characters that highlights key points and includes a few impactful hashtags.\n\t•\tFacebook: Develop a conversational post that provides additional context and includes a link to the article or video to encourage engagement.\n\nThis should be written from a third-person perspective, positioning the content as an external source of information.\n\n**Or YouTube Transcription:**\n{{ $json?.transcript ?? 'Transcript not available' }}\n\nThe response must be structured in valid JSON format as follows:\n\n{\n  \"linkedin\": \"This content explores [key topic], offering insights into [main takeaways]. Professionals looking to [goal or impact] will find valuable strategies here. Read more: [URL]\",\n  \"instagram\": \"Discover how [key topic] can transform your [industry or field]! 🚀 Watch/read the latest insights now. #Innovation #Success #YourHashtag [URL]\",\n  \"twitter\": \"[Key topic] is changing the game! Discover the latest insights on [main takeaway]. #Trending #YourHashtag [URL]\",\n  \"facebook\": \"A must-read/watch on [key topic]! It breaks down [main takeaway] and offers valuable insights for those in [industry]. Dive in: [URL]\"\n}\n\nMake sure the output is always a properly formatted JSON object.",
+      "type": "openai_message",
+      "has_equal_prefix": true
+    },
+    "text_9": {
+      "path": [
+        "nodes",
+        7,
+        "name"
+      ],
+      "original": "Google Docs",
+      "type": "node_name"
+    },
+    "text_10": {
+      "path": [
+        "nodes",
+        8,
+        "name"
+      ],
+      "original": "OpenAI1",
+      "type": "node_name"
+    },
+    "text_11": {
+      "path": [
+        "nodes",
+        8,
+        "parameters",
+        "messages",
+        "values",
+        0,
+        "content"
+      ],
+      "original": "Generate tailored social media posts for LinkedIn, Instagram, Twitter (X), and Facebook based on the following article summary:\n\t•\tLinkedIn: Write a professional, insightful post that summarizes the key takeaways in a formal tone, positioning the article as a valuable resource.\n\t•\tInstagram: Craft a short, engaging caption with a compelling call to action and relevant hashtags to drive interaction.\n\t•\tTwitter (X): Create a concise post under 280 characters that highlights key points and includes a few impactful hashtags.\n\t•\tFacebook: Develop a conversational post that provides additional context and includes a link to the article to encourage engagement.\n\nThis should be written as if referring to the article from a third-person perspective, positioning it as an external source of information.\n\n**Article Summary:**\n{{ $('Dumpling Blog')?.item?.json?.title ?? 'Title not available' }}\n{{ $('Dumpling Blog')?.item?.json?.metadata?.description ?? 'Description not available' }}\n{{ $('Dumpling Blog')?.item?.json?.content ?? 'Content not available' }}\n{{ $('Text Classifier')?.item?.json?.URL ?? 'URL not available' }}\n\nThe response should be formatted as valid JSON with the following structure:\n\n{\n  \"linkedin\": \"This article explores [key topic], providing insights into [main takeaways]. Professionals looking to [goal or impact] will find valuable strategies here. Read more: [URL]\",\n  \"instagram\": \"Discover how [key topic] can transform your [industry or field]! 🚀 Read the latest insights now. #Innovation #Success #YourHashtag [URL]\",\n  \"twitter\": \"[Key topic] is changing the game! Discover the latest insights on [main takeaway]. #Trending #YourHashtag [URL]\",\n  \"facebook\": \"A must-read article on [key topic]! It breaks down [main takeaway] and offers valuable insights for those in [industry]. Dive in: [URL]\"\n}\n\n",
+      "type": "openai_message",
+      "has_equal_prefix": true
+    },
+    "text_12": {
+      "path": [
+        "nodes",
+        9,
+        "name"
+      ],
+      "original": "Airtable1",
+      "type": "node_name"
+    },
+    "text_13": {
+      "path": [
+        "nodes",
+        10,
+        "name"
+      ],
+      "original": "Airtable2",
+      "type": "node_name"
+    }
+  }
+}

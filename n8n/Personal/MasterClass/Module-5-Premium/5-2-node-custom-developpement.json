@@ -1,0 +1,311 @@
+{
+  "name": "5.2 - Node Custom Développement",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "node-development/new-request",
+        "options": {}
+      },
+      "id": "webhook-node-request-502",
+      "name": "Demande Nouveau Node",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ],
+      "webhookId": "node-development-502"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Système de spécification et génération de code pour nodes custom\nconst nodeRequest = $input.first().json;\n\n// Classe pour l'analyse et génération de spécifications\nclass NodeSpecificationGenerator {\n  constructor(request) {\n    this.request = request;\n    this.spec = null;\n    this.codeTemplate = null;\n    this.validationErrors = [];\n  }\n  \n  // Validation de la demande\n  validateRequest() {\n    const required = ['name', 'description', 'service', 'operations', 'contact'];\n    const missing = required.filter(field => !this.request[field]);\n    \n    if (missing.length > 0) {\n      this.validationErrors.push(`Champs manquants: ${missing.join(', ')}`);\n    }\n    \n    // Validation des opérations\n    if (this.request.operations && this.request.operations.length === 0) {\n      this.validationErrors.push('Au moins une opération doit être définie');\n    }\n    \n    // Validation de l'API\n    if (!this.request.api_documentation && !this.request.api_url) {\n      this.validationErrors.push('Documentation API ou URL API requise');\n    }\n    \n    return this;\n  }\n  \n  // Génération de la spécification technique\n  generateTechnicalSpec() {\n    const complexity = this.calculateComplexity();\n    const estimatedTime = this.estimateDevTime();\n    \n    this.spec = {\n      node_info: {\n        name: this.request.name,\n        display_name: this.request.display_name || this.request.name,\n        description: this.request.description,\n        version: '1.0.0',\n        icon: this.request.icon || 'default.svg',\n        color: this.request.color || '#4285f4'\n      },\n      \n      service_integration: {\n        service_name: this.request.service,\n        api_base_url: this.request.api_url,\n        authentication: this.analyzeAuthentication(),\n        rate_limits: this.request.rate_limits || 'Standard',\n        api_version: this.request.api_version || 'v1'\n      },\n      \n      operations: this.generateOperationsSpec(),\n      \n      credentials: this.generateCredentialsSpec(),\n      \n      properties: this.generatePropertiesSpec(),\n      \n      development_specs: {\n        complexity: complexity,\n        estimated_hours: estimatedTime,\n        estimated_cost: this.calculateCost(estimatedTime),\n        required_skills: this.identifyRequiredSkills(),\n        testing_requirements: this.generateTestingRequirements()\n      },\n      \n      generated_at: new Date().toISOString()\n    };\n    \n    return this;\n  }\n  \n  // Analyse de l'authentification\n  analyzeAuthentication() {\n    const authType = this.request.authentication_type || 'api_key';\n    \n    const authSpecs = {\n      'api_key': {\n        type: 'apiKey',\n        properties: {\n          apiKey: {\n            displayName: 'API Key',\n            name: 'apiKey',\n            type: 'string',\n            typeOptions: { password: true },\n            required: true\n          }\n        }\n      },\n      'oauth2': {\n        type: 'oauth2',\n        properties: {\n          clientId: {\n            displayName: 'Client ID',\n            name: 'clientId',\n            type: 'string',\n            required: true\n          },\n          clientSecret: {\n            displayName: 'Client Secret',\n            name: 'clientSecret',\n            type: 'string',\n            typeOptions: { password: true },\n            required: true\n          }\n        },\n        oauth: {\n          authUrl: this.request.oauth_auth_url,\n          tokenUrl: this.request.oauth_token_url,\n          scopes: this.request.oauth_scopes || []\n        }\n      },\n      'basic': {\n        type: 'basic',\n        properties: {\n          username: {\n            displayName: 'Username',\n            name: 'username',\n            type: 'string',\n            required: true\n          },\n          password: {\n            displayName: 'Password',\n            name: 'password',\n            type: 'string',\n            typeOptions: { password: true },\n            required: true\n          }\n        }\n      }\n    };\n    \n    return authSpecs[authType] || authSpecs['api_key'];\n  }\n  \n  // Génération des spécifications d'opérations\n  generateOperationsSpec() {\n    if (!this.request.operations) return [];\n    \n    return this.request.operations.map(op => {\n      return {\n        name: op.name,\n        displayName: op.display_name || op.name,\n        description: op.description,\n        method: op.method || 'GET',\n        endpoint: op.endpoint,\n        parameters: this.generateOperationParameters(op),\n        response_format: op.response_format || 'json',\n        error_handling: this.generateErrorHandling(op)\n      };\n    });\n  }\n  \n  // Génération des paramètres d'opération\n  generateOperationParameters(operation) {\n    const params = [];\n    \n    // Paramètres requis\n    if (operation.required_params) {\n      operation.required_params.forEach(param => {\n        params.push({\n          displayName: param.display_name || param.name,\n          name: param.name,\n          type: param.type || 'string',\n          required: true,\n          description: param.description\n        });\n      });\n    }\n    \n    // Paramètres optionnels\n    if (operation.optional_params) {\n      operation.optional_params.forEach(param => {\n        params.push({\n          displayName: param.display_name || param.name,\n          name: param.name,\n          type: param.type || 'string',\n          required: false,\n          description: param.description,\n          default: param.default || ''\n        });\n      });\n    }\n    \n    return params;\n  }\n  \n  // Génération des spécifications de credentials\n  generateCredentialsSpec() {\n    const auth = this.analyzeAuthentication();\n    \n    return {\n      name: `${this.request.name}Api`,\n      displayName: `${this.request.service} API`,\n      documentationUrl: this.request.api_documentation,\n      properties: auth.properties,\n      authenticate: {\n        type: auth.type,\n        properties: auth.oauth || {}\n      }\n    };\n  }\n  \n  // Génération des propriétés du node\n  generatePropertiesSpec() {\n    const properties = [\n      {\n        displayName: 'Resource',\n        name: 'resource',\n        type: 'options',\n        options: this.generateResourceOptions(),\n        default: this.request.operations[0]?.name || '',\n        noDataExpression: true\n      },\n      {\n        displayName: 'Operation',\n        name: 'operation',\n        type: 'options',\n        displayOptions: {\n          show: {\n            resource: this.request.operations.map(op => op.name)\n          }\n        },\n        options: this.generateOperationOptions(),\n        default: 'get',\n        noDataExpression: true\n      }\n    ];\n    \n    return properties;\n  }\n  \n  // Génération des options de ressources\n  generateResourceOptions() {\n    const resources = [...new Set(this.request.operations.map(op => op.resource || op.name))];\n    \n    return resources.map(resource => ({\n      name: resource.charAt(0).toUpperCase() + resource.slice(1),\n      value: resource\n    }));\n  }\n  \n  // Génération des options d'opérations\n  generateOperationOptions() {\n    return this.request.operations.map(op => ({\n      name: op.display_name || op.name,\n      value: op.name,\n      description: op.description\n    }));\n  }\n  \n  // Calcul de la complexité\n  calculateComplexity() {\n    let complexity = 0;\n    \n    // Complexité des opérations\n    complexity += this.request.operations.length * 2;\n    \n    // Complexité de l'authentification\n    const authComplexity = {\n      'api_key': 1,\n      'basic': 2,\n      'oauth2': 5\n    };\n    complexity += authComplexity[this.request.authentication_type] || 1;\n    \n    // Complexité des paramètres\n    this.request.operations.forEach(op => {\n      complexity += (op.required_params || []).length;\n      complexity += (op.optional_params || []).length * 0.5;\n    });\n    \n    // Complexité spéciale\n    if (this.request.webhooks) complexity += 3;\n    if (this.request.file_uploads) complexity += 2;\n    if (this.request.pagination) complexity += 2;\n    \n    return complexity < 10 ? 'simple' : complexity < 20 ? 'medium' : 'complex';\n  }\n  \n  // Estimation du temps de développement\n  estimateDevTime() {\n    const baseHours = 8;\n    const operationHours = this.request.operations.length * 4;\n    \n    const complexityMultiplier = {\n      'simple': 1,\n      'medium': 1.5,\n      'complex': 2.5\n    };\n    \n    const authHours = {\n      'api_key': 2,\n      'basic': 3,\n      'oauth2': 8\n    };\n    \n    const totalHours = (baseHours + operationHours + authHours[this.request.authentication_type] || 2) * complexityMultiplier[this.calculateComplexity()];\n    \n    return Math.ceil(totalHours);\n  }\n  \n  // Calcul du coût\n  calculateCost(hours) {\n    const hourlyRate = 75; // 75€/heure\n    return hours * hourlyRate;\n  }\n  \n  // Identification des compétences requises\n  identifyRequiredSkills() {\n    const skills = ['TypeScript', 'n8n API', 'Node.js'];\n    \n    if (this.request.authentication_type === 'oauth2') {\n      skills.push('OAuth2 implementation');\n    }\n    \n    if (this.request.webhooks) {\n      skills.push('Webhook handling');\n    }\n    \n    if (this.request.file_uploads) {\n      skills.push('File handling');\n    }\n    \n    return skills;\n  }\n  \n  // Génération des exigences de test\n  generateTestingRequirements() {\n    return {\n      unit_tests: 'Required for all operations',\n      integration_tests: 'Required for API connectivity',\n      manual_tests: 'Required for UI components',\n      performance_tests: this.calculateComplexity() === 'complex' ? 'Required' : 'Optional',\n      security_tests: this.request.authentication_type === 'oauth2' ? 'Required' : 'Standard'\n    };\n  }\n  \n  // Génération de la gestion d'erreurs\n  generateErrorHandling(operation) {\n    return {\n      common_errors: [\n        { code: 400, message: 'Bad Request - Invalid parameters' },\n        { code: 401, message: 'Unauthorized - Invalid credentials' },\n        { code: 403, message: 'Forbidden - Insufficient permissions' },\n        { code: 404, message: 'Not Found - Resource not found' },\n        { code: 429, message: 'Rate limit exceeded' },\n        { code: 500, message: 'Internal server error' }\n      ],\n      retry_strategy: {\n        max_retries: 3,\n        backoff: 'exponential',\n        retry_codes: [429, 500, 502, 503, 504]\n      }\n    };\n  }\n  \n  // Génération du rapport final\n  generateReport() {\n    return {\n      request_id: `node_req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,\n      validation: {\n        valid: this.validationErrors.length === 0,\n        errors: this.validationErrors\n      },\n      original_request: this.request,\n      technical_specification: this.spec,\n      project_timeline: this.generateTimeline(),\n      generated_at: new Date().toISOString()\n    };\n  }\n  \n  // Génération du timeline\n  generateTimeline() {\n    const estimatedHours = this.spec.development_specs.estimated_hours;\n    const phases = [\n      { name: 'Analysis & Design', hours: Math.ceil(estimatedHours * 0.2) },\n      { name: 'Development', hours: Math.ceil(estimatedHours * 0.5) },\n      { name: 'Testing', hours: Math.ceil(estimatedHours * 0.2) },\n      { name: 'Documentation', hours: Math.ceil(estimatedHours * 0.1) }\n    ];\n    \n    return {\n      total_hours: estimatedHours,\n      phases: phases,\n      estimated_days: Math.ceil(estimatedHours / 8)\n    };\n  }\n}\n\n// Génération de la spécification\nconst generator = new NodeSpecificationGenerator(nodeRequest);\nconst report = generator\n  .validateRequest()\n  .generateTechnicalSpec()\n  .generateReport();\n\nreturn [{ json: report }];"
+      },
+      "id": "node-specification-502",
+      "name": "Génération Spécification",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "validation-success",
+              "leftValue": "={{ $json.validation.valid }}",
+              "rightValue": "true",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-validation-502",
+      "name": "Vérifier Validation",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Générateur de code TypeScript pour node n8n\nconst specification = $input.first().json;\nconst spec = specification.technical_specification;\n\n// Classe pour la génération de code\nclass NodeCodeGenerator {\n  constructor(specification) {\n    this.spec = specification;\n    this.nodeCode = '';\n    this.credentialsCode = '';\n    this.testCode = '';\n  }\n  \n  // Génération du code principal du node\n  generateNodeCode() {\n    const nodeInfo = this.spec.node_info;\n    const operations = this.spec.operations;\n    \n    this.nodeCode = `import {\n  IExecuteFunctions,\n  INodeExecutionData,\n  INodeType,\n  INodeTypeDescription,\n  ILoadOptionsFunctions,\n  INodePropertyOptions,\n  NodeOperationError,\n  NodeApiError,\n} from 'n8n-workflow';\n\nimport { OptionsWithUri } from 'request';\n\nexport class ${nodeInfo.name} implements INodeType {\n  description: INodeTypeDescription = {\n    displayName: '${nodeInfo.display_name}',\n    name: '${nodeInfo.name.toLowerCase()}',\n    icon: 'file:${nodeInfo.icon}',\n    group: ['transform'],\n    version: 1,\n    subtitle: '={{$parameter[\"operation\"] + \": \" + $parameter[\"resource\"]}}',\n    description: '${nodeInfo.description}',\n    defaults: {\n      name: '${nodeInfo.display_name}',\n      color: '${nodeInfo.color}',\n    },\n    inputs: ['main'],\n    outputs: ['main'],\n    credentials: [\n      {\n        name: '${this.spec.credentials.name}',\n        required: true,\n      },\n    ],\n    properties: [\n      {\n        displayName: 'Resource',\n        name: 'resource',\n        type: 'options',\n        options: [\n${this.generateResourceOptions()}\n        ],\n        default: '${operations[0]?.name || 'get'}',\n        noDataExpression: true,\n      },\n      {\n        displayName: 'Operation',\n        name: 'operation',\n        type: 'options',\n        displayOptions: {\n          show: {\n            resource: ['${operations.map(op => op.name).join(\"', '\")}']\n          }\n        },\n        options: [\n${this.generateOperationOptions()}\n        ],\n        default: '${operations[0]?.name || 'get'}',\n        noDataExpression: true,\n      },\n${this.generateParameterProperties()}\n    ],\n  };\n\n  async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {\n    const items = this.getInputData();\n    const returnData: INodeExecutionData[] = [];\n    const resource = this.getNodeParameter('resource', 0) as string;\n    const operation = this.getNodeParameter('operation', 0) as string;\n\n    for (let i = 0; i < items.length; i++) {\n      try {\n        let responseData;\n        \n        if (resource === 'main') {\n${this.generateOperationCases()}\n        }\n        \n        if (Array.isArray(responseData)) {\n          returnData.push.apply(returnData, responseData as INodeExecutionData[]);\n        } else {\n          returnData.push({ json: responseData });\n        }\n        \n      } catch (error) {\n        if (this.continueOnFail()) {\n          returnData.push({ json: { error: error.message } });\n          continue;\n        }\n        throw error;\n      }\n    }\n    \n    return [returnData];\n  }\n\n${this.generateHelperMethods()}\n}\n`;\n    \n    return this;\n  }\n  \n  // Génération des options de ressources\n  generateResourceOptions() {\n    return this.spec.operations.map(op => \n      `          {\n            name: '${op.displayName}',\n            value: '${op.name}',\n            description: '${op.description}',\n          }`\n    ).join(',\\n');\n  }\n  \n  // Génération des options d'opérations\n  generateOperationOptions() {\n    return this.spec.operations.map(op => \n      `          {\n            name: '${op.displayName}',\n            value: '${op.name}',\n            description: '${op.description}',\n          }`\n    ).join(',\\n');\n  }\n  \n  // Génération des propriétés de paramètres\n  generateParameterProperties() {\n    let properties = '';\n    \n    this.spec.operations.forEach(op => {\n      if (op.parameters && op.parameters.length > 0) {\n        op.parameters.forEach(param => {\n          properties += `      {\n        displayName: '${param.displayName}',\n        name: '${param.name}',\n        type: '${param.type}',\n        required: ${param.required},\n        displayOptions: {\n          show: {\n            resource: ['main'],\n            operation: ['${op.name}'],\n          },\n        },\n        default: '${param.default || ''}',\n        description: '${param.description}',\n      },\\n`;\n        });\n      }\n    });\n    \n    return properties;\n  }\n  \n  // Génération des cas d'opération\n  generateOperationCases() {\n    let cases = '';\n    \n    this.spec.operations.forEach(op => {\n      cases += `          if (operation === '${op.name}') {\n            responseData = await this.${op.name}Request(i);\n          }\\n`;\n    });\n    \n    return cases;\n  }\n  \n  // Génération des méthodes helper\n  generateHelperMethods() {\n    let methods = '';\n    \n    this.spec.operations.forEach(op => {\n      methods += `\n  async ${op.name}Request(this: IExecuteFunctions, itemIndex: number): Promise<any> {\n    const credentials = await this.getCredentials('${this.spec.credentials.name}');\n    \n    const options: OptionsWithUri = {\n      method: '${op.method}',\n      uri: \\`\\${this.spec.service_integration.api_base_url}${op.endpoint}\\`,\n      headers: {\n        'Content-Type': 'application/json',\n        'Authorization': \\`Bearer \\${credentials.apiKey}\\`,\n      },\n      json: true,\n    };\n    \n    // Add parameters\n${this.generateParameterHandling(op)}\n    \n    try {\n      const response = await this.helpers.request!(options);\n      return response;\n    } catch (error) {\n      throw new NodeApiError(this.getNode(), error);\n    }\n  }`;\n    });\n    \n    return methods;\n  }\n  \n  // Génération de la gestion des paramètres\n  generateParameterHandling(operation) {\n    if (!operation.parameters || operation.parameters.length === 0) {\n      return '    // No parameters for this operation';\n    }\n    \n    let handling = '';\n    \n    operation.parameters.forEach(param => {\n      handling += `    const ${param.name} = this.getNodeParameter('${param.name}', itemIndex) as ${param.type === 'number' ? 'number' : 'string'};\n`;\n      \n      if (operation.method === 'GET') {\n        handling += `    if (${param.name} !== undefined) {\n      options.qs = { ...options.qs, ${param.name} };\n    }\n`;\n      } else {\n        handling += `    if (${param.name} !== undefined) {\n      options.body = { ...options.body, ${param.name} };\n    }\n`;\n      }\n    });\n    \n    return handling;\n  }\n  \n  // Génération du code des credentials\n  generateCredentialsCode() {\n    const cred = this.spec.credentials;\n    \n    this.credentialsCode = `import {\n  ICredentialType,\n  INodeProperties,\n} from 'n8n-workflow';\n\nexport class ${cred.name} implements ICredentialType {\n  name = '${cred.name}';\n  displayName = '${cred.displayName}';\n  documentationUrl = '${cred.documentationUrl}';\n  properties: INodeProperties[] = [\n${this.generateCredentialProperties()}\n  ];\n}\n`;\n    \n    return this;\n  }\n  \n  // Génération des propriétés credentials\n  generateCredentialProperties() {\n    const props = this.spec.credentials.properties;\n    \n    return Object.keys(props).map(key => {\n      const prop = props[key];\n      return `    {\n      displayName: '${prop.displayName}',\n      name: '${prop.name}',\n      type: '${prop.type}',\n      required: ${prop.required},\n      ${prop.typeOptions ? `typeOptions: ${JSON.stringify(prop.typeOptions)},` : ''}\n      default: '',\n    }`;\n    }).join(',\\n');\n  }\n  \n  // Génération du code de test\n  generateTestCode() {\n    this.testCode = `import { WorkflowTestData } from '../../../test/types';\n\nexport const ${this.spec.node_info.name}WorkflowTest: WorkflowTestData = {\n  description: 'Test ${this.spec.node_info.display_name} node',\n  input: {\n    workflowData: {\n      nodes: [\n        {\n          name: 'Start',\n          type: 'n8n-nodes-base.start',\n          parameters: {},\n          position: [240, 300],\n        },\n        {\n          name: '${this.spec.node_info.display_name}',\n          type: 'n8n-nodes-custom.${this.spec.node_info.name.toLowerCase()}',\n          parameters: {\n            resource: '${this.spec.operations[0]?.name || 'get'}',\n            operation: '${this.spec.operations[0]?.name || 'get'}',\n          },\n          position: [460, 300],\n        },\n      ],\n      connections: {\n        Start: {\n          main: [\n            [\n              {\n                node: '${this.spec.node_info.display_name}',\n                type: 'main',\n                index: 0,\n              },\n            ],\n          ],\n        },\n      },\n    },\n  },\n  output: {\n    nodeData: {\n      '${this.spec.node_info.display_name}': [\n        [\n          {\n            json: {\n              success: true,\n            },\n          },\n        ],\n      ],\n    },\n  },\n};\n`;\n    \n    return this;\n  }\n  \n  // Génération du rapport final\n  generateReport() {\n    return {\n      node_code: this.nodeCode,\n      credentials_code: this.credentialsCode,\n      test_code: this.testCode,\n      package_json: this.generatePackageJson(),\n      readme: this.generateReadme(),\n      installation_instructions: this.generateInstallationInstructions(),\n      generated_at: new Date().toISOString()\n    };\n  }\n  \n  // Génération du package.json\n  generatePackageJson() {\n    return {\n      name: `n8n-nodes-${this.spec.node_info.name.toLowerCase()}`,\n      version: '1.0.0',\n      description: `n8n node for ${this.spec.service_integration.service_name}`,\n      main: 'index.js',\n      scripts: {\n        build: 'tsc',\n        dev: 'tsc --watch',\n        format: 'prettier --write .',\n        lint: 'tslint -p tsconfig.json -c tslint.json',\n        test: 'jest'\n      },\n      keywords: ['n8n', 'n8n-node', this.spec.service_integration.service_name.toLowerCase()],\n      n8n: {\n        nodes: [`dist/${this.spec.node_info.name}.node.js`],\n        credentials: [`dist/${this.spec.credentials.name}.credentials.js`]\n      },\n      dependencies: {\n        'n8n-workflow': '^1.0.0'\n      },\n      devDependencies: {\n        typescript: '^4.0.0',\n        '@types/node': '^14.0.0',\n        tslint: '^6.0.0',\n        prettier: '^2.0.0',\n        jest: '^26.0.0'\n      }\n    };\n  }\n  \n  // Génération du README\n  generateReadme() {\n    return `# ${this.spec.node_info.display_name} Node for n8n\n\n${this.spec.node_info.description}\n\n## Installation\n\n\\`\\`\\`bash\nnpm install n8n-nodes-${this.spec.node_info.name.toLowerCase()}\n\\`\\`\\`\n\n## Configuration\n\n1. Add credentials for ${this.spec.service_integration.service_name}\n2. Configure the node with your desired operation\n3. Test the connection\n\n## Available Operations\n\n${this.spec.operations.map(op => `- **${op.displayName}**: ${op.description}`).join('\\n')}\n\n## Development\n\n\\`\\`\\`bash\nnpm run dev\n\\`\\`\\`\n\n## Testing\n\n\\`\\`\\`bash\nnpm test\n\\`\\`\\`\n\n## Contributing\n\nPull requests are welcome!\n`;\n  }\n  \n  // Génération des instructions d'installation\n  generateInstallationInstructions() {\n    return [\n      '1. Install the package: npm install n8n-nodes-' + this.spec.node_info.name.toLowerCase(),\n      '2. Restart your n8n instance',\n      '3. The node will appear in the nodes panel',\n      '4. Configure credentials in n8n settings',\n      '5. Add the node to your workflow'\n    ];\n  }\n}\n\n// Génération du code\nconst codeGenerator = new NodeCodeGenerator(specification.technical_specification);\nconst codeReport = codeGenerator\n  .generateNodeCode()\n  .generateCredentialsCode()\n  .generateTestCode()\n  .generateReport();\n\nreturn [{ \n  json: {\n    ...specification,\n    generated_code: codeReport\n  }\n}];"
+      },
+      "id": "code-generation-502",
+      "name": "Génération Code",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "record",
+        "operation": "create",
+        "base": "VOTRE_NODE_DEVELOPMENT_BASE_ID",
+        "table": "Node_Requests",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Request_ID": "={{ $json.request_id }}",
+            "Node_Name": "={{ $json.technical_specification.node_info.name }}",
+            "Service": "={{ $json.technical_specification.service_integration.service_name }}",
+            "Complexity": "={{ $json.technical_specification.development_specs.complexity }}",
+            "Estimated_Hours": "={{ $json.technical_specification.development_specs.estimated_hours }}",
+            "Estimated_Cost": "={{ $json.technical_specification.development_specs.estimated_cost }}",
+            "Status": "Specification Generated",
+            "Contact": "={{ $json.original_request.contact }}",
+            "Generated_At": "={{ $json.generated_at }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "save-node-request-502",
+      "name": "Sauvegarder Demande",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2,
+      "position": [
+        1250,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "subject": "🚀 Spécification de votre node custom générée",
+        "message": "Votre demande de node custom a été traitée avec succès !\n\n📋 **Détails du projet:**\n• Node: {{ $json.technical_specification.node_info.name }}\n• Service: {{ $json.technical_specification.service_integration.service_name }}\n• Complexité: {{ $json.technical_specification.development_specs.complexity }}\n• Temps estimé: {{ $json.technical_specification.development_specs.estimated_hours }} heures\n• Coût estimé: {{ $json.technical_specification.development_specs.estimated_cost }}€\n\n⏱️ **Timeline du projet:**\n• Durée totale: {{ $json.project_timeline.estimated_days }} jours\n• Phases: Analyse ({{ $json.project_timeline.phases[0].hours }}h), Développement ({{ $json.project_timeline.phases[1].hours }}h), Test ({{ $json.project_timeline.phases[2].hours }}h)\n\n🛠️ **Compétences requises:**\n{{ $json.technical_specification.development_specs.required_skills.join(', ') }}\n\n📁 **Fichiers joints:**\n• Spécification technique complète\n• Code TypeScript généré\n• Tests unitaires\n• Documentation\n\nNous vous contacterons dans les 24h pour discuter du projet !",
+        "toList": "={{ $json.original_request.contact }}",
+        "options": {}
+      },
+      "id": "email-specification-502",
+      "name": "Email Spécification",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1500,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "send",
+        "subject": "❌ Problème avec votre demande de node",
+        "message": "Votre demande de node custom ne peut pas être traitée pour les raisons suivantes:\n\n❌ **Erreurs détectées:**\n{{ $json.validation.errors.join('\\n') }}\n\n📝 **Pour corriger:**\n1. Vérifiez que tous les champs requis sont remplis\n2. Fournissez la documentation API\n3. Définissez au moins une opération\n4. Assurez-vous que les informations de contact sont correctes\n\n🔄 **Prochaines étapes:**\nCorrigez ces problèmes et resoumettez votre demande.\n\nNous sommes là pour vous aider si vous avez des questions !",
+        "toList": "={{ $json.original_request.contact }}",
+        "options": {}
+      },
+      "id": "email-validation-error-502",
+      "name": "Email Erreur Validation",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "channel": "#node-development",
+        "text": "🚀 **Nouvelle demande de node custom**\n\n*Node:* {{ $json.technical_specification.node_info.name }}\n*Service:* {{ $json.technical_specification.service_integration.service_name }}\n*Complexité:* {{ $json.technical_specification.development_specs.complexity }}\n*Temps estimé:* {{ $json.technical_specification.development_specs.estimated_hours }}h\n*Coût:* {{ $json.technical_specification.development_specs.estimated_cost }}€\n*Contact:* {{ $json.original_request.contact }}\n\n*Opérations:* {{ $json.technical_specification.operations.length }}\n*Auth:* {{ $json.original_request.authentication_type }}\n\n*Action:* Spécification générée, prête pour développement",
+        "otherOptions": {
+          "username": "Node Dev Bot"
+        }
+      },
+      "id": "slack-notification-502",
+      "name": "Notification Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [
+        1750,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": "VOTRE_NODE_DEVELOPMENT_LOG_ID",
+        "sheetName": "Development_Log",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Request_ID": "={{ $json.request_id }}",
+            "Node_Name": "={{ $json.technical_specification.node_info.name }}",
+            "Service": "={{ $json.technical_specification.service_integration.service_name }}",
+            "Requester": "={{ $json.original_request.contact }}",
+            "Complexity": "={{ $json.technical_specification.development_specs.complexity }}",
+            "Operations_Count": "={{ $json.technical_specification.operations.length }}",
+            "Auth_Type": "={{ $json.original_request.authentication_type }}",
+            "Estimated_Hours": "={{ $json.technical_specification.development_specs.estimated_hours }}",
+            "Estimated_Cost": "={{ $json.technical_specification.development_specs.estimated_cost }}",
+            "Status": "Specification Generated",
+            "Generated_At": "={{ $json.generated_at }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "log-development-502",
+      "name": "Log Développement",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        2000,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Demande Nouveau Node": {
+      "main": [
+        [
+          {
+            "node": "Génération Spécification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Génération Spécification": {
+      "main": [
+        [
+          {
+            "node": "Vérifier Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vérifier Validation": {
+      "main": [
+        [
+          {
+            "node": "Génération Code",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Email Erreur Validation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Génération Code": {
+      "main": [
+        [
+          {
+            "node": "Sauvegarder Demande",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sauvegarder Demande": {
+      "main": [
+        [
+          {
+            "node": "Email Spécification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Spécification": {
+      "main": [
+        [
+          {
+            "node": "Notification Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notification Slack": {
+      "main": [
+        [
+          {
+            "node": "Log Développement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Erreur Validation": {
+      "main": [
+        [
+          {
+            "node": "Log Développement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "5-2-node-custom-developpement-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "16",
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "module-5-premium",
+      "name": "Module 5 - Premium"
+    }
+  ]
+}

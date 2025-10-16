@@ -1,0 +1,96 @@
+{
+  "source_file": "workflow-telegram-advanced-bot_FR.json",
+  "total_texts": 9,
+  "texts": {
+    "text_0": {
+      "path": [
+        "nodes",
+        0,
+        "name"
+      ],
+      "original": "Telegram Trigger",
+      "type": "node_name",
+      "translated": "Déclencheur Telegram"
+    },
+    "text_1": {
+      "path": [
+        "nodes",
+        1,
+        "name"
+      ],
+      "original": "Analyseur de Message",
+      "type": "node_name",
+      "translated": "Analyseur de Message"
+    },
+    "text_2": {
+      "path": [
+        "nodes",
+        2,
+        "name"
+      ],
+      "original": "Routeur de Commandes",
+      "type": "node_name",
+      "translated": "Routeur de Commandes"
+    },
+    "text_3": {
+      "path": [
+        "nodes",
+        3,
+        "name"
+      ],
+      "original": "Processeur de Commandes",
+      "type": "node_name",
+      "translated": "Processeur de Commandes"
+    },
+    "text_4": {
+      "path": [
+        "nodes",
+        4,
+        "name"
+      ],
+      "original": "Processeur IA",
+      "type": "node_name",
+      "translated": "Processeur IA"
+    },
+    "text_5": {
+      "path": [
+        "nodes",
+        5,
+        "name"
+      ],
+      "original": "Réponse Telegram",
+      "type": "node_name",
+      "translated": "Réponse Telegram"
+    },
+    "text_6": {
+      "path": [
+        "nodes",
+        6,
+        "name"
+      ],
+      "original": "Vérification Escalade",
+      "type": "node_name",
+      "translated": "Vérification d'Escalade"
+    },
+    "text_7": {
+      "path": [
+        "nodes",
+        7,
+        "name"
+      ],
+      "original": "Escalade Support",
+      "type": "node_name",
+      "translated": "Escalade Support"
+    },
+    "text_8": {
+      "path": [
+        "nodes",
+        8,
+        "name"
+      ],
+      "original": "Suivi Analytics",
+      "type": "node_name",
+      "translated": "Suivi Analytics"
+    }
+  }
+}

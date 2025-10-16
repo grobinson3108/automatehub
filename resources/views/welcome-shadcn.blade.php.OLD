@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutomateHub - Automatisez votre business avec n8n</title>
+    @vite(['resources/css/app.css'])
+</head>
+<body class="bg-background text-foreground">
+
+    <!-- Hero Section -->
+    <section class="container mx-auto px-4 py-20 md:py-32">
+        <div class="max-w-screen-xl mx-auto text-center space-y-8">
+
+            <!-- Badge -->
+            <div class="inline-flex items-center gap-2 border border-primary/20 rounded-full px-4 py-2 text-sm">
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded-md bg-primary text-primary-foreground">⚡</span>
+                <span>Automatisez votre business en quelques clics</span>
+            </div>
+
+            <!-- Title -->
+            <h1 class="text-4xl md:text-6xl font-bold max-w-screen-md mx-auto">
+                La plateforme
+                <span class="bg-gradient-to-r from-primary to-orange-600 bg-clip-text text-transparent">n8n</span>
+                pour entrepreneurs
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="text-xl text-muted-foreground max-w-screen-sm mx-auto">
+                Workflows prêts à l'emploi, tutoriels vidéo et communauté active.
+                Automatisez votre pharmacie, commerce ou service en minutes.
+            </p>
+
+            <!-- CTA Buttons -->
+            <div class="flex flex-col md:flex-row gap-4 justify-center items-center">
+                <a href="#" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-8 py-3 font-bold hover:bg-primary/90 transition-colors">
+                    Commencer gratuitement
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                    </svg>
+                </a>
+                <a href="#" class="inline-flex items-center justify-center rounded-md border border-input bg-background px-8 py-3 font-bold hover:bg-accent transition-colors">
+                    Voir les workflows
+                </a>
+            </div>
+
+            <!-- Hero Image Placeholder -->
+            <div class="relative mt-14">
+                <div class="absolute top-2 lg:-top-8 left-1/2 transform -translate-x-1/2 w-[90%] h-24 lg:h-80 bg-primary/50 rounded-full blur-3xl"></div>
+                <div class="relative border-2 border-primary/30 rounded-lg bg-card p-8 shadow-lg">
+                    <p class="text-muted-foreground text-lg">📸 Dashboard Preview Coming Soon</p>
+                    <p class="text-sm text-muted-foreground mt-2">Interface n8n automatehub.fr</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="container mx-auto px-4 py-24">
+        <div class="text-center mb-12">
+            <h2 class="text-lg text-primary mb-2 tracking-wider">Fonctionnalités</h2>
+            <h3 class="text-3xl md:text-4xl font-bold mb-4">Pourquoi choisir AutomateHub ?</h3>
+            <p class="text-xl text-muted-foreground max-w-2xl mx-auto">
+                La seule plateforme n8n en français conçue pour les entrepreneurs locaux.
+                Workflows, formations et support inclus.
+            </p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <!-- Feature 1 -->
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/20 text-primary mb-4 ring-8 ring-primary/10">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                </div>
+                <h4 class="font-bold text-lg mb-2">Workflows n8n prêts</h4>
+                <p class="text-muted-foreground">Bibliothèque de workflows testés pour pharmacies, commerces et services. Import en 1 clic.</p>
+            </div>
+
+            <!-- Feature 2 -->
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/20 text-primary mb-4 ring-8 ring-primary/10">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                    </svg>
+                </div>
+                <h4 class="font-bold text-lg mb-2">Tutoriels vidéo</h4>
+                <p class="text-muted-foreground">Apprenez pas à pas avec nos tutoriels gratuits et premium. De débutant à expert.</p>
+            </div>
+
+            <!-- Feature 3 -->
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/20 text-primary mb-4 ring-8 ring-primary/10">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                    </svg>
+                </div>
+                <h4 class="font-bold text-lg mb-2">Automation rapide</h4>
+                <p class="text-muted-foreground">Automatisez Google Business, emails, SMS et WhatsApp en quelques minutes.</p>
+            </div>
+
+            <!-- Feature 4 -->
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/20 text-primary mb-4 ring-8 ring-primary/10">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                </div>
+                <h4 class="font-bold text-lg mb-2">Communauté Skool</h4>
+                <p class="text-muted-foreground">Rejoignez 500+ entrepreneurs qui automatisent leur business. Support 7j/7.</p>
+            </div>
+
+            <!-- Feature 5 -->
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/20 text-primary mb-4 ring-8 ring-primary/10">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                    </svg>
+                </div>
+                <h4 class="font-bold text-lg mb-2">Conforme RGPD</h4>
+                <p class="text-muted-foreground">Tous nos workflows respectent le RGPD et les réglementations françaises.</p>
+            </div>
+
+            <!-- Feature 6 -->
+            <div class="text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/20 text-primary mb-4 ring-8 ring-primary/10">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                    </svg>
+                </div>
+                <h4 class="font-bold text-lg mb-2">ROI immédiat</h4>
+                <p class="text-muted-foreground">Économisez 10h/semaine dès la première automatisation. Rentable en 48h.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="container mx-auto px-4 py-24">
+        <div class="max-w-4xl mx-auto bg-primary/10 border border-primary/20 rounded-2xl p-12 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Prêt à automatiser votre business ?</h2>
+            <p class="text-xl text-muted-foreground mb-8">
+                Rejoignez 500+ entrepreneurs qui ont déjà automatisé leur quotidien avec AutomateHub.
+            </p>
+            <a href="#" class="inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground px-8 py-4 text-lg font-bold hover:bg-primary/90 transition-colors">
+                Accéder aux workflows gratuitement
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-border py-8">
+        <div class="container mx-auto px-4 text-center text-muted-foreground">
+            <p>© 2025 AutomateHub. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

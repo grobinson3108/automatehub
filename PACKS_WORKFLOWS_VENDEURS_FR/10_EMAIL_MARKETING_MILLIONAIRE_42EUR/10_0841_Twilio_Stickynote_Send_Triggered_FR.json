@@ -1,0 +1,508 @@
+{
+  "meta": {
+    "instanceId": "408f9fb9940c3cb18ffdef0e0150fe342d6e655c3a9fac21f0f644e8bedabcd9",
+    "templateCredsSetupCompleted": true
+  },
+  "nodes": [
+    {
+      "id": "c2429079-50b7-4da8-9fe4-9a1879bd681c",
+      "name": "Déclencheur Twilio",
+      "type": "n8n-nodes-base.twilioTrigger",
+      "position": [
+        -380,
+        -460
+      ],
+      "webhookId": "47604448-e049-480d-899e-d3318a93276b",
+      "parameters": {
+        "updates": [
+          "com.twilio.messaging.inbound-message.received"
+        ]
+      },
+      "credentials": {
+        "twilioApi": {
+          "id": "TJv4H4lXxPCLZT50",
+          "name": "Twilio account"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "b1c0dc4c-593f-49aa-8fec-a77c7e40928e",
+      "name": "Rechercher des cours disponibles",
+      "type": "n8n-nodes-base.airtableTool",
+      "position": [
+        380,
+        -80
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appO5xvP1aUBYKyJ7",
+          "cachedResultUrl": "https://airtable.com/appO5xvP1aUBYKyJ7",
+          "cachedResultName": "Northvale Institute of Technology Courses 2025-2026"
+        },
+        "limit": 5,
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "tblRfh0t0KNSJYJVw",
+          "cachedResultUrl": "https://airtable.com/appO5xvP1aUBYKyJ7/tblRfh0t0KNSJYJVw",
+          "cachedResultName": "Imported table"
+        },
+        "options": {},
+        "operation": "search",
+        "returnAll": false,
+        "descriptionType": "manual",
+        "filterByFormula": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Filter_By_Formula', ``, 'string') }}",
+        "toolDescription": "Appelez cet outil pour accéder à la base de données des cours. Assurez-vous de disposer du schéma de la base de données des cours avant d'utiliser cet outil."
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Und0frCQ6SNVX3VV",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "ad06d5f6-cd6d-4804-b633-cf065866f41e",
+      "name": "Obtenir le schéma de la base de données des cours",
+      "type": "n8n-nodes-base.airtableTool",
+      "position": [
+        240,
+        -160
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appO5xvP1aUBYKyJ7",
+          "cachedResultUrl": "https://airtable.com/appO5xvP1aUBYKyJ7",
+          "cachedResultName": "Northvale Institute of Technology Courses 2025-2026"
+        },
+        "resource": "base",
+        "operation": "getSchema",
+        "descriptionType": "manual",
+        "toolDescription": "Appelez cet outil pour obtenir le schéma de la base de données des cours."
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Und0frCQ6SNVX3VV",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "7d16ef89-3e63-4f64-9470-eb1bf9c76ece",
+      "name": "Obtenir le message de l'utilisateur",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -160,
+        -460
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "5ca2fffb-2926-42df-ae2b-95ba081345ef",
+              "name": "message",
+              "type": "string",
+              "value": "={{ $json.Body || $json.chatInput }}"
+            },
+            {
+              "id": "3bfdb166-0ab1-44b9-b6e4-ce6ad52a465c",
+              "name": "sessionId",
+              "type": "string",
+              "value": "={{ $json.From || $json.sessionId }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "b2b03e59-2c1d-4852-a8a6-37fb20f38b55",
+      "name": "Envoyer une réponse SMS",
+      "type": "n8n-nodes-base.twilio",
+      "position": [
+        660,
+        -460
+      ],
+      "parameters": {
+        "to": "={{ $json.fields.from }}",
+        "from": "={{ $('Twilio Trigger').item.json.To }}",
+        "message": "={{ $('Course Assistant Agent').item.json.output }}",
+        "options": {}
+      },
+      "credentials": {
+        "twilioApi": {
+          "id": "TJv4H4lXxPCLZT50",
+          "name": "Twilio account"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "c07ba0c0-2e22-48fc-bca9-cbaeb221ccf9",
+      "name": "Ajouter au journal des appels",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        440,
+        -460
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appO5xvP1aUBYKyJ7",
+          "cachedResultUrl": "https://airtable.com/appO5xvP1aUBYKyJ7",
+          "cachedResultName": "Northvale Institute of Technology Courses 2025-2026"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "tblRFuaayw0En6T0c",
+          "cachedResultUrl": "https://airtable.com/appO5xvP1aUBYKyJ7/tblRFuaayw0En6T0c",
+          "cachedResultName": "Call Log"
+        },
+        "columns": {
+          "value": {
+            "from": "={{ $('Get User Message').first().json.sessionId }}",
+            "answer": "={{ $json.output }}",
+            "question": "={{ $('Get User Message').first().json.message }}"
+          },
+          "schema": [
+            {
+              "id": "from",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "from",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "question",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "question",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "answer",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "answer",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Created",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "id"
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "operation": "create"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Und0frCQ6SNVX3VV",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "ba7b4d7b-7b78-41f0-b158-3d1f09d14120",
+      "name": "Agent assistant des cours",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        60,
+        -460
+      ],
+      "parameters": {
+        "text": "={{ $json.message }}",
+        "options": {
+          "systemMessage": "=Vous êtes un assistant de renseignements sur les cours pour l'Institut de Technologie de Northvale aidant les étudiants avec diverses questions sur les cours disponibles pour l'année.\n* Répondez factuellement et sourcez les informations à partir de la base de données des cours pour garantir que vous disposez d'informations à jour.\n* Évitez de répondre ou de vous engager dans toute discussion non liée aux cours de l'Institut de Technologie de Northvale et orientez plutôt l'étudiant à contacter helpdesk@northvale.edu.\n* interrogez toujours le schéma de la base de données des cours avant d'utiliser les outils.\n\nNote : La syntaxe du filtre airtable par requête a été mise à jour\n* Encapsulez votre requête dans AND() ou OR() pour joindre les paramètres.\n* Pour filtrer les sélections simples ou multiples, utilisez l'opération FIND(). ex. AND({Schedule_from}>=900, FIND('Wed', {Schedule_day}))\n* les heures doivent être inclusives sauf indication contraire. Utilisez les opérateurs >= ou <=."
+        },
+        "promptType": "define"
+      },
+      "typeVersion": 1.8
+    },
+    {
+      "id": "3c790125-6665-4a0c-85b4-397e71faae35",
+      "name": "Obtenir la liste des professeurs",
+      "type": "n8n-nodes-base.airtableTool",
+      "position": [
+        560,
+        -180
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appO5xvP1aUBYKyJ7",
+          "cachedResultUrl": "https://airtable.com/appO5xvP1aUBYKyJ7",
+          "cachedResultName": "Northvale Institute of Technology Courses 2025-2026"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "tblRfh0t0KNSJYJVw",
+          "cachedResultUrl": "https://airtable.com/appO5xvP1aUBYKyJ7/tblRfh0t0KNSJYJVw",
+          "cachedResultName": "Imported table"
+        },
+        "options": {
+          "fields": [
+            "Instructor"
+          ]
+        },
+        "operation": "search",
+        "descriptionType": "manual",
+        "toolDescription": "Appelez cet outil pour obtenir une liste des professeurs actifs."
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Und0frCQ6SNVX3VV",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "27aacf1e-b8a7-46d0-915e-0481d9608251",
+      "name": "Obtenir la liste des départements",
+      "type": "n8n-nodes-base.airtableTool",
+      "position": [
+        500,
+        -20
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appO5xvP1aUBYKyJ7",
+          "cachedResultUrl": "https://airtable.com/appO5xvP1aUBYKyJ7",
+          "cachedResultName": "Northvale Institute of Technology Courses 2025-2026"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "tblRfh0t0KNSJYJVw",
+          "cachedResultUrl": "https://airtable.com/appO5xvP1aUBYKyJ7/tblRfh0t0KNSJYJVw",
+          "cachedResultName": "Imported table"
+        },
+        "options": {
+          "fields": [
+            "Department"
+          ]
+        },
+        "operation": "search",
+        "descriptionType": "manual",
+        "toolDescription": "Appelez cet outil pour obtenir une liste des départements."
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Und0frCQ6SNVX3VV",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "f1991f1f-9666-43d9-88ce-a2c083491a78",
+      "name": "Modèle",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        -40,
+        -240
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "8gccIjcuf3gvaoEr",
+          "name": "OpenAi account"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "2afd9d28-a1ba-4364-a576-ed3e86c640b6",
+      "name": "Mémoire",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        100,
+        -240
+      ],
+      "parameters": {},
+      "typeVersion": 1.3
+    },
+    {
+      "id": "774472f7-eb3d-4251-97e3-8e4033a0cf4f",
+      "name": "Note autocollante",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -940,
+        -1100
+      ],
+      "parameters": {
+        "width": 420,
+        "height": 1320,
+        "content": "## Essayez-le !\n### Ce modèle n8n propose un assistant chatbot simple mais performant capable de répondre aux questions sur les cours par SMS.\n\nAvec le bon accès aux données, les agents IA sont capables de planifier et d'exécuter des tâches de recherche relativement complexes pour obtenir leurs réponses. Dans cet exemple, l'agent doit d'abord comprendre le schéma de la base de données, récupérer des listes de valeurs avant de générer sa propre requête pour interroger la base de données.\n\n**Consultez la base de données exemple ici - https://airtable.com/appO5xvP1aUBYKyJ7/shr8jSFDaghubDOrw**\n\n### Comment ça fonctionne\n* Un déclencheur Twilio nous permet de recevoir des SMS en entrée dans notre workflow via webhook.\n* Le message est ensuite dirigé vers notre agent IA qui est chargé d'assister l'utilisateur et d'utiliser la base de données des cours comme référence. La base de données est une base Airtable.\n* L'agent détermine de manière autonome quel outil il doit utiliser et génère sa propre requête \"filter_by_formula\" pour rechercher parmi les cours disponibles.\n* En cas de résultats de recherche réussis, l'agent peut alors utiliser ces informations pour répondre à la requête de l'utilisateur.\n* La sortie de l'agent est enregistrée dans une deuxième feuille de la base Airtable. Nous pouvons l'utiliser plus tard pour l'analyse et la génération de prospects.\n* Enfin, la réponse est renvoyée à l'utilisateur par SMS via Twilio.\n\n### Comment utiliser\n* Assurez-vous que votre numéro Twilio est configuré pour transférer les messages vers l'URL webhook de ce workflow.\n* Configurez et mettez à jour la base de données des cours selon vos besoins. Si vous n'êtes pas intéressé par les cours, vous pouvez la remplacer par un inventaire, des livraisons ou toute autre donnée pertinente pour votre entreprise.\n* Posez des questions telles que :\n  * \"Pouvez-vous m'aider à trouver des cours adaptés pour occuper mes mercredis matin ?\"\n  * \"Quels cours sont dispensés par le professeur Lee ?\"\n  * \"Je m'intéresse aux arts créatifs. Quels cours sont disponibles et pourraient me concerner ?\"\n\n### Exigences\n* Twilio pour la réception et l'envoi de SMS\n* OpenAI pour LLM et Agent\n* Airtable pour la base de données des cours\n\n### Personnalisation de ce workflow\n* Ajoutez des outils supplémentaires et élargissez la gamme de requêtes auxquelles l'agent peut répondre ou aider.\n* Vous n'utilisez pas Airtable ? Cette technique fonctionne également avec des bases de données SQL comme PostgreSQL.\n\n### Besoin d'aide ?\nRejoignez le [Discord](https://discord.com/invite/XPKeKXeB7d) ou posez votre question dans le [Forum](https://community.n8n.io/) !\n\nBon hacking !"
+      },
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Modèle": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent assistant des cours",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mémoire": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agent assistant des cours",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déclencheur Twilio": {
+      "main": [
+        [
+          {
+            "node": "Obtenir le message de l'utilisateur",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir le message de l'utilisateur": {
+      "main": [
+        [
+          {
+            "node": "Agent assistant des cours",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Ajouter au journal des appels": {
+      "main": [
+        [
+          {
+            "node": "Envoyer une réponse SMS",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent assistant des cours": {
+      "main": [
+        [
+          {
+            "node": "Ajouter au journal des appels",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir la liste des professeurs": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent assistant des cours",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir la liste des départements": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent assistant des cours",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rechercher des cours disponibles": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent assistant des cours",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir le schéma de la base de données des cours": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent assistant des cours",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

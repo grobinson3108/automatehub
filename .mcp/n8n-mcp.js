@@ -1,0 +1,1 @@
+/var/www/MCP/n8n-mcp-correct.js

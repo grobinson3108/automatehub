@@ -1,0 +1,701 @@
+{
+  "name": "Email Telegram Management - Unified",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": ["callback_query"]
+      },
+      "id": "telegram-callback-trigger",
+      "name": "Telegram Callback Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [250, 200],
+      "webhookId": "email-callback-handler"
+    },
+    {
+      "parameters": {
+        "updates": ["message"]
+      },
+      "id": "telegram-message-trigger",
+      "name": "Telegram Message Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [250, 400],
+      "webhookId": "email-message-handler"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.callback_query.data}}",
+              "operation": "startsWith",
+              "value2": "reply_"
+            }
+          ]
+        }
+      },
+      "id": "if-reply-button",
+      "name": "IF Reply Button",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 200]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst callbackData = items[0].json.callback_query.data;\nconst mailId = callbackData.replace('reply_', '');\nconst chatId = items[0].json.callback_query.message.chat.id;\nconst queryId = items[0].json.callback_query.id;\nconst firstName = items[0].json.callback_query.from.first_name || 'Utilisateur';\n\nreturn [{\n  json: {\n    mailId,\n    chatId,\n    queryId,\n    firstName,\n    messageId: items[0].json.callback_query.message.message_id\n  }\n}];"
+      },
+      "id": "extract-reply-data",
+      "name": "Extract Reply Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 150]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{$json.chatId}}",
+        "text": "📧 Répondre au mail [{{$json.mailId}}]\n\n{{$json.firstName}}, tapez ou dictez votre réponse ci-dessous :",
+        "replyMarkup": "forceReply",
+        "additionalFields": {
+          "force_reply": true,
+          "input_field_placeholder": "Tapez votre réponse..."
+        }
+      },
+      "id": "force-reply",
+      "name": "Force Reply Keyboard",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [850, 150],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "callback",
+        "operation": "answerQuery",
+        "queryId": "={{$json.queryId}}",
+        "text": "✅ Tapez votre réponse",
+        "additionalFields": {
+          "show_alert": false
+        }
+      },
+      "id": "answer-reply-callback",
+      "name": "Answer Reply Callback",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1050, 150],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.message.reply_to_message ? 'true' : 'false'}}",
+              "value2": "true"
+            },
+            {
+              "value1": "={{$json.message.reply_to_message.text}}",
+              "operation": "contains",
+              "value2": "Répondre au mail"
+            }
+          ]
+        },
+        "combineOperation": "and"
+      },
+      "id": "if-is-reply",
+      "name": "IF Is Reply to Email",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 400]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst message = items[0].json.message;\nconst replyToText = message.reply_to_message.text;\nconst mailIdMatch = replyToText.match(/\\[([^\\]]+)\\]/);\nconst mailId = mailIdMatch ? mailIdMatch[1] : null;\n\n// Gérer texte ou audio\nlet userResponse = message.text || '';\nif (message.voice) {\n  userResponse = \"[Message vocal à transcrire]\";\n  // TODO: Ajouter intégration Whisper si nécessaire\n}\n\nreturn [{\n  json: {\n    mailId,\n    userResponse,\n    chatId: message.chat.id,\n    userId: message.from.id,\n    userName: message.from.first_name\n  }\n}];"
+      },
+      "id": "extract-response",
+      "name": "Extract Response Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 400]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "lookup",
+        "sheetId": "YOUR_SHEET_ID",
+        "sheetName": "Emails",
+        "lookupColumn": "ID",
+        "lookupValue": "={{$json.mailId}}",
+        "options": {
+          "returnAllMatches": false
+        }
+      },
+      "id": "lookup-email",
+      "name": "Lookup Original Email",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [850, 400],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "text",
+        "operation": "message",
+        "modelId": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Tu es un assistant qui rédige des réponses professionnelles à des emails."
+            },
+            {
+              "role": "user", 
+              "content": "Email original :\nDe : {{$node[\"Lookup Original Email\"].json[\"Nom\"]}}\nSujet : {{$node[\"Lookup Original Email\"].json[\"Email Reçu\"]}}\n\nRéponse demandée par l'utilisateur :\n{{$json.userResponse}}\n\nGénère une réponse email professionnelle et polie basée sur la demande de l'utilisateur."
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 500
+        }
+      },
+      "id": "generate-draft",
+      "name": "Generate Email Draft",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [1050, 400],
+      "credentials": {
+        "openAiApi": {
+          "id": "3",
+          "name": "OpenAI Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "update",
+        "sheetId": "YOUR_SHEET_ID",
+        "sheetName": "Emails",
+        "dataStartRow": 2,
+        "keyRow": 1,
+        "columnToMatchOn": "ID",
+        "valueToMatchOn": "={{$json.mailId}}",
+        "fieldsUi": {
+          "values": [
+            {
+              "column": "Email Préparé",
+              "fieldValue": "={{$node[\"Generate Email Draft\"].json.choices[0].message.content}}"
+            },
+            {
+              "column": "Itérations",
+              "fieldValue": "={{(parseInt($node[\"Lookup Original Email\"].json[\"Itérations\"]) || 0) + 1}}"
+            }
+          ]
+        }
+      },
+      "id": "update-sheet",
+      "name": "Update Sheet with Draft",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1250, 400],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{$json.chatId}}",
+        "text": "📝 Brouillon de réponse :\n━━━━━━━━━━━━━━━\n{{$node[\"Generate Email Draft\"].json.choices[0].message.content}}\n━━━━━━━━━━━━━━━",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "buttons": [
+                {
+                  "text": "✏️ Modifier",
+                  "callback_data": "edit_{{$json.mailId}}"
+                }
+              ]
+            },
+            {
+              "buttons": [
+                {
+                  "text": "✅ Envoyer",
+                  "callback_data": "send_{{$json.mailId}}"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      "id": "send-draft",
+      "name": "Send Draft with Options",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1450, 400],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.callback_query.data}}",
+              "operation": "startsWith",
+              "value2": "edit_"
+            }
+          ]
+        }
+      },
+      "id": "if-edit-button",
+      "name": "IF Edit Button",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 250]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.callback_query.data}}",
+              "operation": "startsWith",
+              "value2": "send_"
+            }
+          ]
+        }
+      },
+      "id": "if-send-button",
+      "name": "IF Send Button",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst callbackData = items[0].json.callback_query.data;\nconst mailId = callbackData.replace('edit_', '');\nconst chatId = items[0].json.callback_query.message.chat.id;\nconst queryId = items[0].json.callback_query.id;\n\nreturn [{\n  json: {\n    mailId,\n    chatId,\n    queryId\n  }\n}];"
+      },
+      "id": "extract-edit-data",
+      "name": "Extract Edit Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 250]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{$json.chatId}}",
+        "text": "✏️ Modifier le brouillon [{{$json.mailId}}]\n\nTapez vos modifications ci-dessous :",
+        "replyMarkup": "forceReply",
+        "additionalFields": {
+          "force_reply": true,
+          "input_field_placeholder": "Tapez vos modifications..."
+        }
+      },
+      "id": "force-edit-reply",
+      "name": "Force Edit Reply",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [850, 250],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "callback",
+        "operation": "answerQuery",
+        "queryId": "={{$json.queryId}}",
+        "text": "✏️ Modifiez le brouillon"
+      },
+      "id": "answer-edit-callback",
+      "name": "Answer Edit Callback",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1050, 250],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst callbackData = items[0].json.callback_query.data;\nconst mailId = callbackData.replace('send_', '');\nconst chatId = items[0].json.callback_query.message.chat.id;\nconst queryId = items[0].json.callback_query.id;\n\nreturn [{\n  json: {\n    mailId,\n    chatId,\n    queryId\n  }\n}];"
+      },
+      "id": "extract-send-data",
+      "name": "Extract Send Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "lookup",
+        "sheetId": "YOUR_SHEET_ID",
+        "sheetName": "Emails",
+        "lookupColumn": "ID",
+        "lookupValue": "={{$json.mailId}}",
+        "options": {
+          "returnAllMatches": false
+        }
+      },
+      "id": "lookup-draft",
+      "name": "Lookup Draft to Send",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [850, 300],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{$json[\"Email\"]}}",
+        "subject": "Re: {{$json[\"Email Reçu\"]}}",
+        "emailType": "text",
+        "message": "={{$json[\"Email Préparé\"]}}",
+        "options": {}
+      },
+      "id": "send-email",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [1050, 300],
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "4",
+          "name": "Gmail Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "serviceAccount",
+        "operation": "update",
+        "sheetId": "YOUR_SHEET_ID",
+        "sheetName": "Emails",
+        "dataStartRow": 2,
+        "keyRow": 1,
+        "columnToMatchOn": "ID",
+        "valueToMatchOn": "={{$json.mailId}}",
+        "fieldsUi": {
+          "values": [
+            {
+              "column": "Status",
+              "fieldValue": "Répondu"
+            },
+            {
+              "column": "Date Réponse",
+              "fieldValue": "={{new Date().toISOString()}}"
+            }
+          ]
+        }
+      },
+      "id": "update-status",
+      "name": "Update Email Status",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1250, 300],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "2",
+          "name": "Google Sheets Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "={{$json.chatId}}",
+        "text": "✅ Email envoyé avec succès !\n\nDe : Votre adresse\nÀ : {{$node[\"Lookup Draft to Send\"].json[\"Email\"]}}\nSujet : Re: {{$node[\"Lookup Draft to Send\"].json[\"Email Reçu\"]}}"
+      },
+      "id": "confirm-sent",
+      "name": "Confirm Email Sent",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1450, 300],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Telegram Bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "callback",
+        "operation": "answerQuery",
+        "queryId": "={{$json.queryId}}",
+        "text": "✅ Email envoyé !"
+      },
+      "id": "answer-send-callback",
+      "name": "Answer Send Callback",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1450, 350],
+      "credentials": {
+        "telegramApi": {
+          "id": "1",
+          "name": "Telegram Bot"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Callback Trigger": {
+      "main": [
+        [
+          {
+            "node": "IF Reply Button",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF Edit Button",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "IF Send Button",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Reply Button": {
+      "main": [
+        [
+          {
+            "node": "Extract Reply Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Reply Data": {
+      "main": [
+        [
+          {
+            "node": "Force Reply Keyboard",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Force Reply Keyboard": {
+      "main": [
+        [
+          {
+            "node": "Answer Reply Callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Message Trigger": {
+      "main": [
+        [
+          {
+            "node": "IF Is Reply to Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Is Reply to Email": {
+      "main": [
+        [
+          {
+            "node": "Extract Response Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Response Data": {
+      "main": [
+        [
+          {
+            "node": "Lookup Original Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lookup Original Email": {
+      "main": [
+        [
+          {
+            "node": "Generate Email Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Email Draft": {
+      "main": [
+        [
+          {
+            "node": "Update Sheet with Draft",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Sheet with Draft": {
+      "main": [
+        [
+          {
+            "node": "Send Draft with Options",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Edit Button": {
+      "main": [
+        [
+          {
+            "node": "Extract Edit Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Edit Data": {
+      "main": [
+        [
+          {
+            "node": "Force Edit Reply",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Force Edit Reply": {
+      "main": [
+        [
+          {
+            "node": "Answer Edit Callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Send Button": {
+      "main": [
+        [
+          {
+            "node": "Extract Send Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Send Data": {
+      "main": [
+        [
+          {
+            "node": "Lookup Draft to Send",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lookup Draft to Send": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Email": {
+      "main": [
+        [
+          {
+            "node": "Update Email Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Email Status": {
+      "main": [
+        [
+          {
+            "node": "Confirm Email Sent",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Answer Send Callback",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionTimeout": 120
+  }
+}

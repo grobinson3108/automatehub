@@ -1,0 +1,219 @@
+{
+  "name": "Module 3.3 - Système de Facturation Automatisé",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nouvelle-commande",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-order",
+      "name": "Webhook nouvelle commande",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookId": "order-webhook"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Générer numéro de facture unique\nconst date = new Date();\nconst year = date.getFullYear();\nconst month = String(date.getMonth() + 1).padStart(2, '0');\nconst random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');\n\nconst numeroFacture = `FAC-${year}${month}-${random}`;\n\n// Calculer les montants\nconst items = $input.item.json.body.items || [];\nlet sousTotal = 0;\n\nitems.forEach(item => {\n  sousTotal += item.quantite * item.prix_unitaire;\n});\n\nconst tauxTVA = 0.20; // 20% TVA\nconst montantTVA = sousTotal * tauxTVA;\nconst totalTTC = sousTotal + montantTVA;\n\n// Préparer les données de facture\nreturn {\n  numero_facture: numeroFacture,\n  date_facture: date.toISOString(),\n  client: $input.item.json.body.client,\n  items: items,\n  sous_total: sousTotal.toFixed(2),\n  taux_tva: (tauxTVA * 100) + '%',\n  montant_tva: montantTVA.toFixed(2),\n  total_ttc: totalTTC.toFixed(2),\n  conditions_paiement: '30 jours',\n  statut: 'en_attente'\n};"
+      },
+      "id": "prepare-invoice",
+      "name": "Préparer facture",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "content": "=<!DOCTYPE html>\n<html>\n<head>\n  <style>\n    body { font-family: Arial, sans-serif; }\n    .invoice { max-width: 800px; margin: auto; padding: 20px; }\n    .header { display: flex; justify-content: space-between; margin-bottom: 40px; }\n    .company { font-size: 24px; font-weight: bold; color: #333; }\n    .invoice-number { text-align: right; }\n    .client-info { margin-bottom: 30px; }\n    table { width: 100%; border-collapse: collapse; }\n    th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }\n    th { background-color: #f8f9fa; }\n    .totals { text-align: right; margin-top: 30px; }\n    .total-line { display: flex; justify-content: flex-end; margin: 5px 0; }\n    .total-label { width: 150px; }\n    .total-ttc { font-size: 20px; font-weight: bold; color: #007bff; }\n  </style>\n</head>\n<body>\n  <div class=\"invoice\">\n    <div class=\"header\">\n      <div class=\"company\">AutomateHub</div>\n      <div class=\"invoice-number\">\n        <h2>FACTURE</h2>\n        <p>N° {{ $json.numero_facture }}</p>\n        <p>Date: {{ new Date($json.date_facture).toLocaleDateString('fr-FR') }}</p>\n      </div>\n    </div>\n    \n    <div class=\"client-info\">\n      <h3>Client:</h3>\n      <p><strong>{{ $json.client.nom }}</strong></p>\n      <p>{{ $json.client.adresse }}</p>\n      <p>{{ $json.client.email }}</p>\n    </div>\n    \n    <table>\n      <thead>\n        <tr>\n          <th>Description</th>\n          <th>Quantité</th>\n          <th>Prix unitaire</th>\n          <th>Total HT</th>\n        </tr>\n      </thead>\n      <tbody>\n        {{ $json.items.map(item => `\n        <tr>\n          <td>${item.description}</td>\n          <td>${item.quantite}</td>\n          <td>${item.prix_unitaire.toFixed(2)} €</td>\n          <td>${(item.quantite * item.prix_unitaire).toFixed(2)} €</td>\n        </tr>\n        `).join('') }}\n      </tbody>\n    </table>\n    \n    <div class=\"totals\">\n      <div class=\"total-line\">\n        <span class=\"total-label\">Sous-total HT:</span>\n        <span>{{ $json.sous_total }} €</span>\n      </div>\n      <div class=\"total-line\">\n        <span class=\"total-label\">TVA ({{ $json.taux_tva }}):</span>\n        <span>{{ $json.montant_tva }} €</span>\n      </div>\n      <div class=\"total-line total-ttc\">\n        <span class=\"total-label\">TOTAL TTC:</span>\n        <span>{{ $json.total_ttc }} €</span>\n      </div>\n    </div>\n    \n    <p style=\"margin-top: 40px; font-size: 12px; color: #666;\">\n      Conditions de paiement: {{ $json.conditions_paiement }}<br>\n      Merci de votre confiance.\n    </p>\n  </div>\n</body>\n</html>",
+        "contentType": "html"
+      },
+      "id": "generate-html",
+      "name": "Générer HTML facture",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "options": {
+          "format": "A4",
+          "margin": {
+            "top": "20mm",
+            "bottom": "20mm",
+            "left": "20mm",
+            "right": "20mm"
+          }
+        }
+      },
+      "id": "html-to-pdf",
+      "name": "Convertir en PDF",
+      "type": "n8n-nodes-base.htmlToPdf",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "upload",
+        "name": "={{ $json.numero_facture }}.pdf",
+        "parents": {
+          "values": [
+            {
+              "id": "YOUR_INVOICES_FOLDER_ID"
+            }
+          ]
+        },
+        "resolveData": true,
+        "options": {}
+      },
+      "id": "save-to-drive",
+      "name": "Sauvegarder dans Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [1050, 200],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_INVOICES_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Factures",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "numero": "={{ $json.numero_facture }}",
+            "date": "={{ $json.date_facture }}",
+            "client": "={{ $json.client.nom }}",
+            "montant_ht": "={{ $json.sous_total }}",
+            "tva": "={{ $json.montant_tva }}",
+            "total_ttc": "={{ $json.total_ttc }}",
+            "statut": "={{ $json.statut }}",
+            "lien_pdf": "={{ $node[\"Sauvegarder dans Drive\"].json.webViewLink }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "log-to-sheets",
+      "name": "Logger dans Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1250, 200],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.client.email }}",
+        "subject": "Votre facture AutomateHub n°{{ $json.numero_facture }}",
+        "emailType": "html",
+        "message": "=<p>Bonjour {{ $json.client.nom }},</p>\n\n<p>Veuillez trouver ci-joint votre facture n°{{ $json.numero_facture }} d'un montant de <strong>{{ $json.total_ttc }} €</strong>.</p>\n\n<p>Cette facture est payable sous {{ $json.conditions_paiement }}.</p>\n\n<p>Pour toute question, n'hésitez pas à nous contacter.</p>\n\n<p>Cordialement,<br>\nL'équipe AutomateHub</p>",
+        "attachments": {
+          "values": [
+            {
+              "binaryPropertyName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "send-invoice",
+      "name": "Envoyer facture client",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.2,
+      "position": [1050, 400],
+      "credentials": {
+        "smtp": {
+          "id": "1",
+          "name": "SMTP Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "channel": "#comptabilite",
+        "text": ":moneybag: *Nouvelle facture générée*\n\n*N°:* {{ $json.numero_facture }}\n*Client:* {{ $json.client.nom }}\n*Montant:* {{ $json.total_ttc }} €\n*Statut:* {{ $json.statut }}\n\n<{{ $node[\"Sauvegarder dans Drive\"].json.webViewLink }}|Voir la facture>",
+        "otherOptions": {}
+      },
+      "id": "notify-accounting",
+      "name": "Notifier comptabilité",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1450, 300],
+      "credentials": {
+        "slackApi": {
+          "id": "1",
+          "name": "Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  \"success\": true,\n  \"numero_facture\": $json.numero_facture,\n  \"montant_total\": $json.total_ttc,\n  \"lien_pdf\": $node[\"Sauvegarder dans Drive\"].json.webViewLink,\n  \"message\": \"Facture créée et envoyée avec succès\"\n} }}",
+        "options": {}
+      },
+      "id": "webhook-response",
+      "name": "Réponse webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1650, 300]
+    }
+  ],
+  "connections": {
+    "Webhook nouvelle commande": {
+      "main": [[{"node": "Préparer facture", "type": "main", "index": 0}]]
+    },
+    "Préparer facture": {
+      "main": [[{"node": "Générer HTML facture", "type": "main", "index": 0}]]
+    },
+    "Générer HTML facture": {
+      "main": [[{"node": "Convertir en PDF", "type": "main", "index": 0}]]
+    },
+    "Convertir en PDF": {
+      "main": [[
+        {"node": "Sauvegarder dans Drive", "type": "main", "index": 0},
+        {"node": "Envoyer facture client", "type": "main", "index": 0}
+      ]]
+    },
+    "Sauvegarder dans Drive": {
+      "main": [[{"node": "Logger dans Sheets", "type": "main", "index": 0}]]
+    },
+    "Logger dans Sheets": {
+      "main": [[{"node": "Notifier comptabilité", "type": "main", "index": 0}]]
+    },
+    "Notifier comptabilité": {
+      "main": [[{"node": "Réponse webhook", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Génération automatique de factures PDF, envoi par email, archivage Drive et suivi comptable."
+  },
+  "versionId": "1.0.0"
+}

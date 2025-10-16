@@ -1,0 +1,70 @@
+{
+  "id": "151",
+  "name": "Recevoir un message Mattermost lorsqu'une nouvelle donnée est ajoutée à Airtable",
+  "nodes": [
+    {
+      "name": "Déclencheur Airtable",
+      "type": "n8n-nodes-base.airtableTrigger",
+      "position": [
+        550,
+        340
+      ],
+      "parameters": {
+        "baseId": "",
+        "tableId": "Data",
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerField": "Created",
+        "additionalFields": {}
+      },
+      "credentials": {
+        "airtableApi": "Airtable Credentials n8n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Mattermost",
+      "type": "n8n-nodes-base.mattermost",
+      "position": [
+        750,
+        340
+      ],
+      "parameters": {
+        "message": "=Une nouvelle donnée a été ajoutée à Airtable.\nID : {{$node[\"Airtable Trigger\"].json[\"fields\"][\"id\"]}}\nNom : {{$node[\"Airtable Trigger\"].json[\"fields\"][\"name\"]}}",
+        "channelId": "",
+        "attachments": [],
+        "otherOptions": {}
+      },
+      "credentials": {
+        "mattermostApi": "mattermost"
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": false,
+  "settings": {},
+  "connections": {
+    "Déclencheur Airtable": {
+      "main": [
+        [
+          {
+            "node": "Mattermost",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

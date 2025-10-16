@@ -1,0 +1,77 @@
+{
+  "nodes": [
+    {
+      "name": "En cliquant sur 'exécuter'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "name": "Extraire le nom de domaine",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        700,
+        300
+      ],
+      "parameters": {
+        "functionCode": "// Take email and extract the domain name \nvar email = ($json[\"email\"]);\nvar name   = email.substring(0, email.lastIndexOf(\"@\"));\nvar domain = email.substring(email.lastIndexOf(\"@\") +1);\n\n//To display the final domain name. (result)\n\nreturn [{\n  json: { domain }\n}]"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Exemple d'email",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        460,
+        300
+      ],
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "email",
+              "value": "email@domain2.com"
+            }
+          ]
+        },
+        "options": {},
+        "keepOnlySet": true
+      },
+      "typeVersion": 1
+    }
+  ],
+  "connections": {
+    "Exemple d'email": {
+      "main": [
+        [
+          {
+            "node": "Extraire le nom de domaine",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "En cliquant sur 'exécuter'": {
+      "main": [
+        [
+          {
+            "node": "Exemple d'email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

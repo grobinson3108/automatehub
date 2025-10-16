@@ -1,0 +1,19 @@
+{
+  "name": "Pack_Ecommerce_Pro",
+  "type": "Metier",
+  "description": "Solution e-commerce compl\u00e8te : boutique, commandes, clients",
+  "prix": 159,
+  "workflow_count": 90,
+  "workflows": [
+    "Shopify_Order_Processing_with_CRM_and_Task_Updates.json",
+    "Stripe_Payment_Order_Sync_\u2013_Auto_Retrieve_Customer_&_Product_Purchased.json",
+    "Shopify_Order_to_Zendesk_Ticket_Creation.json",
+    "Update_HubSpot_and_Notify_Slack_on_Stripe_Invoice_Payment.json",
+    "Linear_Project_Status_and_End_Date_to_Productboard_feature_Sync_complex_17nodes.json",
+    "AI-Driven_WooCommerce_Product_Importer_with_SEO_complex_16nodes.json",
+    "AI-Powered_Personal_Shopper_with_WooCommerce_Integration.json",
+    "Create,_update_and_get_a_product_from_WooCommerce.json",
+    "Daily_Shopify_Sales_Update_to_Sheets_and_Slack.json",
+    "New_WooCommerce_Customer_to_Mautic.json"
+  ]
+}

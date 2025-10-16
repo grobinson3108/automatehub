@@ -1,0 +1,85 @@
+{
+  "id": "340",
+  "name": "Analyseur de corps d'email par aprenden8n.com",
+  "nodes": [
+    {
+      "name": "Lors du clic sur 'exécuter'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        250,
+        300
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "name": "Extrait de l'analyseur d'email",
+      "type": "n8n-nodes-base.functionItem",
+      "position": [
+        670,
+        300
+      ],
+      "parameters": {
+        "functionCode": "var obj = {};\nvar labels = item.labels.split(\",\");\nitem.labels.split(\",\").forEach(function(label) {\n  var re = labels.indexOf(label) === labels.length - 1 ? \"\\\\b\" + label + \"\\\\b[: ]+([^$]+)\" : \"\\\\b\" + label + \"\\\\b[: ]+([^\\\\n$]+)\";\n  var found = item.body.match(new RegExp(re, \"i\"));\n  if (found && found.length > 1) {\n    obj[label] = found[1].trim();\n  }\n});\n\nreturn obj;"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Définir les valeurs",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        460,
+        300
+      ],
+      "parameters": {
+        "values": {
+          "number": [],
+          "string": [
+            {
+              "name": "body",
+              "value": "Name: Miquel\nEmail: miquel@aprenden8n.com\nSubject: Welcome aboard\nMessage: Hi Miquel!\n\nThank you for your signup!"
+            },
+            {
+              "name": "labels",
+              "value": "Name,Email,Subject,Message"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": false,
+  "settings": {},
+  "connections": {
+    "Définir les valeurs": {
+      "main": [
+        [
+          {
+            "node": "Extrait de l'analyseur d'email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lors du clic sur 'exécuter'": {
+      "main": [
+        [
+          {
+            "node": "Définir les valeurs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

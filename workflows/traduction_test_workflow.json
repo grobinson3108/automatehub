@@ -1,0 +1,56 @@
+{
+  "name": "Test Workflow Traduction - Email Analysis",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual_trigger",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "text",
+        "inputDataFieldName": "workflow_json",
+        "options": {}
+      },
+      "id": "read_workflow",
+      "name": "Read Workflow JSON",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [450, 300],
+      "notesInFlow": true,
+      "notes": "Lire le fichier JSON du workflow à traduire"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse the workflow JSON\nconst workflowData = JSON.parse($input.first().json.workflow_json);\n\n// Extract nodes with text to translate\nconst nodesToTranslate = [];\n\nfor (const node of workflowData.nodes) {\n  const translatable = {\n    id: node.id,\n    name: node.name,\n    type: node.type,\n    textsToTranslate: {}\n  };\n  \n  // Extract node name\n  if (node.name) {\n    translatable.textsToTranslate.name = node.name;\n  }\n  \n  // Extract notes\n  if (node.notes) {\n    translatable.textsToTranslate.notes = node.notes;\n  }\n  \n  // Extract sticky note content\n  if (node.type === 'n8n-nodes-base.stickyNote' && node.parameters?.content) {\n    translatable.textsToTranslate.stickyContent = node.parameters.content;\n  }\n  \n  // Extract text from Set nodes\n  if (node.type === 'n8n-nodes-base.set' && node.parameters?.assignments?.assignments) {\n    node.parameters.assignments.assignments.forEach((assignment, index) => {\n      if (assignment.name) {\n        translatable.textsToTranslate[`assignment_${index}_name`] = assignment.name;\n      }\n    });\n  }\n  \n  nodesToTranslate.push(translatable);\n}\n\nreturn nodesToTranslate;"
+      },
+      "id": "extract_texts",
+      "name": "Extract Texts to Translate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [650, 300]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [[{
+        "node": "Read Workflow JSON",
+        "type": "main",
+        "index": 0
+      }]]
+    },
+    "Read Workflow JSON": {
+      "main": [[{
+        "node": "Extract Texts to Translate",
+        "type": "main",
+        "index": 0
+      }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

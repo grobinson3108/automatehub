@@ -1,0 +1,15 @@
+[Unit]
+Description=n8n workflow automation
+After=network.target
+
+[Service]
+Type=simple
+User=grobinson
+WorkingDirectory=/home/grobinson
+ExecStart=/var/www/automatehub/n8n-start.sh
+Restart=on-failure
+RestartSec=10
+Environment=N8N_RUNNERS_ENABLED=true
+
+[Install]
+WantedBy=multi-user.target

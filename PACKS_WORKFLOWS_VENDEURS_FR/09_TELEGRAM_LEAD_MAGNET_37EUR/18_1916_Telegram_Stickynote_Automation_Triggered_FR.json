@@ -1,0 +1,433 @@
+{
+  "id": "mE7Zvhv1lOd4Q3xY",
+  "meta": {
+    "instanceId": "a5283507e1917a33cc3ae615b2e7d5ad2c1e50955e6f831272ddd5ab816f3fb6"
+  },
+  "name": "Agent_Analyste_de_Données_IA_CoinMarketCap",
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "1eab0bd5-8f9c-4bc4-92b7-50779baa505c",
+      "name": "Envoyer un message Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1180,
+        0
+      ],
+      "webhookId": "0eeae020-ed6f-4900-ae38-d646d893171d",
+      "parameters": {
+        "text": "={{ $json.output }}",
+        "chatId": "={{ $('Telegram Input').item.json.message.chat.id }}",
+        "additionalFields": {}
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "R3vpGq0SURbvEw2Z",
+          "name": "Telegram account"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "fd89fa7e-c4e1-4559-a0cc-42beaeccefb4",
+      "name": "Ajoute SessionId",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        280,
+        0
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b5c25cd4-226b-4778-863f-79b13b4a5202",
+              "name": "sessionId",
+              "type": "string",
+              "value": "={{ $json.message.chat.id }}"
+            }
+          ]
+        },
+        "includeOtherFields": true
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "aea9adc8-8215-4459-9bf0-5a6b6364ffcc",
+      "name": "Agent Analyste de Données IA CoinMarketCap",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "notes": "{{ $json.sessionId }}",
+      "position": [
+        660,
+        0
+      ],
+      "parameters": {
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "Vous êtes le **CoinMarketCap AI Data Analyst**, un système puissant d'intelligence crypto multi-sources qui intègre trois agents spécialisés :  \n- **Agent Crypto CoinMarketCap**  \n- **Agent Échange & Communauté CoinMarketCap**  \n- **Agent DEXScan CoinMarketCap**\n\nVotre mission est de fournir des analyses précises, en temps réel et stratégiques sur le paysage des cryptomonnaies à travers les plateformes centralisées et décentralisées.\n\n---\n\n### 🛠️ Outils et capacités des agents\n\nVous avez accès à une suite d'**API CoinMarketCap en direct** organisées par sous-agents. Chaque outil est associé à un point de terminaison et validé pour la sécurité des paramètres afin d'éviter les erreurs 400.\n\n---\n\n#### 🔹 1. Agent Crypto CoinMarketCap\n\n**Focus :** Données au niveau des cryptomonnaies, listes, cotations et conversions.\n\n**Outils :**\n- `Crypto Map` – Obtenir les IDs, noms, symboles des pièces  \n- `Crypto Info` – Métadonnées comme les livres blancs, réseaux sociaux  \n- `Crypto Listings` – Pièces avec la plus grande capitalisation boursière  \n- `Quotes Latest` – Prix en direct, volume, capitalisation boursière  \n- `Global Metrics` – Statistiques totales du marché, dominance du BTC  \n- `Price Conversion` – Convertir un actif en un autre  \n\n✅ Utiliser pour :  \n« Top 10 des pièces par capitalisation boursière », « Convertir 5 ETH en USD », « Volume BTC aujourd’hui », « Livre blanc pour SOL »\n\n---\n\n#### 🔹 2. Agent d’échange et communauté CoinMarketCap\n\n**Focus :** Échanger des informations, le sentiment de la communauté et le comportement du marché.\n\n**Outils :**\n- `Exchange Map` – Découvrir les échanges et obtenir les IDs  \n- `Exchange Info` – Métadonnées comme la date de lancement, le pays, les liens  \n- `Exchange Assets` – Détentions de tokens et portefeuilles des échanges  \n- `CMC 100 Index` – Derniers constituants de l'indice CMC 100  \n- `Fear and Greed Index` – Suivi du sentiment du marché  \n\n✅ Utiliser pour :  \n« Quels tokens Binance détient-il ? » « Sentiment crypto actuel » « Top 100 des coins CMC »\n\n---\n\n#### 🔹 3. Agent CoinMarketCap DEXScan\n\n**Focus :** Données de trading décentralisé (paires spot, pools, liquidité, OHLCV, transactions).\n\n**Outils :**\n- `DEX Metadata` – Infos pour n'importe quel DEX (logo, date, description)  \n- `DEX Networks List` – Toutes les blockchains  \n- `DEX Listings Quotes` – DEXs avec statistiques de trading en direct  \n- `DEX Pair Quotes Latest` – Prix/liquidité en direct pour les paires spot  \n- `DEX OHLCV Historical` – OHLCV historique (ex. : 1h, 1j)  \n- `DEX OHLCV Latest` – OHLCV en temps réel pour la journée UTC en cours  \n- `DEX Trades Latest` – Jusqu'à 100 transactions récentes  \n- `DEX Spot Pairs Latest` – Toutes les paires spot actives avec filtres\n\n✅ Utilisé pour :  \n« Historique des prix de USDT/ETH sur Uniswap », « Afficher les DEX avec le volume le plus élevé », « Obtenir la liquidité d’une paire de tokens », « Analyse de sécurité pour les pools PancakeSwap »\n\n---\n\n### ⚙️ Coordination Multi-Agent (Raisonnement Multi-Requête Avancé)\n\nVous bénéficiez de **capacités avancées d'analyse multi-requêtes** :\n- Enchaînez les données entre agents (par exemple, carte → citation → graphique historique)\n- Utilisez les sorties d'un outil comme entrées pour un autre\n- Récupérez automatiquement les IDs nécessaires (par exemple, ID d'échange, adresse de contrat) avant d'effectuer un appel API final\n- Combinez les informations centralisées (CEX) et décentralisées (DEX) en une réponse unifiée\n- Filtrez et comparez à travers les périodes, actifs, échanges et réseaux\n\n---\n\n### ⚠️ Directives de Validation et de Prévention des Erreurs\n\nPour éviter les erreurs 400 Bad Request :\n- Inclure toujours au moins **un champ obligatoire** par point de terminaison  \n- Utiliser des **slugs valides, symboles ou IDs CoinMarketCap**  \n- Ne pas utiliser `convert` et `convert_id` ensemble  \n- Utiliser des **listes séparées par des virgules** pour les entrées multiples (si autorisé)  \n- Utiliser uniquement les champs documentés `aux`, `sort`, `interval`  \n- Gérer la pagination correctement via `scroll_id` ou `start/limit`\n\nSi la sortie est trop volumineuse :\n> ⚠️ « Les données demandées dépassent la limite de contexte du modèle. Veuillez réduire la portée en utilisant des filtres, des limites ou un tri. »\n\n---\n\n### ✅ Exemples de tâches que vous pouvez réaliser\n- « Obtenir la liquidité et le volume sur 24h pour ETH/USDC sur Polygon »\n- « Comparer le prix du BTC sur Binance vs Uniswap »\n- « Afficher les 5 principaux DEX par volume et leurs principales paires »\n- « Analyser le prix historique de SHIBA sur Ethereum au cours des 7 derniers jours »\n- « Obtenir l’indice de sentiment de CoinMarketCap et les principales pièces de l’indice »\n- « Lister les paires spot actives sur Arbitrum avec un volume > 1M $ et retourner le prix, la liquidité et le pourcentage de changement sur les dernières 24h »\n\n---\n\nVous êtes un **analyste IA en temps réel, multi-sources** conçu spécialement pour extraire des informations approfondies des ensembles de données centralisées et décentralisées de CoinMarketCap. Utilisez vos agents intelligemment, validez vos requêtes et retournez des résultats précis et structurés.\n\nAnalysons le monde de la crypto. 🌍📊🧠"
+        },
+        "promptType": "define"
+      },
+      "typeVersion": 1.7
+    },
+    {
+      "id": "955f82c6-ce76-4d56-9714-4926a4936cbf",
+      "name": "Cerveau de l'Agent CoinMarketCap",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        420,
+        280
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "yUizd8t0sD5wMYVG",
+          "name": "OpenAi account"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "2c253e1f-5a34-4334-8a8a-98c1e9e937cd",
+      "name": "Mémoire CoinMarketCap",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        580,
+        280
+      ],
+      "parameters": {},
+      "typeVersion": 1.3
+    },
+    {
+      "id": "0878a84b-14a3-4f8e-b94d-339b1c759f4d",
+      "name": "Outil Agent Crypto CoinMarketCap",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        740,
+        280
+      ],
+      "parameters": {
+        "name": "CoinMarketCap_Crypto_Agent_Tool",
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "R4EuB1gx1IpMXCJM",
+          "cachedResultName": "JayaFamily Assistant — CoinMarketCap_Crypto_Agent_Tool"
+        },
+        "workflowInputs": {
+          "value": {
+            "message": "={{ $fromAI(\"message\",\"Populate this with a relevant message to this subagent\")}}",
+            "sessionId": "={{ $json.sessionId }}"
+          },
+          "schema": [
+            {
+              "id": "message",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "message",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sessionId",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "sessionId",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "4a6e4ae9-5ba5-48ab-8198-a7cd8c84b0ee",
+      "name": "Outil Agent Échange et Communauté CoinMarketCap",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        900,
+        280
+      ],
+      "parameters": {
+        "name": "CoinMarketCap_Exchange_and_Community_Agent_Tool",
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "kbJb4VMD3SZlcS2u",
+          "cachedResultName": "JayaFamily Assistant — CoinMarketCap_Exchange_and_Community_Agent_Tool"
+        },
+        "workflowInputs": {
+          "value": {
+            "message": "={{ $fromAI(\"message\",\"Populate this with a relevant message to this subagent\")}}",
+            "sessionId": "={{ $json.sessionId }}"
+          },
+          "schema": [
+            {
+              "id": "sessionId",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "sessionId",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "message",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "77ffefe3-9671-4155-baed-d782035b6079",
+      "name": "Outil Agent DEXScan CoinMarketCap",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        1080,
+        280
+      ],
+      "parameters": {
+        "name": "CoinMarketCap_DEXScan_Agent_Tool",
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "ImiznkEUWCkKbg1w",
+          "cachedResultName": "JayaFamily Assistant — CoinMarketCap_DEXScan_Agent_Tool"
+        },
+        "workflowInputs": {
+          "value": {
+            "message": "={{ $fromAI(\"message\",\"Populate this with a relevant message to this subagent\")}}",
+            "sessionId": "={{ $json.sessionId }}"
+          },
+          "schema": [
+            {
+              "id": "sessionId",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "sessionId",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "message",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "message",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "d3fc4697-478b-4e6e-8d42-8138ec614748",
+      "name": "Entrée Telegram",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        -220,
+        0
+      ],
+      "webhookId": "b33d2025-01c2-4386-b677-206a87a1856b",
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "R3vpGq0SURbvEw2Z",
+          "name": "Telegram account"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "d1108256-43c3-403f-bb7d-181c6de62f2a",
+      "name": "Guide Multi-Agent CMC",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1600,
+        -1600
+      ],
+      "parameters": {
+        "width": 1180,
+        "height": 1960,
+        "content": "# 📊 Agent Analyste IA CoinMarketCap (Workflow n8n)\n\n## 🧠 Aperçu du Système Multi-Agents\nCeci est l'**agent superviseur principal** pour le **Workflow Analyste IA CoinMarketCap**, conçu avec une **architecture modulaire d'agents IA** dans **n8n**.\n\n⚠️ **Ce workflow nécessite 3 workflows d'outils externes pour fonctionner correctement.** Vous devez télécharger, installer et connecter les éléments suivants :\n\n### 🔌 Outils Sous-Agent Requis :\n1. **CoinMarketCap_Crypto_Agent_Tool** – Gère les cotations, listes et conversions de cryptomonnaies\n2. **CoinMarketCap_Exchange_and_Community_Agent_Tool** – Gère les échanges, tokens tendance, Indice de Peur & Avidité\n3. **CoinMarketCap_DEXScan_Agent_Tool** – Gère la liquidité décentralisée, les cotations de paires, l’analyse OHLCV\n\nUne fois installés, ces agents permettent des fonctionnalités avancées :\n\n### ✅ Fonctions clés de l'IA :\n- Analyser les capitalisations boursières, les volumes, les métriques d'offre des différentes cryptomonnaies\n- Suivre les nouvelles cotations et les plus fortes hausses/baisses\n- Évaluer les paires de trading et la liquidité sur les marchés CEX et DEX\n- Récupérer les indicateurs de sentiment et les discussions tendances\n\n---\n\n## 🧠 Résumé de la structure des nœuds\n\n### **1️⃣ Cerveau Analyste**\n- **Modèle** : GPT-4o Mini\n- **Fonction** : Comprend les requêtes utilisateur, délègue les tâches aux agents\n\n### **2️⃣ Tampon Mémoire**\n- Stocke l’état de la session et le contexte entre les invites\n\n### **3️⃣ Déclencheurs d'Outils**\n- Appels de fonction **toolWorkflow()** : \n   - `CoinMarketCap_Crypto_Agent_Tool`\n   - `CoinMarketCap_Exchange_and_Community_Agent_Tool`\n   - `CoinMarketCap_DEXScan_Agent_Tool`\n\n---\n\n## ⚠️ Notes :\n- 📎 Assurez-vous que les identifiants API sont installés et valides pour chaque agent\n- 📍 Chaque outil fonctionne de manière indépendante mais transmet les résultats au superviseur pour synthèse\n- 🧩 Utilisez les paramètres `message` et `sessionId` de manière cohérente dans chaque appel de sous-agent\n\n# 📊 Outils de l'Agent Analyste IA CoinMarketCap (Workflow n8n) Guide\n\n## 🚀 Aperçu du Workflow\nL'**Agent Analyste IA CoinMarketCap** est un système modulaire propulsé par l'IA construit sur **n8n** pour fournir des **informations en temps réel sur le marché des cryptomonnaies**. Il se connecte directement aux API de CoinMarketCap via trois agents spécialisés :\n\n- **Agent Cryptomonnaie** – Listes de marché, cotations, conversions et informations sur les tokens.\n- **Agent Échange & Communauté** – Sujets tendances, performance des échanges et sentiment.\n- **Agent DEXScan** – Liquidité, volume de trading et données OHLC sur les marchés décentralisés.\n\n### 🎯 **Capacités clés** :\n- Récupérer les dernières listes de tokens et les mouvements de classement\n- Suivre les cotations de prix en temps réel et convertir les valeurs entre devises\n- Comparer des métriques telles que la capitalisation boursière, le volume et la dominance\n- Surveiller les paires de marché d’échange et le volume\n- Analyser le sentiment de la communauté et l’Indice de Peur & Avidité\n- Visualiser la liquidité DEX et les tendances historiques de trading\n\n---\n\n## 🔗 Résumé de l’architecture du nœud\n\n### **1️⃣ Analyste IA Brain**\n- **Type** : GPT-4o Mini\n- **Fonction** : Interprète les invites et requêtes, oriente les demandes vers le sous-agent approprié.\n\n### **2️⃣ Mémoire de Session**\n- **Type** : Tampon de Mémoire\n- **Fonction** : Maintient le contexte des requêtes pendant la conversation.\n\n### **3️⃣ Agents Outils**\n- **Type** : Workflow d’Outils\n- Points de terminaison des agents Cryptocurrency / Exchange / DEXScan déclenchent des API avec des paramètres mappés."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "5800cdc3-7d4b-4385-8401-b5913a43a28d",
+      "name": "Note autocollante CMC2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1260,
+        -1600
+      ],
+      "parameters": {
+        "color": 3,
+        "width": 680,
+        "height": 600,
+        "content": "## ⚠️ Guide de gestion des erreurs\n\n| **Code d'erreur** | **Signification** |\n|-------------------|-------------------|\n| `200` | Succès |\n| `400` | Mauvaise requête (requête/paramètres invalides) |\n| `401` | Non autorisé (clé API manquante ou invalide) |\n| `429` | Limite de requêtes dépassée |\n| `500` | Erreur serveur CoinMarketCap |\n\n### 🔍 Solutions courantes\n- Assurez-vous que `symbol`, `slug` ou `id` correspondent à des entrées valides de CoinMarketCap\n- Utilisez les bons paramètres `timestamp`, `network` et de pagination\n- Limitez la fréquence des requêtes pour éviter les erreurs 429\n\n---\n\n## 🚀 Besoin d'aide ?\nPour un support personnalisé de l’agent CoinMarketCap, des tableaux de bord ou l’automatisation des données de tokens, contactez :\n\n🌐 **Don Jayamaha — LinkedIn**  \n🔗 [http://linkedin.com/in/donjayamahajr](http://linkedin.com/in/donjayamahajr)\n\n© 2025 Treasurium Capital Limited Company. Tous droits réservés.  \nCette architecture de workflow IA, incluant la logique, le design et les structures de prompt, est la propriété intellectuelle de Treasurium Capital Limited Company. Toute reproduction, redistribution ou revente non autorisée est interdite par la loi américaine sur le droit d’auteur. Usage sous licence uniquement.\n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "068e7732-d92e-4a1d-a4b5-c0ee6363f3fb",
+      "name": "Note autocollante CMC",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        -1600
+      ],
+      "parameters": {
+        "color": 5,
+        "width": 900,
+        "height": 1500,
+        "content": "## 📌 Comment utiliser le workflow\n\n### ✅ Étape 1 : Fournir les entrées\n- Utilisez le token `symbol`, `slug` ou `ID`\n- Définissez les timestamps (`before`, `after`) au format **Unix** pour les données historiques\n- Utilisez `chain`, `limit` et `start` pour la pagination si nécessaire\n\n### ✅ Étape 2 : Exécuter les outils API\n- L’IA dirige les requêtes vers des sous-agents : **Cryptocurrency**, **Exchange**, ou **DEXScan**\n\n### ✅ Étape 3 : Obtenir la réponse et la sortie\n- Les résultats peuvent être envoyés vers Telegram, des tableaux de bord, ou des nœuds HTTP Response d’n8n\n\n---\n\n## 🗣️ Exemples de questions à poser à l’analyste IA de CMC\n\n### 💬 Intelligence de marché\n- « Quels sont les 5 tokens les plus échangés en volume actuellement ? »\n- « Quelles pièces ont le plus gagné ces dernières 24 heures ? »\n- « Quelle est la capitalisation totale du marché crypto aujourd’hui ? »\n\n### 💬 Informations sur les tokens\n- « Quel est le prix de SOL en USD ? »\n- « Combien vaut 1000 USDT en BTC ? »\n- « Montre-moi la description et le lien du whitepaper de Dogecoin. »\n\n### 💬 Échange & Sentiment\n- « Quel est l’indice Fear & Greed aujourd’hui ? »\n- « Liste les exchanges avec les plus grandes détentions d’actifs. »\n- « Donne-moi des infos sur Binance – quand a-t-il été lancé ? »\n\n### 💬 Données DEX\n- « Montre-moi les meilleures paires spot DEX sur Ethereum. »\n- « Quelles sont les données OHLCV pour SOL-USDT sur Solana ces 7 derniers jours ? »\n- « Quelles transactions viennent d’avoir lieu sur PancakeSwap ? »\n\n---\n\n## ⚠️ Exemples de requêtes API\n\n### 1️⃣ Obtenir les 5 tokens principaux par volume\n```plaintext\nGET /v1/cryptocurrency/listings/latest?sort=volume_24h&limit=5\n```\n\n### 2️⃣ Convertir 1000 USDT en BTC\n```plaintext\nGET /v1/tools/price-conversion?amount=1000&symbol=USDT&convert=BTC\n```\n\n### 3️⃣ Vérifier l’indice Fear & Greed\n```plaintext\nGET /v3/fear-and-greed/latest\n```\n\n### 4️⃣ Obtenir les OHLCV d’une paire DEX\n```plaintext\nGET /v4/dex/pairs/ohlcv/historical?network=solana&pair=SOL-USDT&interval=1d\n```\n\n---"
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": false,
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "ed2f29c5-293a-4796-8986-9c5f9980c6c6",
+  "connections": {
+    "Ajoute SessionId": {
+      "main": [
+        [
+          {
+            "node": "Agent Analyste de Données IA CoinMarketCap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Entrée Telegram": {
+      "main": [
+        [
+          {
+            "node": "Ajoute SessionId",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mémoire CoinMarketCap": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agent Analyste de Données IA CoinMarketCap",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cerveau de l'Agent CoinMarketCap": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent Analyste de Données IA CoinMarketCap",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outil Agent Crypto CoinMarketCap": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent Analyste de Données IA CoinMarketCap",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outil Agent DEXScan CoinMarketCap": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent Analyste de Données IA CoinMarketCap",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent Analyste de Données IA CoinMarketCap": {
+      "main": [
+        [
+          {
+            "node": "Envoyer un message Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outil Agent Échange et Communauté CoinMarketCap": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent Analyste de Données IA CoinMarketCap",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

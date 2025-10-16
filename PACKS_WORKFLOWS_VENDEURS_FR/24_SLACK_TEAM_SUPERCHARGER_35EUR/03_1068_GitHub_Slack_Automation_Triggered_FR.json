@@ -1,0 +1,65 @@
+{
+  "id": "5ec2322573f7590007802e1f",
+  "name": "Versions Extranet",
+  "nodes": [
+    {
+      "name": "Slack",
+      "type": "n8n-nodes-base.slack",
+      "position": [
+        560,
+        550
+      ],
+      "parameters": {
+        "text": "=Une nouvelle version est disponible dans {{$node[\"Github Trigger\"].json[\"body\"][\"repository\"][\"full_name\"]}} !\nDétails de {{$node[\"Github Trigger\"].json[\"body\"][\"release\"][\"tag_name\"]}} :\n{{$node[\"Github Trigger\"].json[\"body\"][\"release\"][\"body\"]}}\n\nLien : {{$node[\"Github Trigger\"].json[\"body\"][\"release\"][\"html_url\"]}}",
+        "as_user": true,
+        "channel": "extranet-md",
+        "attachments": [],
+        "otherOptions": {}
+      },
+      "credentials": {
+        "slackApi": "Extranet-md"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Déclencheur Github",
+      "type": "n8n-nodes-base.githubTrigger",
+      "position": [
+        350,
+        550
+      ],
+      "parameters": {
+        "owner": "Mesdocteurs",
+        "events": [
+          "release"
+        ],
+        "repository": "mda-admin-partner-api"
+      },
+      "credentials": {
+        "githubApi": "Github API"
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": true,
+  "settings": {},
+  "connections": {
+    "Déclencheur Github": {
+      "main": [
+        [
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

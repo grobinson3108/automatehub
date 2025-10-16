@@ -1,0 +1,42 @@
+{
+  "parameters": {
+    "method": "POST",
+    "url": "https://automatehub.fr/api/save-draft-alt.php",
+    "sendHeaders": true,
+    "headerParameters": {
+      "parameters": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ]
+    },
+    "sendBody": true,
+    "bodyParameters": {
+      "parameters": [
+        {
+          "name": "environment",
+          "value": "test"
+        },
+        {
+          "name": "to",
+          "value": "={{ $node[\"Lookup for Send\"].json.Nom }}"
+        },
+        {
+          "name": "originalSubject",
+          "value": "={{ $node[\"Lookup for Send\"].json[\"Email Reçu\"].split('\\n')[0] }}"
+        },
+        {
+          "name": "body",
+          "value": "={{ $json.brouillon }}"
+        }
+      ]
+    },
+    "options": {}
+  },
+  "id": "save-draft-api",
+  "name": "Save Draft via API",
+  "type": "n8n-nodes-base.httpRequest",
+  "typeVersion": 4.2,
+  "position": [1250, 1000]
+}

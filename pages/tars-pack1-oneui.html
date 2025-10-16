@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="fr" class="remember-theme">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+    <title>🤖 TARS - Pack Workflows Automatisation | AutomateHub</title>
+
+    <meta name="description" content="Automatisez votre business comme TARS dans Interstellar ! Pack de workflows n8n en français.">
+    <meta name="author" content="AutomateHub">
+    <meta name="robots" content="noindex, nofollow">
+
+    <!-- Icons -->
+    <link rel="shortcut icon" href="../OneUI/01 OneUI Source (HTML)/src/assets/media/favicons/favicon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="../OneUI/01 OneUI Source (HTML)/src/assets/media/favicons/favicon-192x192.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../OneUI/01 OneUI Source (HTML)/src/assets/media/favicons/apple-touch-icon-180x180.png">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" id="css-main" href="../OneUI/01 OneUI Source (HTML)/src/assets/css/oneui.min.css">
+
+    <!-- Custom TARS styles -->
+    <style>
+      .hero-section {
+        background: linear-gradient(135deg, var(--bs-primary) 0%, var(--bs-info) 100%);
+        color: white;
+        padding: 4rem 0;
+      }
+
+      .robot-icon {
+        font-size: 4rem;
+        animation: float 3s ease-in-out infinite;
+      }
+
+      @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+      }
+
+      .price-badge {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .price-badge::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        animation: shine 3s infinite;
+      }
+
+      @keyframes shine {
+        0% { left: -100%; }
+        100% { left: 100%; }
+      }
+
+      .countdown-timer {
+        font-family: 'Courier New', monospace;
+        font-weight: bold;
+        color: var(--bs-danger);
+        font-size: 1.5rem;
+      }
+
+      .feature-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none;
+        background: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      }
+
+      .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      }
+
+      .testimonial-card {
+        background: var(--bs-light);
+        border-left: 4px solid var(--bs-success);
+      }
+
+      .urgent-banner {
+        background: var(--bs-danger);
+        color: white;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+      }
+
+      .social-proof {
+        background: var(--bs-success);
+        color: white;
+      }
+
+      .guarantee-badge {
+        background: var(--bs-warning);
+        color: var(--bs-dark);
+        border-radius: 50px;
+        padding: 1rem 2rem;
+        font-weight: bold;
+      }
+    </style>
+
+    <!-- Load theme -->
+    <script src="../OneUI/01 OneUI Source (HTML)/src/assets/js/setTheme.js"></script>
+  </head>
+
+  <body>
+    <!-- Page Container -->
+    <div id="page-container" class="main-content-boxed">
+
+      <!-- Hero Section -->
+      <div class="hero-section">
+        <div class="content text-center">
+          <div class="robot-icon mb-4">🤖</div>
+          <h1 class="h2 fw-bold mb-3">TARS - Assistant IA d'Automatisation</h1>
+          <p class="fs-lg mb-4">Comme dans Interstellar, mais pour vos workflows !</p>
+
+          <div class="urgent-banner rounded p-3 mb-4 d-inline-block">
+            ⚡ OFFRE SPÉCIALE LIMITÉE - Réservée aux abonnés LinkedIn ⚡
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <main id="main-container">
+        <div class="content">
+          <div class="row justify-content-center">
+            <div class="col-lg-10">
+
+              <!-- Product Header -->
+              <div class="block block-rounded">
+                <div class="block-content text-center py-5">
+                  <h2 class="h3 fw-bold mb-3">🎯 Pack TARS - 30 Workflows d'Automatisation Premium</h2>
+                  <p class="fs-lg text-muted mb-4">
+                    Vous avez demandé le workflow TARS gratuit... Voici une offre exclusive pour aller plus loin !
+                  </p>
+                </div>
+              </div>
+
+              <!-- Features Grid -->
+              <div class="row g-4 mb-5">
+                <div class="col-md-6 col-lg-3">
+                  <div class="feature-card card h-100 text-center p-4">
+                    <div class="mb-3" style="font-size: 3rem;">⚡</div>
+                    <h5 class="fw-bold">30 Workflows</h5>
+                    <p class="text-muted">Automatisation marketing, LinkedIn, emails</p>
+                  </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                  <div class="feature-card card h-100 text-center p-4">
+                    <div class="mb-3" style="font-size: 3rem;">🇫🇷</div>
+                    <h5 class="fw-bold">100% Français</h5>
+                    <p class="text-muted">Traduits et adaptés pour le marché français</p>
+                  </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                  <div class="feature-card card h-100 text-center p-4">
+                    <div class="mb-3" style="font-size: 3rem;">📱</div>
+                    <h5 class="fw-bold">Installation Simple</h5>
+                    <p class="text-muted">Importation en 1 clic dans n8n</p>
+                  </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                  <div class="feature-card card h-100 text-center p-4">
+                    <div class="mb-3" style="font-size: 3rem;">💡</div>
+                    <h5 class="fw-bold">Support Inclus</h5>
+                    <p class="text-muted">Documentation + vidéos explicatives</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pricing Section -->
+              <div class="row justify-content-center mb-5">
+                <div class="col-lg-6">
+                  <div class="price-badge card border-0 text-center p-5" style="background: linear-gradient(135deg, var(--bs-success) 0%, var(--bs-info) 100%); color: white;">
+                    <div class="mb-3">
+                      <span class="text-decoration-line-through opacity-75" style="font-size: 1.5rem;">Valeur normale : 94€</span>
+                    </div>
+                    <div class="mb-3" style="font-size: 4rem; font-weight: bold;">29€</div>
+                    <p class="mb-4"><strong>Économisez 65€ aujourd'hui !</strong></p>
+
+                    <button class="btn btn-warning btn-lg rounded-pill px-5 py-3" onclick="purchase()">
+                      🚀 J'ACCÈDE AU PACK TARS - 29€
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Timer -->
+              <div class="text-center mb-5">
+                <div class="card border-danger">
+                  <div class="card-body py-3">
+                    <p class="mb-2 fw-bold">⏰ Offre valable encore :</p>
+                    <div class="countdown-timer" id="countdown">02:00:00</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Testimonials -->
+              <div class="row g-4 mb-5">
+                <div class="col-lg-6">
+                  <div class="testimonial-card card p-4 h-100">
+                    <blockquote class="mb-3">
+                      "J'ai automatisé ma prospection LinkedIn en 30 minutes. Incroyable !"
+                    </blockquote>
+                    <footer class="fw-bold">- Marie, Consultante Marketing</footer>
+                  </div>
+                </div>
+
+                <div class="col-lg-6">
+                  <div class="testimonial-card card p-4 h-100">
+                    <blockquote class="mb-3">
+                      "Ces workflows m'ont fait gagner 10h par semaine. ROI immédiat !"
+                    </blockquote>
+                    <footer class="fw-bold">- Thomas, Entrepreneur</footer>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Guarantee -->
+              <div class="text-center mb-5">
+                <div class="guarantee-badge d-inline-block">
+                  <h5 class="mb-2">✅ Garantie 30 jours satisfait ou remboursé</h5>
+                  <p class="mb-0">Si vous n'économisez pas au moins 5 heures par semaine, nous vous remboursons intégralement !</p>
+                </div>
+              </div>
+
+              <!-- Social Proof -->
+              <div class="social-proof card p-4 text-center mb-5">
+                <h5 class="mb-3">💬 Ce qu'en disent nos utilisateurs :</h5>
+                <div class="row g-3">
+                  <div class="col-md-4">
+                    <div class="badge bg-light text-dark p-2">⭐⭐⭐⭐⭐ 4.9/5</div>
+                    <div class="small">150+ avis clients</div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="badge bg-light text-dark p-2">🚀 98% satisfaits</div>
+                    <div class="small">Taux de satisfaction</div>
+                  </div>
+                  <div class="col-md-4">
+                    <div class="badge bg-light text-dark p-2">⚡ 8h économisées</div>
+                    <div class="small">Moyenne par semaine</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Final CTA -->
+              <div class="text-center">
+                <button class="btn btn-danger btn-xl rounded-pill px-5 py-4 fw-bold" onclick="purchase()" style="font-size: 1.2rem;">
+                  🎯 OUI, JE VEUX AUTOMATISER COMME TARS !
+                </button>
+                <div class="mt-3 small text-muted">
+                  🔒 Paiement sécurisé • 📧 Livraison immédiate • ✅ Garantie 30 jours
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </main>
+
+    </div>
+    <!-- END Page Container -->
+
+    <!-- Tracking Script -->
+    <script src="../tracking/tars-tracker.js"></script>
+
+    <!-- OneUI Core JS -->
+    <script src="../OneUI/01 OneUI Source (HTML)/src/assets/js/oneui.app.min.js"></script>
+
+    <!-- Custom JS -->
+    <script>
+      // Initialize TARS Tracker
+      document.addEventListener('DOMContentLoaded', function() {
+        if (window.tarsTracker) {
+          window.tarsTracker.trackFunnelPack1();
+        }
+      });
+
+      // Countdown timer
+      let timeLeft = 2 * 60 * 60; // 2 hours in seconds
+
+      function updateTimer() {
+        const hours = Math.floor(timeLeft / 3600);
+        const minutes = Math.floor((timeLeft % 3600) / 60);
+        const seconds = timeLeft % 60;
+
+        document.getElementById('countdown').textContent =
+          `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+        if (timeLeft > 0) {
+          timeLeft--;
+        }
+      }
+
+      setInterval(updateTimer, 1000);
+
+      function purchase() {
+        // Track conversion
+        if (window.tarsTracker) {
+          window.tarsTracker.trackPack1Purchase();
+          window.tarsTracker.trackButtonClick('purchase_pack1', { amount: 29 });
+        }
+
+        // Show loading state
+        event.target.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i>Redirection...';
+        event.target.disabled = true;
+
+        // Redirect to upsell
+        setTimeout(() => {
+          window.location.href = 'tars-upsell1-oneui.html';
+        }, 1000);
+      }
+
+      // Track CTA clicks
+      document.querySelectorAll('button').forEach(button => {
+        button.addEventListener('click', function() {
+          if (window.tarsTracker && this.textContent.includes('TARS')) {
+            window.tarsTracker.trackButtonClick('cta_pack1', {
+              text: this.textContent.trim()
+            });
+          }
+        });
+      });
+
+      // Add some TARS personality with console messages
+      console.log('🤖 TARS: "What are you looking for, chief?"');
+      console.log('🤖 TARS: "Humor level set to 75%"');
+      console.log('🤖 TARS: "These workflows will make you 99% more efficient... maybe."');
+    </script>
+
+  </body>
+</html>

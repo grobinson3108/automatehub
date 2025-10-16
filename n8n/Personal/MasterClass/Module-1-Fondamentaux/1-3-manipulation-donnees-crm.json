@@ -1,0 +1,216 @@
+{
+  "name": "1.3 - Manipulation Données CRM",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 2
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger-003",
+      "name": "Déclencheur - Toutes les 2h",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "prospects",
+              "value": "[{\"nom\":\"Dupont\",\"email\":\"dupont@example.com\",\"score\":75,\"statut\":\"nouveau\"},{\"nom\":\"Martin\",\"email\":\"martin@example.com\",\"score\":45,\"statut\":\"contact\"},{\"nom\":\"Bernard\",\"email\":\"bernard@example.com\",\"score\":90,\"statut\":\"qualifié\"}]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "data-source-003",
+      "name": "Données CRM",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Traitement des données prospects\nconst prospects = JSON.parse($input.first().json.prospects);\n\nconst prospectsTranche = prospects.map(prospect => {\n  let priorite = '';\n  let action = '';\n  \n  // Définir la priorité selon le score\n  if (prospect.score >= 80) {\n    priorite = 'Très Haute';\n    action = 'Appel immédiat';\n  } else if (prospect.score >= 60) {\n    priorite = 'Haute';\n    action = 'Email personnalisé';\n  } else if (prospect.score >= 40) {\n    priorite = 'Moyenne';\n    action = 'Newsletter';\n  } else {\n    priorite = 'Faible';\n    action = 'Nurturing';\n  }\n  \n  return {\n    ...prospect,\n    priorite,\n    action,\n    date_traitement: new Date().toISOString()\n  };\n});\n\n// Retourner les données traitées\nreturn prospectsTranche.map(p => ({ json: p }));"
+      },
+      "id": "function-scoring-003",
+      "name": "Scoring Automatique",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [
+        750,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "condition-high-priority",
+              "leftValue": "={{ $json.priorite }}",
+              "rightValue": "Très Haute",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "switch-priority-003",
+      "name": "Filtrer Priorité Haute",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1000,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "notification",
+              "value": "🔥 PROSPECT PRIORITAIRE: {{ $json.nom }} (Score: {{ $json.score }})"
+            },
+            {
+              "name": "email",
+              "value": "{{ $json.email }}"
+            },
+            {
+              "name": "action_requise",
+              "value": "{{ $json.action }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "format-alert-003",
+      "name": "Formater Alerte",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        1250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": "VOTRE_CRM_DOCUMENT_ID",
+        "sheetName": "Prospects",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Nom": "={{ $json.nom }}",
+            "Email": "={{ $json.email }}",
+            "Score": "={{ $json.score }}",
+            "Statut": "={{ $json.statut }}",
+            "Priorité": "={{ $json.priorite }}",
+            "Action": "={{ $json.action }}",
+            "Date_Traitement": "={{ $json.date_traitement }}"
+          }
+        },
+        "options": {}
+      },
+      "id": "save-to-sheets-003",
+      "name": "Sauvegarder CRM",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        1000,
+        500
+      ]
+    }
+  ],
+  "connections": {
+    "Déclencheur - Toutes les 2h": {
+      "main": [
+        [
+          {
+            "node": "Données CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Données CRM": {
+      "main": [
+        [
+          {
+            "node": "Scoring Automatique",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scoring Automatique": {
+      "main": [
+        [
+          {
+            "node": "Filtrer Priorité Haute",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Sauvegarder CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrer Priorité Haute": {
+      "main": [
+        [
+          {
+            "node": "Formater Alerte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1-3-manipulation-donnees-crm-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "3",
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "module-1-fondamentaux",
+      "name": "Module 1 - Fondamentaux"
+    }
+  ]
+}

@@ -1,0 +1,631 @@
+{
+  "name": "Business Intelligence Autonome - Juillet 2025",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 1
+            }
+          ]
+        }
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789001",
+      "name": "Collecte Horaire Data",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://www.googleapis.com/analytics/v3/data/ga",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "ids",
+              "value": "ga:{{$node.Settings.json.googleAnalyticsId}}"
+            },
+            {
+              "name": "start-date",
+              "value": "today"
+            },
+            {
+              "name": "end-date",
+              "value": "today"
+            },
+            {
+              "name": "metrics",
+              "value": "ga:sessions,ga:users,ga:pageviews,ga:bounceRate,ga:avgSessionDuration,ga:goalCompletionsAll"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789002",
+      "name": "Google Analytics Data",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [460, 200]
+    },
+    {
+      "parameters": {
+        "url": "https://api.stripe.com/v1/balance",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789003",
+      "name": "Stripe Balance",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [460, 320]
+    },
+    {
+      "parameters": {
+        "url": "https://api.hubapi.com/crm/v3/analytics/reports",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "filters",
+              "value": "[{\"property\":\"createdate\",\"operator\":\"GTE\",\"value\":\"{{$today()}}\"}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789004",
+      "name": "HubSpot CRM Pipeline",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [460, 440]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Consolidation des données multi-sources\nconst analytics = $input.all()[0].json;\nconst stripe = $input.all()[1].json;\nconst hubspot = $input.all()[2].json;\n\n// Calcul du Business Health Score\nlet healthScore = 0;\nconst metrics = {\n  revenue: {\n    current: stripe.available?.[0]?.amount || 0,\n    target: 50000,\n    weight: 30\n  },\n  traffic: {\n    current: parseInt(analytics.totalsForAllResults?.['ga:sessions'] || 0),\n    target: 10000,\n    weight: 25\n  },\n  conversions: {\n    current: parseInt(analytics.totalsForAllResults?.['ga:goalCompletionsAll'] || 0),\n    target: 500,\n    weight: 25\n  },\n  pipeline: {\n    current: hubspot.results?.length || 0,\n    target: 100,\n    weight: 20\n  }\n};\n\n// Calcul pondéré du score\nfor (const [key, metric] of Object.entries(metrics)) {\n  const performance = Math.min((metric.current / metric.target) * 100, 100);\n  healthScore += (performance * metric.weight) / 100;\n}\n\n// Analyse des tendances\nconst growthTrend = healthScore > 80 ? 'Excellent' : \n                    healthScore > 60 ? 'Bon' : \n                    healthScore > 40 ? 'Moyen' : 'Critique';\n\n// Détection d'anomalies\nconst alerts = [];\nif (metrics.revenue.current < metrics.revenue.target * 0.7) {\n  alerts.push({\n    type: 'revenue',\n    severity: 'high',\n    message: 'Revenus 30% sous objectif'\n  });\n}\n\nif (parseFloat(analytics.totalsForAllResults?.['ga:bounceRate'] || 0) > 70) {\n  alerts.push({\n    type: 'engagement',\n    severity: 'medium',\n    message: 'Taux de rebond élevé (>70%)'\n  });\n}\n\nreturn {\n  businessHealth: Math.round(healthScore),\n  growthTrend,\n  metrics,\n  alerts,\n  timestamp: new Date().toISOString(),\n  rawData: {\n    analytics,\n    stripe,\n    hubspot\n  }\n};"
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789005",
+      "name": "Consolidation & Scoring",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 320]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "message",
+        "modelId": "gpt-4-turbo-preview",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Tu es un Business Analyst IA expert. Analyse ces métriques business et fournis des insights actionnables."
+            },
+            {
+              "role": "user", 
+              "content": "Voici les métriques business actuelles:\n\nBusiness Health Score: {{$json.businessHealth}}/100\nTendance: {{$json.growthTrend}}\n\nMétriques détaillées:\n- Revenus: {{$json.metrics.revenue.current}}€ / {{$json.metrics.revenue.target}}€\n- Trafic: {{$json.metrics.traffic.current}} sessions\n- Conversions: {{$json.metrics.conversions.current}}\n- Pipeline: {{$json.metrics.pipeline.current}} opportunités\n\nAlertes: {{JSON.stringify($json.alerts)}}\n\nGénère:\n1. Une analyse de la situation actuelle\n2. 3 recommandations court terme (1 mois) avec ROI estimé\n3. 3 actions stratégiques moyen terme (3 mois)\n4. Prédictions pour les 30 prochains jours\n\nFormat JSON structuré."
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789006",
+      "name": "Analyse IA Prédictive",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.3,
+      "position": [900, 320]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "={{$node.Settings.json.dashboardSheetId}}",
+          "mode": "id"
+        },
+        "sheetName": "BI Dashboard",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Timestamp": "={{$json.timestamp}}",
+            "Health Score": "={{$json.businessHealth}}",
+            "Tendance": "={{$json.growthTrend}}",
+            "Revenus": "={{$json.metrics.revenue.current}}",
+            "Trafic": "={{$json.metrics.traffic.current}}",
+            "Conversions": "={{$json.metrics.conversions.current}}",
+            "Pipeline": "={{$json.metrics.pipeline.current}}",
+            "Alertes": "={{$json.alerts.length}}",
+            "Recommandations": "={{$node['Analyse IA Prédictive'].json.recommendations}}"
+          }
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED"
+        }
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789007",
+      "name": "Update Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.2,
+      "position": [1120, 200]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "8c7dd0ad-b758-49d4-b66f-9ce4c3c9c3f6",
+              "leftValue": "={{ $json.alerts.length }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789008",
+      "name": "Check Alerts",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1120, 440]
+    },
+    {
+      "parameters": {
+        "channel": "={{$node.Settings.json.slackAlertChannel}}",
+        "text": "🚨 *Alerte Business Intelligence*\n\nBusiness Health: {{$json.businessHealth}}/100 ({{$json.growthTrend}})\n\n*Alertes détectées:*\n{{$json.alerts.map(a => `• ${a.message} (${a.severity})`).join('\\n')}}\n\n*Top 3 Actions Recommandées:*\n{{$node['Analyse IA Prédictive'].json.shortTermActions.slice(0,3).map((a, i) => `${i+1}. ${a.action} - ROI: ${a.roi}`).join('\\n')}}\n\n_Dashboard complet:_ {{$node.Settings.json.dashboardUrl}}",
+        "authentication": "oAuth2",
+        "otherOptions": {},
+        "attachments": [],
+        "blocksUi": "none"
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789009",
+      "name": "Slack Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.1,
+      "position": [1340, 400]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose"
+          },
+          "conditions": [
+            {
+              "id": "8c7dd0ad-b758-49d4-b66f-9ce4c3c9c3f7",
+              "leftValue": "={{ $json.businessHealth }}",
+              "rightValue": "={{ $node.Settings.json.criticalThreshold }}",
+              "operator": {
+                "type": "number",
+                "operation": "lt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789010",
+      "name": "Critical Check",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1340, 520]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "text": "🔴 ALERTE CRITIQUE CEO\n\nBusiness Health: {{$json.businessHealth}}/100\nSituation: {{$json.growthTrend}}\n\nACTION IMMÉDIATE REQUISE:\n{{$node['Analyse IA Prédictive'].json.criticalActions[0].action}}\n\nDashboard: {{$node.Settings.json.dashboardUrl}}",
+        "chatId": "={{$node.Settings.json.telegramCeoChatId}}",
+        "additionalFields": {}
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789011",
+      "name": "Telegram CEO Alert",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.1,
+      "position": [1560, 480]
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "create",
+        "databaseId": "={{$node.Settings.json.supabaseTableId}}",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "timestamp",
+              "fieldValue": "={{$json.timestamp}}"
+            },
+            {
+              "fieldId": "health_score",
+              "fieldValue": "={{$json.businessHealth}}"
+            },
+            {
+              "fieldId": "revenue",
+              "fieldValue": "={{$json.metrics.revenue.current}}"
+            },
+            {
+              "fieldId": "traffic",
+              "fieldValue": "={{$json.metrics.traffic.current}}"
+            },
+            {
+              "fieldId": "conversions",
+              "fieldValue": "={{$json.metrics.conversions.current}}"
+            },
+            {
+              "fieldId": "pipeline",
+              "fieldValue": "={{$json.metrics.pipeline.current}}"
+            },
+            {
+              "fieldId": "predictions",
+              "fieldValue": "={{JSON.stringify($node['Analyse IA Prédictive'].json.predictions)}}"
+            },
+            {
+              "fieldId": "raw_data",
+              "fieldValue": "={{JSON.stringify($json.rawData)}}"
+            }
+          ]
+        }
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789012",
+      "name": "Store in Supabase",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [1120, 320]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "daysInterval": 7
+            }
+          ]
+        }
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789013",
+      "name": "Weekly Executive Report",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [260, 600]
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "getAll",
+        "databaseId": "={{$node.Settings.json.supabaseTableId}}",
+        "returnAll": false,
+        "limit": 168,
+        "filters": {
+          "conditions": [
+            {
+              "field": "timestamp",
+              "type": "dateTime",
+              "operation": "isAfter",
+              "value": "={{$today.minus(7, 'days').toISO()}}"
+            }
+          ]
+        }
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789014",
+      "name": "Get Week Data",
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [460, 600]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Analyse hebdomadaire des données\nconst weekData = $input.all();\n\n// Calculs statistiques\nconst healthScores = weekData.map(d => d.json.health_score);\nconst avgHealth = healthScores.reduce((a,b) => a+b, 0) / healthScores.length;\nconst minHealth = Math.min(...healthScores);\nconst maxHealth = Math.max(...healthScores);\n\n// Tendances revenus\nconst revenues = weekData.map(d => d.json.revenue);\nconst weekRevenue = revenues.reduce((a,b) => a+b, 0);\nconst avgDailyRevenue = weekRevenue / 7;\n\n// Performance metrics\nconst conversions = weekData.map(d => d.json.conversions);\nconst totalConversions = conversions.reduce((a,b) => a+b, 0);\n\n// Identification patterns\nconst patterns = {\n  bestDay: '',\n  worstDay: '',\n  peakHours: [],\n  criticalEvents: 0\n};\n\n// Recommendations basées sur l'analyse\nconst weeklyInsights = {\n  summary: {\n    avgHealthScore: Math.round(avgHealth),\n    healthRange: `${minHealth}-${maxHealth}`,\n    totalRevenue: weekRevenue,\n    avgDailyRevenue: Math.round(avgDailyRevenue),\n    totalConversions,\n    conversionTrend: totalConversions > 350 ? 'Positive' : 'À améliorer'\n  },\n  patterns,\n  recommendations: [],\n  nextWeekForecast: {\n    expectedRevenue: Math.round(avgDailyRevenue * 7 * 1.1),\n    expectedConversions: Math.round(totalConversions * 1.05),\n    confidence: '85%'\n  }\n};\n\nreturn weeklyInsights;"
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789015",
+      "name": "Weekly Analysis",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 600]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "operation": "message",
+        "modelId": "gpt-4-turbo-preview",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Tu es un consultant stratégique senior. Génère un rapport exécutif hebdomadaire percutant et actionnable."
+            },
+            {
+              "role": "user",
+              "content": "Données de la semaine:\n{{JSON.stringify($json, null, 2)}}\n\nGénère un rapport exécutif incluant:\n1. Executive Summary (3 points clés)\n2. Performance Analysis\n3. Strategic Recommendations (5 actions prioritaires)\n4. Risk Assessment\n5. Next Week Forecast\n\nTon: Professionnel, direct, orienté action. Format: Email HTML élégant."
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.6
+        }
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789016",
+      "name": "Generate Executive Report",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.3,
+      "position": [900, 600]
+    },
+    {
+      "parameters": {
+        "fromEmail": "bi@automatehub.fr",
+        "toEmail": "={{$node.Settings.json.executiveEmails}}",
+        "subject": "📊 Rapport BI Hebdomadaire - Score: {{$json.summary.avgHealthScore}}/100",
+        "emailType": "html",
+        "message": "={{$node['Generate Executive Report'].json.choices[0].message.content}}",
+        "options": {}
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789017",
+      "name": "Send Executive Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [1120, 600]
+    },
+    {
+      "parameters": {
+        "values": {
+          "values": [
+            {
+              "name": "googleAnalyticsId",
+              "value": "ga:123456789"
+            },
+            {
+              "name": "dashboardSheetId",
+              "value": "1abc...xyz"
+            },
+            {
+              "name": "dashboardUrl",
+              "value": "https://docs.google.com/spreadsheets/d/1abc...xyz"
+            },
+            {
+              "name": "slackAlertChannel",
+              "value": "#bi-alerts"
+            },
+            {
+              "name": "telegramCeoChatId",
+              "value": "123456789"
+            },
+            {
+              "name": "supabaseTableId",
+              "value": "business_metrics"
+            },
+            {
+              "name": "criticalThreshold",
+              "value": 40
+            },
+            {
+              "name": "executiveEmails",
+              "value": "ceo@company.com,cfo@company.com"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789018",
+      "name": "Settings",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.2,
+      "position": [260, 100]
+    },
+    {
+      "parameters": {
+        "content": "## 🎯 Business Intelligence Autonome\n### Analyse prédictive 24/7 pour PME - Juillet 2025\n\n**Fonctionnalités:**\n- 📊 Collecte multi-sources (Analytics, Stripe, CRM)\n- 🤖 IA prédictive avec scoring intelligent\n- 📈 Dashboard temps réel Google Sheets\n- 🚨 Alertes intelligentes Slack/Telegram\n- 📧 Rapports exécutifs hebdomadaires\n- 💾 DataWarehouse Supabase\n\n**Configuration requise:**\n1. API Keys: Google Analytics, Stripe, HubSpot\n2. OpenAI API pour analyses IA\n3. Google Sheets pour dashboard\n4. Slack/Telegram pour alertes",
+        "height": 251,
+        "width": 358,
+        "color": 7
+      },
+      "id": "e8f3c1b4-7d2a-4e5f-9abc-123456789019",
+      "name": "Documentation",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [240, -100]
+    }
+  ],
+  "connections": {
+    "Collecte Horaire Data": {
+      "main": [
+        [
+          {
+            "node": "Google Analytics Data",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Stripe Balance",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "HubSpot CRM Pipeline",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Analytics Data": {
+      "main": [
+        [
+          {
+            "node": "Consolidation & Scoring",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Stripe Balance": {
+      "main": [
+        [
+          {
+            "node": "Consolidation & Scoring",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "HubSpot CRM Pipeline": {
+      "main": [
+        [
+          {
+            "node": "Consolidation & Scoring",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Consolidation & Scoring": {
+      "main": [
+        [
+          {
+            "node": "Analyse IA Prédictive",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Store in Supabase",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Check Alerts",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Critical Check",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyse IA Prédictive": {
+      "main": [
+        [
+          {
+            "node": "Update Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Alerts": {
+      "main": [
+        [
+          {
+            "node": "Slack Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Critical Check": {
+      "main": [
+        [
+          {
+            "node": "Telegram CEO Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Weekly Executive Report": {
+      "main": [
+        [
+          {
+            "node": "Get Week Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Week Data": {
+      "main": [
+        [
+          {
+            "node": "Weekly Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Weekly Analysis": {
+      "main": [
+        [
+          {
+            "node": "Generate Executive Report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Executive Report": {
+      "main": [
+        [
+          {
+            "node": "Send Executive Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateId": "business-intelligence-autonome-2025",
+    "templateCredsSetupCompleted": false,
+    "instanceId": "automatehub"
+  },
+  "tags": [
+    {
+      "name": "Business Intelligence",
+      "createdAt": "2025-07-13T00:00:00.000Z"
+    },
+    {
+      "name": "IA Prédictive",
+      "createdAt": "2025-07-13T00:00:00.000Z"
+    },
+    {
+      "name": "Juillet 2025",
+      "createdAt": "2025-07-13T00:00:00.000Z"
+    }
+  ]
+}

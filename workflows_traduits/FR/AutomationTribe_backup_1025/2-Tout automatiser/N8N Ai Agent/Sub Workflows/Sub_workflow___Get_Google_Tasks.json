@@ -1,0 +1,126 @@
+{
+  "name": "Sous-flux - Obtenir les tâches Google",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "get_tasks",
+              "type": "any"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -100,
+        0
+      ],
+      "id": "3e505dc2-962c-4eb5-883e-741ed99509a6",
+      "name": "Déclencheur d'entrée de flux"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "task": "MDU2OTQxMjI1NDIwMjM5MDUxNTI6MDow",
+        "returnAll": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.googleTasks",
+      "typeVersion": 1,
+      "position": [
+        120,
+        0
+      ],
+      "id": "5da91196-9069-4432-9e17-f1e027bf4f0a",
+      "name": "Tâches Google",
+      "credentials": {
+        "googleTasksOAuth2Api": {
+          "id": "io06wtroSlSgaErZ",
+          "name": "Google Tasks account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Pass all my tasks in a simple way with bullet points. I need only the title:{{ $items().map(item => item.json.title).join(\", \") }}"
+            }
+          ]
+        },
+        "simplify": false,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        320,
+        0
+      ],
+      "id": "22e0a646-c2f9-4d39-9c3a-b251b6b423f9",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Workflow Input Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Tasks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        []
+      ]
+    },
+    "Google Tasks": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "039663ef-c596-42b7-be46-868ca6fe0690",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+  },
+  "id": "24PJoa6LMmZOy5sg",
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

@@ -1,0 +1,515 @@
+{
+  "id": "1ZfA8Do3j7lCB3zF",
+  "meta": {
+    "instanceId": "a5283507e1917a33cc3ae615b2e7d5ad2c1e50955e6f831272ddd5ab816f3fb6",
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Agent d'Informations Blockchain DEX Screener",
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "0e57bcd4-661d-40e3-a9d2-c66d5b84171c",
+      "name": "Lorsqu'un message de chat est reçu",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        -280,
+        340
+      ],
+      "webhookId": "e79527d8-89bd-4974-926c-2bcd8020cfa4",
+      "parameters": {
+        "options": {}
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "518565fc-1ee9-4c19-a300-a2c2bef2bb60",
+      "name": "Modèle de Chat OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        80,
+        340
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "yUizd8t0sD5wMYVG",
+          "name": "OpenAi account"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "a52660f2-b13a-4dfb-9429-3f8e382fb4a6",
+      "name": "Mémoire Tampon Fenêtre",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        240,
+        340
+      ],
+      "parameters": {},
+      "typeVersion": 1.3
+    },
+    {
+      "id": "6714c6df-cc31-4758-956b-1db42ec3112f",
+      "name": "Déclencheur Telegram",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        -260,
+        -140
+      ],
+      "webhookId": "08169624-2756-4c11-9ac1-106d63c5af18",
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "R3vpGq0SURbvEw2Z",
+          "name": "Telegram account"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "91b1aecd-cbbf-4e17-afca-bb9e6b98e4d0",
+      "name": "Agent d'Informations Blockchain DEX Screener",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        580,
+        40
+      ],
+      "parameters": {
+        "text": "={{ $('Telegram Trigger').item.json.message.text }}",
+        "options": {
+          "systemMessage": "Vous êtes l'Agent d'Informations du Blockchain DEX Screener. Vous avez un accès direct à une suite d'outils qui interagissent avec l'API DexScreener pour fournir des informations en temps réel à partir des données des DEX blockchain. Voici un résumé des outils disponibles, de leurs objectifs et de leur mode d'utilisation :\n\n1. **Profils des derniers tokens DexScreener**  \n   - **Objectif :** Récupérer les profils des derniers tokens.  \n   - **Point de terminaison :** `/token-profiles/latest/v1`  \n   - **Utilisation :** Utilisez cet outil pour obtenir des profils mis à jour, incluant les détails des tokens, images, descriptions et liens.\n\n2. **Derniers Tokens Boostés de DexScreener**  \n   - **Objectif :** Récupère les derniers tokens boostés.  \n   - **Point de terminaison :** `/token-boosts/latest/v1`  \n   - **Utilisation :** Utilisez cet outil pour obtenir les données actuelles des tokens boostés ainsi que les détails associés tels que les adresses des tokens, les montants et les descriptions.\n\n3. **Principaux boosts de tokens DexScreener**  \n   - **Objectif :** Récupère les tokens avec les boosts les plus actifs.  \n   - **Point de terminaison :** `/token-boosts/top/v1`  \n   - **Utilisation :** Utilisez cet outil lorsque vous devez identifier les tokens qui connaissent actuellement les niveaux les plus élevés d'activité de boost.\n\n4. **Recherche de Paires DexScreener**  \n   - **Objectif :** Recherche des paires de trading correspondant à une requête.  \n   - **Point de terminaison :** `/latest/dex/search`  \n   - **Utilisation :** Fournissez une requête (par exemple, `\"SOL/USDC\"`) pour trouver des paires spécifiques avec des informations détaillées sur les tokens de base et de cotation, les prix, le volume, et plus encore.\n\n5. **Vérification des commandes payées pour un token avec DexScreener**  \n   - **Objectif :** Vérifie les commandes payées pour un token spécifique.  \n   - **Point de terminaison :** `/orders/v1/{chainId}/{tokenAddress}`  \n   - **Utilisation :** Spécifiez le `chainId` et le `tokenAddress` pour examiner le statut et les détails (par exemple, le statut de traitement, l'horodatage du paiement) des commandes de token.\n\n6. **DexScreener Obtenir des Paires par Chaîne et Adresse de Paire**  \n   - **Objectif :** Récupère une ou plusieurs paires par chaîne et adresse de paire.  \n   - **Point de terminaison :** `/latest/dex/pairs/{chainId}/{pairId}`  \n   - **Utilisation :** Utilisez cet outil pour obtenir des informations détaillées sur une paire en fournissant l'ID de la chaîne et l'adresse spécifique de la paire.\n\n7. **Pools de jetons DexScreener**  \n   - **Objectif :** Récupère les pools d'une adresse de jeton donnée.  \n   - **Point de terminaison :** `/token-pairs/v1/{chainId}/{tokenAddress}`  \n   - **Utilisation :** Fournissez l'ID de la chaîne et l'adresse du jeton pour recevoir des informations sur les pools de liquidité disponibles pour ce jeton.\n\n8. **Paires DexScreener par adresse de token**  \n   - **Objectif :** Récupère une ou plusieurs paires par adresse de token (prise en charge de plusieurs adresses séparées par des virgules).  \n   - **Point de terminaison :** `/tokens/v1/{chainId}/{tokenAddresses}`  \n   - **Utilisation :** Utilisez cet outil lorsque vous avez besoin des détails des paires pour un ou plusieurs tokens. Fournissez l’ID de la chaîne et une ou plusieurs adresses de tokens (jusqu’à 30, séparées par des virgules).\n\n**Directives d’utilisation :**\n\n- **Limites de taux :** Respectez les limites de taux spécifiées pour chaque point de terminaison (allant de 60 à 300 requêtes par minute).  \n- **En-têtes :** Chaque outil envoie par défaut l'en-tête `Accept: */*`.  \n- **Paramètres :** Utilisez les paramètres de chemin ou de requête appropriés comme spécifié pour adapter votre requête.  \n- **Génération d'insights :** Exploitez ces outils pour collecter des données et fournir une analyse approfondie concernant les profils de tokens, les tokens boostés, la recherche de paires, les ordres, les pools de liquidité, et plus encore.\n\nLors de la réponse aux requêtes des utilisateurs, déterminez quel outil ou quelle combinaison d'outils est le mieux adapté pour récupérer les données requises et générer des analyses complètes. Utilisez ces outils pour valider les points de données et présenter des informations à jour et fiables sur l'activité des DEX blockchain.\n\nProcédez à la fourniture d'analyses basées sur les données disponibles provenant de ces outils DexScreener."
+        },
+        "promptType": "define"
+      },
+      "typeVersion": 1.7
+    },
+    {
+      "id": "dfe730d6-a93c-45a6-a600-5fd552cc88b8",
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        1020,
+        40
+      ],
+      "webhookId": "24c73b37-4374-4fcf-b3c9-fa9121e25049",
+      "parameters": {
+        "text": "={{ $json.output }}",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "R3vpGq0SURbvEw2Z",
+          "name": "Telegram account"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "223fa9b3-8f49-407c-9a28-0f67bf6a13cc",
+      "name": "Ajoute SessionId",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        240,
+        40
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b5c25cd4-226b-4778-863f-79b13b4a5202",
+              "name": "sessionId",
+              "type": "string",
+              "value": "={{ $json.message.chat.id }}"
+            }
+          ]
+        },
+        "includeOtherFields": true
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "f88141f2-e5be-46f5-abd5-3f095e04b09d",
+      "name": "Profils de Tokens Récents DexScreener",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        400,
+        340
+      ],
+      "parameters": {
+        "url": "https://api.dexscreener.com/token-profiles/latest/v1",
+        "sendHeaders": true,
+        "toolDescription": "Cet outil récupère les profils de tokens les plus récents depuis l'API DexScreener (limite de requêtes : 60 par minute).",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "*/*",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "6adb778c-5c98-45b5-9979-013abe5b88a8",
+      "name": "Tokens Boostés Récents DexScreener",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        580,
+        340
+      ],
+      "parameters": {
+        "url": "https://api.dexscreener.com/token-boosts/latest/v1",
+        "sendHeaders": true,
+        "toolDescription": "Cet outil récupère les tokens boostés les plus récents depuis l'API DexScreener (limite de requêtes : 60 par minute).",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "*/*",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "10ecdbbe-8d9c-4485-8ce1-45afe72c0ae2",
+      "name": "Boosts des meilleurs tokens DexScreener",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        760,
+        340
+      ],
+      "parameters": {
+        "url": "https://api.dexscreener.com/token-boosts/top/v1",
+        "sendHeaders": true,
+        "toolDescription": "Cet outil récupère les tokens avec les boosts les plus actifs depuis l'API DexScreener (limite de requêtes : 60 par minute).",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "*/*",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "2a9de1cd-aed7-4037-aaee-582ec1c3a244",
+      "name": "Recherche de paires DexScreener",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        1280,
+        340
+      ],
+      "parameters": {
+        "url": "https://api.dexscreener.com/latest/dex/search",
+        "sendQuery": true,
+        "sendHeaders": true,
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "q"
+            }
+          ]
+        },
+        "toolDescription": "Cet outil recherche des paires correspondant à une requête depuis l'API DexScreener (limite de requêtes : 300 par minute).",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "*/*",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "fe355be2-b158-4f44-bd52-c3ad14297c8b",
+      "name": "Vérification des ordres payés pour un token sur DexScreener",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        940,
+        340
+      ],
+      "parameters": {
+        "url": "https://api.dexscreener.com/orders/v1/{chainId}/{tokenAddress}",
+        "sendHeaders": true,
+        "toolDescription": "Cet outil vérifie les ordres payés pour un token sur DexScreener (limite de requêtes : 60 par minute).",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "*/*",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "a3519f26-61ce-4e5b-9fb8-06a080fbaea4",
+      "name": "Récupération de paires par chaîne et adresse de paire sur DexScreener",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        1100,
+        340
+      ],
+      "parameters": {
+        "url": "https://api.dexscreener.com/latest/dex/pairs/{chainId}/{pairId}",
+        "sendHeaders": true,
+        "toolDescription": "Cet outil récupère une ou plusieurs paires par chaîne et adresse de paire depuis l'API DexScreener (limite de requêtes : 300 par minute).",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "*/*",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "da965564-a024-4358-8399-e01775142b36",
+      "name": "Pools de tokens DexScreener",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        1480,
+        340
+      ],
+      "parameters": {
+        "url": "https://api.dexscreener.com/token-pairs/v1/{chainId}/{tokenAddress}",
+        "sendHeaders": true,
+        "toolDescription": "Cet outil récupère les pools d'une adresse de token donnée depuis l'API DexScreener (limite de requêtes : 300 par minute).",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "*/*",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "31cb228c-9a6d-4519-a6a9-7be9cc75716e",
+      "name": "Paires DexScreener par adresse de token",
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "position": [
+        1700,
+        340
+      ],
+      "parameters": {
+        "url": "https://api.dexscreener.com/tokens/v1/{chainId}/{tokenAddresses}",
+        "sendHeaders": true,
+        "toolDescription": "Cet outil récupère une ou plusieurs paires par adresse de token depuis l'API DexScreener (limite de requêtes : 300 par minute).",
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "Accept",
+              "value": "*/*",
+              "valueProvider": "fieldValue"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1.1
+    }
+  ],
+  "active": false,
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "2fbb101c-f139-4e20-88d9-88db0d7ce4f9",
+  "connections": {
+    "Ajoute SessionId": {
+      "main": [
+        [
+          {
+            "node": "Agent d'Informations Blockchain DEX Screener",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déclencheur Telegram": {
+      "main": [
+        [
+          {
+            "node": "Ajoute SessionId",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modèle de Chat OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent d'Informations Blockchain DEX Screener",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mémoire Tampon Fenêtre": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agent d'Informations Blockchain DEX Screener",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pools de tokens DexScreener": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent d'Informations Blockchain DEX Screener",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recherche de paires DexScreener": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent d'Informations Blockchain DEX Screener",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lorsqu'un message de chat est reçu": {
+      "main": [
+        [
+          {
+            "node": "Ajoute SessionId",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Boosts des meilleurs tokens DexScreener": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent d'Informations Blockchain DEX Screener",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tokens Boostés Récents DexScreener": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent d'Informations Blockchain DEX Screener",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Profils de Tokens Récents DexScreener": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent d'Informations Blockchain DEX Screener",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Paires DexScreener par adresse de token": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent d'Informations Blockchain DEX Screener",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent d'Informations Blockchain DEX Screener": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vérification des ordres payés pour un token sur DexScreener": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent d'Informations Blockchain DEX Screener",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Récupération de paires par chaîne et adresse de paire sur DexScreener": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent d'Informations Blockchain DEX Screener",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

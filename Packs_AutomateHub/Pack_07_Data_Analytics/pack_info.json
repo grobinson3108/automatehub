@@ -1,0 +1,16 @@
+{
+  "name": "Pack 07 Data Analytics",
+  "description": "40 workflows pour analyser vos donn\u00e9es et cr\u00e9er des rapports",
+  "prix": 89,
+  "workflows_count": 40,
+  "keywords": [
+    "data",
+    "analytics",
+    "report",
+    "dashboard",
+    "sheets",
+    "excel",
+    "bigquery",
+    "metrics"
+  ]
+}

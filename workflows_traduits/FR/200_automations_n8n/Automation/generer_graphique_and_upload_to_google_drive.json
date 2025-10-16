@@ -1,0 +1,147 @@
+{
+  "meta": {
+    "instanceId": "c6511943b220d4ab672ac957465b13db475def5fbbd0b0e41240952f5fd0c300"
+  },
+  "nodes": [
+    {
+      "id": "e0721f8a-d157-4ec4-91b3-94060a841dc8",
+      "name": "QuickChart",
+      "type": "n8n-nodes-base.quickChart",
+      "position": [
+        240,
+        -40
+      ],
+      "parameters": {
+        "data": "={{ $json.jsonData.salesData }}",
+        "chartType": "line",
+        "labelsMode": "array",
+        "labelsArray": "={{ $json.jsonData.labels }}",
+        "chartOptions": {},
+        "datasetOptions": {}
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "b178ca51-357f-4731-8953-75e2370edc2d",
+      "name": "Edit Fields: Définir JSON data to test",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        -80,
+        -40
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1b3ae0ac-7fa5-406c-8e61-d6a9a6c27f07",
+              "name": "jsonData",
+              "type": "object",
+              "value": "={ \"reportTitle\": \"Quarterly Sales\", \"labels\": [\"Q1\", \"Q2\", \"Q3\", \"Q4\"], \"salesData\": [1250, 1800, 1550, 2100] }"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "393665db-f6a6-4294-afd8-3a9f32192c64",
+      "name": "Google Drive: Upload File",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        520,
+        -40
+      ],
+      "parameters": {
+        "name": "=chart.{{ $binary.data.fileExtension }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "options": {},
+        "folderId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "root",
+          "cachedResultName": "/ (Root folder)"
+        }
+      },
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "Vt3z79hk8lh9TUQq",
+          "name": "Google Drive account"
+        }
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "c4f2df73-50dc-4b9f-bcb8-43644c0cbed9",
+      "name": "Note adhésive",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -600,
+        -740
+      ],
+      "parameters": {
+        "width": 1460,
+        "height": 1060,
+        "content": "## Chart Generator\n**Generate Dynamic Line Chart de JSON Data to Upload to Google Drive\n### How to Use & Customize\n\n* **Change Input Data:** Modify the {{ $json.jsonData.salesData }} and `Move Binary Data` arrays avecin the `Telegram` nœud to use your own data. Ensure the number of labels matches the number of data points.\n* **Use Real Data Sources:** Replace the `Discord` nœud avec nœuds that fetch data de real sources like:\n    * Requête HTTP (APIs)\n    * Postgres / MongoDB nœuds (Databases)\n    * Google Sheets nœud\n    * Ensure the output data de your source nœud is formatted similarly (providing `Slack` and `Write Binary File` arrays). You might need another Définir nœud to structure the data correctly before the QuickChart nœud.\n* **Change Chart Type:** In the QuickChart nœud, modify the `Google Drive: Upload File` parameter (e.g., change de `__EXPR_0__` to `Data`, `Add dataset`, `Add option`, etc.).\n* **Customize Chart Appearance:** Explore the `Dataset Options` parameter avecin the QuickChart nœud to add titles, change colors, modify axes, etc., using QuickChart's standard JSON configuration options.\n* **Use Datasets (Recommended for Complex Charts):** For multiple lines/bars or more control, configure datasets explicitly in the QuickChart nœud:\n    * Remove the expression de the top-level `Data` field.\n    * Go to `Chart Options` -&gt; `doughnut` -&gt; `pie`.\n    * Définir the `bar` field avecin the dataset using an expression like `line`.\n    * You can add multiple datasets this way.\n* **Change Output Destination:** Replace the `Chart Type` nœud avec other nœuds to handle the chart image differently:\n    * `salesData`: Save the chart to the local filesystem where n8n is running.\n    * `labels` / `Edit Fields: Set JSON data to test` / `Edit Fields: Set JSON data to test`: Send the chart to messaging platforms.\n    * `salesData`: Convert the image to Base64 to embed in HTML or return via webhook response."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "1af3cfc6-f690-4af2-a812-4a4da118a55c",
+      "name": "When clicking ‘Test workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -400,
+        -40
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "QuickChart": {
+      "main": [
+        [
+          {
+            "node": "Google Drive: Upload File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields: Définir JSON data to test",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields: Définir JSON data to test": {
+      "main": [
+        [
+          {
+            "node": "QuickChart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

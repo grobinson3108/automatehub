@@ -1,0 +1,309 @@
+{
+  "meta": {
+    "instanceId": "408f9fb9940c3cb18ffdef0e0150fe342d6e655c3a9fac21f0f644e8bedabcd9",
+    "templateCredsSetupCompleted": true
+  },
+  "nodes": [
+    {
+      "id": "eaa31cde-3017-400d-aac8-999def8cc227",
+      "name": "Note autocollante",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -340,
+        -780
+      ],
+      "parameters": {
+        "width": 617,
+        "height": 490,
+        "content": "## Vérifier si l'email entrant concerne un rendez-vous\nNous utilisons LLM pour vérifier le sujet et le corps de l'email afin de déterminer s'il s'agit d'une demande de rendez-vous."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "b03d3f72-d1d8-49a7-bcc1-a476fd5c4ad7",
+      "name": "Note autocollante1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        400,
+        -780
+      ],
+      "parameters": {
+        "width": 796,
+        "height": 482,
+        "content": "## Obtenir la disponibilité du calendrier et composer une réponse\nAssurez-vous de mettre à jour l'ID du Workflow si vous exécutez ceci en tant que 2 workflows"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "29ce0093-c4c8-41cc-be69-334de3a1d1a2",
+      "name": "Modèle de chat OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        -60,
+        -460
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "8gccIjcuf3gvaoEr",
+          "name": "OpenAi account"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "5176f475-704b-446e-b368-ffa395bb089e",
+      "name": "Modèle de chat OpenAI1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        480,
+        -460
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "8gccIjcuf3gvaoEr",
+          "name": "OpenAi account"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "0e8a75dd-ce68-46c3-972c-32b15e04b254",
+      "name": "Envoyer la réponse",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        940,
+        -660
+      ],
+      "webhookId": "0f18d414-1b14-4d2e-9fc2-d2d302372dc6",
+      "parameters": {
+        "message": "={{ $json.output }}",
+        "options": {},
+        "messageId": "={{ $('Gmail Trigger').first().json.id }}",
+        "operation": "reply"
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Sf5Gfl9NiFTNXFWb",
+          "name": "Gmail account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "bf154384-274a-4cdd-977d-890220948a9d",
+      "name": "Déclencheur Gmail",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "position": [
+        -280,
+        -640
+      ],
+      "parameters": {
+        "filters": {
+          "readStatus": "unread",
+          "includeSpamTrash": false
+        },
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Sf5Gfl9NiFTNXFWb",
+          "name": "Gmail account"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "5a268b34-38ea-4e55-87ab-8a616e2aa1fa",
+      "name": "Classer le rendez-vous",
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "position": [
+        -60,
+        -640
+      ],
+      "parameters": {
+        "options": {
+          "fallback": "discard"
+        },
+        "inputText": "=Please evaluate the following email to determine if it suggests scheduling a meeting or a call:\nSubject: {{ $json.Subject }}\nSnippet: {{ $json.snippet }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "is_appointment",
+              "description": "email Is requesting an appointment"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "7b5a8468-09e5-4575-97cb-9175ee02b19d",
+      "name": "Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        500,
+        -660
+      ],
+      "parameters": {
+        "text": "=Expéditeur : {{ $('Gmail Trigger').first().json.From }}\nSujet : {{ $('Gmail Trigger').first().json.Subject }}\nTexte de l'email : {{ $('Gmail Trigger').first().json.snippet }}",
+        "options": {
+          "systemMessage": "=Vous êtes un assistant de planification par email. En vous basant sur l'email reçu, vérifiez ma disponibilité et proposez une réponse appropriée.\nVisez à obtenir une heure précise, plutôt qu'un simple jour. Lors de la vérification de ma disponibilité, assurez-vous qu'il y ait suffisamment de temps entre les réunions.\nSi je ne suis pas disponible, proposez TOUJOURS une nouvelle heure basée sur ma disponibilité. Lors de la proposition d'une nouvelle heure, laissez toujours un tampon de 15 minutes après la réunion précédente.\nLa date et l'heure actuelles sont : {{ $now.toISO() }}."
+        },
+        "promptType": "define"
+      },
+      "typeVersion": 1.8
+    },
+    {
+      "id": "b61e8061-5719-4c30-97da-e306e7b79b76",
+      "name": "Google Agenda",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "position": [
+        680,
+        -460
+      ],
+      "parameters": {
+        "options": {},
+        "timeMax": "={{ $now.plus(1, 'month').toISO() }}",
+        "timeMin": "={{ $now.minus(1, 'day').toISO() }}",
+        "calendar": {
+          "__rl": true,
+          "mode": "id",
+          "value": "your_email@gmail.com"
+        },
+        "operation": "getAll",
+        "returnAll": true
+      },
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "kWMxmDbMDDJoYFVK",
+          "name": "Google Calendar account"
+        }
+      },
+      "typeVersion": 1.3
+    },
+    {
+      "id": "47e07b6c-d432-4111-b33e-56d6c305c40c",
+      "name": "Marquer comme lu",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        940,
+        -480
+      ],
+      "webhookId": "7e2d851b-c9f3-471c-875d-0da7c2c3b561",
+      "parameters": {
+        "messageId": "={{ $('Gmail Trigger').first().json.id }}",
+        "operation": "markAsRead"
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "Sf5Gfl9NiFTNXFWb",
+          "name": "Gmail account"
+        }
+      },
+      "typeVersion": 2.1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Agent": {
+      "main": [
+        [
+          {
+            "node": "Envoyer la réponse",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Marquer comme lu",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déclencheur Gmail": {
+      "main": [
+        [
+          {
+            "node": "Classer le rendez-vous",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Agenda": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modèle de chat OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Classer le rendez-vous",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modèle de chat OpenAI1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classer le rendez-vous": {
+      "main": [
+        [
+          {
+            "node": "Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

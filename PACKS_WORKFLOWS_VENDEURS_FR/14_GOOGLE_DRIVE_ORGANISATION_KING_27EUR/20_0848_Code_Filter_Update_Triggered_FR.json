@@ -1,0 +1,725 @@
+{
+  "meta": {
+    "instanceId": "5e2cdd86a9e1ca2fc82cc63db38d1710d5d6a5c6fe352258a6f7112815bcd512",
+    "templateCredsSetupCompleted": true
+  },
+  "nodes": [
+    {
+      "id": "c4dca8f0-98fa-4b06-a806-1ab271f024a2",
+      "name": "Configuration",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        120,
+        460
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a916dcbd-d681-4e09-9ce9-0f50a1b4290b",
+              "name": "keep",
+              "type": "string",
+              "value": "=last"
+            },
+            {
+              "id": "949a2f76-5981-4fd2-9665-b10db26e2f48",
+              "name": "action",
+              "type": "string",
+              "value": "=flag"
+            },
+            {
+              "id": "7f4502b4-c330-4c9c-ab89-ba53874aafbb",
+              "name": "owner",
+              "type": "string",
+              "value": "={{ $json.owner || $json.owners[0].emailAddress }}"
+            },
+            {
+              "id": "592eb79e-28db-4470-8347-36b2a661cb03",
+              "name": "folder",
+              "type": "string",
+              "value": "={{ $json.folder || $json.parents[0]}}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "2562ed4a-8ecd-4a32-ae51-bc85daa9817b",
+      "name": "Modifier les champs",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1800,
+        440
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1d28f976-2467-4d18-8698-556d29a5f8c0",
+              "name": "isDuplicate",
+              "type": "boolean",
+              "value": "={{ $json.isDuplicate }}"
+            },
+            {
+              "id": "e9d8eb20-7668-4287-bfb4-d4f66c019f73",
+              "name": "id",
+              "type": "string",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "id": "587e5f8e-bd94-4ec5-80f2-066c99922135",
+              "name": "name",
+              "type": "string",
+              "value": "={{ $json.name }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "e7f0482c-77c7-46a0-8a36-e61bb624c422",
+      "name": "Filtrer",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        2020,
+        440
+      ],
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "bd33247c-4c88-4c0b-bdfe-6f9dca0205e3",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.isDuplicate }}",
+              "rightValue": ""
+            }
+          ]
+        }
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "28768732-29a4-4446-8b12-dda187976bf9",
+      "name": "Dédupliquer en gardant le premier",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        1580,
+        560
+      ],
+      "parameters": {
+        "jsCode": "// Sort files by creation time (oldest first)\nconst sorted = items.sort((a, b) => \n  new Date(a.json.createdTime) - new Date(b.json.createdTime));\n\nconst seen = {};\nfor (const item of sorted) {\n  const md5 = item.json.md5Checksum;\n\n  // Failsafe: Skip if md5Checksum is missing or empty\n  if (!md5) {\n    item.json.isDuplicate = false; // Mark as not duplicate to avoid issues\n    continue; // Skip to the next item\n  }\n\n  item.json.isDuplicate = md5 in seen;\n  if (!item.json.isDuplicate) seen[md5] = true;\n}\nreturn items;"
+      },
+      "executeOnce": false,
+      "typeVersion": 2
+    },
+    {
+      "id": "1f6f9529-2283-4806-ad5a-b0425f9f68e2",
+      "name": "Dédupliquer en gardant le dernier",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        1580,
+        360
+      ],
+      "parameters": {
+        "jsCode": "// Sort files by creation time (latest first)\nconst sorted = items.sort((a, b) => \n  new Date(b.json.createdTime) - new Date(a.json.createdTime));\n\nconst seen = {};\nfor (const item of sorted) {\n  const md5 = item.json.md5Checksum;\n\n  // Failsafe: Skip if md5Checksum is missing or empty\n  if (!md5) {\n    item.json.isDuplicate = false; // Mark as not duplicate to avoid issues\n    continue; // Skip to the next item\n  }\n\n  if (md5 in seen) {\n    item.json.isDuplicate = true;\n  } else {\n    item.json.isDuplicate = false;\n    seen[md5] = true;\n  }\n}\nreturn items;"
+      },
+      "executeOnce": false,
+      "typeVersion": 2
+    },
+    {
+      "id": "c5250dd1-6eeb-4b89-b2e7-e44a8d88212c",
+      "name": "Note adhésive5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -40,
+        -120
+      ],
+      "parameters": {
+        "color": 5,
+        "width": 440,
+        "height": 800,
+        "content": "# 2. Configuration\nChoisissez le comportement de **conservation** et d'**action** du workflow\n\n1. Le paramètre **conserver** vous permet de décider si vous souhaitez garder le premier ou le dernier fichier reçu lorsqu'un doublon est détecté. (valeurs possibles : `first`, `last`. Par défaut : `last`)\n2. Le paramètre **action** vous permet de décider quoi faire avec les doublons détectés. Les envoyer à la corbeille ou les signaler en les renommant avec le préfixe DUPLICATE- (valeurs possibles : `trash`, `flag`. Par défaut : `flag`). Les fichiers déjà préfixés par DUPLICATE- ne sont pas signalés à nouveau.\n\nLes paramètres `owner` et `folder` sont pris du déclencheur et ne nécessiteront probablement jamais d'être modifiés :\n- Le **dossier** pointe vers le dossier avec lequel travailler. Par défaut, il est pris du déclencheur.\n- Le paramètre **owner** doit correspondre au propriétaire des fichiers. Le workflow ne fonctionne qu'avec les fichiers appartenant à cet utilisateur. Il est spécifié avec l'email de l'utilisateur et est pris du premier propriétaire de fichier du déclencheur."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "67c4d02f-b170-4504-9bae-7bf14db7abd3",
+      "name": "Note adhésive6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        460,
+        180
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 320,
+        "height": 500,
+        "content": "## Dossier de travail\nLe nœud \"Dossier de travail\" vous permet de choisir les fichiers à dédupliquer.\n\nCe workflow inclut un filtre pour travailler sur un seul dossier au niveau de profondeur 1. Il ne fonctionne pas avec les fichiers dans des dossiers imbriqués.\n\nVous pouvez supprimer le filtre Dossier pour travailler sur l'ensemble du disque ou ajouter différents filtres."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "9ed26ef0-da89-43c5-9e12-2ec97b2e51f6",
+      "name": "Envoyer les doublons à la corbeille",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        2760,
+        320
+      ],
+      "parameters": {
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.id }}"
+        },
+        "options": {},
+        "operation": "deleteFile"
+      },
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "VypmUgEf64twpmiZ",
+          "name": "Google Drive account"
+        }
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "fcfd08fa-7a19-4974-b3bb-6ed27a2030cf",
+      "name": "Aucune opération, ne rien faire",
+      "type": "n8n-nodes-base.noOp",
+      "position": [
+        2800,
+        600
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "de7967e7-eb3b-456c-b12e-6de3165ad29a",
+      "name": "Est signalé",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        2540,
+        620
+      ],
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "c8d8eac5-e03a-4673-bcf9-a8acaa95cb8e",
+              "operator": {
+                "type": "string",
+                "operation": "startsWith"
+              },
+              "leftValue": "={{ $('Trash/Flag Duplicates').item.json.name }}",
+              "rightValue": "DUPLICATE-"
+            }
+          ]
+        }
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "d227d6ee-97e7-4b4d-b1a2-4cd402be99d5",
+      "name": "Déclencheur Google Drive",
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "position": [
+        -360,
+        460
+      ],
+      "parameters": {
+        "event": "fileCreated",
+        "options": {},
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyX",
+              "unit": "minutes",
+              "value": 15
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "mode": "list",
+          "value": "1-tjf96Ooj0SL8qaE04BGIeCGnd-O1R8c",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1-tjf96Ooj0SL8qaE04BGIeCGnd-O1R8c",
+          "cachedResultName": "2025/04\n"
+        }
+      },
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "VypmUgEf64twpmiZ",
+          "name": "Google Drive account"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "22e1638e-5c2e-41bc-b66e-fcee6af05762",
+      "name": "Déposer des fichiers Google Apps",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        940,
+        460
+      ],
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "1e7d9666-fba0-4fe7-b03a-1a4e5c07b389",
+              "operator": {
+                "type": "string",
+                "operation": "notStartsWith"
+              },
+              "leftValue": "={{ $json.mimeType }}",
+              "rightValue": "application/vnd.google-apps"
+            }
+          ]
+        }
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "ec80f4de-5dff-4693-bff4-2509fd581d70",
+      "name": "Note Autocollante",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        840,
+        180
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 320,
+        "height": 500,
+        "content": "# Rejeter les documents Google Apps trouvés\nDocs, Sheets, Forms, Slides, Drawins, etc. sont rejetés car ce ne sont pas de vrais fichiers binaires et leur contenu ne peut pas être vérifié directement."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "66ee766a-3dea-449f-827c-1922c6e053f3",
+      "name": "Note Autocollante7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -520,
+        -120
+      ],
+      "parameters": {
+        "color": 5,
+        "width": 440,
+        "height": 800,
+        "content": "# 1. Paramètres du déclencheur et dossier de travail\n\nLors de l'utilisation du déclencheur Google Drive, configurez les **Fréquences de sondage** et le **Dossier** avec lequel travailler.\n\nPar défaut, le déclencheur est configuré pour vérifier les *téléversements de fichiers* toutes les 15 minutes.\n\nLorsqu'il est configuré avec un dossier spécifique dans le drive, le workflow fonctionne uniquement avec les fichiers directement dans ce dossier (il ne vérifiera pas/modifiera les fichiers dans les sous-dossiers).\n\nLorsqu'il est configuré avec le dossier racine (/) du drive, il vérifiera tous les fichiers dans tous les dossiers et sous-dossiers, donc **UTILISEZ CELA AVEC PRUDENCE** car cela pourrait entraîner la suppression/le renommage de fichiers importants."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "6f8a7855-2ee3-426d-879f-afb303d5aa20",
+      "name": "Dossier de travail",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        560,
+        460
+      ],
+      "parameters": {
+        "filter": {
+          "folderId": {
+            "__rl": true,
+            "mode": "id",
+            "value": "={{ $('Config').item.json.folder }}"
+          },
+          "whatToSearch": "files"
+        },
+        "options": {
+          "fields": [
+            "*"
+          ]
+        },
+        "resource": "fileFolder",
+        "returnAll": true,
+        "queryString": "='{{$('Config').item.json.owner}}' in owners",
+        "searchMethod": "query"
+      },
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "VypmUgEf64twpmiZ",
+          "name": "Google Drive account"
+        }
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "6f69e6d3-96ca-4411-9a48-160ebdb2a273",
+      "name": "Note Autocollante1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2500,
+        540
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 540,
+        "height": 220,
+        "content": "### Les fichiers qui commencent déjà par *DUPLICATE-* ne sont pas à nouveau signalés."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "65b4ba42-89ce-437c-a3e8-bf3f9b01cc21",
+      "name": "Note Autocollante2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2500,
+        780
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 360,
+        "height": 240,
+        "content": "### Dans Google Drive, les fichiers mis à la corbeille sont conservés pendant 30 jours avant d'être supprimés définitivement. \nIls peuvent être examinés et restaurés pendant cet intervalle de 30 jours."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "99374aa8-e597-4919-8b64-c376b246621a",
+      "name": "Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        2880,
+        800
+      ],
+      "parameters": {
+        "fileId": {
+          "__rl": true,
+          "mode": "id",
+          "value": "={{ $json.id }}"
+        },
+        "options": {},
+        "operation": "update",
+        "newUpdatedFileName": "=DUPLICATE-{{ $json.name }}"
+      },
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "VypmUgEf64twpmiZ",
+          "name": "Google Drive account"
+        }
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "6ae62c31-4cf0-48e7-aa42-19fc259c5981",
+      "name": "Conserver Premier/Dernier",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        1300,
+        460
+      ],
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "last",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "7f5ba21d-8f3d-4736-9c34-ac7ebd6a9699",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Config').item.json.keep }}",
+                    "rightValue": "last"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "first",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "93a013f6-6c59-47ad-bce3-8b34cc8f026c",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Config').item.json.keep }}",
+                    "rightValue": "first"
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "typeVersion": 3.2
+    },
+    {
+      "id": "9cb84da7-3cd9-4a53-af09-8b63f1cf8a34",
+      "name": "Supprimer/Marquer les doublons",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        2240,
+        440
+      ],
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "send to trash",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "0314ac48-e7b7-406b-abcd-8cd1ab872c79",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Config').item.json.action }}",
+                    "rightValue": "trash"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "flag as duplicate",
+              "conditions": {
+                "options": {
+                  "version": 2,
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "70d8e5f1-16a6-4921-ad9c-ab00049e507d",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $('Config').item.json.action }}",
+                    "rightValue": "flag"
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "typeVersion": 3.2
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Configuration": {
+      "main": [
+        [
+          {
+            "node": "Dossier de travail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrer": {
+      "main": [
+        [
+          {
+            "node": "Supprimer/Marquer les doublons",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Est signalé": {
+      "main": [
+        [
+          {
+            "node": "Aucune opération, ne rien faire",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modifier les champs": {
+      "main": [
+        [
+          {
+            "node": "Filtrer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dossier de travail": {
+      "main": [
+        [
+          {
+            "node": "Déposer des fichiers Google Apps",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conserver Premier/Dernier": {
+      "main": [
+        [
+          {
+            "node": "Dédupliquer en gardant le dernier",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Dédupliquer en gardant le premier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déclencheur Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Configuration",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dédupliquer en gardant le dernier": {
+      "main": [
+        [
+          {
+            "node": "Modifier les champs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supprimer/Marquer les doublons": {
+      "main": [
+        [
+          {
+            "node": "Envoyer les doublons à la corbeille",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Est signalé",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Dédupliquer en gardant le premier": {
+      "main": [
+        [
+          {
+            "node": "Modifier les champs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déposer des fichiers Google Apps": {
+      "main": [
+        [
+          {
+            "node": "Conserver Premier/Dernier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

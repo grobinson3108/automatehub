@@ -1,0 +1,23 @@
+{
+  "name": "Test Workflow with Tag",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "manual",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    }
+  ],
+  "connections": {},
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ],
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

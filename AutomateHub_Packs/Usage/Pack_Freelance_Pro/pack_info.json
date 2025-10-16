@@ -1,0 +1,19 @@
+{
+  "name": "Pack_Freelance_Pro",
+  "type": "Usage",
+  "description": "\ud83d\udcbc Kit complet du freelance productif",
+  "prix": 79,
+  "workflow_count": 50,
+  "workflows": [
+    "Daily_Calendar_Summary_and_Event_Reminders.json",
+    "scheduled_process_todoist_complex_12nodes.json",
+    "Email-Triggered_Calendar_Updates_and_Airtable_Sync.json",
+    "Sync_Notion_Tasks_with_Clockify_Time_Tracking.json",
+    "Scheduled_Notion_Updates_to_LinkedIn_Posts.json",
+    "Automate_Your_Customer_Service_With_WhatsApp_Business_Cloud_&_Asana_7nodes.json",
+    "Scheduled_Google_Calendar_Events_to_API_Notifications.json",
+    "Scheduled_Notion_Database_Update_with_Conditional_Logic.json",
+    "Automated_Task_Routing_and_Data_Processing_Pipeline.json",
+    "Scheduled_AI_Text_Analysis_and_Notion_Database_Update.json"
+  ]
+}

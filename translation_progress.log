@@ -1,0 +1,261 @@
+🚀 TRADUCTION PERFORMANTE AVEC MAPPING
+============================================================
+✅ Clé OpenAI trouvée
+
+📁 20 workflows trouvés dans AutomationTribe
+============================================================
+
+[1/20] Traitement...
+
+📄 Traduction de: Generate_social_post_ideas_or_summaries.json
+  📝 Extraction des textes...
+  📊 14 textes extraits
+  📦 1 batch(es) créé(s)
+  🌐 Traduction batch 1/1 (14 textes)...
+  📋 Réponse OpenAI reçue (1512 caractères)
+  ✅ 14 textes traduits
+  💾 Workflow sauvegardé
+
+[2/20] Traitement...
+
+📄 Traduction de: Create_banners_from_your_URL_s___ChatGPT.json
+  📝 Extraction des textes...
+  📊 41 textes extraits
+  📦 1 batch(es) créé(s)
+  🌐 Traduction batch 1/1 (41 textes)...
+  📋 Réponse OpenAI reçue (2028 caractères)
+  ⚠️  Erreur parsing regex: Invalid \escape: line 8 column 270 (char 516)
+  ❌ Impossible de parser la réponse JSON: Invalid \escape: line 8 column 270 (char 516)
+  📄 Réponse brute: {
+  "$text_1": "Créer des bannières à partir de vos URL - ChatGPT",
+  "$text_2": "Générer une image",
+  "$text_3": "Convertir en fichier",
+  "$text_4": "Sur la soumission du formulaire",
+  "$text_5": ...
+  ✅ 41 traductions extraites manuellement
+  ✅ 41 textes traduits
+  💾 Workflow sauvegardé
+
+[3/20] Traitement...
+
+📄 Traduction de: Post_to_ALL_social_networks.json
+  📝 Extraction des textes...
+  📊 26 textes extraits
+  📦 1 batch(es) créé(s)
+  🌐 Traduction batch 1/1 (26 textes)...
+  📋 Réponse OpenAI reçue (806 caractères)
+  ✅ 26 textes traduits
+  💾 Workflow sauvegardé
+
+[4/20] Traitement...
+
+📄 Traduction de: Card_auto_poster.json
+  📝 Extraction des textes...
+  📊 56 textes extraits
+  📦 2 batch(es) créé(s)
+  🌐 Traduction batch 1/2 (46 textes)...
+  📋 Réponse OpenAI reçue (3499 caractères)
+  🌐 Traduction batch 2/2 (10 textes)...
+  📋 Réponse OpenAI reçue (1833 caractères)
+  ✅ 56 textes traduits
+  💾 Workflow sauvegardé
+
+[5/20] Traitement...
+
+📄 Traduction de: MCP.json
+  📝 Extraction des textes...
+  📊 9 textes extraits
+  📦 1 batch(es) créé(s)
+  🌐 Traduction batch 1/1 (9 textes)...
+  📋 Réponse OpenAI reçue (821 caractères)
+  ✅ 9 textes traduits
+  💾 Workflow sauvegardé
+
+[6/20] Traitement...
+
+📄 Traduction de: Autonomous_Content_Engine___Blog_Post.json
+  📝 Extraction des textes...
+  📊 61 textes extraits
+  📦 2 batch(es) créé(s)
+  🌐 Traduction batch 1/2 (35 textes)...
+  📋 Réponse OpenAI reçue (2008 caractères)
+  🌐 Traduction batch 2/2 (26 textes)...
+  📋 Réponse OpenAI reçue (1922 caractères)
+  ✅ 61 textes traduits
+  💾 Workflow sauvegardé
+
+[7/20] Traitement...
+
+📄 Traduction de: AT30___Clone_any_Tiktok_Video_and_Repurpose_it.json
+  📝 Extraction des textes...
+  📊 49 textes extraits
+  📦 1 batch(es) créé(s)
+  🌐 Traduction batch 1/1 (49 textes)...
+  📋 Réponse OpenAI reçue (1861 caractères)
+  ✅ 49 textes traduits
+  💾 Workflow sauvegardé
+
+[8/20] Traitement...
+
+📄 Traduction de: AI_Powered_Web_Intel_Extractor.json
+  📝 Extraction des textes...
+  📊 14 textes extraits
+  📦 1 batch(es) créé(s)
+  🌐 Traduction batch 1/1 (14 textes)...
+  📋 Réponse OpenAI reçue (715 caractères)
+  ✅ 14 textes traduits
+  💾 Workflow sauvegardé
+
+[9/20] Traitement...
+
+📄 Traduction de: Generate_social_post_ideas_or_summaries.json
+  📝 Extraction des textes...
+  📊 14 textes extraits
+  📦 2 batch(es) créé(s)
+  🌐 Traduction batch 1/2 (11 textes)...
+  📋 Réponse OpenAI reçue (950 caractères)
+  🌐 Traduction batch 2/2 (3 textes)...
+  📋 Réponse OpenAI reçue (649 caractères)
+  ✅ 14 textes traduits
+  💾 Workflow sauvegardé
+
+[10/20] Traitement...
+
+📄 Traduction de: Stock_photos_EXIF.json
+  📝 Extraction des textes...
+  📊 9 textes extraits
+  📦 1 batch(es) créé(s)
+  🌐 Traduction batch 1/1 (9 textes)...
+  📋 Réponse OpenAI reçue (714 caractères)
+  ✅ 9 textes traduits
+  💾 Workflow sauvegardé
+
+⏸️  Pause de 10 secondes après 10 workflows...
+
+[11/20] Traitement...
+
+📄 Traduction de: blueprint.json
+  📝 Extraction des textes...
+  📊 1 textes extraits
+  📦 1 batch(es) créé(s)
+  🌐 Traduction batch 1/1 (1 textes)...
+❌ Erreur de traduction: HTTPSConnectionPool(host='api.openai.com', port=443): Read timed out. (read timeout=60)
+  ✅ 0 textes traduits
+  💾 Workflow sauvegardé
+
+[12/20] Traitement...
+
+📄 Traduction de: BIG_VIDEO_GENERATION.json
+  📝 Extraction des textes...
+  📊 55 textes extraits
+  📦 1 batch(es) créé(s)
+  🌐 Traduction batch 1/1 (55 textes)...
+  📋 Réponse OpenAI reçue (2865 caractères)
+  ✅ 55 textes traduits
+  💾 Workflow sauvegardé
+
+[13/20] Traitement...
+
+📄 Traduction de: Life_Style_Product_Photo_Generator.json
+  📝 Extraction des textes...
+  📊 6 textes extraits
+  📦 1 batch(es) créé(s)
+  🌐 Traduction batch 1/1 (6 textes)...
+  📋 Réponse OpenAI reçue (259 caractères)
+  ✅ 6 textes traduits
+  💾 Workflow sauvegardé
+
+[14/20] Traitement...
+
+📄 Traduction de: ONE_CLICK___N8N_Video_Shorts.json
+  📝 Extraction des textes...
+  📊 25 textes extraits
+  📦 1 batch(es) créé(s)
+  🌐 Traduction batch 1/1 (25 textes)...
+  📋 Réponse OpenAI reçue (1842 caractères)
+  ✅ 25 textes traduits
+  💾 Workflow sauvegardé
+
+[15/20] Traitement...
+
+📄 Traduction de: Sumobundle___Telegram_Agent.json
+  📝 Extraction des textes...
+  📊 29 textes extraits
+  📦 1 batch(es) créé(s)
+  🌐 Traduction batch 1/1 (29 textes)...
+  📋 Réponse OpenAI reçue (1524 caractères)
+  ✅ 29 textes traduits
+  💾 Workflow sauvegardé
+
+[16/20] Traitement...
+
+📄 Traduction de: Sub_workflow_Google_Tasks.json
+  📝 Extraction des textes...
+  📊 3 textes extraits
+  📦 1 batch(es) créé(s)
+  🌐 Traduction batch 1/1 (3 textes)...
+  📋 Réponse OpenAI reçue (115 caractères)
+  ✅ 3 textes traduits
+  💾 Workflow sauvegardé
+
+[17/20] Traitement...
+
+📄 Traduction de: Sub_workflow___Get_Google_Tasks.json
+  📝 Extraction des textes...
+  📊 5 textes extraits
+  📦 1 batch(es) créé(s)
+  🌐 Traduction batch 1/1 (5 textes)...
+  📋 Réponse OpenAI reçue (328 caractères)
+  ✅ 5 textes traduits
+  💾 Workflow sauvegardé
+
+[18/20] Traitement...
+
+📄 Traduction de: Sub_workflow_Translate.json
+  📝 Extraction des textes...
+  📊 4 textes extraits
+  📦 1 batch(es) créé(s)
+  🌐 Traduction batch 1/1 (4 textes)...
+  📋 Réponse OpenAI reçue (292 caractères)
+  ✅ 4 textes traduits
+  💾 Workflow sauvegardé
+
+[19/20] Traitement...
+
+📄 Traduction de: Blog___interface.json
+  📝 Extraction des textes...
+  📊 39 textes extraits
+  📦 3 batch(es) créé(s)
+  🌐 Traduction batch 1/3 (7 textes)...
+  📋 Réponse OpenAI reçue (285 caractères)
+  🌐 Traduction batch 2/3 (1 textes)...
+  📋 Réponse OpenAI reçue (285 caractères)
+  🌐 Traduction batch 3/3 (31 textes)...
+  📋 Réponse OpenAI reçue (596 caractères)
+  ✅ 9 textes traduits
+  💾 Workflow sauvegardé
+
+[20/20] Traitement...
+
+📄 Traduction de: Vidéos_Longues_en_un_clique.json
+  📝 Extraction des textes...
+  📊 50 textes extraits
+  📦 3 batch(es) créé(s)
+  🌐 Traduction batch 1/3 (47 textes)...
+  📋 Réponse OpenAI reçue (1435 caractères)
+  🌐 Traduction batch 2/3 (2 textes)...
+  📋 Réponse OpenAI reçue (504 caractères)
+  🌐 Traduction batch 3/3 (1 textes)...
+  📋 Réponse OpenAI reçue (520 caractères)
+  ✅ 50 textes traduits
+  💾 Workflow sauvegardé
+
+⏸️  Pause de 10 secondes après 20 workflows...
+
+============================================================
+📊 RÉSUMÉ FINAL:
+  ✅ Workflows traduits avec succès: 20
+  ⚠️  Workflows sans texte à traduire: 0
+  ❌ Erreurs: 0
+  📁 Mappings sauvegardés dans: /var/www/automatehub/translation_mappings
+============================================================

@@ -1,0 +1,15 @@
+{
+  "name": "Pack 12 Finance Comptabilite",
+  "description": "35 workflows pour la gestion financi\u00e8re automatis\u00e9e",
+  "prix": 109,
+  "workflows_count": 16,
+  "keywords": [
+    "invoice",
+    "payment",
+    "accounting",
+    "expense",
+    "billing",
+    "stripe",
+    "paypal"
+  ]
+}

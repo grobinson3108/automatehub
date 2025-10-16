@@ -1,0 +1,675 @@
+/* AutomateHub - Design inspiré d'Audelalia avec couleurs pastels modernes */
+
+/* Import Google Fonts - Poppins comme Audelalia */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* CSS Variables - Couleurs pastels modernes inspirées d'Audelalia */
+:root {
+  /* Couleurs principales pastels */
+  --primary-blue: #6ba3c3;        /* Bleu doux comme Audelalia */
+  --secondary-blue: #8bb8d1;      /* Bleu plus clair */
+  --conversion-coral: #e8b4b4;    /* Coral pastel pour conversion */
+  --accent-mint: #54b48d;         /* Vert menthe */
+  --accent-peach: #f4a261;        /* Pêche douce */
+  --accent-lavender: #b19cd9;     /* Lavande */
+  
+  /* Couleurs de support */
+  --soft-gray: #f8f9fa;
+  --medium-gray: #6c757d;
+  --dark-gray: #343a40;
+  --white: #ffffff;
+  
+  /* Gradients pastels */
+  --hero-gradient: linear-gradient(135deg, #6ba3c3 0%, #8bb8d1 50%, #b19cd9 100%);
+  --cta-gradient: linear-gradient(135deg, #e8b4b4 0%, #f4a261 100%);
+  --success-gradient: linear-gradient(135deg, #54b48d 0%, #6ba3c3 100%);
+  --card-gradient: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  
+  /* Typographie */
+  --font-primary: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-secondary: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  
+  /* Ombres douces */
+  --shadow-soft: 0 2px 8px rgba(107, 163, 195, 0.08);
+  --shadow-medium: 0 4px 16px rgba(107, 163, 195, 0.12);
+  --shadow-large: 0 8px 32px rgba(107, 163, 195, 0.16);
+  --shadow-cta: 0 4px 20px rgba(232, 180, 180, 0.25);
+  
+  /* Animations */
+  --transition-fast: 0.2s ease-out;
+  --transition-normal: 0.3s ease-out;
+  --transition-slow: 0.5s ease-out;
+  
+  /* Rayons de bordure */
+  --radius-small: 8px;
+  --radius-medium: 12px;
+  --radius-large: 16px;
+  --radius-xl: 24px;
+}
+
+/* Reset et base */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-primary) !important;
+  line-height: 1.6;
+  color: var(--dark-gray);
+  background-color: var(--white);
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-primary) !important;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--dark-gray);
+}
+
+/* Boutons de conversion - Style Audelalia */
+.btn-conversion-primary {
+  background: var(--cta-gradient) !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  padding: 14px 28px !important;
+  border-radius: var(--radius-large) !important;
+  box-shadow: var(--shadow-cta) !important;
+  transition: all var(--transition-normal) !important;
+  text-transform: none !important;
+  letter-spacing: 0.3px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+}
+
+.btn-conversion-primary:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 25px rgba(232, 180, 180, 0.35) !important;
+  color: white !important;
+}
+
+.btn-conversion-primary:active {
+  transform: translateY(0) !important;
+}
+
+.btn-conversion-secondary {
+  background: var(--primary-blue) !important;
+  border: none !important;
+  color: white !important;
+  font-weight: 500 !important;
+  padding: 12px 24px !important;
+  border-radius: var(--radius-medium) !important;
+  transition: all var(--transition-normal) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.btn-conversion-secondary:hover {
+  background: var(--secondary-blue) !important;
+  transform: translateY(-1px) !important;
+  color: white !important;
+  box-shadow: var(--shadow-medium);
+}
+
+.btn-outline-conversion {
+  background: transparent !important;
+  border: 2px solid var(--primary-blue) !important;
+  color: var(--primary-blue) !important;
+  font-weight: 500 !important;
+  padding: 12px 24px !important;
+  border-radius: var(--radius-medium) !important;
+  transition: all var(--transition-normal) !important;
+}
+
+.btn-outline-conversion:hover {
+  background: var(--primary-blue) !important;
+  color: white !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Hero Section - Style Audelalia */
+.hero-conversion {
+  background: var(--hero-gradient);
+  position: relative;
+  overflow: hidden;
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  padding: 80px 0 60px;
+}
+
+.hero-conversion::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><defs><pattern id="dots" width="40" height="40" patternUnits="userSpaceOnUse"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100%" height="100%" fill="url(%23dots)"/></svg>');
+  opacity: 0.4;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-title {
+  font-size: 3rem !important;
+  font-weight: 700 !important;
+  color: white !important;
+  margin-bottom: 1.5rem !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 1.3rem !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  margin-bottom: 2rem !important;
+  font-weight: 400 !important;
+  line-height: 1.5;
+}
+
+/* Cards et sections - Style Audelalia */
+.card-pastel {
+  background: var(--card-gradient);
+  border-radius: var(--radius-large);
+  padding: 2rem;
+  box-shadow: var(--shadow-medium);
+  transition: all var(--transition-normal);
+  border: 1px solid rgba(107, 163, 195, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.card-pastel:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-large);
+}
+
+.card-pastel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--hero-gradient);
+}
+
+/* Social Proof - Style doux */
+.social-proof {
+  background: white;
+  border-radius: var(--radius-xl);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-large);
+  margin-top: -4rem;
+  position: relative;
+  z-index: 3;
+  border: 1px solid rgba(107, 163, 195, 0.1);
+}
+
+.counter-item {
+  text-align: center;
+  padding: 1rem;
+}
+
+.counter-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary-blue);
+  display: block;
+  line-height: 1;
+  font-family: var(--font-secondary);
+}
+
+.counter-label {
+  font-size: 0.9rem;
+  color: var(--medium-gray);
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+
+/* Benefits Section */
+.benefit-card {
+  background: white;
+  border-radius: var(--radius-large);
+  padding: 2.5rem 2rem;
+  box-shadow: var(--shadow-medium);
+  transition: all var(--transition-normal);
+  border: 2px solid transparent;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+.benefit-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-large);
+  border-color: var(--primary-blue);
+}
+
+.benefit-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--success-gradient);
+  transform: scaleX(0);
+  transition: transform var(--transition-normal);
+}
+
+.benefit-card:hover::before {
+  transform: scaleX(1);
+}
+
+.benefit-icon {
+  width: 70px;
+  height: 70px;
+  background: var(--success-gradient);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  color: white;
+  font-size: 1.8rem;
+  box-shadow: var(--shadow-soft);
+}
+
+.benefit-title {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--primary-blue);
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.benefit-description {
+  color: var(--medium-gray);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+/* Tutorial Grid */
+.tutorial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+  margin: 3rem 0;
+}
+
+.tutorial-card {
+  background: white;
+  border-radius: var(--radius-large);
+  overflow: hidden;
+  box-shadow: var(--shadow-medium);
+  transition: all var(--transition-normal);
+  position: relative;
+  border: 2px solid transparent;
+}
+
+.tutorial-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-large);
+  border-color: var(--primary-blue);
+}
+
+.tutorial-card.premium {
+  position: relative;
+  border-color: var(--conversion-coral);
+}
+
+.tutorial-card.premium::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(4px);
+  z-index: 2;
+}
+
+.tutorial-card.premium .unlock-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  text-align: center;
+  padding: 2rem;
+}
+
+.tutorial-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-large);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  z-index: 4;
+}
+
+.tutorial-badge.free {
+  background: var(--accent-mint);
+  color: white;
+}
+
+.tutorial-badge.premium {
+  background: var(--conversion-coral);
+  color: white;
+}
+
+/* Comparison Table */
+.comparison-table {
+  background: white;
+  border-radius: var(--radius-large);
+  overflow: hidden;
+  box-shadow: var(--shadow-large);
+  margin: 3rem 0;
+  border: 1px solid rgba(107, 163, 195, 0.1);
+}
+
+.comparison-header {
+  background: var(--hero-gradient);
+  color: white;
+  padding: 2.5rem;
+  text-align: center;
+}
+
+.comparison-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border-bottom: 1px solid rgba(107, 163, 195, 0.1);
+}
+
+.comparison-cell {
+  padding: 1.5rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.comparison-cell.highlight {
+  background: rgba(232, 180, 180, 0.1);
+  font-weight: 600;
+  color: var(--conversion-coral);
+}
+
+/* Testimonials */
+.testimonial-card {
+  background: white;
+  border-radius: var(--radius-large);
+  padding: 2rem;
+  box-shadow: var(--shadow-medium);
+  margin: 1rem 0;
+  position: relative;
+  border-left: 4px solid var(--primary-blue);
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  margin-top: 1.5rem;
+}
+
+.testimonial-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 1rem;
+  background: var(--hero-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+}
+
+.testimonial-info h5 {
+  margin: 0;
+  font-weight: 600;
+  color: var(--primary-blue);
+}
+
+.testimonial-info p {
+  margin: 0;
+  color: var(--medium-gray);
+  font-size: 0.9rem;
+}
+
+/* Urgency Elements */
+.urgency-banner {
+  background: var(--conversion-coral);
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+}
+
+.urgency-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Floating Elements */
+.floating-cta {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Progress Indicators */
+.progress-conversion {
+  height: 6px;
+  background: rgba(107, 163, 195, 0.2);
+  border-radius: var(--radius-small);
+  overflow: hidden;
+  margin: 1rem 0;
+}
+
+.progress-conversion .progress-bar {
+  height: 100%;
+  background: var(--success-gradient);
+  border-radius: var(--radius-small);
+  transition: width 1s ease-out;
+}
+
+/* Notifications */
+.notification-popup {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  background: white;
+  border-radius: var(--radius-medium);
+  padding: 1rem 1.5rem;
+  box-shadow: var(--shadow-large);
+  border-left: 4px solid var(--accent-mint);
+  z-index: 1000;
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* Forms - Style Audelalia */
+.form-floating {
+  margin-bottom: 1.5rem;
+}
+
+.form-floating .form-control {
+  border: 2px solid rgba(107, 163, 195, 0.2);
+  border-radius: var(--radius-medium);
+  padding: 1.5rem 1rem 0.5rem;
+  font-size: 1rem;
+  transition: all var(--transition-normal);
+  background: white;
+}
+
+.form-floating .form-control:focus {
+  border-color: var(--primary-blue);
+  box-shadow: 0 0 0 3px rgba(107, 163, 195, 0.1);
+  outline: none;
+}
+
+.form-floating label {
+  color: var(--medium-gray);
+  font-weight: 500;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.2rem !important;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.1rem !important;
+  }
+  
+  .btn-conversion-primary {
+    font-size: 0.95rem !important;
+    padding: 12px 20px !important;
+  }
+  
+  .tutorial-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .comparison-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .floating-cta {
+    bottom: 1rem;
+    right: 1rem;
+  }
+  
+  .card-pastel {
+    padding: 1.5rem;
+  }
+}
+
+/* Micro-interactions */
+.hover-lift {
+  transition: all var(--transition-normal);
+}
+
+.hover-lift:hover {
+  transform: translateY(-3px);
+}
+
+.pulse-cta {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(232, 180, 180, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(232, 180, 180, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(232, 180, 180, 0); }
+}
+
+/* Scrollbar personnalisée */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--soft-gray);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary-blue);
+  border-radius: var(--radius-small);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--secondary-blue);
+}
+
+/* Badges et tags */
+.badge-pastel {
+  background: var(--accent-mint);
+  color: white;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-large);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.badge-pastel.premium {
+  background: var(--conversion-coral);
+}
+
+.badge-pastel.secondary {
+  background: var(--accent-lavender);
+}
+
+/* Sections avec fond */
+.section-pastel {
+  background: linear-gradient(135deg, var(--soft-gray) 0%, rgba(107, 163, 195, 0.05) 100%);
+  padding: 4rem 0;
+}
+
+/* Navigation override pour correspondre au style */
+.navbar {
+  box-shadow: 0 2px 10px rgba(107, 163, 195, 0.1) !important;
+  background-color: white !important;
+}
+
+.navbar-nav .nav-link {
+  color: var(--dark-gray) !important;
+  font-weight: 500 !important;
+  transition: all var(--transition-normal) !important;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link.active {
+  color: var(--primary-blue) !important;
+}
+
+/* Footer override */
+.footer {
+  background: var(--soft-gray) !important;
+  border-top: 4px solid var(--primary-blue);
+}

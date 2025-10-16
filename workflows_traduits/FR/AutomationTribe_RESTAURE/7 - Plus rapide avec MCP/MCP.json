@@ -1,0 +1,221 @@
+{
+  "name": "MCP",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -80,
+        0
+      ],
+      "id": "fc758aef-f4c0-4340-b549-8610c99f654d",
+      "name": "When chat message received",
+      "webhookId": "ce9ec18f-dbdd-46bb-b9ba-804017e757ec"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=You are an advanced AI assistant with access to multiple tools via Firecrawl and Brave Search MCP servers. Your goal is to dynamically select and execute the best tool based on the user’s request while ensuring all required parameters are correctly provided.\n\n## **1. Retrieve Available Tools**\n- Always **list the available tools** before selecting one to execute.\n- Select the tool that best matches the user’s query.\n\n---\n\n## **2. Tool Selection Logic**\n**### Brave Search MCP (For Web & Local Searches)**\n- If the query requires a **general web search**, use **brave_web_search**.\n- If the query requires finding a **local business or place**, use **brave_local_search**.\n\n**### Firecrawl MCP (For Web Scraping, Crawling, and Data Extraction)**\n- If the user requests to **scrape a single webpage**, use **firecrawl_scrape**.\n- If the user requests to **scrape multiple URLs**, use **firecrawl_batch_scrape**.\n- If the user wants to **discover and crawl an entire site**, use **firecrawl_crawl**.\n- If the user asks for a **search query with content extraction**, use **firecrawl_search**.\n- If the user needs to **extract structured data from a webpage using AI**, use **firecrawl_extract**.\n- If the user wants **in-depth research on a topic**, use **firecrawl_deep_research**.\n- If the user wants to **check the status of a batch scraping operation**, use **firecrawl_check_batch_status**.\n- If the user wants to **check the progress of an ongoing crawl**, use **firecrawl_check_crawl_status**.\n\n---\n\n## **3. Required Parameters for Each Tool**\nMake sure to pass only the necessary parameters based on the selected tool.\n\n**### Brave Search MCP**\n- `brave_web_search`: Requires **query** (e.g., `\"Latest AI news\"`).\n- `brave_local_search`: Requires **query** (e.g., `\"Best coffee shops near me\"`).\n\n**### Firecrawl MCP**\n- `firecrawl_scrape`: Requires **url**, **formats**, **onlyMainContent**, **timeout**.\n- `firecrawl_batch_scrape`: Requires **urls**, **options**.\n- `firecrawl_crawl`: Requires **url**, **maxDepth**, **limit**, **allowExternalLinks**.\n- `firecrawl_search`: Requires **query**, **limit**, **lang**, **country**.\n- `firecrawl_extract`: Requires **urls**, **prompt**, **schema**.\n- `firecrawl_deep_research`: Requires **query**.\n\n---\n\n## **4. Execution & Response Formatting**\n- **NEVER attempt to execute non-existent tools** like `\"firecrawl_scrape_page\"`.  \n- **Ensure that required parameters are always included** to prevent execution errors.  \n- **Structure responses clearly**, ensuring they provide the most relevant and concise results.  \n\n**Example Response Format:**\n```json\n{\n  \"tool_used\": \"firecrawl_scrape\",\n  \"query\": \"Scrape content from example.com\",\n  \"result\": {\n    \"title\": \"Example Website\",\n    \"content\": \"Here is the scraped content...\",\n    \"url\": \"https://example.com\"\n  }\n}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        292,
+        0
+      ],
+      "id": "b2f872e2-5fa8-4f12-a5d5-886ff1bd1773",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        80,
+        220
+      ],
+      "id": "6ef323b0-e661-4f8d-8608-1bcb56e4c527",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-mcp.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        260,
+        220
+      ],
+      "id": "33155e34-1137-4bea-98ca-e9a3df21015a",
+      "name": "Brave List Tools",
+      "credentials": {
+        "mcpClientApi": {
+          "id": "fPKMNEp8v8BxBY9L",
+          "name": "MCP Brave Search"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "executeTool",
+        "toolName": "={{$fromAI('tool', 'selected tool to execute') }}",
+        "toolParameters": "={{ $fromAI('Tool_Parameters', ``, 'json') }}"
+      },
+      "type": "n8n-nodes-mcp.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        400,
+        220
+      ],
+      "id": "f5b2aacd-7962-4a0d-b67c-af88b3287d43",
+      "name": "Brave Execute Tool",
+      "credentials": {
+        "mcpClientApi": {
+          "id": "fPKMNEp8v8BxBY9L",
+          "name": "MCP Brave Search"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-mcp.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        620,
+        220
+      ],
+      "id": "1edc6e3f-4df9-4e53-bc47-c1a9d4e9edb1",
+      "name": "Firecrawl List Tools",
+      "credentials": {
+        "mcpClientApi": {
+          "id": "Ro9eBiRL3Bd8RL9O",
+          "name": "MCP Firecrawl"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "{\n  \"url\": \"https://example.com\",\n  \"formats\": [\"markdown\"],\n  \"onlyMainContent\": true,\n  \"waitFor\": 1000,\n  \"timeout\": 30000,\n  \"mobile\": false\n}",
+        "operation": "executeTool",
+        "toolName": "={{$fromAI('tool', 'selected tool to execute') }}",
+        "toolParameters": "={{ $fromAI('Tool_Parameters', ``, 'json') }}"
+      },
+      "type": "n8n-nodes-mcp.mcpClientTool",
+      "typeVersion": 1,
+      "position": [
+        780,
+        220
+      ],
+      "id": "5e81b8dd-8c91-4955-b502-dfe439930d8c",
+      "name": "Firecrawl Execute Tool",
+      "credentials": {
+        "mcpClientApi": {
+          "id": "Ro9eBiRL3Bd8RL9O",
+          "name": "MCP Firecrawl"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Brave List Tools": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Brave Execute Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Firecrawl List Tools": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Firecrawl Execute Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "02f02c11-2c0c-4f44-98b1-4a0947691560",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+  },
+  "id": "d4Is4yzGIrtvcNyC",
+  "tags": []
+}

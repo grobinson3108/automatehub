@@ -1,0 +1,966 @@
+{
+  "meta": {
+    "instanceId": "26ba763460b97c249b82942b23b6384876dfeb9327513332e743c5f6219c2b8e"
+  },
+  "nodes": [
+    {
+      "id": "192d3e4f-6bb0-4b87-a1fa-e32c9efb49cc",
+      "name": "Lors du clic sur \"Tester le workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        336,
+        34
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "32a7a772-76a6-4614-a6ab-d2b152a5811f",
+      "name": "Modèle de Chat OpenAI1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1220,
+        180
+      ],
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {
+          "temperature": 0
+        }
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "8gccIjcuf3gvaoEr",
+          "name": "OpenAi account"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "8c444314-ed7d-4ca0-b0fa-b6d1e964c698",
+      "name": "Obtenir les lignes applicables",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        516,
+        34
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appbgxPBurOmQK3E7",
+          "cachedResultUrl": "https://airtable.com/appbgxPBurOmQK3E7",
+          "cachedResultName": "Building Inventory Survey Example"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "id",
+          "value": "tblEHkoTvKpa4Aa0Q"
+        },
+        "options": {},
+        "operation": "search",
+        "returnAll": false,
+        "filterByFormula": "AND(Image!=\"\", AI_status=FALSE())"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Und0frCQ6SNVX3VV",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "f90578fa-b886-4653-8ff7-0c91884dc517",
+      "name": "Exécuter le déclencheur du workflow",
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "position": [
+        1257,
+        733
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "8f5959eb-45bd-4185-a959-10268827e41d",
+      "name": "Modifier les champs",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1417,
+        733
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7263764b-8409-4cea-8db3-3278dd7ef9d8",
+              "name": "=route",
+              "type": "string",
+              "value": "={{ $json.route }}"
+            },
+            {
+              "id": "55c3b207-2e98-4137-8413-f72cbff17986",
+              "name": "query",
+              "type": "string",
+              "value": "={{ $json.query }}"
+            },
+            {
+              "id": "6eb873de-3c3a-4135-9dc0-1d441c63647c",
+              "name": "",
+              "type": "string",
+              "value": ""
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.3
+    },
+    {
+      "id": "2c7f7274-12e9-4dd3-8ee4-679b408d5430",
+      "name": "Réponse de secours",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1580,
+        875
+      ],
+      "parameters": {
+        "mode": "raw",
+        "options": {},
+        "jsonOutput": "{\n  \"response\": {\n    \"ok\": false,\n    \"error\": \"The requested tool was not found or the service may be unavailable. Do not retry.\"\n  }\n}\n"
+      },
+      "typeVersion": 3.3
+    },
+    {
+      "id": "09f36f4d-eb88-4d93-a8b3-e9ba66b46b54",
+      "name": "API SERP Google Recherche d'Image Inversée",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1860,
+        549
+      ],
+      "parameters": {
+        "url": "https://serpapi.com/search.json",
+        "options": {},
+        "sendQuery": true,
+        "authentication": "predefinedCredentialType",
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "engine",
+              "value": "google_reverse_image"
+            },
+            {
+              "name": "image_url",
+              "value": "={{ $json.query }}"
+            }
+          ]
+        },
+        "nodeCredentialType": "serpApi"
+      },
+      "credentials": {
+        "serpApi": {
+          "id": "aJCKjxx6U3K7ydDe",
+          "name": "SerpAPI account"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "8e3a0f38-8663-4f5c-837f-4b9aa21f14fb",
+      "name": "Réponse de la recherche d'image inversée",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2037,
+        547
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "de99a504-713f-4c78-8679-08139b2def31",
+              "name": "response",
+              "type": "string",
+              "value": "={{ JSON.stringify($json.image_results.map(x => ({ position: x.position, title: x.title, link: x.link, description: x.snippet }))) }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.3
+    },
+    {
+      "id": "0cd2269a-5b1f-4f10-b180-7f9cff9b1102",
+      "name": "Outil de recherche d'image inversée",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        1300,
+        340
+      ],
+      "parameters": {
+        "name": "reverse_image_search",
+        "fields": {
+          "values": [
+            {
+              "name": "route",
+              "stringValue": "serp.google_reverse_image"
+            }
+          ]
+        },
+        "workflowId": "={{ $workflow.id }}",
+        "description": "Appelez cet outil pour effectuer une recherche d'image inversée. Les recherches d'image inversée retournent des URLs où des produits similaires existent. Récupérez les URLs retournées pour obtenir plus d'informations. Cet outil nécessite le corps de requête objet suivant.\n```\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"image_url\": { \"type\": \"string\" },\n   }\n}\n```\nimage_url doit être une URL absolue vers l'image."
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "9825651e-b382-4e0a-97ef-37764cb5be9e",
+      "name": "API de Grattage Firecrawl",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1860,
+        889
+      ],
+      "parameters": {
+        "url": "https://api.firecrawl.dev/v0/scrape",
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "sendHeaders": true,
+        "authentication": "genericCredentialType",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $json.query }}"
+            }
+          ]
+        },
+        "genericAuthType": "httpHeaderAuth",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "OUOnyTkL9vHZNorB",
+          "name": "Firecrawl API"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "7f61d60b-b052-4b7c-abfd-9eb8e05a45a2",
+      "name": "Grattage réussi ?",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        2020,
+        889
+      ],
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "a15a164f-d0c5-478f-8b27-f3d51746c214",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              },
+              "leftValue": "={{ $json.success }}",
+              "rightValue": ""
+            }
+          ]
+        }
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "29c65ef4-6350-490a-b8e3-a5c869e656b2",
+      "name": "Réponse de succès du grattage Firecrawl",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2180,
+        889
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7db5c81f-de90-40e1-8086-3f13d40451c7",
+              "name": "response",
+              "type": "string",
+              "value": "={{ $json.data.markdown.substring(0, 3000) }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.3
+    },
+    {
+      "id": "229b4008-d8a8-4609-854a-fc244a4ed630",
+      "name": "Réponse d'erreur du grattage Firecrawl",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        2180,
+        1049
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e691d86a-d366-44a2-baa6-3dba42527f6e",
+              "name": "response",
+              "type": "string",
+              "value": "{ error: \"Unable to scrape website due to unknown error. Do not retry.\" }"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.3
+    },
+    {
+      "id": "f080069b-e849-45e0-88cf-03707d22c704",
+      "name": "Outil de grattage web Firecrawl",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        1440,
+        340
+      ],
+      "parameters": {
+        "name": "webpage_url_scraper_tool",
+        "fields": {
+          "values": [
+            {
+              "name": "route",
+              "stringValue": "firecrawl.scrape"
+            }
+          ]
+        },
+        "workflowId": "={{ $workflow.id }}",
+        "description": "Appelez cet outil pour récupérer le contenu d'une page à partir d'une URL.\n```\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"url\": { \"type\": \"string\" },\n   }\n}\n```\nurl doit être une URL absolue."
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "4eff88bb-bd5e-4d6a-b5e1-8521632c461f",
+      "name": "Analyseur de sortie structurée",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        1500,
+        180
+      ],
+      "parameters": {
+        "jsonSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"title\": { \"type\": \"string\" },\n    \"description\": { \"type\": \"string\" },\n    \"model\": { \"type\": \"string\" },\n    \"material\": { \"type\": \"string\" },\n    \"color\": { \"type\": \"string\" },\n    \"condition\": { \"type\": \"string\" }\n  }\n}"
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "328d106b-a473-4f54-82fd-55c30d813da9",
+      "name": "Note autocollante",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        280,
+        -260
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 402.5984702109446,
+        "height": 495.4071184783251,
+        "content": "## 1. Utilisez Airtable pour capturer les photos de l'enquête\n[En savoir plus sur AirTable](https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.airtable)\n\nPour activer ce workflow, nous avons besoin d'une base de données où nous pouvons récupérer le titre et la photo à analyser et écrire les valeurs générées en retour. Airtable est parfait pour cela car il dispose d'une API robuste avec laquelle nous pouvons travailler.\n\nPour cette démonstration, nous déclencherons manuellement mais cela peut être modifié pour des formulaires ou d'autres déclencheurs."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "e358775d-ff83-411d-9364-b43c87d98134",
+      "name": "Note autocollante1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        716.3106363781314,
+        -160
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 359.40869874940336,
+        "height": 428.4787925736586,
+        "content": "## 2. Utilisez un modèle de vision IA pour analyser la photo.\n[En savoir plus sur OpenAI Vision](https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-langchain.openai)\n\nNous utiliserons le modèle de vision OpenAi pour créer une description détaillée du produit sur la photo. Nous séparons cette étape de l'agent car elle utilise un modèle d'image plutôt que le modèle habituel basé sur le texte."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "51b4a70c-9583-4e8a-8e8d-896a80ad53c3",
+      "name": "Note autocollante2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1111.3914848823072,
+        -293.9250474768817
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 593.0683948010671,
+        "height": 803.956942672397,
+        "content": "## 3. Construisez un agent IA qui recherche sur Internet\n[En savoir plus sur OpenAI Agents](https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-langchain.openai)\n\nCet agent IA a la capacité d'effectuer des recherches inversées d'images en utilisant nos photos capturées ainsi que de visiter des pages web externes afin d'obtenir des noms de produits et des attributs précis. L'agent, avec les outils, pourrait imiter ce qu'un utilisateur humain moyen ferait pour accomplir la même tâche.\n\n* Pour la recherche inversée d'images, nous utilisons le service SERP API cependant nous n'utiliserons pas le nœud SERP intégré car nous devons spécifier des paramètres personnalisés.\n* Pour le scraping, nous utiliserons [Firecrawl](https://www.firecrawl.dev/) car ce service aide également à analyser et retourner la page en markdown, ce qui est plus efficace."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "adfb519b-a5c7-432c-be32-5acfcc388b49",
+      "name": "Note autocollante3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1740,
+        -149.28190375244515
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 373.3601237414979,
+        "height": 397.7168664109706,
+        "content": "## 4. Écrasez nos lignes avec les résultats enrichis\n\nEt voilà ! Notre agent IA a potentiellement économisé des heures de travail de saisie manuelle pour notre enquêteur. Cette technique peut être utilisée pour de nombreux autres cas d'utilisation."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "6444e217-b944-450e-892a-5822d4d390ce",
+      "name": "Note autocollante4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1200,
+        549
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 554.6092633638649,
+        "height": 490.7010880746526,
+        "content": "## 5. Utilisation de l'Outil de Workflow Personnalisé\n[En savoir plus sur les Outils de Workflow](https://docs.n8n.io/integrations/builtin/cluster-nodes/sub-nodes/n8n-nodes-langchain.toolworkflow)\n\nLes Agents IA s'appuient sur des Outils pour prendre des décisions et deviennent exponentiellement plus puissants plus ils disposent d'outils. Un schéma courant pour gérer plusieurs outils est de créer un système de routage pour les outils en utilisant le modèle API."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "bf2459cf-a931-4232-9504-b36b15721194",
+      "name": "Enrichir les Lignes de Produit",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        1880,
+        60
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appbgxPBurOmQK3E7",
+          "cachedResultUrl": "https://airtable.com/appbgxPBurOmQK3E7",
+          "cachedResultName": "Building Inventory Survey Example"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "id",
+          "value": "tblEHkoTvKpa4Aa0Q"
+        },
+        "columns": {
+          "value": {
+            "id": "={{ $('Get Applicable Rows').item.json.id }}",
+            "Color": "={{ $json.output.output.color }}",
+            "Model": "={{ $json.output.output.model }}",
+            "Title": "={{ $json.output.output.title }}",
+            "Material": "={{ $json.output.output.material }}",
+            "AI_status": true,
+            "Condition": "={{ $json.output.output.condition }}",
+            "Description": "={{ $json.output.output.description }}"
+          },
+          "schema": [
+            {
+              "id": "id",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": true,
+              "required": false,
+              "displayName": "id",
+              "defaultMatch": true
+            },
+            {
+              "id": "Title",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Title",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Image",
+              "type": "array",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Image",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Description",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Description",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Model",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Model",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Material",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Material",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Color",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Color",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Condition",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Condition",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "AI_status",
+              "type": "boolean",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "AI_status",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "id"
+          ]
+        },
+        "options": {},
+        "operation": "update"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Und0frCQ6SNVX3VV",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "19d736bf-c29d-46a2-93bc-b536ff28c4b5",
+      "name": "Note Autocollante6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -100,
+        -260
+      ],
+      "parameters": {
+        "width": 359.6648027457353,
+        "height": 381.0536322713287,
+        "content": "## Essayez-le !\n### Ce workflow fait ce qui suit :\n* Analyse une feuille de calcul Airtable pour les lignes contenant des images de photos de produits.\n* Utilise un modèle de vision IA pour tenter d'identifier le produit.\n* Utilise un Agent IA pour rechercher le produit sur internet afin d'enrichir les données du produit.\n* Écrase notre feuille de calcul Airtable avec les données enrichies.\n\n### Besoin d'aide ?\nRejoignez le [Discord](https://discord.com/invite/XPKeKXeB7d) ou posez votre question dans le [Forum](https://community.n8n.io/) !\n\nBon hacking !"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "25f15c48-16bf-4f92-942d-c224ed88d208",
+      "name": "Analyser l'Image",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        840,
+        80
+      ],
+      "parameters": {
+        "text": "=Concentrez-vous sur le {{ $json.Title }} dans l'image - nous appellerons cela « l'objet ». Identifiez les attributs suivants de l'objet. Si vous ne pouvez pas déterminer avec certitude, laissez vide et passez à l'attribut suivant.\n* Description de l'objet.\n* Le modèle/la marque de l'objet.\n* Le(s) matériau(x) utilisé(s) dans la construction de l'objet.\n* La/les couleur(s) de l'objet.\n* L'état de l'objet. Utilisez l'un des termes suivant : mauvais, bon, excellent.\n",
+        "options": {},
+        "resource": "image",
+        "imageUrls": "={{ $json.Image[0].thumbnails.large.url }}",
+        "operation": "analyze"
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "8gccIjcuf3gvaoEr",
+          "name": "OpenAi account"
+        }
+      },
+      "typeVersion": 1.3
+    },
+    {
+      "id": "e6c99f71-ccc9-426e-b916-cc38864e3224",
+      "name": "Agent d'Identification d'Objet",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1260,
+        20
+      ],
+      "parameters": {
+        "text": "=system: Votre rôle est d'aider un expert en diagnostic immobilier à réaliser une tâche de classification d'objets et de collecte de données où l'expert prendra des photos de divers objets et votre travail est d'essayer d'identifier avec précision certains attributs produits des objets comme détaillé ci-dessous.\n\nL'expert vous a fourni les éléments suivants :\n1) URL de la photo ```{{ $('Get Applicable Rows').item.json.Image[0].thumbnails.large.url }}```.\n2) description de la photo ```{{ $json.content }}```.\n\nPour chaque attribut produit que l'expert ne peut pas déterminer, vous pouvez :\n1) utiliser l'outil de recherche d'image inversée pour rechercher le produit sur internet via l'URL de l'image fournie.\n2) utiliser l'outil de scraping web pour lire des pages web sur internet qui pourraient être pertinentes pour le produit.\n3) Si après avoir utilisé ces outils, vous êtes toujours incapable de déterminer les attributs produits requis, laissez les données vides.\n\nUtilisez toutes les informations fournies et recueillies pour extraire les attributs produits suivants : titre, description, modèle, matériau, couleur et état.",
+        "agent": "openAiFunctionsAgent",
+        "options": {},
+        "promptType": "define",
+        "hasOutputParser": true
+      },
+      "typeVersion": 1.5
+    },
+    {
+      "id": "661b14bd-6511-4f20-981c-2e68a7c34ec5",
+      "name": "Routeur d'Actions",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        1577,
+        733
+      ],
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "outputKey": "serp.google_reverse_image",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $json.route }}",
+                    "rightValue": "serp.google_reverse_image"
+                  }
+                ]
+              },
+              "renameOutput": true
+            },
+            {
+              "outputKey": "firecrawl.scrape",
+              "conditions": {
+                "options": {
+                  "leftValue": "",
+                  "caseSensitive": true,
+                  "typeValidation": "strict"
+                },
+                "combinator": "and",
+                "conditions": [
+                  {
+                    "id": "0a1f54ae-39f1-468d-ba6e-1376d13e4ee8",
+                    "operator": {
+                      "name": "filter.operator.equals",
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "leftValue": "={{ $json.route }}",
+                    "rightValue": "firecrawl.scrape"
+                  }
+                ]
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "typeVersion": 3
+    },
+    {
+      "id": "c5078221-9239-4ec0-b25e-7cd880b58216",
+      "name": "Note Autocollante5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        480,
+        20
+      ],
+      "parameters": {
+        "width": 181.2788838920522,
+        "height": 297.0159375852115,
+        "content": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n🚨**Obligatoire**\n* Définissez ici les IDs de Base et de Table Airtable."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "c58c0db4-9b99-4a77-90ae-66fa3981b684",
+      "name": "Note Autocollante7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1840,
+        40
+      ],
+      "parameters": {
+        "width": 181.2788838920522,
+        "height": 297.0159375852115,
+        "content": "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n🚨**Requis**\n* Définissez ici les IDs de la Base et de la Table Airtable."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "e3a666d7-d7a5-43f5-8f04-7972332f8916",
+      "name": "Note Autocollante8",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1780,
+        440
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 460.3301604548244,
+        "height": 298.81538450684064,
+        "content": "## 5.1 Outil de Recherche d'Image Inversée Google\nCet outil utilise l'API de recherche d'image inversée de Google pour retourner les sites web où des images similaires sont trouvées."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "d7407cdb-16bb-4bd9-a28e-7a72a5289354",
+      "name": "Note Autocollante9",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1780,
+        769.9385328672522
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 575.3216480295998,
+        "height": 463.34699288922565,
+        "content": "## 5.2 Outil de Webscraping\nCet outil utilise l'API Firecrawl.dev pour explorer les pages web et retourne ces pages au format markdown."
+      },
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Modifier les champs": {
+      "main": [
+        [
+          {
+            "node": "Routeur d'Actions",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyser l'Image": {
+      "main": [
+        [
+          {
+            "node": "Agent d'Identification d'Objet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Routeur d'Actions": {
+      "main": [
+        [
+          {
+            "node": "API SERP Google Recherche d'Image Inversée",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "API de Grattage Firecrawl",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Réponse de secours",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Grattage réussi ?": {
+      "main": [
+        [
+          {
+            "node": "Réponse de succès du grattage Firecrawl",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Réponse d'erreur du grattage Firecrawl",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modèle de Chat OpenAI1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent d'Identification d'Objet",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir les lignes applicables": {
+      "main": [
+        [
+          {
+            "node": "Analyser l'Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API de Grattage Firecrawl": {
+      "main": [
+        [
+          {
+            "node": "Grattage réussi ?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent d'Identification d'Objet": {
+      "main": [
+        [
+          {
+            "node": "Enrichir les Lignes de Produit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exécuter le déclencheur du workflow": {
+      "main": [
+        [
+          {
+            "node": "Modifier les champs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyseur de sortie structurée": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Agent d'Identification d'Objet",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outil de grattage web Firecrawl": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent d'Identification d'Objet",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outil de recherche d'image inversée": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent d'Identification d'Objet",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API SERP Google Recherche d'Image Inversée": {
+      "main": [
+        [
+          {
+            "node": "Réponse de la recherche d'image inversée",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lors du clic sur \"Tester le workflow\"": {
+      "main": [
+        [
+          {
+            "node": "Obtenir les lignes applicables",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+Démarrage de Content Extractor (Laravel) sur le port 5682...
+INFO:__main__:Connexion à la base de données réussie
+INFO:__main__:Content Extractor API (Laravel) démarré sur le port 5682
+INFO:__main__:127.0.0.1 - "GET /health HTTP/1.1" 200 -
+INFO:__main__:127.0.0.1 - "POST /youtube HTTP/1.1" 400 -
+Terminated

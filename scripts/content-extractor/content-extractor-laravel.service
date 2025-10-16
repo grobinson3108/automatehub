@@ -1,0 +1,23 @@
+[Unit]
+Description=Content Extractor API Service (Laravel Integration)
+After=network.target mysql.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/automatehub/scripts/content-extractor
+Environment="PATH=/var/www/automatehub/scripts/content-extractor/env/bin:/usr/local/bin:/usr/bin:/bin"
+Environment="PORT=5682"
+Environment="DB_HOST=localhost"
+Environment="DB_USERNAME=automatehub"
+Environment="DB_PASSWORD="
+Environment="DB_DATABASE=automatehub"
+ExecStart=/var/www/automatehub/scripts/content-extractor/env/bin/python /var/www/automatehub/scripts/content-extractor/api-server-laravel.py
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,1042 @@
+{
+  "meta": {
+    "instanceId": "408f9fb9940c3cb18ffdef0e0150fe342d6e655c3a9fac21f0f644e8bedabcd9"
+  },
+  "nodes": [
+    {
+      "id": "10565888-4a1b-439a-a188-c6ee7990bb63",
+      "name": "Extraire du fichier",
+      "type": "n8n-nodes-base.extractFromFile",
+      "position": [
+        860,
+        260
+      ],
+      "parameters": {
+        "options": {},
+        "operation": "pdf",
+        "binaryPropertyName": "File_Upload"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "583aff4b-d9f5-44e7-8e91-4938592b5630",
+      "name": "Modèle de chat OpenAI1",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1740,
+        380
+      ],
+      "parameters": {
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "8gccIjcuf3gvaoEr",
+          "name": "OpenAi account"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "3a09afd0-0dce-41fd-bec3-783fcb3d01fc",
+      "name": "Analyseur de sortie structurée",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        1920,
+        380
+      ],
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"Name\": { \"type\": \"string\" },\n    \"Address\": { \"type\": \"string\" },\n    \"Email\": { \"type\": \"string\" },\n    \"Telephone\": { \"type\": \"string\" },\n    \"Education\": { \"type\": \"string\" },\n    \"Skills & Technologies\": { \"type\": \"string\" },\n    \"Years of Experience\": { \"type\": \"string\" },\n    \"Cover Letter\": { \"type\": \"string\" }\n  }\n}"
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "541a00d0-1635-48ad-b69e-83b28e178d6e",
+      "name": "Modèle de chat OpenAI2",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1020,
+        420
+      ],
+      "parameters": {
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "8gccIjcuf3gvaoEr",
+          "name": "OpenAi account"
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "19e4ad5b-2f96-491c-bcb3-52cca526ff82",
+      "name": "Étape 1 sur 2 - Télécharger le CV",
+      "type": "n8n-nodes-base.formTrigger",
+      "position": [
+        460,
+        220
+      ],
+      "webhookId": "4cf0f3b7-6282-47af-a7f1-3dfb00a1311d",
+      "parameters": {
+        "options": {
+          "path": "job-application-step1of2",
+          "ignoreBots": true,
+          "buttonLabel": "Submit",
+          "useWorkflowTimezone": true
+        },
+        "formTitle": "Step 1 of 2: Submit Your CV",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "placeholder": "Eg. Sam Smith",
+              "requiredField": true
+            },
+            {
+              "fieldType": "file",
+              "fieldLabel": "File Upload",
+              "multipleFiles": false,
+              "requiredField": true,
+              "acceptFileTypes": "pdf"
+            },
+            {
+              "fieldType": "dropdown",
+              "fieldLabel": "Acknowledgement of Terms",
+              "multiselect": true,
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "I agree to the terms & conditions"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "formDescription": "Thank you for your interest in applying for Acme Inc. To ensure a speedy process, please ensure you following all instructions and fill out all required inputs.\n\nThis step requires you upload your CV in a password-free PDF document. Any document that is not a CV will be rejected."
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "ec54096b-5f9f-444e-87b1-db99197731f1",
+      "name": "Enregistrer dans Airtable",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        2340,
+        320
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appQ6mE9KSzlvaGDT",
+          "cachedResultUrl": "https://airtable.com/appQ6mE9KSzlvaGDT",
+          "cachedResultName": "Job Applications with AI & Forms"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "tblUwwRXGnNzesNgr",
+          "cachedResultUrl": "https://airtable.com/appQ6mE9KSzlvaGDT/tblUwwRXGnNzesNgr",
+          "cachedResultName": "Table 1"
+        },
+        "columns": {
+          "value": {
+            "Name": "={{ $json.output.Name }}",
+            "Email": "={{ $json.output.Email }}",
+            "Address": "={{ $json.output.Address }}",
+            "Education": "={{ $json.output.Education }}",
+            "Telephone": "={{ $json.output.Telephone }}",
+            "Cover Letter": "={{ $json.output['Cover Letter'] }}",
+            "Submitted By": "={{ $('Step 1 of 2 - Upload CV').first().json.Name }}",
+            "Years of Experience": "={{ $json.output['Years of Experience'] }}",
+            "Skills & Technologies": "={{ $json.output['Skills & Technologies'] }}"
+          },
+          "schema": [
+            {
+              "id": "Name",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "File",
+              "type": "array",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "File",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Cover Letter",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Cover Letter",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Address",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Address",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Email",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Telephone",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Telephone",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Education",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Education",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Skills & Technologies",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Skills & Technologies",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Years of Experience",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Years of Experience",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Created",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Modified",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Last Modified",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Submitted By",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Submitted By",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": []
+        },
+        "options": {},
+        "operation": "create"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Und0frCQ6SNVX3VV",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "127965b3-a2c6-443b-942d-8691b5bcb25d",
+      "name": "Classer le document",
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "position": [
+        1020,
+        260
+      ],
+      "parameters": {
+        "options": {
+          "fallback": "other"
+        },
+        "inputText": "={{ $json.text }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "CV or Resume",
+              "description": "This document is a CV or Resume"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "b82476c8-b285-467f-b344-e1f667f42479",
+      "name": "Télécharger le fichier dans l'enregistrement",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        2540,
+        320
+      ],
+      "parameters": {
+        "url": "=https://content.airtable.com/v0/{{ $('Save to Airtable').params.base.value }}/{{ $json.id }}/File/uploadAttachment",
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "authentication": "predefinedCredentialType",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "contentType",
+              "value": "application/pdf"
+            },
+            {
+              "name": "filename",
+              "value": "={{ $workflow.id }}-{{ $execution.id }}.pdf"
+            },
+            {
+              "name": "file",
+              "value": "={{ $('Step 1 of 2 - Upload CV').first().binary.File_Upload.data }}"
+            }
+          ]
+        },
+        "nodeCredentialType": "airtableTokenApi"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Und0frCQ6SNVX3VV",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "ee6f59ee-781f-4ed4-8cec-b7de70a82dac",
+      "name": "Succès du formulaire",
+      "type": "n8n-nodes-base.form",
+      "position": [
+        3900,
+        320
+      ],
+      "webhookId": "4b154ccc-ad54-4cc2-a239-cf8354fc91bf",
+      "parameters": {
+        "options": {},
+        "operation": "completion",
+        "completionTitle": "Application Success",
+        "completionMessage": "Thank you for completing the application process.\nYour informaion is filed securely and will be reviewed by our team.\n\nWe will be in touch shortly."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "43d46474-b9f8-4adf-89f8-d4c993641448",
+      "name": "Enregistrer dans Airtable1",
+      "type": "n8n-nodes-base.airtable",
+      "onError": "continueErrorOutput",
+      "position": [
+        3720,
+        320
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appQ6mE9KSzlvaGDT",
+          "cachedResultUrl": "https://airtable.com/appQ6mE9KSzlvaGDT",
+          "cachedResultName": "Job Applications with AI & Forms"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "tblUwwRXGnNzesNgr",
+          "cachedResultUrl": "https://airtable.com/appQ6mE9KSzlvaGDT/tblUwwRXGnNzesNgr",
+          "cachedResultName": "Table 1"
+        },
+        "columns": {
+          "value": {
+            "Name": "={{ $json.Name }}",
+            "Email": "={{ $json.Email }}",
+            "Address": "={{ $json.Address }}",
+            "Education": "={{ $json.Education }}",
+            "Telephone": "={{ $json.Telephone }}",
+            "Cover Letter": "={{ $json.output['Cover Letter'] }}",
+            "Years of Experience": "={{ $json['Years of Experience'] }}",
+            "Skills & Technologies": "={{ $json['Skills & Technologies'] }}"
+          },
+          "schema": [
+            {
+              "id": "Name",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Name",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "File",
+              "type": "array",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "File",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Cover Letter",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Cover Letter",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Address",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Address",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Email",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Telephone",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Telephone",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Education",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Education",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Skills & Technologies",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Skills & Technologies",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Years of Experience",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Years of Experience",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Created",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Created",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Last Modified",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": true,
+              "required": false,
+              "displayName": "Last Modified",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Submitted By",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "Submitted By",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [
+            "Email",
+            "Name"
+          ]
+        },
+        "options": {},
+        "operation": "update"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "Und0frCQ6SNVX3VV",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "38115307-824c-4354-917c-b18e93178f87",
+      "name": "Étape 2 sur 2 - Formulaire de candidature",
+      "type": "n8n-nodes-base.formTrigger",
+      "position": [
+        3520,
+        320
+      ],
+      "webhookId": "db923d6c-ea24-4679-b4ba-d3b142ef8338",
+      "parameters": {
+        "options": {
+          "path": "job-application-step2of2",
+          "ignoreBots": true,
+          "useWorkflowTimezone": true
+        },
+        "formTitle": "Step 2 of 2: Application Form",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Name",
+              "placeholder": "Eg. Sam Smith",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Address",
+              "requiredField": true
+            },
+            {
+              "fieldType": "email",
+              "fieldLabel": "Email",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Telephone",
+              "requiredField": true
+            },
+            {
+              "fieldType": "textarea",
+              "fieldLabel": "Education",
+              "requiredField": true
+            },
+            {
+              "fieldType": "textarea",
+              "fieldLabel": "Skills & Technologies",
+              "requiredField": true
+            },
+            {
+              "fieldType": "textarea",
+              "fieldLabel": "Years of Experience",
+              "requiredField": true
+            },
+            {
+              "fieldType": "textarea",
+              "fieldLabel": "Cover Letter",
+              "requiredField": true
+            },
+            {
+              "fieldType": "dropdown",
+              "fieldLabel": "Acknowledgement of Terms",
+              "multiselect": true,
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "I agree to consent to the terms and conditions"
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        },
+        "formDescription": "This application form prefills using the CV you submitted. Please make any amendments as required and once satisfied, please submit the form to complete the application process."
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "1171540b-ebb2-41cb-b9f1-2da335caaece",
+      "name": "Note autocollante",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        300,
+        20
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 430,
+        "height": 381,
+        "content": "## 1. Formulaire de candidature pour télécharger le CV\n[En savoir plus sur le nœud Form Trigger](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.formtrigger/)\n\nNotre processus de candidature commence par un simple téléchargement de fichier pour obtenir le CV du candidat pour traitement."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "4791901b-31a6-44c3-a1da-9c32b78cf305",
+      "name": "Note autocollante1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        760,
+        17.5
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 774,
+        "height": 593,
+        "content": "## 2. Classificateur de Documents et Formulaire de Nouvelle Soumission\n[En savoir plus sur le Classificateur de Texte](https://docs.n8n.io/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.text-classifier/)\n\nLa validation du formulaire reste une étape cruciale et avant l’introduction des LLM, classifier les types de documents était un processus relativement fastidieux. Aujourd’hui, le nœud classificateur de texte de n8n fait un excellent travail dans cette tâche.\n\nLa validation contextuelle alimentée par l’IA signifie que les CV des candidats invalides, incomplets ou mal créés peuvent être rejetés comme contrôle qualité. Lorsque cela se produit dans notre workflow, nous présentons à nouveau à l’utilisateur le formulaire de téléchargement de fichier pour réessayer."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "4dc1a316-15b7-4568-9910-79b4a7989dcb",
+      "name": "Note Autocollante2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1560,
+        -20
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 648,
+        "height": 584,
+        "content": "## 3. Pré-remplissage Intelligent des Candidatures avec Contexte du Poste\n[En savoir plus sur le nœud Basic LLM](https://docs.n8n.io/integrations/builtin/cluster-nodes/root-nodes/n8n-nodes-langchain.chainllm)\n\nL’extraction d’informations est une étape logique une fois que nous avons le contenu de notre PDF, mais nous pouvons aller plus loin en extrayant uniquement les données pertinentes pour notre offre d’emploi. Cela garantit que les informations extraites sont toujours pertinentes, ce qui fait gagner du temps à l’équipe de recrutement.\n\nPour réaliser cela dans cette démo, j’ai inclus l’offre d’emploi dans l’invite pour que le LLM puisse comparer le CV. Cela fournit à l’IA suffisamment de contexte pour accomplir la tâche avec succès."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "76006a7b-32ce-4606-be98-9a7b7b451215",
+      "name": "Agent d’Aptitude à la Candidature",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        1740,
+        220
+      ],
+      "parameters": {
+        "text": "=Voici le CV du candidat :\n{{ $json.text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Extraire les informations du CV du candidat qui sont pertinentes pour l'offre d'emploi.\nLors de la rédaction de la lettre de motivation, n'utilisez pas plus de quelques paragraphes. Il n'est pas nécessaire de s'adresser à l'entreprise ou au personnel de recrutement car ce texte sera saisi dans un formulaire en ligne.\nUtilisez un ton formel et professionnel.\nVoici l'offre d'emploi à laquelle la lettre de motivation doit répondre :\n\n```\nOffre d'emploi : Directeur Général des Opérations – Industrie Manufacturière\nType de poste : Temps plein\nNiveau d'expérience : Intermédiaire à Senior\n\nÀ propos de nous :  \nNous sommes une entreprise de fabrication avant-gardiste engagée dans l'innovation, la qualité et la durabilité. Nous nous efforçons d'améliorer les opérations, d'améliorer la qualité des produits et de mettre en œuvre des pratiques écologiques, favorisant un environnement de travail productif et collaboratif.\n\nDescription du poste :\nNous recherchons un Directeur Général des Opérations expérimenté et dynamique pour diriger et optimiser nos processus de fabrication. Le candidat retenu supervisera la production, améliorera l'efficacité et mettra en œuvre des stratégies efficaces pour soutenir notre mission. Ce poste est idéal pour un professionnel chevronné ayant une solide expérience en gestion opérationnelle et un talent pour l'amélioration des processus.\n\nResponsabilités clés :\n\nSuperviser et gérer les équipes de production et de vente sur plusieurs équipes, assurant un fonctionnement fluide 24h/24 et 6j/7.  \nDévelopper et mettre en œuvre des mesures de contrôle qualité et de responsabilité rentables pour maintenir des normes de fabrication élevées.  \nGérer les stocks et les achats, en planifiant stratégiquement les achats de matières premières pour maximiser l'efficacité des coûts.  \nDiriger les mises à niveau du système ERP ou des projets similaires de transformation numérique, en garantissant une exécution dans les délais et respectueuse du budget.  \nOptimiser le contrôle du crédit et les conditions de paiement pour améliorer la trésorerie tout en maintenant les relations clients.  \nPromouvoir des pratiques durables, y compris l'intégration de matériaux recyclés dans les processus de production.  \nQualifications :\n\nLicence en administration des affaires ou dans un domaine connexe ; un Master en économie financière est un plus.\nExpérience avérée dans un rôle de leadership au sein de l'industrie manufacturière.\nExpertise dans la gestion d'équipes, des cycles de production et de l'assurance qualité.\nMaîtrise des systèmes ERP et des logiciels tels que Stata, Bloomberg Professional et Thomson Reuters DataStream.\nSolides compétences analytiques, de prise de décision et d'organisation.\nFamiliarité avec les marchés financiers, le capital-investissement ou le conseil en gestion stratégique est un plus.\nCompétences préférées :\n\nConnaissance avancée de la fabrication des plastiques, y compris les applications du polyéthylène et du polypropylène.\nExpérience dans la mise en œuvre d’initiatives de durabilité et de pratiques commerciales écologiques.\nExcellentes compétences en communication, avec un historique de collaboration et de renforcement d’équipe.\nCe que nous offrons :\n\nSalaire compétitif et package d'avantages sociaux.\nOpportunités de croissance et de développement professionnel.\nUn environnement de travail collaboratif et innovant.\nComment postuler :\nVeuillez envoyer votre CV et une lettre de motivation mettant en avant votre expérience et vos réalisations à [HR Email]. Les candidatures seront examinées au fur et à mesure.\n\nRejoignez-nous et stimulez l'excellence opérationnelle dans la fabrication !\n```"
+            }
+          ]
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      },
+      "typeVersion": 1.5
+    },
+    {
+      "id": "cfc6a1a1-d42c-49b1-a93b-4a04e7e88521",
+      "name": "Note Autocollante3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2240,
+        40
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 528,
+        "height": 524,
+        "content": "## 4. Enregistrer dans le Système de Suivi des Candidatures\n[En savoir plus sur le nœud Airtable](https://docs.n8n.io/integrations/builtin/app-nodes/n8n-nodes-base.airtable/)\n\nEnsuite, nous pouvons compléter notre capture simple de données en intégrant et en poussant les données vers notre Système de Suivi des Candidatures.\n\nIci, nous utilisons Airtable car nous pouvons également stocker des fichiers PDF dans nos lignes.\n\nVoir notre exemple Airtable ici : [https://airtable.com/appQ6mE9KSzlvaGDT/shrIivfe9qH6YEYAs](https://airtable.com/appQ6mE9KSzlvaGDT/shrIivfe9qH6YEYAs)"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "8f21067f-a851-4480-84b8-bb37eddfd7d6",
+      "name": "Note Autocollante4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2780,
+        40
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 575.8190139534884,
+        "height": 524,
+        "content": "## 5. Redirection vers le Formulaire de Candidature\n[En savoir plus sur la Fin de Formulaire](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.form/#form-ending)\n\nEnfin, pour compléter le flux du formulaire pour l’étape 1 sur 2, nous utiliserons un nœud de fin de formulaire pour rediriger l’utilisateur vers l’étape 2 sur 2.\n\nIci, nous utilisons des paramètres de requête dans notre redirection car cela pré-remplira les champs du formulaire à l’étape 2 sur 2."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "2ba9cea6-173f-45be-bdda-a6ef061d91f5",
+      "name": "Note Autocollante5",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3380,
+        40
+      ],
+      "parameters": {
+        "color": 7,
+        "width": 788,
+        "height": 524,
+        "content": "## 6. Formulaire de candidature pour modifier les détails\n[En savoir plus sur les Formulaires](https://docs.n8n.io/integrations/builtin/core-nodes/n8n-nodes-base.form)\n\nDans la deuxième partie du processus de candidature, les candidats se voient présenter un formulaire contenant plusieurs champs à remplir. Cette étape a souvent été source de frustration pour beaucoup, car ils finissent par dupliquer des informations déjà présentes dans leur CV.\n\nSi notre redirection avec des données préremplies fonctionne comme prévu, ce problème sera résolu, car les champs seront automatiquement remplis par notre LLM lors de l’étape 1 sur 2. Cela permet également aux candidats de revoir et d’affiner les champs de la candidature avant de soumettre."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "5add63c3-19d4-4035-a718-b1c125a03c67",
+      "name": "Nouvelle tentative de téléchargement de fichier",
+      "type": "n8n-nodes-base.form",
+      "position": [
+        1340,
+        380
+      ],
+      "webhookId": "c3e8dc74-c6e0-4d0b-acf3-8bbc2f7c9ae2",
+      "parameters": {
+        "options": {
+          "formTitle": "Please upload a CV",
+          "formDescription": "Unfortunately, we were unable to process your previous file upload.\n\nTo continue, you must upload a valid CV in PDF format. "
+        },
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "file",
+              "fieldLabel": "File Upload",
+              "multipleFiles": false,
+              "requiredField": true,
+              "acceptFileTypes": "pdf"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "cc27b37f-26f5-47c3-9ac2-4412352070e5",
+      "name": "Rediriger vers l’étape 2 sur 2",
+      "type": "n8n-nodes-base.form",
+      "position": [
+        3120,
+        280
+      ],
+      "webhookId": "1b6e2375-e21d-4e4f-a44e-3ef0de95320e",
+      "parameters": {
+        "operation": "completion",
+        "redirectUrl": "=https://<HOST>/form/job-application-step2of2?{{ $('Application Suitability Agent').first().json.output.urlEncode() }}",
+        "respondWith": "redirect"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "1cba63a9-57cb-4e17-a601-2bd64fb50dbf",
+      "name": "Note adhésive6",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -140,
+        -240
+      ],
+      "parameters": {
+        "width": 420,
+        "height": 640,
+        "content": "## Essayez-le !\n\n### Ce modèle n8n combine le téléchargement de fichiers via formulaire avec des composants IA pour créer un flux simple mais efficace de soumission de candidature.\nC'est une solution économique parfaite, sans fioritures apparentes, mais très avancée grâce à son utilisation de l'IA.\n\n### Comment ça fonctionne\n* Le processus de soumission de candidature commence par un déclencheur de formulaire n8n pour accepter les fichiers CV au format PDF.\n* Le PDF est validé à l'aide du nœud classificateur de texte pour déterminer s'il s'agit d'un CV valide.\n* Un nœud LLM basique est utilisé pour extraire les informations pertinentes du CV en tant que capture de données. Une copie de l'offre d'emploi originale est incluse pour garantir la pertinence.\n* Les données du candidat sont ensuite envoyées à un ATS pour traitement. Pour notre démonstration, nous avons utilisé airtable car nous pouvions y joindre des PDF aux lignes.\n* Enfin, un second déclencheur de formulaire est utilisé pour permettre au candidat de modifier l'un des champs générés de la candidature.\n\n### Besoin d’aide ?\nRejoignez le [Discord](https://discord.com/invite/XPKeKXeB7d) ou posez votre question dans le [Forum](https://community.n8n.io/) !\n\nBon hacking !\n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "4289f9f2-2286-4bc7-9045-c645ff292341",
+      "name": "Note adhésive7",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3060,
+        460
+      ],
+      "parameters": {
+        "height": 120,
+        "content": "### 🚨 Changez l’URL de base ici !\nCette redirection nécessite l’URL de base complète, changez-la pour l’hôte de votre instance n8n."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "fca5b2ab-291f-4ac3-b4e1-13911666359f",
+      "name": "Soumission réussie",
+      "type": "n8n-nodes-base.form",
+      "position": [
+        2900,
+        280
+      ],
+      "webhookId": "f3b12dd4-dd5d-47a9-8bc1-727ba7eb5d15",
+      "parameters": {
+        "options": {
+          "formTitle": "CV Submission Successful!",
+          "buttonLabel": "Continue",
+          "formDescription": "We'll now redirect you to step 2 of 2 - our Application form. Please note, some fields will be prefilled with information from your CV. Feel free to amend this information as needed."
+        },
+        "formFields": {
+          "values": [
+            {
+              "fieldType": "dropdown",
+              "fieldLabel": "Acknowledgement",
+              "multiselect": true,
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "I understand my CV will be held soley for purpose of application and for no more than 90 days."
+                  }
+                ]
+              },
+              "requiredField": true
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Enregistrer dans Airtable": {
+      "main": [
+        [
+          {
+            "node": "Télécharger le fichier dans l'enregistrement",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Classer le document": {
+      "main": [
+        [
+          {
+            "node": "Agent d’Aptitude à la Candidature",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Nouvelle tentative de téléchargement de fichier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraire du fichier": {
+      "main": [
+        [
+          {
+            "node": "Classer le document",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nouvelle tentative de téléchargement de fichier": {
+      "main": [
+        [
+          {
+            "node": "Extraire du fichier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Enregistrer dans Airtable1": {
+      "main": [
+        [
+          {
+            "node": "Succès du formulaire",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Succès du formulaire",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modèle de chat OpenAI1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent d’Aptitude à la Candidature",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modèle de chat OpenAI2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Classer le document",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Soumission réussie": {
+      "main": [
+        [
+          {
+            "node": "Rediriger vers l’étape 2 sur 2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Télécharger le fichier dans l'enregistrement": {
+      "main": [
+        [
+          {
+            "node": "Soumission réussie",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Étape 1 sur 2 - Télécharger le CV": {
+      "main": [
+        [
+          {
+            "node": "Extraire du fichier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyseur de sortie structurée": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Agent d’Aptitude à la Candidature",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent d’Aptitude à la Candidature": {
+      "main": [
+        [
+          {
+            "node": "Enregistrer dans Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Étape 2 sur 2 - Formulaire de candidature": {
+      "main": [
+        [
+          {
+            "node": "Enregistrer dans Airtable1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

@@ -1,0 +1,461 @@
+{
+  "id": "wi2ZWKN9XPR0jkvn",
+  "meta": {
+    "instanceId": "a5283507e1917a33cc3ae615b2e7d5ad2c1e50955e6f831272ddd5ab816f3fb6",
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Insights OpenSea propulsés par l'IA via Telegram",
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "0b6ec133-7023-4c6a-ae53-78168211545c",
+      "name": "Lorsqu'un message de chat est reçu",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        840,
+        140
+      ],
+      "webhookId": "befa3e52-7b57-4832-9f88-b2c430244595",
+      "parameters": {
+        "options": {}
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "787a9e8d-e67d-4947-90d1-8e3284de7b39",
+      "name": "Déclencheur Telegram",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        840,
+        -160
+      ],
+      "webhookId": "f9267d32-3860-4f02-99b3-493c4cac36ed",
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "R3vpGq0SURbvEw2Z",
+          "name": "Telegram account"
+        }
+      },
+      "typeVersion": 1.1
+    },
+    {
+      "id": "2e10802a-48d7-4b82-afe0-b9e5f93498bf",
+      "name": "Ajoute SessionId",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1160,
+        -160
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b5c25cd4-226b-4778-863f-79b13b4a5202",
+              "name": "sessionId",
+              "type": "string",
+              "value": "={{ $json.message.chat.id }}"
+            }
+          ]
+        },
+        "includeOtherFields": true
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "8dd2dcdd-7cd5-4381-b1a5-66a2b6a69111",
+      "name": "Cerveau Superviseur Opensea",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        1380,
+        160
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "yUizd8t0sD5wMYVG",
+          "name": "OpenAi account"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "b2b59481-afbb-4cb6-98b7-c26bf51ead76",
+      "name": "Mémoire Superviseur Opensea",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        1580,
+        160
+      ],
+      "parameters": {},
+      "typeVersion": 1.3
+    },
+    {
+      "id": "52dde53b-cb42-4ae2-b573-d9356d7ec3f3",
+      "name": "Outil Agent d'Analyse OpenSea",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        1760,
+        160
+      ],
+      "parameters": {
+        "name": "OpenSea_Analytics_Agent_Tool",
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "yRMCUm6oJEMknhbw",
+          "cachedResultName": "JayaFamily Assistant — OpenSea Analytics Agent Tool"
+        },
+        "workflowInputs": {
+          "value": {
+            "message": "={{ $fromAI(\"message\",\"Populate this with a relevant message to this subagent\")}}",
+            "sessionId": "={{ $json.sessionId }}"
+          },
+          "schema": [
+            {
+              "id": "message",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "message",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sessionId",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "sessionId",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "596517b1-4f1e-4285-b8ee-cdf8108c4138",
+      "name": "Outil Agent NFT OpenSea",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        1940,
+        160
+      ],
+      "parameters": {
+        "name": "OpenSea_NFT_Agent_Tool",
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "ZBH1ExE58wsoodkZ",
+          "cachedResultName": "JayaFamily Assistant — OpenSea NFT Agent Tool"
+        },
+        "workflowInputs": {
+          "value": {
+            "message": "={{ $fromAI(\"message\",\"Populate this with a relevant message to this subagent\")}}",
+            "sessionId": "={{ $json.sessionId }}"
+          },
+          "schema": [
+            {
+              "id": "message",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "message",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sessionId",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "sessionId",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "643c5c81-ba21-4afa-9c78-70cd6cde08f7",
+      "name": "Outil Agent Marché OpenSea",
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "position": [
+        2120,
+        160
+      ],
+      "parameters": {
+        "name": "OpenSea_Marketplace_Agent_Tool",
+        "workflowId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "brRSLvIkYp3mLq0K",
+          "cachedResultName": "JayaFamily Assistant — OpenSea Marketplace Agent Tool"
+        },
+        "workflowInputs": {
+          "value": {
+            "message": "={{ $fromAI(\"message\",\"Populate this with a relevant message to this subagent\")}}",
+            "sessionId": "={{ $json.sessionId }}"
+          },
+          "schema": [
+            {
+              "id": "message",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "message",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "sessionId",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "required": false,
+              "displayName": "sessionId",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "069cb9bc-96a4-4539-b7c5-b06d29968ec6",
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        2080,
+        -120
+      ],
+      "webhookId": "9841771a-821a-4a40-a9e8-fb8a29eaa9f3",
+      "parameters": {
+        "text": "={{ $json.output }}",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "credentials": {
+        "telegramApi": {
+          "id": "R3vpGq0SURbvEw2Z",
+          "name": "Telegram account"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "cc852b55-0214-4276-9c2f-755d9cb3fc28",
+      "name": "Agent d'Insights OpenSea propulsé par l'IA",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        1600,
+        -120
+      ],
+      "parameters": {
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "**🌍 Rôle & Capacités**  \nL'**Agent d'Insights IA d'OpenSea** est un **analyste de données IA avancé** avec un **accès complet à l'API d'OpenSea**, capable d'exécuter des **requêtes multi-étapes, l'agrégation de données et des recherches approfondies** sur les tendances du marché NFT, le suivi des actifs et les analyses de trading en temps réel.\n\nIl exploite **trois outils d'agent puissants** pour fournir des **informations exploitables et une intelligence décisionnelle** :  \n1. **Agent Marketplace** – Récupère les **listings, commandes, offres et données de tarification basées sur les caractéristiques**.  \n2. **Agent Analytics** – Récupère les **statistiques des collections NFT, historiques des transactions et analyses de marché**.  \n3. **Agent NFT** – Collecte les **métadonnées détaillées, informations de propriété et données des tokens de paiement**.\n\n🧠 **Ce système d'IA peut traiter plusieurs outils simultanément, effectuer des recherches entre différents ensembles de données, et synthétiser des réponses puissantes aux requêtes des utilisateurs.**  \n\n---\n\n## **🛠 Informations exploitables & requêtes multi-étapes**\nL'agent peut **combiner** plusieurs outils, traiter les données collectées, et exécuter des recherches approfondies pour des **réponses plus intelligentes**.\n\n🔹 **Comment cela fonctionne** :\n- 🏛 **Comparer plusieurs collections** _(par exemple, prix plancher, volume des ventes)_  \n- 🎯 **Suivre les tendances de flipping NFT** _(par exemple, quels portefeuilles achètent/vendent le plus)_  \n- 🔥 **Identifier les NFTs sous-évalués** _(par exemple, annonces en dessous de la valeur moyenne des attributs)_  \n- 📊 **Agréguer les données de ventes dans le temps** _(par exemple, tendances des collections sur 7 jours vs 30 jours)_  \n- 👥 **Analyser les mouvements des whales** _(par exemple, suivre les achats importants de NFTs)_  \n- 💡 **Prédire les changements du marché** _(par exemple, pics soudains dans les offres d'achat)_\n\n📢 **Exemples de requêtes d'action :**  \n- _« Trouve-moi les 5 NFT Azuki les plus sous-évalués selon les ventes récentes. »_  \n- _« Compare le volume d'échanges des 3 derniers mois entre Moonbirds et CloneX. »_  \n- _« Suis tous les portefeuilles qui ont récemment vendu un NFT Bored Ape Yacht Club. »_  \n- _« Liste les 10 portefeuilles ayant effectué le plus d'achats de NFT cette semaine. »_  \n\n---\n\n## **🚀 Outils disponibles & utilisation appropriée**\n\n### **1️⃣ Outils d'Agent Marketplace (Commandes, Listes et Offres)**\nFournit des **données de marketplace en temps réel** pour les **NFTs, collections et attributs**.  \n\n🔹 **Comment utiliser correctement ces outils** :\n- Toujours saisir **un slug de collection OpenSea valide** (trouvé dans les URLs OpenSea).  \n- S'assurer que les **noms des blockchains** correspondent aux chaînes supportées par OpenSea.  \n- Utiliser la **pagination (`next` cursor)** pour les grands ensembles de données.\n\n| **Outil**                        | **Description** |\n|----------------------------------|----------------|\n| 🛒 **Obtenir toutes les annonces (par collection)**  | Récupère toutes les annonces actives pour une collection. |\n| 💰 **Obtenir toutes les offres (par collection)**  | Récupère toutes les offres valides pour une collection. |\n| 🔎 **Obtenir la meilleure annonce (par NFT)**  | Trouve l'annonce active la **moins chère** pour un NFT spécifique. |\n| 🏆 **Obtenir les meilleures annonces (par collection)** | Récupère les annonces actives les **moins chères** pour une collection entière. |\n| 💲 **Obtenir la meilleure offre (par NFT)** | Trouve l'offre la **plus élevée** pour un NFT spécifique. |\n| 🏷 **Obtenir les offres de la collection** | Récupère toutes les offres actives **à l'échelle de la collection**. |\n| 🎯 **Obtenir les offres d'articles** | Récupère les offres **individuelles**, excluant les offres basées sur des critères. |\n| 📋 **Obtenir les annonces (par chaîne & protocole)** | Liste toutes les commandes actives filtrées par blockchain et protocole. |\n| 🔗 **Obtenir la commande (par hash)** | Récupère les détails d'une **commande spécifique** en utilisant son hash. |\n| 🎨 **Obtenir les offres par trait** | Récupère **toutes les offres basées sur des traits** dans une collection. |\n\n✅ **Notes critiques pour les requêtes sur le Marketplace** :  \n1. **Utilisez uniquement les chaînes supportées par OpenSea** _(voir la liste complète ci-dessous)_.  \n2. `\"polygon\"` n'est **pas autorisé** – utilisez `\"matic\"` à la place.  \n3. **Seaport est le seul protocole supporté** pour les requêtes liées aux ordres.  \n4. **Adresse fixe du protocole** pour Get Order :  \n   - `0x0000000000000068f116a894984e2db1123eb395`  \n5. **Pagination** : Utilisez le paramètre `next` pour les grands ensembles de données.  \n\n---\n\n### **2️⃣ Outils d'Agent d'Analyse (Aperçus du Marché & Transactions)**\nFournit une **analyse historique et en temps réel** sur les collections NFT, les transactions des utilisateurs et les événements blockchain.  \n\n🔹 **Comment utiliser correctement ces outils** :\n- Spécifiez toujours **un slug de collection valide** ou **une adresse de portefeuille**.  \n- Filtrez les transactions par **blockchain, type d'événement et période**.  \n- Utilisez la **pagination** lors de la récupération de grands ensembles de données.\n\n| **Outil**                          | **Description** |\n|------------------------------------|----------------|\n| 📊 **Obtenir les statistiques de la collection** | Récupère la **capitalisation boursière, le prix plancher, le volume total et les ventes** d'une collection NFT. |\n| 🏷 **Obtenir les événements (toute l'activité du marché)** | Récupère **tous les événements NFT** incluant les ventes, transferts, mises en vente, offres et rachats. |\n| 👤 **Obtenir les événements (par compte)** | Liste **toutes les transactions liées aux NFT** pour une **adresse de portefeuille** spécifique. |\n| 🏛 **Obtenir les événements (par collection)** | Récupère toutes les transactions pour **une collection NFT entière**. |\n| 🎟 **Obtenir les événements (par NFT)** | Récupère **l'historique complet des transactions** d'un seul NFT. |\n\n✅ **Notes critiques pour les requêtes analytiques** :  \n1. Utilisez des **noms de blockchain valides** _(voir la liste ci-dessous)_ pour filtrer les résultats.  \n2. Définissez les **types d'événements** : _vente, transfert, mise en vente, offre, rachat_.  \n3. Utilisez les horodatages `before` et `after` _(format Unix)_ pour filtrer les données historiques.  \n4. **Pagination** : utilisez `next` pour les grands ensembles de données.  \n\n---\n\n### **3️⃣ Outils d'agent NFT (Métadonnées, Propriété et Contrats Intelligents)**  \nFournit des **détails approfondis** sur les NFT individuels, les collections et les tokens de paiement.\n\n🔹 **Comment utiliser correctement ces outils** :  \n- Assurez-vous que les **adresses de portefeuille et les adresses de contrat** sont **valides**.  \n- Pour les **métadonnées NFT**, fournissez **le nom de la blockchain + l'adresse du contrat + l'ID du token**.\n\n| **Outil**                        | **Description** |\n|----------------------------------|----------------|\n| 🔍 **Obtenir un compte** | Récupère les **détails du profil** d'un utilisateur OpenSea. |\n| 🏛 **Obtenir une collection** | Récupère les **métadonnées, frais et liens sociaux** d'une collection NFT. |\n| 📜 **Obtenir des collections** | Liste **toutes les collections NFT** avec des filtres optionnels (créateur, blockchain, etc.). |\n| 🏗 **Obtenir un contrat** | Récupère les **détails du contrat intelligent** pour une collection NFT. |\n| 🎭 **Obtenir un NFT** | Récupère les **métadonnées, traits, rareté et propriété** d'un NFT unique. |\n| 👥 **Obtenir des NFTs (par compte)** | Liste **tous les NFTs possédés** par une adresse de portefeuille donnée. |\n| 📦 **Obtenir des NFTs (par collection)** | Récupère **plusieurs NFTs** d'une collection spécifique. |\n| 🔗 **Obtenir des NFTs (par contrat)** | Liste tous les NFTs pour un **contrat intelligent donné**. |\n| 💵 **Obtenir un jeton de paiement** | Récupère les **détails d'un jeton de paiement ERC-20**. |\n| 🎨 **Obtenir des traits** | Liste **tous les traits disponibles** dans une collection. |\n\n✅ **Notes Critiques pour les Requêtes NFT** :  \n1. **Utilisez les noms corrects des blockchains** _(voir la liste complète ci-dessous)_.  \n2. Les **adresses de contrat** doivent être **valides** et exister sur OpenSea.  \n3. **L’ID du Token NFT est requis** pour récupérer les métadonnées.  \n4. **Pour les tokens de paiement, assurez-vous d’utiliser le nom correct de la blockchain.**  \n\n---\n\n## **🚀 Blockchains Supportées**  \nPour éviter les erreurs, **n’utilisez que les noms de blockchain suivants** :\n\n✅ **Chaînes valides pour les requêtes OpenSea** :\n- `amoy`\n- `ape_chain`\n- `ape_curtis`\n- `arbitrum`\n- `arbitrum_nova`\n- `arbitrum_sepolia`\n- `avalanche`\n- `avalanche_fuji`\n- `b3`\n- `b3_sepolia`\n- `baobab`\n- `base`\n- `base_sepolia`\n- `bera_chain`\n- `blast`\n- `blast_sepolia`\n- `ethereum`\n- `flow`\n- `flow_testnet`\n- `klaytn`\n- `matic` _(utilisez à la place de \"polygon\")_\n- `monad_testnet`\n- `mumbai`\n- `optimism`\n- `optimism_sepolia`\n- `sei_testnet`\n- `sepolia`\n- `shape`\n- `solana`\n- `soldev`\n- `soneium`\n- `soneium_minato`\n- `unichain`\n- `zora`\n- `zora_sepolia`\n\n❌ **N'utilisez PAS de noms de chaînes non pris en charge !**  \n\n---\n\n## **🛠 Comment fonctionne l'agent IA**\n1. **Comprend votre requête** et détermine l'outil API approprié.  \n2. **Exécute la requête API** avec des paramètres valides.  \n3. **Traite et structure les résultats** en **informations lisibles**.  \n4. **Combine plusieurs sources de données** pour des réponses basées sur la recherche.  \n5. **Permet des questions de suivi** pour des insights de marché plus approfondis.\n\n🎯 **Utilisez cette IA pour l'intelligence de marché, l'analyse des tendances et les stratégies d'investissement en NFT !** 🚀"
+        },
+        "promptType": "define"
+      },
+      "typeVersion": 1.8
+    },
+    {
+      "id": "087fad83-0a96-42f6-92b1-06685bfc13f4",
+      "name": "Note Autocollante",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -940,
+        -1380
+      ],
+      "parameters": {
+        "color": 2,
+        "width": 1320,
+        "height": 1780,
+        "content": "# Système d'Insights OpenSea Propulsé par l'IA (n8n) - Guide d'Intégration Complet\n\n## 🚀 Vue d'ensemble du système\nLe **Système d'Insights OpenSea Propulsé par l'IA** est un workflow n8n entièrement automatisé qui connecte plusieurs outils d'agents pour fournir des **insights en temps réel sur le marché des NFT via Telegram**. Ce système se compose de **quatre workflows interconnectés** :\n\n1. **OpenSea Insights alimentés par l'IA via Telegram** (Superviseur principal)  \n2. **Outil d'agent d'analyse OpenSea** (Tendances du marché et statistiques des collections)  \n3. **Outil d'agent du marché OpenSea** (Annonces en direct, offres et commandes)  \n4. **Outil d'agent NFT OpenSea** (Métadonnées, propriété et jetons de paiement)\n\nCes agents fonctionnent **en synchronisation** sous la **Supervision IA**, qui détermine l'agent ou les agents appropriés à utiliser en fonction des requêtes des utilisateurs. Les réponses sont structurées et renvoyées via **Telegram** pour des informations en temps réel.\n\n---\n\n## 🔗 **Architecture du Système**\n\n### **🔹 Workflow Principal : Insights OpenSea Propulsés par IA via Telegram**\n- Agit comme le **cerveau et centre de commande**.\n- Reçoit les requêtes depuis le **chat Telegram**.\n- Détermine quel(s) **agent(s)** doit/doivent traiter la demande.\n- Agrège et formate les résultats.\n- Envoie des réponses structurées à l’utilisateur Telegram.\n\n### **🔹 Outils Agents de Support**\nChaque **outil agent** est un workflow n8n distinct avec une fonction spécifique :\n\n1️⃣ **Agent d'Analyse OpenSea** → Récupère les **tendances du marché, l'historique des ventes, les données de transaction**.  \n2️⃣ **Agent du Marché OpenSea** → Récupère les **listes de NFT, les offres, les meilleurs prix et les détails des commandes**.  \n3️⃣ **Agent NFT OpenSea** → Récupère les **métadonnées des NFT, les enregistrements de propriété, les caractéristiques et les données des tokens de paiement**.\n\nL'**IA Superviseur (Workflow Telegram)** appelle ces workflows d'agents selon les besoins.\n\n---\n\n## 🛠 **Instructions d'Installation**\n\n### **1️⃣ Configuration du Superviseur Principal (Workflow Telegram)**\n1. **Créez un Bot Telegram** en utilisant [BotFather](https://t.me/botfather).\n2. **Copiez la clé API** et connectez-la au **nœud Déclencheur Telegram** de n8n.\n3. Configurez le **nœud Message de Chat Reçu** pour capturer les requêtes des utilisateurs.\n4. Configurez le **nœud ID de Session** pour suivre l’historique des conversations.\n5. Reliez le **Cerveau du Superviseur IA (GPT-4o Mini)** pour traiter les messages.\n6. Connectez-le aux **trois outils agents** en utilisant les **nœuds Workflow d’Outil**.\n7. Renvoyez la sortie vers Telegram en utilisant le **nœud Telegram**.\n\n✅ **Cette configuration permet l'interaction Telegram avec tous les agents OpenSea.**\n\n### **2️⃣ Configuration des outils de l'agent OpenSea**\nChaque outil d'agent doit être lié au workflow principal :\n\n**A. Agent d'analyse OpenSea**\n- Récupère les tendances du marché NFT et l'historique des transactions.\n- Nécessite **le slug de la collection, l'adresse du portefeuille ou les filtres de transaction**.\n\n**B. Agent du marché OpenSea**\n- Récupère les annonces, offres et commandes NFT.\n- Nécessite **le slug de la collection, l'ID du token ou le hash de la commande**.\n\n**C. Agent NFT OpenSea**\n- Récupère les métadonnées NFT, les caractéristiques et les données de propriété.\n- Nécessite **l'adresse du portefeuille, l'adresse du contrat ou l'ID du token**.\n\n### **3️⃣ Connexion des Agents au Workflow Principal**\nChaque **nœud de workflow d'outil** à l'intérieur du **workflow de supervision Telegram** doit être configuré pour transmettre la requête **à l'outil agent correct**.\n\nExemple :\n- L'utilisateur demande : **« Trouve l'annonce la moins chère pour Bored Ape #1234 »** → **L'Agent Marketplace est activé**.\n- L'utilisateur demande : **« Récupère tous les NFTs possédés par 0xABC... »** → **L'Agent NFT est activé**.\n- L'utilisateur demande : **« Compare le volume des ventes des 3 derniers mois d'Azuki et Moonbirds »** → **L'Agent Analytics est activé**.\n\n---"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "c9dd93eb-44bc-4825-a092-8a8b8e3b07bb",
+      "name": "Note autocollante1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        660,
+        -1380
+      ],
+      "parameters": {
+        "color": 5,
+        "width": 840,
+        "height": 1060,
+        "content": "## 🔄 **Flux de données et processus d'exécution**\n\n### **📩 Étape 1 : Réception d'une requête**\n1. L'utilisateur envoie une demande via Telegram.\n2. Le **Déclencheur Telegram** capture le message.\n3. Le **Nœud ID de session** attribue un identifiant de conversation.\n\n### **📊 Étape 2 : Traitement de la requête**\n4. Le **Cerveau superviseur IA** (GPT-4o Mini) interprète la demande.\n5. Il décide quel **outil agent** doit traiter la requête.\n\n### **🔗 Étape 3 : Activation de l’Outil Agent Correct**\n6. Le **nœud de workflow de l’outil approprié** est déclenché (Analytics, Marketplace, ou Agent NFT).\n7. L’**agent sélectionné traite la requête** et récupère les données depuis l’API d’OpenSea.\n\n### **📤 Étape 4 : Envoi de la Réponse**\n8. La réponse est structurée par le Superviseur IA.\n9. Le **nœud Telegram** envoie la réponse formatée à l’utilisateur.\n\n✅ **Cela garantit que tous les agents travaillent ensemble de manière fluide.**\n\n---\n\n## 🔥 **Exemples de Requêtes & Résultats Attendus**\n\n### **🛒 Requêtes sur la Marketplace OpenSea**\n| **Requête Utilisateur** | **Agent Utilisé** | **Réponse Attendue** |\n|--------------|--------------|----------------|\n| _« Montre-moi les 5 annonces les moins chères pour Azuki. »_ | Agent Marketplace | Liste des NFTs Azuki avec prix et liens. |\n| _« Quelle est la meilleure offre pour Bored Ape #4567 ? »_ | Agent Marketplace | Offre active la plus élevée avec infos sur l’acheteur. |\n| _« Récupère les détails de la commande 0x123abc... »_ | Agent Marketplace | Détail de la commande (prix, vendeur, expiration). |\n\n### **📊 Requêtes d'Analyse OpenSea**\n| **Requête Utilisateur** | **Agent Utilisé** | **Réponse Attendue** |\n|--------------|--------------|----------------|\n| _“Comparer le volume des ventes sur 7 jours de BAYC & MAYC.”_ | Agent d'Analyse | Graphique montrant les données de ventes. |\n| _“Lister toutes les transactions pour CloneX dans les dernières 24 heures.”_ | Agent d'Analyse | Tableau des ventes & transferts. |\n| _“Suivre tous les portefeuilles ayant vendu un Doodle la semaine dernière.”_ | Agent d'Analyse | Liste des portefeuilles & NFTs vendus. |\n\n### **🎭 Requêtes de métadonnées NFT OpenSea**\n| **Requête utilisateur** | **Agent utilisé** | **Réponse attendue** |\n|--------------|--------------|----------------|\n| _« Récupérer les métadonnées pour Cool Cat #7890. »_ | Agent NFT | Description du NFT, image et attributs. |\n| _« Quels NFTs 0x123... possède-t-il sur Ethereum ? »_ | Agent NFT | Liste des NFTs détenus par le portefeuille. |\n| _« Montre-moi tous les NFTs du contrat 0xABC... »_ | Agent NFT | Tous les tokens liés au contrat. |\n\n✅ **Cela démontre comment chaque agent fournit des informations uniques.**\n\n---"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "5f8504a0-283a-408e-9768-b4b90088e687",
+      "name": "Note autocollante2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1800,
+        -1380
+      ],
+      "parameters": {
+        "color": 3,
+        "width": 800,
+        "height": 720,
+        "content": "## ⚠️ **Notes Critiques de Configuration & Dépannage**\n\n🔹 **1. Assurez-vous des Identifiants API Corrects**  \n- Chaque agent doit être connecté à l’API d’OpenSea.  \n- Utilisez **l’Authentification par En-tête HTTP** avec une **Clé API**.\n\n🔹 **2. Vérifiez les Noms de Chaînes Invalides**  \n- ❌ `\"polygon\"` n’est **pas valide** → Utilisez `\"matic\"` à la place.  \n- ✅ **Seules les blockchains supportées doivent être utilisées**.\n\n🔹 **3. Maintenez le Suivi de Session**  \n- Assurez-vous que **sessionId** est correctement transmis entre les workflows.  \n- Cela évite la **perte de contexte** dans les requêtes multi-étapes.\n\n🔹 **4. Utilisez la Pagination pour les Grandes Bases de Données**  \n- Pour les requêtes retournant **plus de 100 résultats**, utilisez le paramètre `next`.\n\n---\n\n## 🚀 **Pensées Finales**  \nLe **Système d’Informations Propulsé par IA d’OpenSea** est conçu pour les **investisseurs, collectionneurs et analystes NFT** recherchant des **données de marché structurées en temps réel** via Telegram. En intégrant plusieurs outils agents, il offre une **méthode puissante et automatisée pour analyser les NFTs, les transactions et les tendances du marché**.\n\n**Besoin d’Aide ?**  \n🌐 Connectez-vous sur LinkedIn :  \n🔗 [http://linkedin.com/in/donjayamahajr](http://linkedin.com/in/donjayamahajr)\n"
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": false,
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "184b0a31-6aee-4b9b-adc5-ef06e6a3f3f0",
+  "connections": {
+    "Ajoute SessionId": {
+      "main": [
+        [
+          {
+            "node": "Agent d'Insights OpenSea propulsé par l'IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déclencheur Telegram": {
+      "main": [
+        [
+          {
+            "node": "Ajoute SessionId",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outil Agent NFT OpenSea": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent d'Insights OpenSea propulsé par l'IA",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cerveau Superviseur Opensea": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Agent d'Insights OpenSea propulsé par l'IA",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mémoire Superviseur Opensea": {
+      "ai_memory": [
+        [
+          {
+            "node": "Agent d'Insights OpenSea propulsé par l'IA",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lorsqu'un message de chat est reçu": {
+      "main": [
+        [
+          {
+            "node": "Agent d'Insights OpenSea propulsé par l'IA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outil Agent d'Analyse OpenSea": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent d'Insights OpenSea propulsé par l'IA",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Outil Agent Marché OpenSea": {
+      "ai_tool": [
+        [
+          {
+            "node": "Agent d'Insights OpenSea propulsé par l'IA",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agent d'Insights OpenSea propulsé par l'IA": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

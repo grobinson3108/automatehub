@@ -1,0 +1,75 @@
+{
+  "name": "Module 5.3 - Scan Carte de Visite Pro (Preview)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "preview-trigger-scan",
+      "name": "When clicking \"Test workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "content": "## 🔒 Workflow Premium - Scanner de Cartes de Visite IA\n\n### 📇 Le Scanner Ultime pour Professionnels\n\n**🚀 Fonctionnalités Révolutionnaires**\n\n1. **Scan Multi-Format**\n   - Photos smartphone (même floues!)\n   - Scans PDF\n   - Screenshots LinkedIn\n   - Photos de salons/événements\n\n2. **Extraction IA Avancée**\n   - Nom et prénom (même complexes)\n   - Entreprise et poste\n   - Tous les emails/téléphones\n   - Réseaux sociaux détectés\n   - Adresse complète géolocalisée\n\n3. **Enrichissement Automatique**\n   - Photo LinkedIn récupérée\n   - Infos entreprise (secteur, taille)\n   - Validation email en temps réel\n   - Score de qualité du contact\n\n4. **Intégrations CRM**\n   - HubSpot, Salesforce, Pipedrive\n   - Google Contacts synchronisé\n   - Webhooks personnalisés\n   - API REST complète\n\n5. **Automatisations Post-Scan**\n   - Email de bienvenue personnalisé\n   - Ajout LinkedIn automatique\n   - Séquence de nurturing\n   - Rappel de follow-up\n\n---\n\n### 📊 ROI Garanti\n\n- ⏱️ **30 secondes** vs 5 minutes manuel\n- 🎯 **99.2%** de précision\n- 📈 **+47%** de contacts convertis\n- 💰 **315€** économisés/mois (temps)\n\n[**Essayer maintenant →**](https://automatehub.fr/demo)",
+        "contentType": "markdown"
+      },
+      "id": "scan-preview-info",
+      "name": "Scanner Preview",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "example-001",
+              "name": "exemple_extraction",
+              "value": "={{ {\n  \"carte_originale\": \"Photo floue prise au salon\",\n  \"donnees_extraites\": {\n    \"nom\": \"Marie-Claire Dubois-Martin\",\n    \"entreprise\": \"TechCorp International\",\n    \"poste\": \"Directrice Innovation & Digital\",\n    \"email\": \"mc.dubois@techcorp.com\",\n    \"telephone\": \"+33 6 12 34 56 78\",\n    \"linkedin\": \"linkedin.com/in/mcdubois\",\n    \"adresse\": \"123 Avenue des Champs, 75008 Paris\"\n  },\n  \"enrichissement\": {\n    \"photo_linkedin\": \"✅ Trouvée\",\n    \"entreprise_info\": {\n      \"secteur\": \"Technologies\",\n      \"taille\": \"500-1000 employés\",\n      \"ca\": \"50-100M€\"\n    },\n    \"email_valide\": true,\n    \"score_qualite\": 9.5\n  },\n  \"actions_automatiques\": [\n    \"✅ Ajouté au CRM\",\n    \"✅ Email de bienvenue envoyé\",\n    \"✅ Invitation LinkedIn pending\",\n    \"✅ Rappel follow-up dans 3 jours\"\n  ]\n} }}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "scan-example",
+      "name": "Exemple Scan",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "content": "## 🎯 Workflow Complet\n\n```mermaid\ngraph TD\n    A[📷 Photo Carte] -->|Vision IA| B[Extraction Texte]\n    B -->|NLP| C[Structuration Données]\n    C -->|Validation| D[Enrichissement Web]\n    D -->|APIs| E[Photo + Infos Entreprise]\n    E -->|CRM| F[Contact Créé]\n    F -->|Automations| G[Email + LinkedIn + Rappel]\n```\n\n### 🏆 Cas Client Réel\n\n**Salon Tech Paris 2024**\n- 347 cartes scannées en 2 jours\n- 98% d'extraction correcte\n- 142 rendez-vous générés\n- ROI: 2,847%\n\n### 💎 Version Business Exclusive\n\n**Business (97€/mois)**\n- Scan illimité\n- Enrichissement premium\n- API dédiée haute vitesse\n- Formation équipe commerciale\n- Dashboard analytics\n- Export CRM en masse\n- Support prioritaire 24/7\n\n### 🎁 Bonus Premium\n\n- Application mobile dédiée\n- Mode batch (100 cartes/min)\n- Détection doublons IA\n- Templates emails sectoriels\n- Intégration calendrier",
+        "contentType": "markdown"
+      },
+      "id": "scan-workflow-demo",
+      "name": "Workflow Demo",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "When clicking \"Test workflow\"": {
+      "main": [[{"node": "Scanner Preview", "type": "main", "index": 0}]]
+    },
+    "Scanner Preview": {
+      "main": [[{"node": "Exemple Scan", "type": "main", "index": 0}]]
+    },
+    "Exemple Scan": {
+      "main": [[{"node": "Workflow Demo", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "description": "Preview du scanner de cartes de visite professionnel avec enrichissement IA."
+  },
+  "versionId": "1.0.0"
+}

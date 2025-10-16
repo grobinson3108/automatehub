@@ -1,0 +1,267 @@
+{
+  "name": "Module 3.2 - Email Marketing Automatisé",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24
+            }
+          ]
+        }
+      },
+      "id": "schedule-daily",
+      "name": "Tous les jours à 9h",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_CONTACTS_SHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Contacts",
+          "mode": "name"
+        },
+        "options": {}
+      },
+      "id": "get-contacts",
+      "name": "Récupérer contacts",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [450, 300],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "1",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "active-check",
+              "leftValue": "={{ $json.statut }}",
+              "rightValue": "actif",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "email-check",
+              "leftValue": "={{ $json.derniere_interaction }}",
+              "rightValue": "={{ $now.minus(30, 'days').toISO() }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "before"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-inactive",
+      "name": "Filtrer contacts inactifs",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "segment-001",
+              "name": "segment",
+              "value": "={{ \n  // Segmentation basée sur le comportement\n  const daysSinceInteraction = Math.floor(\n    ($now - new Date($json.derniere_interaction)) / (1000 * 60 * 60 * 24)\n  );\n  \n  if (daysSinceInteraction > 90) {\n    return 'réactivation';\n  } else if (daysSinceInteraction > 60) {\n    return 'engagement';\n  } else if (daysSinceInteraction > 30) {\n    return 'nurturing';\n  }\n  return 'actif';\n}}",
+              "type": "string"
+            },
+            {
+              "id": "campaign-001",
+              "name": "campagne",
+              "value": "={{ \n  const campaigns = {\n    'réactivation': {\n      'sujet': '{{ $json.prenom }}, nous vous manquez !',\n      'template': 'reactivation',\n      'discount': '20%'\n    },\n    'engagement': {\n      'sujet': 'Découvrez nos nouvelles fonctionnalités',\n      'template': 'features',\n      'discount': '10%'\n    },\n    'nurturing': {\n      'sujet': 'Votre guide exclusif n8n',\n      'template': 'education',\n      'discount': null\n    }\n  };\n  \n  campaigns[$json.segment];\n}}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "segment-contacts",
+      "name": "Segmenter contacts",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "model": "gpt-3.5-turbo",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Tu es un expert en email marketing. Crée des emails personnalisés et engageants pour AutomateHub, une plateforme de formation n8n."
+            },
+            {
+              "role": "user",
+              "content": "=Crée un email de {{ $json.campagne.template }} pour {{ $json.prenom }} {{ $json.nom }}.\n\nInformations:\n- Entreprise: {{ $json.entreprise }}\n- Dernière interaction: {{ $json.derniere_interaction }}\n- Intérêts: {{ $json.interets }}\n{{ $json.campagne.discount ? '- Offre spéciale: ' + $json.campagne.discount + ' de réduction' : '' }}\n\nLe ton doit être professionnel mais chaleureux."
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7
+        }
+      },
+      "id": "generate-content",
+      "name": "Générer contenu IA",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.2,
+      "position": [1050, 300],
+      "credentials": {
+        "openAiApi": {
+          "id": "1",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "={{ $json.campagne.sujet }}",
+        "emailType": "html",
+        "message": "={{ $node[\"Générer contenu IA\"].json.choices[0].message.content }}",
+        "options": {
+          "replyTo": "support@automatehub.fr"
+        }
+      },
+      "id": "send-campaign",
+      "name": "Envoyer campagne",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.2,
+      "position": [1250, 300],
+      "credentials": {
+        "smtp": {
+          "id": "1",
+          "name": "SMTP Account"
+        }
+      },
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.analytics.com/track",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "event",
+              "value": "email_sent"
+            },
+            {
+              "name": "contact_id",
+              "value": "={{ $json.id }}"
+            },
+            {
+              "name": "campaign",
+              "value": "={{ $json.campagne.template }}"
+            },
+            {
+              "name": "segment",
+              "value": "={{ $json.segment }}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $now.toISO() }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "track-analytics",
+      "name": "Tracker analytics",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1450, 300],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "Analytics API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "functionCode": "const stats = {\n  total: items.length,\n  segments: {},\n  success: 0,\n  failed: 0\n};\n\nitems.forEach(item => {\n  const segment = item.json.segment;\n  stats.segments[segment] = (stats.segments[segment] || 0) + 1;\n  \n  if (item.json.emailSent) {\n    stats.success++;\n  } else {\n    stats.failed++;\n  }\n});\n\nreturn [{\n  json: {\n    date: new Date().toISOString(),\n    stats: stats,\n    summary: `Campagne envoyée à ${stats.success} contacts sur ${stats.total}`\n  }\n}];"
+      },
+      "id": "calculate-stats",
+      "name": "Calculer statistiques",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 2,
+      "position": [1650, 300]
+    },
+    {
+      "parameters": {
+        "content": "## 📊 Rapport de Campagne Email\n\n**Date:** {{ $json.date }}\n\n### Résumé\n{{ $json.summary }}\n\n### Détails par segment\n{{ Object.entries($json.stats.segments).map(([segment, count]) => `- **${segment}:** ${count} contacts`).join('\\n') }}\n\n### Performance\n- ✅ Emails envoyés: {{ $json.stats.success }}\n- ❌ Échecs: {{ $json.stats.failed }}\n- 📈 Taux de succès: {{ Math.round(($json.stats.success / $json.stats.total) * 100) }}%",
+        "contentType": "markdown"
+      },
+      "id": "campaign-report",
+      "name": "Rapport campagne",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [1850, 300]
+    }
+  ],
+  "connections": {
+    "Tous les jours à 9h": {
+      "main": [[{"node": "Récupérer contacts", "type": "main", "index": 0}]]
+    },
+    "Récupérer contacts": {
+      "main": [[{"node": "Filtrer contacts inactifs", "type": "main", "index": 0}]]
+    },
+    "Filtrer contacts inactifs": {
+      "main": [[{"node": "Segmenter contacts", "type": "main", "index": 0}]]
+    },
+    "Segmenter contacts": {
+      "main": [[{"node": "Générer contenu IA", "type": "main", "index": 0}]]
+    },
+    "Générer contenu IA": {
+      "main": [[{"node": "Envoyer campagne", "type": "main", "index": 0}]]
+    },
+    "Envoyer campagne": {
+      "main": [[{"node": "Tracker analytics", "type": "main", "index": 0}]]
+    },
+    "Tracker analytics": {
+      "main": [[{"node": "Calculer statistiques", "type": "main", "index": 0}]]
+    },
+    "Calculer statistiques": {
+      "main": [[{"node": "Rapport campagne", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Système d'email marketing complet avec segmentation, personnalisation IA, tracking et rapports automatiques."
+  },
+  "versionId": "1.0.0"
+}

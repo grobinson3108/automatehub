@@ -1,0 +1,34 @@
+//
+// Audelalia Theme
+// --------------------------------------------------
+
+// Import theme variables
+@import '../variables-themes';
+
+// Override default variables with Audelalia theme
+$primary: $theme-audelalia-primary;
+$secondary: $theme-audelalia-dark;
+
+$body-bg: $theme-audelalia-body-bg;
+$body-color: $theme-audelalia-body-color;
+
+$link-color: $theme-audelalia-link-color;
+$link-hover-color: $theme-audelalia-link-hover-color;
+
+$input-btn-focus-color: $theme-audelalia-input-btn-focus-color;
+$input-btn-focus-box-shadow: $theme-audelalia-input-btn-focus-box-shadow;
+
+$input-bg: $theme-audelalia-input-bg;
+$input-color: $theme-audelalia-input-color;
+$input-border-color: $theme-audelalia-input-border-color;
+
+$input-focus-bg: $theme-audelalia-input-focus-bg;
+$input-focus-color: $theme-audelalia-input-focus-color;
+$input-focus-border-color: $theme-audelalia-input-focus-border-color;
+
+// OneUI specific variables
+$header-bg: $theme-audelalia-header-bg;
+$header-dark-bg: $theme-audelalia-header-dark-bg;
+$sidebar-bg: $theme-audelalia-sidebar-bg;
+$sidebar-dark-bg: $theme-audelalia-sidebar-dark-bg;
+$side-overlay-bg: $theme-audelalia-side-overlay-bg;

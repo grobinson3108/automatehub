@@ -1,0 +1,159 @@
+{
+  "name": "Publication Multi-Plateformes AutomateHub",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "videos/*",
+        "recursive": true,
+        "events": ["create"],
+        "interval": 60
+      },
+      "id": "ftp-watcher",
+      "name": "Surveiller Dossier FTP",
+      "type": "n8n-nodes-base.localFileTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.fileName}}",
+              "operation": "endsWith",
+              "value2": ".mp4"
+            }
+          ]
+        }
+      },
+      "id": "filter-video",
+      "name": "Filtrer Vidéos MP4",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "content": "## Transcription\n\nDeux options :\n1. Automatique via Whisper API\n2. Manuelle via fichier .txt avec même nom",
+        "height": 150,
+        "width": 250
+      },
+      "id": "note-transcription",
+      "name": "Note Transcription",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [650, 150]
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Tu es un expert en marketing digital spécialisé dans la promotion de formations n8n et automatisation. Tu dois créer des posts engageants pour différentes plateformes sociales qui donnent envie de rejoindre la communauté Skool AutomateHub. Chaque post doit être adapté au ton et format de la plateforme."
+            },
+            {
+              "role": "user",
+              "content": "Crée des posts pour promouvoir cette vidéo sur l'automatisation n8n.\n\nTitre vidéo: {{$json.videoTitle}}\nDescription: {{$json.videoDescription}}\nTranscription: {{$json.transcription}}\n\nGénère un post pour chaque plateforme:\n\n1. LinkedIn (professionnel, 150-300 mots)\n2. Facebook (convivial, 100-200 mots)\n3. Instagram (accrocheur avec emojis, 50-150 mots + hashtags)\n4. TikTok (jeune et dynamique, 50-100 mots + hashtags trends)\n\nChaque post doit:\n- Mettre en avant un bénéfice concret\n- Inclure un CTA vers la communauté Skool\n- Être adapté au ton de la plateforme\n- Utiliser des emojis appropriés"
+            }
+          ]
+        }
+      },
+      "id": "generate-posts",
+      "name": "Générer Posts Sociaux",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "content": "={{$json.choices[0].message.content}}",
+        "fileName": "posts-sociaux-{{$json.videoTitle}}.txt"
+      },
+      "id": "save-posts",
+      "name": "Sauvegarder Posts",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "channel": "#social-media",
+        "text": "🎬 Nouvelle vidéo détectée!\n\n**{{$json.videoTitle}}**\n\nLes posts pour toutes les plateformes sont prêts :\n✅ LinkedIn\n✅ Facebook\n✅ Instagram\n✅ TikTok\n\n📄 Fichier: {{$json.fileName}}\n🔗 Communauté Skool: https://skool.com/automatehub"
+      },
+      "id": "slack-notification",
+      "name": "Notification Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "content": "## Configuration Skool\n\nURL Communauté: https://skool.com/automatehub\n\nMessages CTA:\n- \"Rejoins +500 entrepreneurs qui automatisent\"\n- \"Accès gratuit aux 100 premiers workflows\"\n- \"Formation complète n8n inside\"",
+        "height": 200,
+        "width": 300
+      },
+      "id": "skool-config",
+      "name": "Config Skool",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [250, 500]
+    }
+  ],
+  "connections": {
+    "Surveiller Dossier FTP": {
+      "main": [
+        [
+          {
+            "node": "Filtrer Vidéos MP4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrer Vidéos MP4": {
+      "main": [
+        [
+          {
+            "node": "Générer Posts Sociaux",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Générer Posts Sociaux": {
+      "main": [
+        [
+          {
+            "node": "Sauvegarder Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sauvegarder Posts": {
+      "main": [
+        [
+          {
+            "node": "Notification Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-01-14T10:00:00.000Z",
+  "versionId": "1"
+}

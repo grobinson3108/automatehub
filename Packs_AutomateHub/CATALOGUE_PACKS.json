@@ -1,0 +1,77 @@
+{
+  "total_workflows": 6394,
+  "workflows_organized": 477,
+  "packs": [
+    {
+      "pack": "Pack_00_Decouverte_Gratuit",
+      "count": 10,
+      "prix": 0
+    },
+    {
+      "pack": "Pack_01_Marketing_ReseauxSociaux",
+      "count": 50,
+      "prix": 79
+    },
+    {
+      "pack": "Pack_02_Email_Communication",
+      "count": 40,
+      "prix": 69
+    },
+    {
+      "pack": "Pack_03_IA_ChatGPT_Automation",
+      "count": 75,
+      "prix": 149
+    },
+    {
+      "pack": "Pack_04_CRM_Ventes",
+      "count": 45,
+      "prix": 99
+    },
+    {
+      "pack": "Pack_05_Ecommerce_Shopify",
+      "count": 50,
+      "prix": 119
+    },
+    {
+      "pack": "Pack_06_Productivite_Organisation",
+      "count": 35,
+      "prix": 59
+    },
+    {
+      "pack": "Pack_07_Data_Analytics",
+      "count": 40,
+      "prix": 89
+    },
+    {
+      "pack": "Pack_08_Messagerie_Instantanee",
+      "count": 45,
+      "prix": 79
+    },
+    {
+      "pack": "Pack_09_Support_Client",
+      "count": 35,
+      "prix": 89
+    },
+    {
+      "pack": "Pack_10_API_Webhooks",
+      "count": 40,
+      "prix": 69
+    },
+    {
+      "pack": "Pack_11_RH_Recrutement",
+      "count": 6,
+      "prix": 99
+    },
+    {
+      "pack": "Pack_12_Finance_Comptabilite",
+      "count": 16,
+      "prix": 109
+    },
+    {
+      "pack": "Pack_99_Ultimate_Collection",
+      "count": 500,
+      "prix": 499
+    }
+  ],
+  "total_market_value": 295183
+}

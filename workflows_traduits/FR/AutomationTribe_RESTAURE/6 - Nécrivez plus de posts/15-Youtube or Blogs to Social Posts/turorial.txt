@@ -1,0 +1,28 @@
+How to Use This Automation
+
+This guide will help you set up an automated social media content generator using n8n, Airtable, OpenAI, and Dumpling AI. This workflow transforms YouTube videos and blog posts into social media posts for LinkedIn, Instagram, Twitter (X), and Facebook.
+
+Step 1: Import the Airtable Base
+	1.	Go to this Airtable link
+	
+	https://airtable.com/appyicvXaO5b9dQ5A/shrNFIPLXbegL9rt5
+	
+	2.	Click “Copy Base” to add it to your Airtable account.
+
+This base stores your video and blog URLs, generated posts, and automation triggers.
+
+Step 2: Import the Workflow into n8n
+	1.	Log into n8n and create a new workflow.
+	2.	Click the three dots in the top-right corner and select “Import from File.”
+	3.	Upload the JSON file from this tutorial.
+
+This workflow connects Airtable, OpenAI, and Dumpling AI to automate content creation.
+
+Step 3: Configure and Test
+	1.	Set up your credentials for Airtable, OpenAI, and Dumpling AI.
+	2.	Copy a YouTube or blog link, then paste it into the Airtable table.
+	3.	In n8n, run the workflow by clicking Test Workflow.
+
+The automation will extract content, generate platform-specific posts, and store them in Airtable for easy access.
+
+This setup lets you create social media content instantly, with no manual writing needed. If you have any questions, ask in the community.

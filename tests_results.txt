@@ -1,0 +1,66 @@
+PHPUnit 11.5.15 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.5
+Configuration: /var/www/automatehub/phpunit.xml
+
+
+   PASS  Tests\Feature\SystemHealthTest
+  ✓ homepage loads successfully                                          0.11s  
+  ✓ database connection works                                            0.01s  
+  ✓ essential tables exist                                               0.01s  
+  ✓ optimization commands exist                                          0.01s  
+  ✓ cache system works                                                   0.01s  
+  ✓ essential directories exist                                          0.01s  
+  ✓ essential config files exist                                         0.01s  
+  ✓ custom artisan commands work                                         0.06s  
+  ✓ performance configuration                                            0.01s  
+  ✓ system dashboard accessible                                          0.02s  
+  ✓ security middlewares active                                          0.01s  
+  ✓ legal pages exist                                                    0.01s  
+  ✓ cookie consent system                                                0.01s  
+
+   PASS  Tests\Feature\CommandsTest
+  ✓ backup monitor command                                               0.02s  
+  ✓ database optimize analyze command                                    0.02s  
+  ✓ logs clean dry run command                                           0.01s  
+  ✓ logs clean real command                                              0.02s  
+  ✓ database optimize force in production                                0.02s  
+  ✓ database optimize refuses production without force                   0.01s  
+  ✓ backup monitor with notifications                                    0.01s  
+  ✓ backup monitor with custom max age                                   0.01s  
+  ✓ commands help                                                        0.02s  
+  ✓ commands performance                                                 0.04s  
+
+  Tests:    23 passed (67 assertions)
+  Duration: 0.54s
+
+Time: 00:00.492, Memory: 62.50 MB
+
+Commands (Tests\Feature\Commands)
+ ✔ Backup monitor command
+ ✔ Database optimize analyze command
+ ✔ Logs clean dry run command
+ ✔ Logs clean real command
+ ✔ Database optimize force in production
+ ✔ Database optimize refuses production without force
+ ✔ Backup monitor with notifications
+ ✔ Backup monitor with custom max age
+ ✔ Commands help
+ ✔ Commands performance
+
+System Health (Tests\Feature\SystemHealth)
+ ✔ Homepage loads successfully
+ ✔ Database connection works
+ ✔ Essential tables exist
+ ✔ Optimization commands exist
+ ✔ Cache system works
+ ✔ Essential directories exist
+ ✔ Essential config files exist
+ ✔ Custom artisan commands work
+ ✔ Performance configuration
+ ✔ System dashboard accessible
+ ✔ Security middlewares active
+ ✔ Legal pages exist
+ ✔ Cookie consent system
+
+OK (23 tests, 67 assertions)

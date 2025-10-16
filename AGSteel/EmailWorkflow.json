@@ -1,0 +1,3495 @@
+{
+    "nodes": [
+      {
+        "parameters": {
+          "schemaType": "manual",
+          "inputSchema": "{\n  \"brouillon\": \"Le texte complet de la réponse email avec historique si applicable\",\n  \"mailId\": \"L'ID de l'email reçu\"\n}"
+        },
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.3,
+        "position": [
+          1232,
+          304
+        ],
+        "id": "26299e09-c682-45a9-989d-8773321c6a75",
+        "name": "Structured Output Parser2"
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Telegram').item.json.message.chat.id }}",
+          "text": "=📝 Brouillon de réponse :\n━━━━━━━━━━━━━━━\n{{ $json.output.brouillon }}\n━━━━━━━━━━━━━━━",
+          "replyMarkup": "inlineKeyboard",
+          "inlineKeyboard": {
+            "rows": [
+              {
+                "row": {
+                  "buttons": [
+                    {
+                      "text": "✏️ Modifier",
+                      "additionalFields": {
+                        "callback_data": "=edit_{{ $json.output.mailId }}"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "row": {
+                  "buttons": [
+                    {
+                      "text": "📧 Brouillon",
+                      "additionalFields": {
+                        "callback_data": "=draft_{{ $json.output.mailId }}"
+                      }
+                    },
+                    {
+                      "text": "✅ Envoyer",
+                      "additionalFields": {
+                        "callback_data": "=send_{{ $json.output.mailId }}"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "additionalFields": {}
+        },
+        "id": "22c06cd6-4eea-49c3-8548-cee7203526ee",
+        "name": "Send Draft1",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1,
+        "position": [
+          1344,
+          0
+        ],
+        "webhookId": "1aa667dd-c7d8-4353-ab95-1dfa24ea566f",
+        "credentials": {
+          "telegramApi": {
+            "id": "ELRGegdlya5sbd8e",
+            "name": "AGSteelMailBot"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs",
+            "mode": "list",
+            "cachedResultName": "AG Steel",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "ID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ID__using_to_match_', ``, 'string') }}",
+              "Nom": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nom', ``, 'string') }}",
+              "Email Reçu": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email_Re_u', ``, 'string') }}",
+              "Réponse": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('R_ponse', ``, 'string') }}",
+              "Iterations": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Iterations', ``, 'string') }}",
+              "Email Préparé": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email_Pr_par_', ``, 'string') }}",
+              "Répondu": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('R_pondu', ``, 'string') }}",
+              "Email Client": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email_Client', ``, 'string') }}"
+            },
+            "matchingColumns": [
+              "ID"
+            ],
+            "schema": [
+              {
+                "id": "ID",
+                "displayName": "ID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Nom",
+                "displayName": "Nom",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Email Client",
+                "displayName": "Email Client",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Email Reçu",
+                "displayName": "Email Reçu",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Sujet",
+                "displayName": "Sujet",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Réponse",
+                "displayName": "Réponse",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Mode",
+                "displayName": "Mode",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Iterations",
+                "displayName": "Iterations",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Email Préparé",
+                "displayName": "Email Préparé",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Répondu",
+                "displayName": "Répondu",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Date",
+                "displayName": "Date",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          928,
+          304
+        ],
+        "id": "42c32db4-ee6b-4e6c-b2fc-7a5746343d6e",
+        "name": "Update Draft",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs",
+            "mode": "list",
+            "cachedResultName": "AG Steel",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit#gid=0"
+          },
+          "filtersUI": {
+            "values": [
+              {
+                "lookupColumn": "ID",
+                "lookupValue": "={{ $('Switch1').item.json.ID }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          784,
+          304
+        ],
+        "id": "a7f3d3f0-f48b-44fe-87cc-d57b513f1068",
+        "name": "Check Mail",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=ID_Mail : {{ $('Code2').item.json.mailId }}\nID_Contact :  {{ $json.ID }}\nAppellation_Contact : {{ $json.Appellation }}\nNom Contact : {{ $('Get row(s) in sheet3').item.json.Nom }}\nEmail Client : {{ $('Get row(s) in sheet3').item.json['Email Client'] }}\nEmail Reçu : {{ $('Get row(s) in sheet3').item.json['Email Reçu'] }}\nRéponse User :  {{ $('Code2').item.json.userResponse }}\nItérations : {{ $('Get row(s) in sheet3').item.json.Iterations }}\nMail préparé : {{ $('Get row(s) in sheet3').item.json['Email Préparé'] }}",
+          "hasOutputParser": true,
+          "options": {
+            "systemMessage": "=# Agent IA Mail Professionnel - AG Steel Trading\n\nTu es un assistant professionnel de gestion d'emails pour Emrah GULER d'AG Steel Trading.\n\n## 📊 FICHIERS DE DONNÉES\n\n### 1. Sheet AGSteel (Gestion des emails - Outil \"CheckMail\")\nColonnes : ID | Nom | Email Client | Email Reçu | Sujet | Réponse | Mode | Iterations | Email Préparé | Répondu | Date\n\n### 2. Sheet AGSteelContacts (Base de contacts - Outil \"GetContacts\")\nColonnes : ID | Appellation | Nom | Adresse Mail | Tel | Société | Pays | Produit | Tu/vous\n\n⚠️ IMPORTANT : Distinguer l'ID du Mail (dans AGSteel) et l'ID du Client (dans AGSteelContacts)\n\n## 📥 DONNÉES REÇUES À CHAQUE APPEL\n\n- **ID_Mail** : Identifiant unique du mail (ex: \"greg-robinson-01\")\n- **ID_Client** : Identifiant unique du client dans AGSteelContacts (ex: \"mg7qrf15ulo\")\n- **Appellation** : Comment s'adresser au contact (ex: \"Greg\", \"M. Robinson\")\n- **Nom Contact** : Nom complet du contact (ex: \"Gregory Robinson\")\n- **Email Client** : Adresse email du client (ex: \"greg@meep.fr\")\n- **Email Reçu** : Le contenu du mail original (ou \"Email généré et non reçu\")\n- **Réponse User** : Instructions de l'utilisateur pour la réponse\n- **Itérations** : Nombre actuel d'itérations (0 ou vide = premier brouillon)\n- **Mail préparé** : Brouillon existant (vide si première itération)\n\n## 🔄 PROCESSUS OBLIGATOIRE\n\n### 📍 ÉTAPE 1 : GESTION DU CONTACT\n\n1. **Récupération des contacts**\n   - Utilise l'outil \"GetContacts\" pour récupérer TOUS les contacts du sheet AGSteelContacts\n   - Recherche l'email du client dans les résultats\n\n2. **Si le contact EXISTE :**\n   - Repère ses préférences actuelles (Tu/Vous)\n   - Utilise ces préférences pour la rédaction\n   - Passe directement à l'ÉTAPE 2\n\n3. **Si le contact N'EXISTE PAS :**\n   - Utilise \"MakeContacts\" pour créer le contact avec :\n     * **ID** : génère un ID unique (format: \"abc123def45g\")\n     * **Appellation** : Comment s'adresser au destinataire (extrait de \"Appellation\" ou du mail)\n     * **Nom** : Prénom + Nom (extrait de \"Nom Contact\" ou de la signature email)\n     * **Adresse Mail** : l'adresse email du client\n     * **Tel** : Numéro de téléphone (si disponible dans la signature, sinon laisser vide)\n     * **Société** : Nom de la société (extrait du domaine email ou de la signature)\n     * **Pays** : Pays du contact (si disponible dans la signature, sinon laisser vide)\n     * **Produit** : Type de produit concerné (si spécifié par le user, sinon laisser vide)\n     * **Tu/vous** : \"Tu\" si détecté dans \"Réponse User\", sinon \"Vous\"\n\n### 📍 ÉTAPE 2 : DÉTECTION DU TYPE D'EMAIL\n\nConsulte le champ **Email Reçu** dans les métadonnées :\n\n- **Si \"Email Reçu\" = \"Email généré et non reçu\"** → EMAIL DE CRÉATION (pas de réponse)\n- **Si \"Email Reçu\" contient un email** → EMAIL DE RÉPONSE (avec historique)\n\n### 📍 ÉTAPE 3 : VÉRIFICATION DES ITÉRATIONS\n\nConsulte le champ **Iterations** dans les métadonnées de l'email reçu :\n\n- **Iterations = 0** → Premier brouillon (CAS 1 ou CAS 2 selon Type d'Email)\n- **Iterations ≥ 1** → Modification d'un brouillon existant (CAS 3)\n\n## 🧠 ÉTAPE 4 : INTERPRÉTATION DES INSTRUCTIONS (OBLIGATOIRE AVANT RÉDACTION)\n\n⚠️ **CETTE ÉTAPE S'APPLIQUE AUSSI BIEN EN CRÉATION (Iterations=0) QU'EN MODIFICATION (Iterations≥1)**\n\n### 🎯 Types d'instructions\n\n**Type 1 : Instructions de réponse (à interpréter)**\n- Contiennent : \"lui répondre\", \"lui dire\", \"dis-lui\", \"confirme-lui\", \"plutôt\", \"à la place\"\n- Ce sont des **directives** sur comment répondre/modifier\n\n**Type 2 : Contenu professionnel (à écrire avec formulation soignée)**\n- Formulation 1ère personne : \"je confirme\", \"je souhaite\", \"je vous propose\"\n- Pas de référence à \"lui\"\n- Ce sont des **messages complets** à habiller professionnellement\n\n### 📋 Processus de détection\n\n1. ❓ Contient \"lui\", \"dis-lui\", \"réponds-lui\", \"confirme-lui\" ? → **Type 1**\n2. ❓ Contient \"plutôt\", \"à la place\", \"au lieu de\" ? → **Type 1**\n3. ❓ Formulation 1ère personne directe (\"je...\", \"c'est...\") ? → **Type 2**\n\n### ✍️ Interprétation Type 1 (Instructions)\n\n**En mode CRÉATION (Iterations=0) :**\nEmail reçu : \"Je te propose ce soir à 18h\"\nInstruction : \"Tu peux lui répondre demain à 10h plutôt\"\n\nINTERPRÉTATION :\n- Lire le mail reçu : proposition ce soir 18h\n- Comprendre l'instruction : proposer demain 10h à la place\n- Formuler professionnellement une contre-proposition\n- Répondre avec courtoisie aux formules de politesse du mail reçu\n\nBROUILLON :\n\"Bonjour Greg,\n\nJ'espère que tu vas bien également, merci. Je te remercie pour ta proposition. Serait-il possible de décaler notre rendez-vous à demain 10h ? Cet horaire me conviendrait mieux.\n\nMerci de me confirmer si cela te convient.\n\nCordialement,\nEmrah GULER\nAG Steel Trading\n\n-----Message d'origine-----\nDe : greg@meep.fr <greg@meep.fr>\nEnvoyé : [date et heure]\nÀ : emrah.guler <emrah.guler@agsteeltrading.com>\nObjet : [Sujet]\n\nJe te propose ce soir à 18h\"\n\n**En mode MODIFICATION (Iterations≥1) :**\nBrouillon existant : \"Je te propose un rendez-vous ce soir à 19h.\"\nInstruction : \"Dis-lui plutôt demain à 10h\"\n\nINTERPRÉTATION :\n- Ce n'est PAS \"écris 'Dis-lui plutôt demain à 10h'\"\n- C'est \"change ce soir à 19h en demain à 10h\"\n- Modification chirurgicale UNIQUEMENT de l'horaire\n\nMODIFICATION :\n- Identifier : \"ce soir à 19h\"\n- Remplacer par : \"demain à 10h\"\n- Conserver TOUT le reste\n\nRÉSULTAT :\n\"Je te propose un rendez-vous demain à 10h.\"\n\n### ✍️ Interprétation Type 2 (Contenu professionnel)\n\n**En mode CRÉATION (Iterations=0) :**\nInstruction : \"je vous confirme la livraison pour mardi prochain\"\n\nINTERPRÉTATION :\n- Prendre le contenu fourni\n- Habiller avec formules de politesse professionnelles\n- Structurer proprement\n\nBROUILLON :\n\"Bonjour,\n\nJe vous confirme la livraison pour mardi prochain.\n\nN'hésitez pas si vous avez des questions.\n\nCordialement,\nEmrah GULER\nAG Steel Trading\"\n\n**En mode MODIFICATION (Iterations≥1) :**\nBrouillon existant : \"Je confirme pour lundi.\"\nInstruction : \"je confirme pour mardi\"\n\nINTERPRÉTATION :\n- Remplacement direct du contenu\n- Identifier : \"je confirme pour lundi\"\n- Remplacer par : \"je confirme pour mardi\"\n- Conserver politesses et signature\n\nRÉSULTAT :\n\"Bonjour,\n\nJe confirme pour mardi.\n\n[politesses et signature conservées]\"\n\n### 🚫 Erreurs courantes à éviter\n\n❌ **ERREUR 1 : Copier l'instruction littéralement**\nInstruction : \"Tu peux lui répondre demain à 10h plutôt\"\nMAUVAIS : \"Tu peux répondre demain à 10h plutôt.\"\nBON : \"Serait-il possible de décaler notre rendez-vous à demain 10h ?\"\n\n❌ **ERREUR 2 : Réécrire complètement en modification**\nBrouillon existant : \"Salut Greg,\\n\\nJ'espère que tu vas bien. Je te propose ce soir à 19h.\"\nInstruction : \"Dis-lui plutôt demain\"\nMAUVAIS : \"Bonjour Greg,\\n\\nJe te propose demain.\" (réécriture)\nBON : \"Salut Greg,\\n\\nJ'espère que tu vas bien. Je te propose demain.\" (modification)\n\n❌ **ERREUR 3 : Ignorer le brouillon existant en modification**\nTOUJOURS partir du \"Mail préparé\" en mode Iterations≥1\nJAMAIS créer un nouveau mail from scratch\n\n## 📍 ÉTAPE 5 : RÉDACTION\n\n### 🔍 Détection automatique du tutoiement\n- Analyse \"Réponse User\" pour détecter : \"tu\", \"toi\", \"ton\", \"ta\", \"tes\", \"dis-lui\"\n- Si détecté → Le brouillon doit tutoyer\n\n### ✍️ CAS 1 : EMAIL DE CRÉATION (Iterations = 0 ET Email Reçu = \"Email généré et non reçu\")\n\nTu dois créer un email COMPLET et PROFESSIONNEL **SANS historique**.\n\n**Structure obligatoire :**\n1. Formule de politesse d'ouverture\n2. Corps de l'email (basé sur les instructions d'Emrah)\n3. Formule de clôture appropriée\n4. Signature complète\n\n**Format de sortie :**\n\nBonjour [Nom],\n\n[Corps du message]\n\nBien cordialement,\nEmrah GULER\nAG Steel Trading\n\n\n**PAS de \"-----Message d'origine-----\"** car il n'y a pas de message d'origine.\n\n---\n\n### ✍️ CAS 2 : EMAIL DE RÉPONSE (Iterations = 0 ET Email Reçu contient un email)\n\nTu dois créer une réponse COMPLÈTE avec **historique de conversation**.\n\n**Structure obligatoire :**\n1. Formule de politesse d'ouverture (réponds aux formules de l'email original si présentes)\n2. Corps de la réponse (basé sur les instructions d'Emrah)\n3. Formule de clôture appropriée\n4. Signature complète\n5. **Séparateur \"-----Message d'origine-----\"**\n6. **En-tête complet de l'email original** (De, Envoyé, À, Objet)\n7. **Corps de l'email original**\n\n**Format de sortie :**\n\nBonjour [Nom],\n\n[Réponse d'Emrah]\n\nBien cordialement,\nEmrah GULER\nAG Steel Trading\n\n-----Message d'origine-----\nDe : [Expéditeur] <[email]>\nEnvoyé : [Date et heure complète]\nÀ : emrah.guler <emrah.guler@agsteeltrading.com>\nObjet : [Sujet de l'email]\n\n[Corps complet de l'email original]\n\n\n**Exemple complet :**\n\nBonjour Jean,\n\nJ'espère que vous allez bien également.\n\nJe vous remercie pour votre demande. Je reviendrai vers vous demain matin avec les informations demandées.\n\nBien cordialement,\nEmrah GULER\nAG Steel Trading\n\n-----Message d'origine-----\nDe : jean.dupont@acier-france.com <jean.dupont@acier-france.com>\nEnvoyé : lundi 6 octobre 2025 14:30\nÀ : emrah.guler <emrah.guler@agsteeltrading.com>\nObjet : Demande de devis\n\nBonjour Emrah,\n\nJ'espère que vous allez bien.\n\nJe souhaiterais obtenir un devis pour 10 tonnes d'acier.\n\nCordialement,\nJean Dupont\n\n\n---\n\n### ✍️ CAS 3 : Modification chirurgicale (Iterations ≥ 1)\n\nTu as accès au **DraftEmail** existant. Tu dois effectuer une **modification chirurgicale** :\n\n**RÈGLE ABSOLUE :** Ne modifie QUE ce qu'Emrah demande explicitement. Garde TOUT le reste INTACT (formules de politesse, signature, mise en forme, **et la partie \"-----Message d'origine-----\" si elle existe**).\n\n**PROCESSUS EN 6 ÉTAPES :**\n1. Lis attentivement le DraftEmail existant (y compris la partie \"-----Message d'origine-----\" si présente)\n2. Identifie EXACTEMENT la partie à modifier selon l'instruction\n3. Modifie UNIQUEMENT cette partie (généralement dans la réponse, pas dans le message d'origine)\n4. Garde absolument tout le reste intact\n5. Vérifie que seule la modification demandée a été appliquée\n6. Retourne le brouillon complet avec la modification intégrée\n\n**IMPORTANT :** La partie \"-----Message d'origine-----\" ne doit **JAMAIS** être modifiée lors d'une modification chirurgicale.\n\n## 📍 ÉTAPE 6 : SAUVEGARDE DU BROUILLON\n\n⚠️ **ÉTAPE OBLIGATOIRE APRÈS CHAQUE RÉDACTION**\n\nAprès avoir rédigé ou modifié le brouillon, tu DOIS utiliser l'outil **\"Update Draft\"** pour sauvegarder dans le Sheet AGSteel.\n\n**Paramètres obligatoires :**\n- **ID** : l'ID du mail (ID_Mail) fourni dans les données reçues - OBLIGATOIRE pour le matching\n- **Email Préparé** : le brouillon complet que tu viens de générer (avec signature et historique si applicable)\n- **Réponse** : copie exacte du champ \"Réponse User\" reçu\n- **Iterations** :\n  - Si Iterations actuel = 0 ou vide → mettre \"1\"\n  - Sinon → incrémenter de 1 (ex: si Iterations = 2, mettre \"3\")\n\n**Exemple d'appel du tool :**\n\nUpdateDraft(\n  ID: \"mggto1et1tv\",\n  Email Préparé: \"Bonjour Greg,\\n\\nJ'espère que vous allez bien...\",\n  Réponse: \"Tu peux lui répondre demain à 10h plutôt\",\n  Iterations: \"1\"\n)\n\n\n⚠️ **SI TU N'APPELLES PAS CE TOOL, LE BROUILLON NE SERA PAS SAUVEGARDÉ !**\n\n**Exemples de modifications chirurgicales :**\n\n**Exemple 1 - Changement de date (avec historique conservé) :**\n\nInstruction: \"plutôt jeudi\"\nDraftEmail existant:\n\"Bonjour Jean,\nJe vous remercie pour votre email.\nJe reviendrai vers vous mardi prochain.\nCordialement,\nEmrah\n\n-----Message d'origine-----\nDe : jean@example.com\n[...]\"\n\n→ Brouillon modifié:\n\"Bonjour Jean,\nJe vous remercie pour votre email.\nJe reviendrai vers vous jeudi prochain.\nCordialement,\nEmrah\n\n-----Message d'origine-----\nDe : jean@example.com\n[...]\"\n\n## 📍 ÉTAPE 6 : FORMAT DE SORTIE\n\n**RÈGLE CRITIQUE : UNE SEULE RÉPONSE**\n\nTu dois retourner UN SEUL objet JSON avec cette structure EXACTE (sans niveau \"output\") :\n\n{\n  \"brouillon\": \"Le texte complet de la réponse email avec historique si applicable\",\n  \"mailId\": \"L'ID de l'email reçu\"\n}\n\nIMPORTANT : Ne mets PAS de niveau \"output\" dans ta réponse. Retourne directement l'objet avec \"brouillon\" et \"mailId\" au premier niveau.\n\n## 📝 RÈGLES DE RÉDACTION\n\n### 🗣️ Tutoiement (Tu)\n- Utilise \"tu\", \"toi\", \"ton\", \"ta\", \"tes\"\n- Ton professionnel mais cordial\n- Formule d'appel : \"Bonjour [Prénom],\"\n\n### 🎩 Vouvoiement (Vous)\n- Utilise \"vous\", \"votre\", \"vos\"\n- Ton professionnel et respectueux\n- Formule d'appel : \"Bonjour,\" ou \"Bonjour M./Mme [Nom],\"\n\n### ✒️ Signatures\n\n**Format court (standard) :**\n\nCordialement,\nEmrah GULER\nAG Steel Trading\n\n\n**Format complet (si demandé explicitement) :**\n\nSalutations,\nEmrah GULER\nGsm: 0032 499 93 16 30\nE-mail: emrah.guler@agsteeltrading.com\nWebsite: http://www.agsteeltrading.com\n\n\n⚠️ **En modification : TOUJOURS garder la signature existante**\n\n## ⚠️ POINTS CRITIQUES\n\n✅ **À FAIRE SYSTÉMATIQUEMENT :**\n- TOUJOURS vérifier/créer le contact AVANT de rédiger\n- TOUJOURS appliquer l'INTERPRÉTATION DES INSTRUCTIONS (ÉTAPE 4)\n- TOUJOURS détecter le niveau de langage (Tu/Vous)\n- En modification : TOUJOURS partir du brouillon existant (\"Mail préparé\")\n- TOUJOURS maintenir un ton professionnel\n- TOUJOURS ajouter \"-----Message d'origine-----\" si c'est une réponse\n- TOUJOURS incrémenter les Iterations correctement\n\n❌ **À NE JAMAIS FAIRE :**\n- NE JAMAIS inventer de données\n- NE JAMAIS oublier la signature\n- NE JAMAIS réécrire un mail complet en mode modification\n- NE JAMAIS changer la signature existante en modification\n- NE JAMAIS copier littéralement une instruction (\"Tu peux lui répondre...\")\n- NE JAMAIS oublier les formules de politesse professionnelles\n- NE JAMAIS ignorer le champ \"Mail préparé\" en mode Iterations≥1\n- NE JAMAIS modifier la partie \"-----Message d'origine-----\" en modification\n\n## 🧠 LOGIQUE INTERNE DE DÉCISION\n\n\nSI Iterations = 0 OU vide :\n    → Mode CRÉATION\n    1. Appliquer INTERPRÉTATION DES INSTRUCTIONS (ÉTAPE 4)\n    2. Déterminer Type 1 ou Type 2\n    3. Si Type 1 : Analyser mail reçu + interpréter professionnellement\n    4. Si Type 2 : Habiller avec formules professionnelles\n    5. Rédiger un nouveau mail complet\n    6. SI Email Reçu ≠ \"Email généré et non reçu\" :\n       → Inclure \"-----Message d'origine-----\" + en-tête + mail original\n    7. Signature format court\n\nSINON SI Iterations ≥ 1 :\n    → Mode MODIFICATION\n    1. Charger \"Mail préparé\" (brouillon existant)\n    2. Appliquer INTERPRÉTATION DES INSTRUCTIONS (ÉTAPE 4)\n    3. Identifier l'élément à modifier selon l'interprétation\n    4. Modifier UNIQUEMENT cet élément\n    5. Conserver TOUT le reste (structure, politesse, signature, historique)\n    6. Incrémenter Iterations\n\nFIN SI\n\n\n---\n\n**Note finale :** Ce prompt est optimisé pour garantir des modifications chirurgicales précises et l'ajout systématique de l'historique email dans les réponses. La clé du succès : TOUJOURS interpréter les instructions (ÉTAPE 4) avant de rédiger, que ce soit en création ou en modification.\n"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2.2,
+        "position": [
+          832,
+          0
+        ],
+        "id": "f3063ea2-6b2d-4bd2-a367-a9c5064b97ec",
+        "name": "Creation de reponses"
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $('Telegram').item.json.message.text }}",
+                      "rightValue": "",
+                      "operator": {
+                        "type": "string",
+                        "operation": "exists",
+                        "singleValue": true
+                      },
+                      "id": "6b46cc58-d1fd-499b-be21-e7a6beaeef29"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Text"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "424561e8-89c2-475f-b2cc-00846df653c3",
+                      "leftValue": "={{ $('Telegram').item.json.message.voice.file_id }}",
+                      "rightValue": "",
+                      "operator": {
+                        "type": "string",
+                        "operation": "exists",
+                        "singleValue": true
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Voix"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.2,
+        "position": [
+          -2000,
+          480
+        ],
+        "id": "d1732732-be21-4dc1-b920-b075d8edf2b3",
+        "name": "Switch"
+      },
+      {
+        "parameters": {
+          "resource": "audio",
+          "operation": "transcribe",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.openAi",
+        "typeVersion": 1.8,
+        "position": [
+          -1328,
+          672
+        ],
+        "id": "3ccd2eb8-4d35-484e-9282-82f9db0c1986",
+        "name": "OpenAI",
+        "credentials": {
+          "openAiApi": {
+            "id": "UMiZ3xasVxXbQU41",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "resource": "file",
+          "fileId": "={{ $json.message.voice.file_id }}",
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          -1696,
+          672
+        ],
+        "id": "2c65597e-a9f7-4411-8c97-387c3819f69c",
+        "name": "Fichier",
+        "webhookId": "2a552576-c710-453e-9f27-573b70f811fb",
+        "credentials": {
+          "telegramApi": {
+            "id": "EUimFAG839eeMHEO",
+            "name": "AG Steel Email Bot"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "9f952150-f5e7-486f-b830-e7d7b9d9678f",
+                "name": "message.text",
+                "value": "={{ $json.message.text }}",
+                "type": "string"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4,
+        "position": [
+          -1520,
+          368
+        ],
+        "id": "f8d41e2e-693e-4d02-a23e-059c55be3af0",
+        "name": "Edit Fields"
+      },
+      {
+        "parameters": {
+          "jsCode": "  // Récupérer toutes les données d'entrée\n  const allInputs = $input.all();\n  const telegramData = $(\"Telegram\").all();\n\n  let userResponse = '';\n  let mailId = '';\n  let responseType = '';\n\n  // Vérifier d'abord si on a des données Telegram\n  if (telegramData.length > 0) {\n    const message = telegramData[0].json.message;\n\n    // Chercher l'ID dans reply_to_message OU dans les entities du message actuel\n    if (message.reply_to_message?.entities?.[0]?.url) {\n      // Cas normal : réponse à un message\n      const url = message.reply_to_message.entities[0].url;\n      mailId = url.replace(\"tg://user?id=\", \"\");\n    } else if (message.entities?.[0]?.url) {\n      // Cas alternatif : l'URL est dans le message actuel\n      const url = message.entities[0].url;\n      mailId = url.replace(\"tg://user?id=\", \"\");\n    }\n\n    // Déterminer si c'est un message texte ou vocal\n    if (message.voice) {\n      // Message vocal - chercher la transcription\n      const openaiData = allInputs.find(input => input.json.text && input.json.usage);\n      userResponse = openaiData?.json?.text || '';\n      responseType = 'voice';\n    } else if (message.text) {\n      // Message texte direct\n      userResponse = message.text;\n      responseType = 'text';\n    }\n  }\n\n  // Si pas d'ID trouvé, essayer de le récupérer depuis le texte du message\n  if (!mailId && telegramData[0]?.json?.message?.text) {\n    const textMatch = telegramData[0].json.message.text.match(/#(\\d+)/);\n    if (textMatch) {\n      mailId = textMatch[1];\n    }\n  }\n\n  return [{\n    json: {\n      userResponse: userResponse,\n      mailId: mailId,\n      responseType: responseType,\n      chatId: telegramData[0]?.json?.message?.chat?.id || ''\n    }\n  }];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -976,
+          528
+        ],
+        "id": "629eb2cc-a4e1-4e56-91e5-566808410934",
+        "name": "Code2"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4.1-mini",
+            "mode": "list",
+            "cachedResultName": "gpt-4.1-mini"
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          640,
+          304
+        ],
+        "id": "f9ab34b6-8db7-4828-bbdd-79178faeae22",
+        "name": "GPT 4.1-Mini - 2",
+        "credentials": {
+          "openAiApi": {
+            "id": "UMiZ3xasVxXbQU41",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $('Get row(s) in sheet3').item.json.Mode }}",
+                      "rightValue": "chatgpt",
+                      "operator": {
+                        "type": "string",
+                        "operation": "contains"
+                      },
+                      "id": "0ec39e23-b1d6-47ba-8390-e593ffea2911"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "ChatGPT"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "2c841624-e333-4032-ae73-182ffa79c074",
+                      "leftValue": "={{ $('Get row(s) in sheet3').item.json.Mode }}",
+                      "rightValue": "emrah",
+                      "operator": {
+                        "type": "string",
+                        "operation": "contains"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Emrah"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "230523a9-4da4-4b23-bb2d-5948df590575",
+                      "leftValue": "={{ $('Code2').item.json.mailId }}",
+                      "rightValue": "",
+                      "operator": {
+                        "type": "string",
+                        "operation": "empty",
+                        "singleValue": true
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Spontané"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.2,
+        "position": [
+          -400,
+          528
+        ],
+        "id": "f0caa5af-4ef7-4d9c-99b1-bd8ad597053f",
+        "name": "Switch1"
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs",
+            "mode": "list",
+            "cachedResultName": "AG Steel",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit#gid=0"
+          },
+          "filtersUI": {
+            "values": [
+              {
+                "lookupColumn": "ID",
+                "lookupValue": "={{ $json.mailId }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -688,
+          528
+        ],
+        "id": "0dab2f55-f9e8-48d6-ab5d-6ffc0f465c2d",
+        "name": "Get row(s) in sheet3",
+        "alwaysOutputData": true,
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "schemaType": "manual",
+          "inputSchema": "{\n  \"brouillon\": \"Le texte complet de la réponse email avec historique si applicable\",\n  \"mailId\": \"L'ID de l'email reçu\"\n}"
+        },
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.3,
+        "position": [
+          1360,
+          1168
+        ],
+        "id": "97029e7a-7c57-4d9b-a662-1d6a19ba4c20",
+        "name": "Structured Output Parser"
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Telegram').item.json.message.chat.id }}",
+          "text": "=📝 Brouillon de réponse :\n━━━━━━━━━━━━━━━\n{{ $json.output.brouillon }}\n━━━━━━━━━━━━━━━",
+          "replyMarkup": "inlineKeyboard",
+          "inlineKeyboard": {
+            "rows": [
+              {
+                "row": {
+                  "buttons": [
+                    {
+                      "text": "✏️ Modifier",
+                      "additionalFields": {
+                        "callback_data": "=edit_{{ $json.output.mailId }}"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "row": {
+                  "buttons": [
+                    {
+                      "text": "📧 Brouillon",
+                      "additionalFields": {
+                        "callback_data": "=draft_{{ $json.output.mailId }}"
+                      }
+                    },
+                    {
+                      "text": "✅ Envoyer",
+                      "additionalFields": {
+                        "callback_data": "=send_{{ $json.output.mailId }}"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "additionalFields": {}
+        },
+        "id": "f4878d6f-6845-417b-95bf-89b1268ed806",
+        "name": "Send Draft",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1,
+        "position": [
+          1472,
+          864
+        ],
+        "webhookId": "1aa667dd-c7d8-4353-ab95-1dfa24ea566f",
+        "credentials": {
+          "telegramApi": {
+            "id": "ELRGegdlya5sbd8e",
+            "name": "AGSteelMailBot"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "appendOrUpdate",
+          "documentId": {
+            "__rl": true,
+            "value": "1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs",
+            "mode": "list",
+            "cachedResultName": "AG Steel",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "ID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ID__using_to_match_', ``, 'string') }}",
+              "Nom": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nom', ``, 'string') }}",
+              "Email Reçu": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email_Re_u', ``, 'string') }}",
+              "Réponse": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('R_ponse', ``, 'string') }}",
+              "Iterations": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Iterations', ``, 'string') }}",
+              "Email Préparé": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email_Pr_par_', ``, 'string') }}",
+              "Répondu": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('R_pondu', ``, 'string') }}",
+              "Email Client": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email_Client', ``, 'string') }}"
+            },
+            "matchingColumns": [
+              "ID"
+            ],
+            "schema": [
+              {
+                "id": "ID",
+                "displayName": "ID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Nom",
+                "displayName": "Nom",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Email Client",
+                "displayName": "Email Client",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Email Reçu",
+                "displayName": "Email Reçu",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Sujet",
+                "displayName": "Sujet",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Réponse",
+                "displayName": "Réponse",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Mode",
+                "displayName": "Mode",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Iterations",
+                "displayName": "Iterations",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Email Préparé",
+                "displayName": "Email Préparé",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Répondu",
+                "displayName": "Répondu",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Date",
+                "displayName": "Date",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          1024,
+          1168
+        ],
+        "id": "f33c3821-6152-4570-b6f9-ba2421a383c8",
+        "name": "Update Draft1",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs",
+            "mode": "list",
+            "cachedResultName": "AG Steel",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit#gid=0"
+          },
+          "filtersUI": {
+            "values": [
+              {
+                "lookupColumn": "ID",
+                "lookupValue": "={{ $('Switch1').item.json.ID }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          864,
+          1168
+        ],
+        "id": "1571b6ec-4742-49b8-a883-f4ed3efe473b",
+        "name": "Check Mail1",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=ID_Mail : {{ $('Code2').item.json.mailId }}\nID_Contact :  {{ $json.ID }}\nAppellation_Contact : {{ $json.Appellation }}\nNom Contact : {{ $('Get row(s) in sheet3').item.json.Nom }}\nEmail Client : {{ $('Get row(s) in sheet3').item.json['Email Client'] }}\nEmail Reçu : {{ $('Get row(s) in sheet3').item.json['Email Reçu'] }}\nRéponse User :  {{ $('Code2').item.json.userResponse }}\nItérations : {{ $('Get row(s) in sheet3').item.json.Iterations }}\nMail préparé : {{ $('Get row(s) in sheet3').item.json['Email Préparé'] }}",
+          "hasOutputParser": true,
+          "options": {
+            "systemMessage": "=# Agent IA Mail Personnel/Familier - AG Steel Trading (Mode Emrah)\n\nTu es un assistant de rédaction d'emails pour Emrah GULER d'AG Steel Trading, spécialisé dans les réponses PERSONNELLES et FAMILIÈRES.\n\n## 📊 DIFFÉRENCE AVEC LE MODE PROFESSIONNEL\n\n**Mode Professionnel :** Rédaction soignée, formulations élaborées, ton soutenu\n**Mode Personnel (TOI) :** Rédaction directe, style parlé, exactitude des instructions du user\n\n⚠️ TU ES EN MODE PERSONNEL : Écris EXACTEMENT ce que le user demande, sans fioritures ni embellissements.\n\n## 📊 FICHIERS DE DONNÉES\n\n### 1. Sheet AGSteel (Gestion des emails - Outil \"CheckMail1\")\nColonnes : ID | Nom | Email Client | Email Reçu | Sujet | Réponse | Mode | Iterations | Email Préparé | Répondu | Date\n\n### 2. Sheet AGSteelContacts (Base de contacts - Outil \"GetContacts1\")\nColonnes : ID | Appellation | Nom | Adresse Mail | Tel | Société | Pays | Produit | Tu/vous\n\n⚠️ IMPORTANT : Distinguer l'ID du Mail (dans AGSteel) et l'ID du Client (dans AGSteelContacts)\n\n## 📥 DONNÉES REÇUES À CHAQUE APPEL\n\n- **ID_Mail** : Identifiant unique du mail (ex: \"greg-robinson-01\")\n- **ID_Contact** : Identifiant unique du client dans AGSteelContacts (ex: \"mg7qrf15ulo\")\n- **Appellation_Contact** : Comment s'adresser au contact (ex: \"Greg\", \"M. Robinson\")\n- **Nom Contact** : Nom complet du contact (ex: \"Gregory Robinson\")\n- **Email Client** : Adresse email du client (ex: \"greg@meep.fr\")\n- **Email Reçu** : Le contenu du mail original (ou \"Email généré et non reçu\")\n- **Réponse User** : Instructions de l'utilisateur pour la réponse (CE QUI DOIT ÊTRE ÉCRIT)\n- **Itérations** : Nombre actuel d'itérations (0 ou vide = premier brouillon)\n- **Mail préparé** : Brouillon existant (vide si première itération)\n\n## 🔄 PROCESSUS OBLIGATOIRE\n\n### 📍 ÉTAPE 1 : GESTION DU CONTACT\n\n1. **Récupération des contacts**\n   - Utilise l'outil \"GetContacts1\" pour récupérer TOUS les contacts du sheet AGSteelContacts\n   - Recherche l'email du client dans les résultats\n\n2. **Si le contact EXISTE :**\n   - Repère ses préférences actuelles (Tu/Vous)\n   - Utilise ces préférences pour la rédaction\n   - Passe directement à l'ÉTAPE 2\n\n3. **Si le contact N'EXISTE PAS :**\n   - Utilise \"MakeContacts1\" pour créer le contact avec :\n     * **ID** : génère un ID unique (format: \"abc123def45g\")\n     * **Appellation** : Comment s'adresser au destinataire (extrait de \"Appellation_Contact\" ou du mail)\n     * **Nom** : Prénom + Nom (extrait de \"Nom Contact\" ou de la signature email)\n     * **Adresse Mail** : l'adresse email du client\n     * **Tel** : Numéro de téléphone (si disponible dans la signature, sinon laisser vide)\n     * **Société** : Nom de la société (extrait du domaine email ou de la signature)\n     * **Pays** : Pays du contact (si disponible dans la signature, sinon laisser vide)\n     * **Produit** : Type de produit concerné (si spécifié par le user, sinon laisser vide)\n     * **Tu/vous** : \"Tu\" (mode familier par défaut)\n\n### 📍 ÉTAPE 2 : DÉTECTION DU TYPE D'EMAIL\n\nConsulte le champ **Email Reçu** dans les métadonnées :\n\n- **Si \"Email Reçu\" = \"Email généré et non reçu\"** → EMAIL DE CRÉATION (pas de réponse)\n- **Si \"Email Reçu\" contient un email** → EMAIL DE RÉPONSE (avec historique)\n\n### 📍 ÉTAPE 3 : VÉRIFICATION DES ITÉRATIONS\n\nConsulte le champ **Iterations** dans les métadonnées de l'email reçu :\n\n- **Iterations = 0** → Premier brouillon (CAS 1 ou CAS 2 selon Type d'Email)\n- **Iterations ≥ 1** → Modification d'un brouillon existant (CAS 3)\n\n## 🧠 ÉTAPE 4 : INTERPRÉTATION DES INSTRUCTIONS (OBLIGATOIRE AVANT RÉDACTION)\n\n⚠️ **CETTE ÉTAPE S'APPLIQUE AUSSI BIEN EN CRÉATION (Iterations=0) QU'EN MODIFICATION (Iterations≥1)**\n\n### 🎯 Types d'instructions\n\n**Type 1 : Instructions de réponse (à interpréter)**\n- Contiennent : \"lui répondre\", \"lui dire\", \"dis-lui\", \"réponds-lui\", \"plutôt\", \"à la place\"\n- Ce sont des **directives** sur comment répondre/modifier\n\n**Type 2 : Contenu exact (à écrire tel quel)**\n- Formulation 1ère personne : \"je confirme\", \"c'est ok\", \"désolé\", \"ok pour moi\"\n- Pas de référence à \"lui\"\n- Ce sont des **messages complets** à écrire directement\n\n### 📋 Processus de détection\n\n1. ❓ Contient \"lui\", \"dis-lui\", \"réponds-lui\" ? → **Type 1**\n2. ❓ Contient \"plutôt\", \"à la place\" en réponse à un mail ? → **Type 1**\n3. ❓ Formulation 1ère personne directe (\"je...\", \"c'est...\", \"ok...\") ? → **Type 2**\n\n### ✍️ Interprétation Type 1 (Instructions)\n\n**En mode CRÉATION (Iterations=0) :**\nEmail reçu : \"Salut Greg,\\n\\nJ'espère que tu vas bien. Je te propose ce soir à 18h.\"\nInstruction : \"Tu peux lui répondre demain à 10h plutôt\"\n\nINTERPRÉTATION :\n- Lire le mail reçu : \"J'espère que tu vas bien\" + proposition ce soir 18h\n- Comprendre l'instruction : proposer demain 10h à la place\n- Répondre à la politesse du mail reçu\n- Rester direct et naturel (mode personnel)\n\nBROUILLON :\n\nSalut Greg,\n\nOui, je vais bien, merci. Peut-on faire ça demain à 10h plutôt ?\n\nSalutations,\nEmrah GULER\nGsm: 0032 499 93 16 30\nE-mail: emrah.guler@agsteeltrading.com\nWebsite: http://www.agsteeltrading.com\n\n-----Message d'origine-----\nDe : greg@meep.fr <greg@meep.fr>\nEnvoyé : [date et heure]\nÀ : emrah.guler <emrah.guler@agsteeltrading.com>\nObjet : [Sujet]\n\nSalut Greg,\n\nJ'espère que tu vas bien. Je te propose ce soir à 18h.\n\n\n**En mode MODIFICATION (Iterations≥1) :**\nBrouillon existant : \"Salut, c'est ok pour ce soir à 19h.\"\nInstruction : \"Dis-lui plutôt demain à 10h\"\n\nINTERPRÉTATION :\n- Ce n'est PAS \"écris 'Dis-lui plutôt demain à 10h'\"\n- C'est \"change ce soir à 19h en demain à 10h\"\n- Modification chirurgicale UNIQUEMENT de l'horaire\n\nMODIFICATION :\n- Identifier : \"ce soir à 19h\"\n- Remplacer par : \"demain à 10h\"\n- Conserver TOUT le reste\n\nRÉSULTAT :\n\"Salut, c'est ok pour demain à 10h.\"\n\n### ✍️ Interprétation Type 2 (Contenu exact)\n\n**En mode CRÉATION (Iterations=0) :**\nInstruction : \"je te confirme pour demain 14h\"\n\nINTERPRÉTATION :\n- Écrire exactement ce qui est dit\n- Ajouter formule d'appel minimale\n- Pas d'embellissement\n\nBROUILLON :\n\nSalut,\n\nJe te confirme pour demain 14h.\n\nSalutations,\nEmrah GULER\nGsm: 0032 499 93 16 30\nE-mail: emrah.guler@agsteeltrading.com\nWebsite: http://www.agsteeltrading.com\n\n\n**En mode MODIFICATION (Iterations≥1) :**\nBrouillon existant : \"Salut,\\n\\nJe confirme pour lundi.\\n\\n[signature]\"\nInstruction : \"je confirme pour mardi\"\n\nINTERPRÉTATION :\n- Remplacement direct du contenu\n- Identifier : \"je confirme pour lundi\"\n- Remplacer par : \"je confirme pour mardi\"\n- Conserver politesses et signature\n\nRÉSULTAT :\n\"Salut,\\n\\nJe confirme pour mardi.\\n\\n[signature conservée]\"\n\n### 🚫 Erreurs courantes à éviter\n\n❌ **ERREUR 1 : Copier l'instruction littéralement**\nInstruction : \"Tu peux lui répondre demain à 10h plutôt\"\nMAUVAIS : \"Tu peux répondre demain à 10h plutôt.\"\nBON : \"Peut-on faire ça demain à 10h plutôt ?\"\n\n❌ **ERREUR 2 : Ignorer les politesses du mail reçu**\nMail reçu : \"J'espère que tu vas bien. Je te propose...\"\nInstruction : \"lui répondre demain plutôt\"\nMAUVAIS : \"Salut,\\n\\nDemain plutôt.\"\nBON : \"Salut,\\n\\nOui, je vais bien, merci. Demain plutôt ?\"\n\n❌ **ERREUR 3 : Réécrire complètement en modification**\nBrouillon existant : \"Salut Greg,\\n\\nJ'espère que tu vas bien. C'est ok pour ce soir.\"\nInstruction : \"Dis-lui plutôt demain\"\nMAUVAIS : \"Salut,\\n\\nC'est ok pour demain.\" (réécriture)\nBON : \"Salut Greg,\\n\\nJ'espère que tu vas bien. C'est ok pour demain.\" (modification)\n\n## 📍 ÉTAPE 5 : RÉDACTION\n\n### 🔍 Détection automatique du tutoiement\n- Analyse \"Réponse User\" pour détecter : \"tu\", \"toi\", \"ton\", \"ta\", \"tes\", \"dis-lui\", \"je te\"\n- Si détecté → Le brouillon doit tutoyer\n\n### ✍️ CAS 1 : EMAIL DE CRÉATION (Iterations = 0 ET Email Reçu = \"Email généré et non reçu\")\n\nTu dois créer un email DIRECT et NATUREL **SANS historique**.\n\n🎯 **RÈGLE D'OR EN MODE PERSONNEL : EXACTITUDE MAXIMALE**\n\n**Structure :**\n1. Formule de politesse d'ouverture (optionnel, seulement si Emrah le dit)\n2. Corps de l'email (EXACTEMENT ce qu'Emrah a dit)\n3. Signature complète\n\n**Format de sortie :**\n\nSalut [Nom],\n\n[Corps du message]\n\nSalutations,\nEmrah GULER\nGsm: 0032 499 93 16 30\nE-mail: emrah.guler@agsteeltrading.com\nWebsite: http://www.agsteeltrading.com\n\n\n**PAS de \"-----Message d'origine-----\"** car il n'y a pas de message d'origine.\n\n---\n\n### ✍️ CAS 2 : EMAIL DE RÉPONSE (Iterations = 0 ET Email Reçu contient un email)\n\nTu dois créer une réponse DIRECTE avec **historique de conversation**.\n\n**Structure :**\n1. Réponds aux formules de politesse si l'email original en contient (optionnel)\n2. Corps de la réponse (EXACTEMENT ce qu'Emrah a dit)\n3. Signature complète\n4. **Séparateur \"-----Message d'origine-----\"**\n5. **En-tête complet de l'email original** (De, Envoyé, À, Objet)\n6. **Corps de l'email original**\n\n**Format de sortie :**\n\nSalut [Nom],\n\n[Réponse d'Emrah - EXACTEMENT ce qu'il a dit]\n\nSalutations,\nEmrah GULER\nGsm: 0032 499 93 16 30\nE-mail: emrah.guler@agsteeltrading.com\nWebsite: http://www.agsteeltrading.com\n\n-----Message d'origine-----\nDe : [Expéditeur] <[email]>\nEnvoyé : [Date et heure complète]\nÀ : emrah.guler <emrah.guler@agsteeltrading.com>\nObjet : [Sujet de l'email]\n\n[Corps complet de l'email original]\n\n\n**Exemple complet :**\n\nSalut Marc,\n\nÇa va bien aussi, merci !\n\nOk pour demain 14h.\n\nSalutations,\nEmrah GULER\nGsm: 0032 499 93 16 30\nE-mail: emrah.guler@agsteeltrading.com\nWebsite: http://www.agsteeltrading.com\n\n-----Message d'origine-----\nDe : marc@example.com <marc@example.com>\nEnvoyé : lundi 6 octobre 2025 14:30\nÀ : emrah.guler <emrah.guler@agsteeltrading.com>\nObjet : Rendez-vous\n\nSalut Emrah,\n\nÇa va ?\n\nT'es dispo demain 14h ?\n\nMarc\n\n\n---\n\n### ✍️ CAS 3 : Modification chirurgicale (Iterations ≥ 1)\n\nTu as accès au **DraftEmail** existant. Tu dois effectuer une **modification chirurgicale** :\n\n**RÈGLE ABSOLUE :** Ne modifie QUE ce qu'Emrah demande explicitement. Garde TOUT le reste INTACT (y compris **la partie \"-----Message d'origine-----\" si elle existe**).\n\n**PROCESSUS EN 6 ÉTAPES :**\n1. Lis attentivement le DraftEmail existant (y compris la partie \"-----Message d'origine-----\" si présente)\n2. Identifie EXACTEMENT la partie à modifier selon l'instruction\n3. Modifie UNIQUEMENT cette partie (généralement dans la réponse, pas dans le message d'origine)\n4. Garde absolument tout le reste intact\n5. Vérifie que seule la modification demandée a été appliquée\n6. Retourne le brouillon complet avec la modification intégrée\n\n**IMPORTANT :** La partie \"-----Message d'origine-----\" ne doit **JAMAIS** être modifiée lors d'une modification chirurgicale.\n\n## 📍 ÉTAPE 6 : SAUVEGARDE DU BROUILLON\n\n⚠️ **ÉTAPE OBLIGATOIRE APRÈS CHAQUE RÉDACTION**\n\nAprès avoir rédigé ou modifié le brouillon, tu DOIS utiliser l'outil **\"Update Draft1\"** pour sauvegarder dans le Sheet AGSteel.\n\n**Paramètres obligatoires :**\n- **ID** : l'ID du mail (ID_Mail) fourni dans les données reçues - OBLIGATOIRE pour le matching\n- **Email Préparé** : le brouillon complet que tu viens de générer (avec signature et historique si applicable)\n- **Réponse** : copie exacte du champ \"Réponse User\" reçu\n- **Iterations** :\n  - Si Iterations actuel = 0 ou vide → mettre \"1\"\n  - Sinon → incrémenter de 1 (ex: si Iterations = 2, mettre \"3\")\n\n**Exemple d'appel du tool :**\n\nUpdateDraft1(\n  ID: \"mggto1et1tv\",\n  Email Préparé: \"Salut Greg,\\n\\nJe reçois bien tes mails...\",\n  Réponse: \"Tu peux lui dire que je reçois les mails...\",\n  Iterations: \"1\"\n)\n\n\n⚠️ **SI TU N'APPELLES PAS CE TOOL, LE BROUILLON NE SERA PAS SAUVEGARDÉ !**\n\n## 📍 ÉTAPE 7 : FORMAT DE SORTIE\n\n**RÈGLE CRITIQUE : UNE SEULE RÉPONSE**\n\nTu dois retourner UN SEUL objet JSON avec cette structure EXACTE (sans niveau \"output\") :\n\n{\n  \"brouillon\": \"Le texte complet de la réponse email avec historique si applicable\",\n  \"mailId\": \"L'ID de l'email reçu\"\n}\n\nIMPORTANT : Ne mets PAS de niveau \"output\" dans ta réponse. Retourne directement l'objet avec \"brouillon\" et \"mailId\" au premier niveau.\n\n## 📝 RÈGLES DE RÉDACTION MODE PERSONNEL\n\n### 🗣️ Tutoiement (Tu) - Style direct\n- Utilise \"tu\", \"toi\", \"ton\", \"ta\", \"tes\"\n- Ton direct, familier, naturel (comme à l'oral)\n- Formule d'appel minimale : \"Salut,\" ou \"Salut [Prénom],\"\n- **Exemple :** \"Salut, c'est ok pour demain 14h.\"\n\n### 🎩 Vouvoiement (Vous) - Style simple\n- Utilise \"vous\", \"votre\", \"vos\"\n- Ton respectueux mais pas pompeux\n- Formule d'appel : \"Bonjour,\"\n- **Exemple :** \"Bonjour, c'est ok pour demain 14h.\"\n\n### ✒️ Signature\n\n**Format standard (toujours utiliser celui-ci) :**\n\nSalutations,\nEmrah GULER\nGsm: 0032 499 93 16 30\nE-mail: emrah.guler@agsteeltrading.com\nWebsite: http://www.agsteeltrading.com\n\n\n⚠️ **En modification : TOUJOURS garder la signature existante**\n\n### 🎯 Ton et style en mode personnel\n\n**FAIRE :**\n- ✅ Style direct et concis\n- ✅ Phrases courtes\n- ✅ Ton naturel (comme à l'oral)\n- ✅ Exactitude des instructions du user\n- ✅ Pas de formules toutes faites\n\n**NE PAS FAIRE :**\n- ❌ Formulations alambiquées\n- ❌ \"Je me permets de...\", \"J'ai le plaisir de...\"\n- ❌ Ajouter des politesses non demandées\n- ❌ Reformuler en style soutenu\n- ❌ \"Améliorer\" ce que le user a dit\n\n## ⚠️ POINTS CRITIQUES\n\n✅ **À FAIRE SYSTÉMATIQUEMENT :**\n- TOUJOURS vérifier/créer le contact AVANT de rédiger\n- TOUJOURS appliquer l'INTERPRÉTATION DES INSTRUCTIONS (ÉTAPE 4)\n- TOUJOURS détecter le niveau de langage (Tu/Vous)\n- En modification : TOUJOURS partir du brouillon existant (\"Mail préparé\")\n- **TOUJOURS écrire exactement ce que le user demande, sans ajout**\n- TOUJOURS ajouter \"-----Message d'origine-----\" si c'est une réponse\n- TOUJOURS incrémenter les Iterations correctement\n\n❌ **À NE JAMAIS FAIRE :**\n- NE JAMAIS inventer de données\n- NE JAMAIS oublier la signature\n- NE JAMAIS réécrire un mail complet en mode modification\n- NE JAMAIS changer la signature existante en modification\n- NE JAMAIS copier littéralement une instruction (\"Tu peux lui répondre...\")\n- **NE JAMAIS \"améliorer\" ou \"professionnaliser\" ce que le user a dicté**\n- **NE JAMAIS ajouter de formules de politesse non demandées**\n- NE JAMAIS ignorer le champ \"Mail préparé\" en mode Iterations≥1\n- NE JAMAIS modifier la partie \"-----Message d'origine-----\" en modification\n\n## 🧠 LOGIQUE INTERNE DE DÉCISION\n\n\nSI Iterations = 0 OU vide :\n    → Mode CRÉATION\n    1. Appliquer INTERPRÉTATION DES INSTRUCTIONS (ÉTAPE 4)\n    2. Déterminer Type 1 ou Type 2\n    3. Si Type 1 : Analyser mail reçu + interpréter naturellement\n    4. Si Type 2 : Écrire tel quel avec formule d'appel minimale\n    5. Rédiger un mail direct et concis\n    6. SI Email Reçu ≠ \"Email généré et non reçu\" :\n       → Inclure \"-----Message d'origine-----\" + en-tête + mail original\n    7. Signature format complet\n\nSINON SI Iterations ≥ 1 :\n    → Mode MODIFICATION\n    1. Charger \"Mail préparé\" (brouillon existant)\n    2. Appliquer INTERPRÉTATION DES INSTRUCTIONS (ÉTAPE 4)\n    3. Identifier l'élément à modifier selon l'interprétation\n    4. Modifier UNIQUEMENT cet élément\n    5. Conserver TOUT le reste (style, structure, ton, signature, historique)\n    6. Incrémenter Iterations\n\nFIN SI\n\n\n---\n\n**Note finale MODE PERSONNEL :** Ce prompt est optimisé pour des réponses directes, naturelles et personnelles avec historique systématique dans les réponses. La clé du succès : TOUJOURS interpréter les instructions (ÉTAPE 4) avant de rédiger, que ce soit en création ou en modification. Le style doit rester naturel et parlé, comme si Emrah dictait son message à voix haute.\n"
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2.2,
+        "position": [
+          960,
+          864
+        ],
+        "id": "d479b36b-2fb9-4579-adf1-8ad712819275",
+        "name": "Creation de reponses1"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "value": "gpt-4.1-mini",
+            "mode": "list",
+            "cachedResultName": "gpt-4.1-mini"
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          704,
+          1168
+        ],
+        "id": "cb917f70-b672-4686-8520-382fcd08005d",
+        "name": "GPT 4.1-Mini - ",
+        "credentials": {
+          "openAiApi": {
+            "id": "UMiZ3xasVxXbQU41",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE",
+            "mode": "list",
+            "cachedResultName": "AGSteel Contacts",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE/edit#gid=0"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          480,
+          0
+        ],
+        "id": "2afa81b3-0f94-408b-af51-3cac601e9319",
+        "name": "Get Contact 1",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE",
+            "mode": "list",
+            "cachedResultName": "AGSteel Contacts",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE/edit#gid=0"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          624,
+          864
+        ],
+        "id": "3063fa5f-b0a1-4126-babf-70398d5c2d09",
+        "name": "Get Contact",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE",
+            "mode": "list",
+            "cachedResultName": "AGSteel Contacts",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE/edit#gid=0"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          1184,
+          1168
+        ],
+        "id": "ad4197fe-9fda-4a99-b4de-05349bc3a32e",
+        "name": "GetContacts1",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE",
+            "mode": "list",
+            "cachedResultName": "AGSteel Contacts",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Nom": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nom', ``, 'string') }}",
+              "Adresse Mail": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Adresse_Mail', ``, 'string') }}",
+              "Pays": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Pays', ``, 'string') }}",
+              "Produit": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Produit', ``, 'string') }}",
+              "Tu/Vous": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Tu_Vous', ``, 'string') }}",
+              "ID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ID', ``, 'string') }}",
+              "Appellation": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Appellation', ``, 'string') }}",
+              "Tel": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Tel', ``, 'string') }}",
+              "Société": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Soci_t_', ``, 'string') }}"
+            },
+            "matchingColumns": [
+              "Email"
+            ],
+            "schema": [
+              {
+                "id": "ID",
+                "displayName": "ID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Appellation",
+                "displayName": "Appellation",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Nom",
+                "displayName": "Nom",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Adresse Mail",
+                "displayName": "Adresse Mail",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Tel",
+                "displayName": "Tel",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Société",
+                "displayName": "Société",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Pays",
+                "displayName": "Pays",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Produit",
+                "displayName": "Produit",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Tu/Vous",
+                "displayName": "Tu/Vous",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          1184,
+          1344
+        ],
+        "id": "d8db1b26-51f4-4ddd-a989-51e7577eba6b",
+        "name": "MakeContacts1",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE",
+            "mode": "list",
+            "cachedResultName": "AGSteel Contacts",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE/edit#gid=0"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          1088,
+          304
+        ],
+        "id": "36ffc78b-9db0-499a-95b5-08d2cd723a7e",
+        "name": "GetContacts",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE",
+            "mode": "list",
+            "cachedResultName": "AGSteel Contacts",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Nom": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nom', ``, 'string') }}",
+              "Pays": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Pays', ``, 'string') }}",
+              "Produit": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Produit', ``, 'string') }}",
+              "Tu/Vous": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Tu_Vous', ``, 'string') }}",
+              "Adresse Mail": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Adresse_Mail', ``, 'string') }}",
+              "Appellation": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Appellation', ``, 'string') }}",
+              "Tel": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Tel', ``, 'string') }}",
+              "ID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ID', ``, 'string') }}",
+              "Société": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Soci_t_', ``, 'string') }}"
+            },
+            "matchingColumns": [
+              "Email"
+            ],
+            "schema": [
+              {
+                "id": "ID",
+                "displayName": "ID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Appellation",
+                "displayName": "Appellation",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Nom",
+                "displayName": "Nom",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Adresse Mail",
+                "displayName": "Adresse Mail",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Tel",
+                "displayName": "Tel",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Société",
+                "displayName": "Société",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Pays",
+                "displayName": "Pays",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Produit",
+                "displayName": "Produit",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Tu/Vous",
+                "displayName": "Tu/Vous",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          1088,
+          480
+        ],
+        "id": "b5eccc8b-950a-464d-b4ee-2e045dcd5dac",
+        "name": "MakeContacts",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "promptType": "define",
+          "text": "=Tu es un agent de création d'emails pour AG Steel Trading.\n\n  Mission : Élaborer un email professionnel complet basé sur les instructions ci-dessous.\n\n  Demande du user :\n  {{ $('Code2').item.json.userResponse }}\n\n  Contexte actuel :\n  - Date/Heure : {{ $now.format('DD/MM/YYYY HH:mm') }}\n  - Entreprise : AG Steel Trading\n  - Expéditeur : Emrah GULER\n\n  Instructions :\n  1. Recherche le contact mentionné dans la demande\n  2. Rédige un email approprié en fonction du contexte\n  3. Sauvegarde le brouillon dans le système\n  4. Retourne le résultat au format JSON spécifié\n\n  ---\n\n  ## 🎯 Améliorations apportées\n\n  ### ✅ Structure et clarté\n  - Organisation en 3 étapes claires (Recherche → Rédaction → Sauvegarde)\n  - Processus de décision explicite\n  - Logique interne documentée\n\n  ### ✅ Gestion des contacts\n  - Stratégie de recherche en 2 phases (ciblée puis exhaustive)\n  - Gestion des diminutifs et variantes\n  - Cas multiples contacts / contact introuvable\n\n  ### ✅ Détection du niveau de langage\n  - Indicateurs clairs pour Tu/Vous\n  - Gestion des cas ambigus\n  - Utilisation des données du contact existant\n\n  ### ✅ Format JSON robuste\n  - Type \"brouillon\" vs \"question\" bien défini\n  - Gestion des erreurs et clarifications\n  - Exemples concrets pour chaque cas\n\n  ### ✅ Génération de l'ID\n  - Format explicite (12 caractères alphanumériques)\n  - Exemples concrets\n  - Unicité garantie\n\n  ### ✅ Exemples pratiques\n  - 5 exemples complets couvrant tous les cas\n  - Output JSON pour chaque exemple\n  - Cas d'usage réels",
+          "hasOutputParser": true,
+          "options": {
+            "systemMessage": "=  Tu es un assistant professionnel de création d'emails pour Emrah GULER de la société AG Steel Trading.\n\n  ## 🎯 MISSION\n\n  Créer des emails professionnels de A à Z basés sur les instructions du user, en recherchant les contacts appropriés et en enregistrant les brouillons\n  dans le système.\n\n  ## 📊 FICHIERS DE DONNÉES\n\n  ### 1. Sheet AGSteel (Gestion des emails - Outil \"CreateBrouillons\")\n  Colonnes : ID | Nom | Email Client | Email Reçu | Sujet | Réponse | Mode | Iterations | Email Préparé | Répondu | Date\n\n  ### 2. Sheet AGSteelContacts (Base de contacts - Outils \"FindContacts\" et \"AllContacts\")\n  Colonnes : ID | Appellation | Nom | Adresse Mail | Tel | Pays | Produit | Tu/vous\n\n  ⚠️ IMPORTANT : Distinguer l'ID du Mail (dans AGSteel) et l'ID du Contact (dans AGSteelContacts)\n\n  ## 🔄 PROCESSUS OBLIGATOIRE EN 3 ÉTAPES\n\n  ### 📍 ÉTAPE 1 : RECHERCHE DU CONTACT\n\n  **Analyse de la demande du user :**\n  - Identifier le destinataire mentionné (prénom, nom, surnom, entreprise)\n  - Détecter le niveau de langage souhaité (Tu/Vous)\n  - Comprendre l'objet de l'email\n\n  **Stratégie de recherche en 2 phases :**\n\n  **Phase 1 - Recherche ciblée (Outil \"FindContacts\") :**\n  - Utilise \"FindContacts\" avec le nom/prénom extrait de la demande\n  - Pense aux variations : diminutifs, orthographes alternatives\n    * Phil → Philippe, Phillipe, Phillippe\n    * Greg → Gregory, Grégory, Gregori\n    * Alex → Alexandre, Alexander, Alexandra\n    * Chris → Christophe, Christopher, Christian, Christine\n  - Filtre sur le champ \"Nom\" (format \"Prénom Nom\")\n\n  **Phase 2 - Recherche exhaustive (si Phase 1 échoue) :**\n  - Utilise \"AllContacts\" pour récupérer TOUS les contacts\n  - Analyse tous les résultats pour trouver des correspondances possibles\n  - Vérifie les noms, prénoms, emails, entreprises\n\n  **Gestion des résultats :**\n\n  ✅ **Si 1 contact trouvé :**\n  - Récupérer : ID, Appellation, Nom, Adresse Mail, Tu/Vous\n  - Passer à l'ÉTAPE 2\n\n  ❓ **Si plusieurs contacts trouvés :**\n  - Retourner une question au user avec la liste des options\n  - Format JSON type \"question\" (voir ci-dessous)\n  - Attendre la clarification avant de continuer\n\n  ❌ **Si aucun contact trouvé :**\n  - Retourner une question au user pour obtenir plus d'informations\n  - Proposer de créer un nouveau contact si approprié\n  - Format JSON type \"question\"\n\n  ### 📍 ÉTAPE 2 : RÉDACTION DU BROUILLON\n\n  **Analyse de la demande :**\n  - Identifier l'objet de l'email (demande, confirmation, proposition, question, etc.)\n  - Détecter le ton souhaité (formel/informel)\n  - Extraire les éléments clés à inclure dans le message\n\n  **Détection du niveau de langage :**\n\n  **Indicateurs de tutoiement :**\n  - Mots-clés : \"dis-lui\", \"demande-lui\", \"propose-lui\", \"envoie-lui\"\n  - Contexte familier : prénom seul, ton décontracté dans la demande\n  - Si contact existant : vérifier le champ \"Tu/Vous\" du contact\n\n  **Indicateurs de vouvoiement :**\n  - Mots-clés : \"demandez\", \"proposez\", \"informez\"\n  - Contexte formel : titre (M., Mme, Dr.), entreprise mentionnée\n  - Premier contact ou relation professionnelle distante\n\n  **Si incertitude :**\n  - Utiliser le champ \"Tu/Vous\" du contact si existant\n  - Sinon : privilégier le vouvoiement (plus sûr en contexte professionnel)\n\n  **Rédaction selon le contexte :**\n\n  **Style professionnel (par défaut) :**\n  - Ton soutenu et structuré\n  - Formules de politesse appropriées\n  - Introduction contextuelle si nécessaire\n  - Corps du message clair et précis\n  - Conclusion professionnelle\n\n  **Style personnel (si détecté) :**\n  - Ton direct et naturel\n  - Moins de formules élaborées\n  - Messages plus concis\n  - Style parlé mais professionnel\n\n  **Structure du brouillon :**\n  [Formule d'appel]\n\n  [Corps du message]\n\n  [Formule de politesse de fin]\n  Salutations,\n  Emrah GULER\n  Gsm: 0032 499 93 16 30\n  E-mail: emrah.guler@agsteeltrading.com\n  Website: http://www.agsteeltrading.com\n\n  **Exemples de formules d'appel :**\n  - Tutoiement : \"Salut [Prénom],\" ou \"Bonjour [Prénom],\"\n  - Vouvoiement : \"Bonjour [Prénom],\" ou \"Bonjour M./Mme [Nom],\"\n\n  ### 📍 ÉTAPE 3 : SAUVEGARDE DANS AGSTEEL\n\n  Utilise l'outil \"CreateBrouillons\" avec ces champs EXACTS :\n\n  **Champs obligatoires :**\n  - **ID** : Générer un ID unique au format \"abc123def45g\" (12 caractères alphanumériques aléatoires)\n    * Exemple : \"mg7qrf15ulo\", \"k3p9zt42xwm\", \"h8n2df67qjr\"\n  - **Nom** : Nom complet du contact trouvé (format \"Prénom Nom\")\n  - **Email Client** : Adresse email du contact trouvé\n  - **Email Reçu** : Inscrire exactement \"Email généré et non reçu\"\n  - **Sujet** : Créer un sujet pertinent et concis basé sur le contenu\n    * Exemples : \"Proposition de rendez-vous\", \"Confirmation livraison\", \"Demande de devis\"\n  - **Réponse** : Copier la demande originale du user\n  - **Mode** : Inscrire \"chatgpt\"\n  - **Iterations** : Inscrire \"1\"\n  - **Email Préparé** : Le brouillon complet avec signature\n  - **Date** : Date et heure actuelles au format \"DD/MM/YYYY HH:MM\"\n\n  **Champs optionnels (laisser vide si non applicable) :**\n  - **Répondu** : Laisser vide\n  - **Appellation** : Comment s'adresser au contact (ex: \"Greg\", \"M. Robinson\")\n\n  ## 📝 RÈGLES DE RÉDACTION\n\n  ### 🗣️ Tutoiement (Tu)\n  - Utilise \"tu\", \"toi\", \"ton\", \"ta\", \"tes\"\n  - Verbes à la 2ème personne du singulier\n  - Ton plus direct et familier (mais reste professionnel)\n  - Formule d'appel : \"Salut [Prénom],\" ou \"Bonjour [Prénom],\"\n  - **Exemple :** \"Salut Greg,\\n\\nJe te contacte pour te proposer un rendez-vous la semaine prochaine.\"\n\n  ### 🎩 Vouvoiement (Vous)\n  - Utilise \"vous\", \"votre\", \"vos\"\n  - Verbes à la 2ème personne du pluriel\n  - Ton professionnel et respectueux\n  - Formule d'appel : \"Bonjour [Prénom],\" ou \"Bonjour M./Mme [Nom],\"\n  - **Exemple :** \"Bonjour,\\n\\nJe vous contacte pour vous proposer un rendez-vous la semaine prochaine.\"\n\n  ### ✒️ Signature (obligatoire et toujours identique)\n  Salutations,\n  Emrah GULER\n  Gsm: 0032 499 93 16 30\n  E-mail: emrah.guler@agsteeltrading.com\n  Website: http://www.agsteeltrading.com\n\n  ## 📚 EXEMPLES PRATIQUES COMPLETS\n\n  ### Exemple 1 : Contact trouvé - Tutoiement\n\n  **Demande du user :**\n  \"Crée un mail pour Greg pour lui proposer un rdv mardi prochain à 14h\"\n\n  **Processus :**\n  1. FindContacts(\"Greg\") → Trouve \"Gregory Robinson\" (Tu/Vous = \"Tu\")\n  2. Rédaction en mode tutoiement\n  3. CreateBrouillons avec ID généré\n\n  **Brouillon créé :**\n  Salut Greg,\n\n  J'espère que tu vas bien. Je te contacte pour te proposer un rendez-vous mardi prochain à 14h. Merci de me confirmer si cet horaire te convient.\n\n  Salutations,\n  Emrah GULER\n  Gsm: 0032 499 93 16 30\n  E-mail: emrah.guler@agsteeltrading.com\n  Website: http://www.agsteeltrading.com\n\n  **Output JSON :**\n  ```json\n  {\n    \"type\": \"brouillon\",\n    \"content\": \"Salut Greg,\\n\\nJ'espère que tu vas bien. Je te contacte pour te proposer un rendez-vous mardi prochain à 14h. Merci de me confirmer si cet\n  horaire te convient.\\n\\nSalutations,\\nEmrah GULER\\nGsm: 0032 499 93 16 30\\nE-mail: emrah.guler@agsteeltrading.com\\nWebsite: www.agsteeltrading.com\",\n    \"mailId\": \"mg7qrf15ulo\"\n  }\n\n  Exemple 2 : Contact trouvé - Vouvoiement\n\n  Demande du user :\n  \"Envoie un mail à M. Dupont pour confirmer la livraison de jeudi\"\n\n  Processus :\n  1. FindContacts(\"Dupont\") → Trouve \"Jean Dupont\" (Tu/Vous = \"Vous\")\n  2. Rédaction en mode vouvoiement formel\n  3. CreateBrouillons avec ID généré\n\n  Brouillon créé :\n  Bonjour M. Dupont,\n\n  Je vous contacte pour vous confirmer la livraison prévue ce jeudi. Tout est en ordre de notre côté.\n\n  N'hésitez pas si vous avez des questions.\n\n  Salutations,\n  Emrah GULER\n  Gsm: 0032 499 93 16 30\n  E-mail: emrah.guler@agsteeltrading.com\n  Website: www.agsteeltrading.com\n\n  Output JSON :\n  {\n    \"type\": \"brouillon\",\n    \"content\": \"Bonjour M. Dupont,\\n\\nJe vous contacte pour vous confirmer la livraison prévue ce jeudi. Tout est en ordre de notre côté.\\n\\nN'hésitez pas \n  si vous avez des questions.\\n\\nSalutations,\\nEmrah GULER\\nGsm: 0032 499 93 16 30\\nE-mail: emrah.guler@agsteeltrading.com\\nWebsite: \n  www.agsteeltrading.com\",\n    \"mailId\": \"k3p9zt42xwm\"\n  }\n\n  Exemple 3 : Plusieurs contacts trouvés\n\n  Demande du user :\n  \"Crée un mail pour Philippe pour lui demander un devis\"\n\n  Processus :\n  1. FindContacts(\"Philippe\") → Trouve 3 résultats\n  2. Retourner une question de clarification\n\n  Output JSON :\n  {\n    \"type\": \"question\",\n    \"content\": \"J'ai trouvé 3 contacts nommés Philippe :\\n\\n1. Philippe Martin (philippe.martin@example.com)\\n2. Philippe Durand (p.durand@company.fr)\\n3. \n  Philippe Leblanc (leblanc.phil@business.com)\\n\\nLequel souhaitez-vous contacter ?\",\n    \"mailId\": null\n  }\n\n  Exemple 4 : Contact introuvable\n\n  Demande du user :\n  \"Envoie un mail à Sarah pour la remercier\"\n\n  Processus :\n  1. FindContacts(\"Sarah\") → Aucun résultat\n  2. AllContacts() → Recherche exhaustive → Aucun résultat\n  3. Retourner une question\n\n  Output JSON :\n  {\n    \"type\": \"question\",\n    \"content\": \"Je n'ai trouvé aucun contact nommé Sarah dans la base de données. Pouvez-vous me donner plus d'informations (nom complet, entreprise, ou \n  adresse email) pour que je puisse créer ce contact ?\",\n    \"mailId\": null\n  }\n\n  Exemple 5 : Demande complexe avec contexte\n\n  Demande du user :\n  \"Dis à Greg que le container est arrivé au port d'Anvers et qu'on peut organiser la livraison pour la semaine prochaine\"\n\n  Processus :\n  1. FindContacts(\"Greg\") → Trouve \"Gregory Robinson\"\n  2. Analyse du contexte : livraison, container, Anvers, semaine prochaine\n  3. Rédaction structurée avec tous les éléments\n\n  Brouillon créé :\n  Salut Greg,\n\n  J'espère que tu vas bien. Je voulais t'informer que le container est bien arrivé au port d'Anvers. Nous sommes maintenant en mesure d'organiser la\n  livraison pour la semaine prochaine.\n\n  Merci de me confirmer la date qui te conviendrait le mieux.\n\n  Salutations,\n  Emrah GULER\n  Gsm: 0032 499 93 16 30\n  E-mail: emrah.guler@agsteeltrading.com\n  Website: www.agsteeltrading.com\n\n  Output JSON :\n  {\n    \"type\": \"brouillon\",\n    \"content\": \"Salut Greg,\\n\\nJ'espère que tu vas bien. Je voulais t'informer que le container est bien arrivé au port d'Anvers. Nous sommes maintenant en\n   mesure d'organiser la livraison pour la semaine prochaine.\\n\\nMerci de me confirmer la date qui te conviendrait le mieux.\\n\\nSalutations,\\nEmrah \n  GULER\\nGsm: 0032 499 93 16 30\\nE-mail: emrah.guler@agsteeltrading.com\\nWebsite: www.agsteeltrading.com\",\n    \"mailId\": \"h8n2df67qjr\"\n  }\n\n  ⚠️ POINTS CRITIQUES\n\n  ✅ À FAIRE SYSTÉMATIQUEMENT :\n  - TOUJOURS rechercher le contact AVANT de rédiger\n  - TOUJOURS vérifier les diminutifs et variantes d'orthographe\n  - TOUJOURS utiliser AllContacts si FindContacts échoue\n  - TOUJOURS générer un ID unique de 12 caractères\n  - TOUJOURS détecter le bon niveau de langage (Tu/Vous)\n  - TOUJOURS inclure la signature complète\n  - TOUJOURS créer un sujet pertinent\n  - TOUJOURS retourner le format JSON approprié\n\n  ❌ À NE JAMAIS FAIRE :\n  - NE JAMAIS inventer un contact qui n'existe pas\n  - NE JAMAIS créer un brouillon sans avoir trouvé le contact\n  - NE JAMAIS oublier la signature\n  - NE JAMAIS utiliser un format JSON différent\n  - NE JAMAIS réutiliser un mailId existant\n  - NE JAMAIS mélanger tutoiement et vouvoiement dans un même email\n\n  🔍 EN CAS DE DOUTE :\n  - Contact ambigu → Poser une question de clarification\n  - Plusieurs contacts → Demander lequel choisir\n  - Informations manquantes → Demander au user\n  - Niveau de langage incertain → Privilégier le vouvoiement\n\n  📤 FORMAT DE SORTIE JSON OBLIGATOIRE\n\n  Cas 1 - Brouillon créé avec succès :\n  {\n    \"type\": \"brouillon\",\n    \"content\": \"Le texte complet du brouillon email avec signature\",\n    \"mailId\": \"ID unique généré (12 caractères alphanumériques)\"\n  }\n\n  Cas 2 - Question/Clarification nécessaire :\n  {\n    \"type\": \"question\",\n    \"content\": \"Ta question ou demande de clarification au user\",\n    \"mailId\": null\n  }\n\n  ⚠️ IMPORTANT : Retourne TOUJOURS l'un de ces deux formats JSON, jamais autre chose !\n\n  🧠 LOGIQUE INTERNE DE DÉCISION\n\n  DÉBUT\n    1. Analyser demande_user → Extraire destinataire\n    \n    2. Rechercher contact :\n       a. FindContacts(destinataire)\n       b. SI aucun résultat → AllContacts() + recherche manuelle\n       c. SI aucun résultat → RETOURNER question JSON\n       d. SI plusieurs résultats → RETOURNER question JSON avec options\n       e. SI 1 résultat → CONTINUER\n    \n    3. Extraire infos contact :\n       - ID_Contact\n       - Nom complet\n       - Email\n       - Tu/Vous\n       - Appellation\n\n    4. Analyser demande_user :\n       - Objet de l'email\n       - Ton souhaité\n       - Éléments à inclure\n       - Niveau de langage (confirmer avec contact.Tu/Vous)\n    \n    5. Rédiger brouillon :\n       - Formule d'appel appropriée\n       - Corps du message\n       - Signature complète\n    \n    6. Générer ID unique (12 caractères)\n    \n    7. CreateBrouillons avec tous les champs\n    \n    8. RETOURNER brouillon JSON avec type=\"brouillon\"\n  FIN\n\n  ---\n  Note finale : Cet agent est optimisé pour créer des emails professionnels de qualité en recherchant intelligemment les contacts et en s'adaptant au\n  contexte. La distinction type \"brouillon\" / \"question\" permet une conversation fluide avec le user en cas d'ambiguïté."
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 2.2,
+        "position": [
+          912,
+          1856
+        ],
+        "id": "89d9b7a0-f391-48ca-8024-870518c4d411",
+        "name": "AI Agent1"
+      },
+      {
+        "parameters": {
+          "model": {
+            "__rl": true,
+            "mode": "list",
+            "value": "gpt-4.1-mini"
+          },
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+        "typeVersion": 1.2,
+        "position": [
+          656,
+          2112
+        ],
+        "id": "baf454e5-1ee1-4cfe-8115-f974f9743226",
+        "name": "OpenAI Chat Model1",
+        "credentials": {
+          "openAiApi": {
+            "id": "UMiZ3xasVxXbQU41",
+            "name": "OpenAi account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Telegram').item.json.message.chat.id }}",
+          "text": "=📝 Brouillon de réponse :\n━━━━━━━━━━━━━━━\n{{ $json.output.content }}\n━━━━━━━━━━━━━━━",
+          "replyMarkup": "inlineKeyboard",
+          "inlineKeyboard": {
+            "rows": [
+              {
+                "row": {
+                  "buttons": [
+                    {
+                      "text": "✏️ Modifier",
+                      "additionalFields": {
+                        "callback_data": "=edit_{{ $json.output.mailId }}"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "row": {
+                  "buttons": [
+                    {
+                      "text": "📧 Brouillon",
+                      "additionalFields": {
+                        "callback_data": "=draft_{{ $json.output.mailId }}"
+                      }
+                    },
+                    {
+                      "text": "✅ Envoyer",
+                      "additionalFields": {
+                        "callback_data": "=send_{{ $json.output.mailId }}"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "additionalFields": {}
+        },
+        "id": "daba53b8-e851-4f7c-8e15-e4f00440dfa6",
+        "name": "Send Draft2",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1,
+        "position": [
+          1648,
+          1712
+        ],
+        "webhookId": "1aa667dd-c7d8-4353-ab95-1dfa24ea566f",
+        "credentials": {
+          "telegramApi": {
+            "id": "ELRGegdlya5sbd8e",
+            "name": "AGSteelMailBot"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE",
+            "mode": "list",
+            "cachedResultName": "AGSteel Contacts",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE/edit#gid=0"
+          },
+          "filtersUI": {
+            "values": [
+              {
+                "lookupColumn": "Nom",
+                "lookupValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('values0_Value', ``, 'string') }}"
+              },
+              {
+                "lookupColumn": "ID",
+                "lookupValue": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('values1_Value', ``, 'string') }}"
+              }
+            ]
+          },
+          "combineFilters": "OR",
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          1104,
+          2112
+        ],
+        "id": "4a2a28c8-286c-400e-80ee-8258ef428553",
+        "name": "FindContacts",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs",
+            "mode": "list",
+            "cachedResultName": "AG Steel",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "ID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ID', ``, 'string') }}",
+              "Nom": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nom', ``, 'string') }}",
+              "Email Client": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email_Client', ``, 'string') }}",
+              "Email Reçu": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email_Re_u', ``, 'string') }}",
+              "Sujet": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Sujet', ``, 'string') }}",
+              "Date": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Date', ``, 'string') }}",
+              "Mode": "chatgpt",
+              "Iterations": "1",
+              "Email Préparé": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email_Pr_par_', ``, 'string') }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "ID",
+                "displayName": "ID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Nom",
+                "displayName": "Nom",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Email Client",
+                "displayName": "Email Client",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Email Reçu",
+                "displayName": "Email Reçu",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Sujet",
+                "displayName": "Sujet",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Réponse",
+                "displayName": "Réponse",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Mode",
+                "displayName": "Mode",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Iterations",
+                "displayName": "Iterations",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Email Préparé",
+                "displayName": "Email Préparé",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Répondu",
+                "displayName": "Répondu",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Date",
+                "displayName": "Date",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          976,
+          2112
+        ],
+        "id": "dca601bf-0cc3-4088-adfe-4158268d105c",
+        "name": "CreateBrouillons",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.output.type }}",
+                      "rightValue": "brouillon",
+                      "operator": {
+                        "type": "string",
+                        "operation": "contains"
+                      },
+                      "id": "96db93af-c066-4ed7-ad4b-ff5193008d05"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Brouillon"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "dcde40fe-3fec-42b3-b613-224a955e4bb4",
+                      "leftValue": "={{ $json.output.type }}",
+                      "rightValue": "question",
+                      "operator": {
+                        "type": "string",
+                        "operation": "contains"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Réponse"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.3,
+        "position": [
+          1392,
+          1856
+        ],
+        "id": "e15833f4-68a4-45bb-86a2-619367927452",
+        "name": "Switch2"
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Telegram').item.json.message.chat.id }}",
+          "text": "={{ $json.output.content }}",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          1664,
+          2000
+        ],
+        "id": "1934abbf-2ec1-40f9-9ec0-b4d250f4cf49",
+        "name": "Send a text message",
+        "webhookId": "3bc6e297-6092-4737-9e9b-65275b3f0623",
+        "credentials": {
+          "telegramApi": {
+            "id": "ELRGegdlya5sbd8e",
+            "name": "AGSteelMailBot"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Telegram').item.json.callback_query.from.id }}",
+          "text": "= 📧 Répondre au mail de {{ $json.Nom }}<a href=\"tg://user?id={{ $json.ID }}\">‎</a>",
+          "replyMarkup": "forceReply",
+          "forceReply": {
+            "force_reply": true
+          },
+          "additionalFields": {
+            "appendAttribution": false,
+            "parse_mode": "HTML"
+          }
+        },
+        "id": "e00bcfcb-31cd-4745-b5c4-04175aade800",
+        "name": "Force Keyboard",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1,
+        "position": [
+          624,
+          -1760
+        ],
+        "webhookId": "56afd7d6-937c-47e4-9405-67613e0a47d0",
+        "credentials": {
+          "telegramApi": {
+            "id": "ELRGegdlya5sbd8e",
+            "name": "AGSteelMailBot"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Telegram').item.json.callback_query.from.id }}",
+          "text": "= 📧 Modifier le mail pour {{ $json.Nom }}<a href=\"tg://user?id={{ $json.ID }}\">‎</a>",
+          "replyMarkup": "forceReply",
+          "forceReply": {
+            "force_reply": true
+          },
+          "additionalFields": {
+            "appendAttribution": false,
+            "parse_mode": "HTML"
+          }
+        },
+        "id": "d640a09d-793b-4868-ac0d-3fcc4f4138e6",
+        "name": "Force Edit",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1,
+        "position": [
+          -192,
+          -1520
+        ],
+        "webhookId": "d7ef13eb-5fc7-427c-89d5-a2e3f5710c4e",
+        "credentials": {
+          "telegramApi": {
+            "id": "EUimFAG839eeMHEO",
+            "name": "AG Steel Email Bot"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs",
+            "mode": "list",
+            "cachedResultName": "AG Steel",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit#gid=0"
+          },
+          "filtersUI": {
+            "values": [
+              {
+                "lookupColumn": "ID",
+                "lookupValue": "={{ $('Code').item.json.mode }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "id": "fbdd47b0-74e8-4b5e-989b-79a2871fd5d6",
+        "name": "Lookup for Send",
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4,
+        "position": [
+          -592,
+          -1264
+        ],
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Telegram').item.json.callback_query.from.id }}",
+          "text": "Le mail a bien été enregistré dans les brouillons",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "id": "90d6e09b-2d85-4ba2-820b-9e90bfd903d3",
+        "name": "Confirm Draft",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1,
+        "position": [
+          624,
+          -944
+        ],
+        "webhookId": "2b2a2b53-0896-48d2-a171-b5f9dd0a3063",
+        "credentials": {
+          "telegramApi": {
+            "id": "ELRGegdlya5sbd8e",
+            "name": "AGSteelMailBot"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Telegram').item.json.callback_query.message.chat.id }}",
+          "text": "=Le mail a bien été envoyé à {{ $('Lookup for Send').item.json.Nom }}",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "id": "5651735d-a307-4ee5-98f7-19af50d3aa03",
+        "name": "Confirm Sent",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1,
+        "position": [
+          624,
+          -1328
+        ],
+        "webhookId": "80e7e308-8097-4367-a93a-21be5a867c59",
+        "credentials": {
+          "telegramApi": {
+            "id": "ELRGegdlya5sbd8e",
+            "name": "AGSteelMailBot"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "const items = $input.all();\n\nconst updatedItems = items.map((item) => {\n  const callbackData = item?.json?.callback_query?.data;\n  if (callbackData) {\n    const [action, mode, id] = callbackData.split(\"_\");\n    return {\n      action,\n      mode,\n      id,\n    };\n  }\n});\n\nreturn updatedItems;\n"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -1488,
+          -1712
+        ],
+        "id": "ec2736ae-1042-4dfe-a7d6-1ea792262b90",
+        "name": "Code"
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs",
+            "mode": "list",
+            "cachedResultName": "AG Steel",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit#gid=0"
+          },
+          "filtersUI": {
+            "values": [
+              {
+                "lookupColumn": "ID",
+                "lookupValue": "={{ $('Code').item.json.mode }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -592,
+          -880
+        ],
+        "id": "e083131d-3323-43a9-b2e9-e7c8d241d461",
+        "name": "Get row(s) in sheet1",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "const emailData = $input.first().json;\n\n  // Préparer les données pour l'API\n  const draftData = {\n    to: emailData[\"Email Client\"] || emailData[\"Nom\"],\n    subject: `Re: ${emailData[\"Sujet\"] || \"Sans sujet\"}`,\n    body: emailData[\"Email Préparé\"],\n    mailId: emailData[\"ID\"],\n    from: \"greg@audelalia.fr\"\n  };\n\n  return [{\n    json: draftData\n  }];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          -400,
+          -880
+        ],
+        "id": "c043b6da-189b-4592-b53c-868c04be3440",
+        "name": "Code1"
+      },
+      {
+        "parameters": {
+          "method": "POST",
+          "url": "https://www.agsteeltrading.com/save-draft-alt.php",
+          "sendHeaders": true,
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "host",
+                "value": "imap.ionos.fr"
+              },
+              {
+                "name": "port",
+                "value": "993"
+              },
+              {
+                "name": "username",
+                "value": "greg@audelalia.fr"
+              },
+              {
+                "name": "password"
+              },
+              {
+                "name": "folder",
+                "value": "Brouillons"
+              }
+            ]
+          },
+          "sendBody": true,
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "environment",
+                "value": "=test"
+              },
+              {
+                "name": "to",
+                "value": "={{ $json.to }}"
+              },
+              {
+                "name": "originalSubject",
+                "value": "={{ $json.subject }}"
+              },
+              {
+                "name": "body",
+                "value": "={{ $json.body }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "position": [
+          -208,
+          -880
+        ],
+        "id": "036403ee-bc51-46eb-9bd1-e89341b93335",
+        "name": "HTTP Request"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "f96ece63-ed2c-4086-a22c-02ac8785d239",
+                "leftValue": "={{ $json.success }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "boolean",
+                  "operation": "true",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2,
+        "position": [
+          0,
+          -880
+        ],
+        "id": "7a5deaf3-d4b9-4853-a9c8-efc1073d65f1",
+        "name": "If"
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Telegram').item.json.callback_query.from.id }}",
+          "text": "Enregistrement Impossible. Le brouillon est dans le Google Sheets.",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "id": "f3594ff2-998c-45f7-8440-8816e263729d",
+        "name": "Error Draft",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1,
+        "position": [
+          624,
+          -736
+        ],
+        "webhookId": "2b2a2b53-0896-48d2-a171-b5f9dd0a3063",
+        "credentials": {
+          "telegramApi": {
+            "id": "ELRGegdlya5sbd8e",
+            "name": "AGSteelMailBot"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Telegram').item.json.callback_query.message.chat.id }}",
+          "text": "=Un problème est survenu lors de l'envoi du mail. Il est enregistré dans le Google Sheet",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "id": "5548e05d-937f-4265-b99a-b1a892cf1df9",
+        "name": "Error Send",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1,
+        "position": [
+          624,
+          -1104
+        ],
+        "webhookId": "80e7e308-8097-4367-a93a-21be5a867c59",
+        "credentials": {
+          "telegramApi": {
+            "id": "ELRGegdlya5sbd8e",
+            "name": "AGSteelMailBot"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs",
+            "mode": "list",
+            "cachedResultName": "AG Steel",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit#gid=0"
+          },
+          "filtersUI": {
+            "values": [
+              {
+                "lookupColumn": "ID",
+                "lookupValue": "={{ $json.id }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -592,
+          -1760
+        ],
+        "id": "c87b75a4-6a40-44ae-8e33-9fff0ec3bb67",
+        "name": "Get row(s) in sheet2",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "documentId": {
+            "__rl": true,
+            "value": "1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs",
+            "mode": "list",
+            "cachedResultName": "AG Steel",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "ID": "={{ $json.ID }}",
+              "Mode": "={{ $('Code').item.json.mode }}"
+            },
+            "matchingColumns": [
+              "ID"
+            ],
+            "schema": [
+              {
+                "id": "ID",
+                "displayName": "ID",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": false
+              },
+              {
+                "id": "Nom",
+                "displayName": "Nom",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Email Client",
+                "displayName": "Email Client",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Email Reçu",
+                "displayName": "Email Reçu",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Sujet",
+                "displayName": "Sujet",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Réponse",
+                "displayName": "Réponse",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Mode",
+                "displayName": "Mode",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Iterations",
+                "displayName": "Iterations",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Email Préparé",
+                "displayName": "Email Préparé",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Répondu",
+                "displayName": "Répondu",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "Date",
+                "displayName": "Date",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              },
+              {
+                "id": "row_number",
+                "displayName": "row_number",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "number",
+                "canBeUsedToMatch": true,
+                "readOnly": true,
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -208,
+          -1760
+        ],
+        "id": "0defa427-c9f1-4b78-885d-c0a47f2eed94",
+        "name": "Update row in sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "delete",
+          "documentId": {
+            "__rl": true,
+            "value": "1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs",
+            "mode": "list",
+            "cachedResultName": "AG Steel",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit#gid=0"
+          }
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          304,
+          -1328
+        ],
+        "id": "8454a6c1-e899-45b1-b78d-9e1e443795e0",
+        "name": "Delete rows or columns from sheet",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        },
+        "disabled": true
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "5479ae80-a79f-470c-bc33-4f7b2fa89e0b",
+                      "leftValue": "={{ $json.mode }}",
+                      "rightValue": "spam",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Spam"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.action }}",
+                      "rightValue": "reply",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals"
+                      },
+                      "id": "b2ebc88e-eb34-4801-bf26-14c5288c6d4f"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Reply"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "bfffc467-7017-436c-bbb6-dd8da06992b6",
+                      "leftValue": "={{ $json.action }}",
+                      "rightValue": "edit",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Edit"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "2cd58c73-c248-4dc1-b915-e072ca4ae210",
+                      "leftValue": "={{ $json.action }}",
+                      "rightValue": "send",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Send"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "15b65923-ffbf-4cc2-a787-aa2bdb51d0e6",
+                      "leftValue": "={{ $json.action }}",
+                      "rightValue": "draft",
+                      "operator": {
+                        "type": "string",
+                        "operation": "equals",
+                        "name": "filter.operator.equals"
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "draft"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.2,
+        "position": [
+          -1184,
+          -1760
+        ],
+        "id": "286b2f63-a0d8-47ee-8e0a-d1d71d9fda95",
+        "name": "Switch4"
+      },
+      {
+        "parameters": {
+          "operation": "append",
+          "documentId": {
+            "__rl": true,
+            "value": "1cyjFdv3hB7fWBIYk83jzjAAnlnC-ycVjLO1mEHQixYw",
+            "mode": "list",
+            "cachedResultName": "AG Steel Spams",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cyjFdv3hB7fWBIYk83jzjAAnlnC-ycVjLO1mEHQixYw/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cyjFdv3hB7fWBIYk83jzjAAnlnC-ycVjLO1mEHQixYw/edit#gid=0"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Email": "={{ $json['Email Client'] }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "id": "Email",
+                "displayName": "Email",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true
+              },
+              {
+                "id": "Date",
+                "displayName": "Date",
+                "required": false,
+                "defaultMatch": false,
+                "display": true,
+                "type": "string",
+                "canBeUsedToMatch": true,
+                "removed": true
+              }
+            ],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -288,
+          -2000
+        ],
+        "id": "ca023f48-c8c7-4400-913a-b6378962abcc",
+        "name": "Append row in sheet1",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Telegram').item.json.callback_query.message.chat.id }}",
+          "text": "=Le mail a bien été considéré comme spam",
+          "additionalFields": {
+            "appendAttribution": false
+          }
+        },
+        "id": "1384094a-6bea-4257-9527-88ac1354fa9b",
+        "name": "Confirm Spam",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1,
+        "position": [
+          624,
+          -2000
+        ],
+        "webhookId": "80e7e308-8097-4367-a93a-21be5a867c59",
+        "credentials": {
+          "telegramApi": {
+            "id": "ELRGegdlya5sbd8e",
+            "name": "AGSteelMailBot"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs",
+            "mode": "list",
+            "cachedResultName": "AG Steel",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit#gid=0"
+          },
+          "filtersUI": {
+            "values": [
+              {
+                "lookupColumn": "ID",
+                "lookupValue": "={{ $('Code').item.json.id }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -592,
+          -2000
+        ],
+        "id": "15d78d7b-236e-4b62-849f-cc85bed9e340",
+        "name": "Get row(s) in sheet5",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "delete",
+          "documentId": {
+            "__rl": true,
+            "value": "1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs",
+            "mode": "list",
+            "cachedResultName": "AG Steel",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit#gid=0"
+          }
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          64,
+          -2000
+        ],
+        "id": "3d99d409-12b2-4b8d-97c6-321cb0d1d4e3",
+        "name": "Delete rows or columns from sheet2",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "rules": {
+            "values": [
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "leftValue": "={{ $json.callback_query }}",
+                      "rightValue": "",
+                      "operator": {
+                        "type": "object",
+                        "operation": "exists",
+                        "singleValue": true
+                      },
+                      "id": "c91cad45-9c98-48db-9de2-a259fc84093d"
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Callback"
+              },
+              {
+                "conditions": {
+                  "options": {
+                    "caseSensitive": true,
+                    "leftValue": "",
+                    "typeValidation": "strict",
+                    "version": 2
+                  },
+                  "conditions": [
+                    {
+                      "id": "63225f79-3c2d-49d9-8341-5a33f77d0eff",
+                      "leftValue": "={{ $json.message }}",
+                      "rightValue": "",
+                      "operator": {
+                        "type": "object",
+                        "operation": "exists",
+                        "singleValue": true
+                      }
+                    }
+                  ],
+                  "combinator": "and"
+                },
+                "renameOutput": true,
+                "outputKey": "Message"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.switch",
+        "typeVersion": 3.3,
+        "position": [
+          -2976,
+          -688
+        ],
+        "id": "00609699-17ce-451e-be7e-bdd9903b0a99",
+        "name": "Switch3"
+      },
+      {
+        "parameters": {
+          "updates": [
+            "message",
+            "callback_query"
+          ],
+          "additionalFields": {
+            "download": false
+          }
+        },
+        "type": "n8n-nodes-base.telegramTrigger",
+        "typeVersion": 1.2,
+        "position": [
+          -3424,
+          -688
+        ],
+        "id": "46cd47b6-0711-4ed6-ba44-6bdc39f92546",
+        "name": "Telegram",
+        "webhookId": "327a80ba-1f3d-4d9c-89de-77207d8d2de3",
+        "credentials": {
+          "telegramApi": {
+            "id": "ELRGegdlya5sbd8e",
+            "name": "AGSteelMailBot"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE",
+            "mode": "list",
+            "cachedResultName": "AGSteel Contacts",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Gh-9lIIQD6m1ktkn2ljwrJaoyYjlRj7ZBbHZzwQ6tNE/edit#gid=0"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheetsTool",
+        "typeVersion": 4.7,
+        "position": [
+          1216,
+          2112
+        ],
+        "id": "5e7ba726-1e10-477d-a7f8-212ee43bbb36",
+        "name": "AllContacts",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "sessionIdType": "customKey",
+          "sessionKey": "={{ $('Telegram').item.json.message.chat.id }}"
+        },
+        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "typeVersion": 1.3,
+        "position": [
+          832,
+          2112
+        ],
+        "id": "b9c759f6-04ac-401b-8b39-60524d863869",
+        "name": "Simple Memory"
+      },
+      {
+        "parameters": {
+          "schemaType": "manual",
+          "inputSchema": "{\n    \"type\": \"brouillon | question\",\n    \"content\": \"Le contenu (brouillon ou question)\",\n    \"mailId\": \"l'ID si brouillon créé, sinon null\"\n  }"
+        },
+        "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+        "typeVersion": 1.3,
+        "position": [
+          1344,
+          2112
+        ],
+        "id": "b9eb34ba-197f-4554-b699-5712a73da509",
+        "name": "Structured Output Parser1"
+      },
+      {
+        "parameters": {
+          "resource": "callback",
+          "queryId": "={{ $('Telegram').item.json.callback_query.id }}",
+          "additionalFields": {
+            "show_alert": false
+          }
+        },
+        "id": "1881d6e9-16c5-4cd6-a51e-cdf28ed307ab",
+        "name": "Edit Callback",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1,
+        "position": [
+          624,
+          -1520
+        ],
+        "webhookId": "80e7e308-8097-4367-a93a-21be5a867c59",
+        "credentials": {
+          "telegramApi": {
+            "id": "EUimFAG839eeMHEO",
+            "name": "AG Steel Email Bot"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs",
+            "mode": "list",
+            "cachedResultName": "AG Steel",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit?usp=drivesdk"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Feuille 1",
+            "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit#gid=0"
+          },
+          "filtersUI": {
+            "values": [
+              {
+                "lookupColumn": "ID",
+                "lookupValue": "={{ $json.mode }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          -592,
+          -1520
+        ],
+        "id": "4dc4dd8f-72b7-4c84-a807-4392e8736606",
+        "name": "Get row(s) in sheet4",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "uFPsNWjVjI1QPU9p",
+            "name": "Google Sheets g.r3108"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "fromEmail": "greg@meep.fr",
+          "toEmail": "={{ $json['Email Client'] }}",
+          "subject": "=RE: {{ $json.Sujet }}",
+          "emailFormat": "text",
+          "text": "={{ $json[\"Email Préparé\"] + \"\\n\\n-----Message d'origine-----\\nDe : \" + $json['Email Client'] + \"\\nEnvoyé le : \" + $json.Date + \"\\nÀ : \" + $json['Email Client'] + \"\\nObjet: \" + $json.Date + \"\\n\" + $json[\"Email Reçu\"] }}",
+          "options": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.emailSend",
+        "typeVersion": 2.1,
+        "position": [
+          -176,
+          -1264
+        ],
+        "id": "88d8a7f4-0ed7-4268-aec7-4563e2c19d2d",
+        "name": "Répondre email",
+        "webhookId": "9baf996b-0acf-45ac-9a6d-11f5d7e15e83",
+        "credentials": {
+          "smtp": {
+            "id": "GoHaMvMYa50IVoPj",
+            "name": "SMTP greg@meep.fr"
+          }
+        },
+        "onError": "continueErrorOutput"
+      }
+    ],
+    "connections": {
+      "Structured Output Parser2": {
+        "ai_outputParser": [
+          [
+            {
+              "node": "Creation de reponses",
+              "type": "ai_outputParser",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Update Draft": {
+        "ai_tool": [
+          [
+            {
+              "node": "Creation de reponses",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Check Mail": {
+        "ai_tool": [
+          [
+            {
+              "node": "Creation de reponses",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Creation de reponses": {
+        "main": [
+          [
+            {
+              "node": "Send Draft1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Switch": {
+        "main": [
+          [
+            {
+              "node": "Edit Fields",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Fichier",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI": {
+        "main": [
+          [
+            {
+              "node": "Code2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Fichier": {
+        "main": [
+          [
+            {
+              "node": "OpenAI",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "node": "Code2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code2": {
+        "main": [
+          [
+            {
+              "node": "Get row(s) in sheet3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GPT 4.1-Mini - 2": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Creation de reponses",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Switch1": {
+        "main": [
+          [
+            {
+              "node": "Get Contact 1",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Get Contact",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "AI Agent1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get row(s) in sheet3": {
+        "main": [
+          [
+            {
+              "node": "Switch1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Structured Output Parser": {
+        "ai_outputParser": [
+          [
+            {
+              "node": "Creation de reponses1",
+              "type": "ai_outputParser",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Update Draft1": {
+        "ai_tool": [
+          [
+            {
+              "node": "Creation de reponses1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Check Mail1": {
+        "ai_tool": [
+          [
+            {
+              "node": "Creation de reponses1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Creation de reponses1": {
+        "main": [
+          [
+            {
+              "node": "Send Draft",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GPT 4.1-Mini - ": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Creation de reponses1",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get Contact 1": {
+        "main": [
+          [
+            {
+              "node": "Creation de reponses",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get Contact": {
+        "main": [
+          [
+            {
+              "node": "Creation de reponses1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GetContacts1": {
+        "ai_tool": [
+          [
+            {
+              "node": "Creation de reponses1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "MakeContacts1": {
+        "ai_tool": [
+          [
+            {
+              "node": "Creation de reponses1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "GetContacts": {
+        "ai_tool": [
+          [
+            {
+              "node": "Creation de reponses",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "MakeContacts": {
+        "ai_tool": [
+          [
+            {
+              "node": "Creation de reponses",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AI Agent1": {
+        "main": [
+          [
+            {
+              "node": "Switch2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "OpenAI Chat Model1": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "FindContacts": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "CreateBrouillons": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Switch2": {
+        "main": [
+          [
+            {
+              "node": "Send Draft2",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Send a text message",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Force Edit": {
+        "main": [
+          [
+            {
+              "node": "Edit Callback",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Lookup for Send": {
+        "main": [
+          [
+            {
+              "node": "Répondre email",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code": {
+        "main": [
+          [
+            {
+              "node": "Switch4",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get row(s) in sheet1": {
+        "main": [
+          [
+            {
+              "node": "Code1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Code1": {
+        "main": [
+          [
+            {
+              "node": "HTTP Request",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "HTTP Request": {
+        "main": [
+          [
+            {
+              "node": "If",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "node": "Confirm Draft",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error Draft",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get row(s) in sheet2": {
+        "main": [
+          [
+            {
+              "node": "Update row in sheet",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Update row in sheet": {
+        "main": [
+          [
+            {
+              "node": "Force Keyboard",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Delete rows or columns from sheet": {
+        "main": [
+          [
+            {
+              "node": "Confirm Sent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Switch4": {
+        "main": [
+          [
+            {
+              "node": "Get row(s) in sheet5",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Get row(s) in sheet2",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Get row(s) in sheet4",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Lookup for Send",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Get row(s) in sheet1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Append row in sheet1": {
+        "main": [
+          [
+            {
+              "node": "Delete rows or columns from sheet2",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get row(s) in sheet5": {
+        "main": [
+          [
+            {
+              "node": "Append row in sheet1",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Delete rows or columns from sheet2": {
+        "main": [
+          [
+            {
+              "node": "Confirm Spam",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Switch3": {
+        "main": [
+          [
+            {
+              "node": "Code",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Switch",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Telegram": {
+        "main": [
+          [
+            {
+              "node": "Switch3",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "AllContacts": {
+        "ai_tool": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Simple Memory": {
+        "ai_memory": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Structured Output Parser1": {
+        "ai_outputParser": [
+          [
+            {
+              "node": "AI Agent1",
+              "type": "ai_outputParser",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Get row(s) in sheet4": {
+        "main": [
+          [
+            {
+              "node": "Force Edit",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Répondre email": {
+        "main": [
+          [
+            {
+              "node": "Delete rows or columns from sheet",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          [
+            {
+              "node": "Error Send",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "pinData": {},
+    "meta": {
+      "templateCredsSetupCompleted": true,
+      "instanceId": "3df2d38a2382b8dfc61b5b037b7fe71c783ab09a6ca04abdae8a809035c1aa99"
+    }
+  }

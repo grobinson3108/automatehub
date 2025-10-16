@@ -1,0 +1,332 @@
+{
+  "meta": {
+    "instanceId": "4a11afdb3c52fd098e3eae9fad4b39fdf1bbcde142f596adda46c795e366b326"
+  },
+  "nodes": [
+    {
+      "id": "17ca0437-6101-4277-9ed2-e37e6b92df02",
+      "name": "Lors du clic sur 'Tester le workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -160,
+        280
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "d3dd600a-2ab5-4d52-92ef-ab3f29dd1790",
+      "name": "Modèle de chat OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        260,
+        400
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "c29d58a2-243b-41ab-99c6-f8a8c92219cf",
+      "name": "Analyseur de sortie structurée",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        460,
+        400
+      ],
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n    \"message\": {\n      \"type\": \"string\"\n    },\n    \"mail_object\": {\n      \"type\": \"string\"\n    }\n  }\n}"
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "3cb31448-5bc3-47c2-a119-d9e33a464d1f",
+      "name": "Déclencheur de planification",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [
+        -160,
+        80
+      ],
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "18b243a5-db1f-4a27-a8a1-3a7c74135d6d",
+      "name": "Note adhésive",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        580,
+        20
+      ],
+      "parameters": {
+        "width": 260,
+        "height": 120,
+        "content": "## Clé API Elevenlabs  \n**Cliquez** pour obtenir votre clé API Elevenlabs. [Elevenlabs](https://try.elevenlabs.io/text-audio)"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "62a9bd08-27f8-45a8-9eb4-30950500a36f",
+      "name": "Changer le nom de fichier",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        880,
+        180
+      ],
+      "parameters": {
+        "jsCode": "/*\n * Filename: addFileName.js\n * Purpose: Add a file name to binary data in an n8n workflow using mail_object from input\n */\n\nconst mailObject = $input.first().json.output.mail_object;\nconst fileName = `${mailObject}.mp3`;\n\nreturn items.map(item => {\n  if (item.binary && item.binary.data) {\n    item.binary.data.fileName = fileName;\n  }\n  return item;\n});"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "41043058-ca06-4c3a-8b7d-597e2941d92b",
+      "name": "Note adhésive1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1020,
+        20
+      ],
+      "parameters": {
+        "width": 300,
+        "height": 120,
+        "content": "## Identifiants API Gmail  \n**Cliquez ici** pour consulter la [documentation](https://docs.n8n.io/integrations/builtin/credentials/google/) et configurer vos autorisations d’accès pour l’API Google Gmail."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "3475e3ae-439d-4245-8994-4444266a67e3",
+      "name": "Note adhésive2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        0
+      ],
+      "parameters": {
+        "width": 300,
+        "height": 140,
+        "content": "## Identifiants API Calendrier  \n**Cliquez ici** pour consulter la [documentation](https://docs.n8n.io/integrations/builtin/credentials/google/) et configurer vos autorisations d’accès pour l’API Google Calendrier."
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "7784fc2d-3e64-40f0-990f-965fba4ad67c",
+      "name": "Générer un rappel vocal",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        660,
+        180
+      ],
+      "parameters": {
+        "url": "https://api.elevenlabs.io/v1/text-to-speech/JBFqnCBsd6RMkjVDRZzb",
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "sendQuery": true,
+        "authentication": "genericCredentialType",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{ $json.output.message }}"
+            },
+            {
+              "name": "model_id",
+              "value": "eleven_multilingual_v2"
+            }
+          ]
+        },
+        "genericAuthType": "httpCustomAuth",
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "output_format",
+              "value": "mp3_22050_32"
+            }
+          ]
+        }
+      },
+      "notesInFlow": true,
+      "retryOnFail": true,
+      "typeVersion": 4.2
+    },
+    {
+      "id": "a2081f29-493b-43c0-bad5-1b273d5db527",
+      "name": "Envoyer un rappel vocal",
+      "type": "n8n-nodes-base.gmail",
+      "position": [
+        1100,
+        180
+      ],
+      "webhookId": "5ba2c8cb-84f1-4363-8410-b8d138286c3a",
+      "parameters": {
+        "sendTo": "={{ $('Get Appointments').item.json.attendees[0].email }}",
+        "message": "=👇 Informations pour demain 🗣️",
+        "options": {
+          "senderName": "John Carpenter",
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          },
+          "appendAttribution": false
+        },
+        "subject": "={{ $('create message').item.json.output.mail_object }}"
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "dd3bf7b2-f951-452a-8912-47ceace50cc0",
+      "name": "créer un message",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        280,
+        180
+      ],
+      "parameters": {
+        "text": "=nom : {{ $json.summary }}\nheure : {{ $json.start.dateTime }}\nadresse : {{ $json.location }}\nDate d'aujourd'hui : {{ $now }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "=Vous êtes un assistant. Vous allez créer un message structuré en JSON.\n\n**\nmessage :\nGénérez un script vocal de rappel pour un rendez-vous immobilier. Le message doit être clair, professionnel et engageant.\n\nIl doit inclure :\n1. Le nom du destinataire.\n2. La date et l'heure du rendez-vous, exprimées naturellement (ex. : à midi, quinze heures quinze, trois heures et demie, cinq heures moins le quart).\n3. L'adresse complète du bien, exprimée naturellement (ex. : 12 Baker Street à Londres, Madison Avenue à New York, 5 Oakwood Drive à Los Angeles).\n4. Une mention de l'expéditeur : M. John Carpenter de l'Agence Super.\n5. Une phrase de confirmation ou une invitation à contacter en cas de besoin.\n\nVariables d'entrée :\n• Nom du destinataire (précédé de M. ou Mme)\n• Heure : heure du rendez-vous\n• Adresse : adresse complète du bien (seulement la rue, le numéro et la ville ; pas le code postal)\n\nLe ton doit être cordial et professionnel, adapté à un message vocal automatisé.\n\nExemple de sortie attendue : \"Bonjour Mme Richard, ici M. John Carpenter de l'Agence Super Immo.\nJe vous rappelle votre rendez-vous prévu demain à 8h15, au 63 Taverniers Road à Talence. Si vous avez des questions ou souhaitez reporter, n'hésitez pas à me contacter. À demain et bonne journée !\"\n\n**\nmail_object : un objet d'email très court\nExemple : Votre rappel de rendez-vous pour demain"
+            }
+          ]
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      },
+      "typeVersion": 1.5
+    },
+    {
+      "id": "63806db8-6814-4fe4-ba2e-80511273ee51",
+      "name": "Obtenir des rendez-vous",
+      "type": "n8n-nodes-base.googleCalendar",
+      "position": [
+        60,
+        180
+      ],
+      "parameters": {
+        "limit": 2,
+        "options": {},
+        "timeMax": "={{ $now.plus({ day: 2 }) }}",
+        "calendar": {
+          "__rl": true,
+          "mode": "list",
+          "value": "mymail@gmail.com",
+          "cachedResultName": "mymail@gmail.com"
+        },
+        "operation": "getAll"
+      },
+      "typeVersion": 1.3
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "créer un message": {
+      "main": [
+        [
+          {
+            "node": "Générer un rappel vocal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Changer le nom de fichier": {
+      "main": [
+        [
+          {
+            "node": "Envoyer un rappel vocal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir des rendez-vous": {
+      "main": [
+        [
+          {
+            "node": "créer un message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déclencheur de planification": {
+      "main": [
+        [
+          {
+            "node": "Obtenir des rendez-vous",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modèle de chat OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "créer un message",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Générer un rappel vocal": {
+      "main": [
+        [
+          {
+            "node": "Changer le nom de fichier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyseur de sortie structurée": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "créer un message",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lors du clic sur 'Tester le workflow'": {
+      "main": [
+        [
+          {
+            "node": "Obtenir des rendez-vous",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

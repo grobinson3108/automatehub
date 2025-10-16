@@ -1,0 +1,27 @@
+{
+  "mcpServers": {
+    "mysql": {
+      "command": "node",
+      "args": ["/var/www/MCP/core/mcp-server-mysql/node_modules/.bin/mcp-mysql"],
+      "env": {
+        "DB_HOST": "localhost",
+        "DB_USER": "root",
+        "DB_PASSWORD": "",
+        "DB_NAME": "automatehub"
+      }
+    },
+    "task-master": {
+      "command": "node",
+      "args": ["/var/www/MCP/core/claude-task-master/node_modules/.bin/task-master-ai", "mcp"],
+      "cwd": "/var/www/MCP/core/claude-task-master"
+    },
+    "n8n-mcp": {
+      "command": "docker",
+      "args": ["exec", "-i", "n8n-mcp", "python", "-m", "n8n_mcp"],
+      "cwd": "/var/www/automatehub",
+      "env": {
+        "N8N_MCP_DATABASE_PATH": "/app/data/n8n_nodes.db"
+      }
+    }
+  }
+}

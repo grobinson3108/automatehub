@@ -1,0 +1,19 @@
+{
+  "name": "Pack_Marketing_Complet",
+  "type": "Metier",
+  "description": "Suite compl\u00e8te marketing digital : r\u00e9seaux sociaux, email, contenu, SEO",
+  "prix": 149,
+  "workflow_count": 100,
+  "workflows": [
+    "Scheduled_YouTube_Video_Posting_to_Twitter.json",
+    "Extract_PDF_Content_and_Publish_as_Blog_Post.json",
+    "Upload_and_Process_Images_for_Social_Media_Posts.json",
+    "AI-Powered_PostgreSQL_Database_Query_Assistant.json",
+    "Scheduled_Twitter_Posts_with_Manual_Override_Option.json",
+    "Weekly_Marketing_Performance_Report_Generator.json",
+    "Social_Media_Post_Scheduler_with_Form_Submission.json",
+    "AI-Powered_Social_Media_Post_Creator_for_Telegram.json",
+    "AI-Powered_WordPress_Post_Summaries_with_Slack_Alerts.json",
+    "AI-Powered_Video_Creation_and_Social_Media_Distribution.json"
+  ]
+}

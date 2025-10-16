@@ -1,0 +1,254 @@
+{
+  "id": "14",
+  "name": "Mettre à jour les valeurs des cryptomonnaies",
+  "nodes": [
+    {
+      "name": "CoinGecko",
+      "type": "n8n-nodes-base.coinGecko",
+      "position": [
+        670,
+        400
+      ],
+      "parameters": {
+        "coinId": "={{$json[\"fields\"][\"Symbol\"]}}",
+        "options": {
+          "market_data": true,
+          "localization": false
+        },
+        "operation": "get"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Obtenir le portefeuille",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        450,
+        400
+      ],
+      "parameters": {
+        "table": "Portfolio",
+        "operation": "list",
+        "application": "appT7eX4iZcZVRIdq",
+        "additionalOptions": {
+          "fields": [
+            "Symbol"
+          ]
+        }
+      },
+      "credentials": {
+        "airtableApi": "Airtable"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Définir",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        870,
+        400
+      ],
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "Present Price",
+              "value": "={{$json[\"market_data\"][\"current_price\"][\"usd\"]}}"
+            },
+            {
+              "name": "Id",
+              "value": "={{$node[\"Get Portfolio\"].json[\"id\"]}}"
+            }
+          ]
+        },
+        "options": {},
+        "keepOnlySet": true
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Exécuter au début de l'heure",
+      "type": "n8n-nodes-base.cron",
+      "position": [
+        240,
+        400
+      ],
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "mode": "everyHour"
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Obtenir les valeurs du portefeuille",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        1260,
+        400
+      ],
+      "parameters": {
+        "table": "Portfolio",
+        "operation": "list",
+        "application": "appT7eX4iZcZVRIdq",
+        "additionalOptions": {
+          "fields": [
+            "Present Value"
+          ]
+        }
+      },
+      "credentials": {
+        "airtableApi": "Airtable"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Déterminer la valeur totale",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        1460,
+        400
+      ],
+      "parameters": {
+        "functionCode": "var totalValues = 0;\n\nitems.forEach(sumValues);\n\nfunction sumValues(value, index, array) {\n  totalValues = totalValues + value.json.fields['Present Value'];\n}\n\nitems = [{\"json\": {}}];\n\n\nitems[0].json['Portfolio Value (US$)'] = totalValues;\n\nreturn items;"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Mettre à jour les valeurs",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        1070,
+        400
+      ],
+      "parameters": {
+        "id": "={{$node[\"SplitInBatches\"].json[\"id\"]}}",
+        "table": "Portfolio",
+        "fields": [
+          "Present Price"
+        ],
+        "options": {},
+        "operation": "update",
+        "application": "appT7eX4iZcZVRIdq",
+        "updateAllFields": false
+      },
+      "credentials": {
+        "airtableApi": "Airtable"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Ajouter la valeur du portefeuille",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        1660,
+        400
+      ],
+      "parameters": {
+        "table": "Portfolio Value",
+        "fields": [
+          "Portfolio Value (US$)"
+        ],
+        "options": {},
+        "operation": "append",
+        "application": "appT7eX4iZcZVRIdq",
+        "addAllFields": false
+      },
+      "credentials": {
+        "airtableApi": "Airtable"
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": false,
+  "settings": {},
+  "connections": {
+    "Définir": {
+      "main": [
+        [
+          {
+            "node": "Mettre à jour les valeurs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "CoinGecko": {
+      "main": [
+        [
+          {
+            "node": "Définir",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir le portefeuille": {
+      "main": [
+        [
+          {
+            "node": "CoinGecko",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mettre à jour les valeurs": {
+      "main": [
+        [
+          {
+            "node": "Obtenir les valeurs du portefeuille",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Exécuter au début de l'heure": {
+      "main": [
+        [
+          {
+            "node": "Obtenir le portefeuille",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir les valeurs du portefeuille": {
+      "main": [
+        [
+          {
+            "node": "Déterminer la valeur totale",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déterminer la valeur totale": {
+      "main": [
+        [
+          {
+            "node": "Ajouter la valeur du portefeuille",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

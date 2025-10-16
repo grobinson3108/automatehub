@@ -1,0 +1,1181 @@
+{
+  "name": "Créer des bannières à partir de vos URL - ChatGPT",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/images/edits",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer sk-enter your api here"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "gpt-image-1"
+            },
+            {
+              "name": "prompt",
+              "value": "=Please create a banner for this product. {{ $json.message.content.websiteData.description }}\n\nDo not add too many words on the banner. \n\nPlease ensure that there is adequate padding between the text and the edges of the banner, so the text does not overlap or spill over the margins."
+            },
+            {
+              "name": "n",
+              "value": "1"
+            },
+            {
+              "name": "size",
+              "value": "1024x1024"
+            },
+            {
+              "parameterType": "formBinaryData",
+              "name": "image",
+              "inputDataFieldName": "data"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1800,
+        -100
+      ],
+      "id": "2b00bf2d-f336-4750-89b5-c59d97626bc4",
+      "name": "Générer une image"
+    },
+    {
+      "parameters": {
+        "operation": "toBinary",
+        "sourceProperty": "data[0].b64_json",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        2000,
+        -100
+      ],
+      "id": "9270c8bb-8935-47ad-8642-5bf2efe81b42",
+      "name": "Convertir en fichier"
+    },
+    {
+      "parameters": {
+        "formTitle": "Auto-Generate & Share Social Banners from Any URL",
+        "formDescription": "<div style=\"text-align: left;\">\n  <p>This form allows you to automatically generate a social media banner from any URL. Just paste your link below and let the automation do the rest: create a beautiful banner, craft your caption, and instantly publish it across your social platforms.</p>\n\n  <p>Want to see how it works behind the scenes? Join my communities:</p>\n  \n  <p><strong>Free Community:</strong> <a href=\"https://dub.sh/free-community\" target=\"_blank\">https://dub.sh/free-community</a></p>\n  <p><strong>Full Workflow & Advanced Training:</strong> <a href=\"https://dub.sh/automation-tribe\" target=\"_blank\">https://dub.sh/automation-tribe</a></p>\n</div>",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Enter URL",
+              "placeholder": "https://www.automation-tribe.com"
+            }
+          ]
+        },
+        "options": {
+          "appendAttribution": false,
+          "buttonLabel": "Generate banner",
+          "ignoreBots": true
+        }
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        760,
+        -100
+      ],
+      "id": "c6acea67-7135-49b6-a497-c6d5710f40c9",
+      "name": "Sur la soumission du formulaire",
+      "webhookId": "35953a3f-c082-4dda-81ea-9197da1c63d3"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json['Enter URL'] }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36"
+            },
+            {
+              "name": "Accept",
+              "value": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-US,en;q=0.9"
+            },
+            {
+              "name": "Accept-Encoding",
+              "value": "gzip, deflate, br"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "Cache-Control",
+              "value": "max-age=0"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "document"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "navigate"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "none"
+            },
+            {
+              "name": "Sec-Fetch-User",
+              "value": "?1"
+            },
+            {
+              "name": "Upgrade-Insecure-Requests",
+              "value": "1"
+            }
+          ]
+        },
+        "options": {
+          "allowUnauthorizedCerts": true,
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        960,
+        -100
+      ],
+      "id": "96014b45-14ec-4a77-8b70-99f3e78003cf",
+      "name": "Demande HTTP"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4.1-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Veuillez extraire les éléments clés suivants de ce code de site web :\n1. L'URL de l'image du logo\n2. La description du produit du site web\n3. L'URL de l'image principale du produit/hero\n\nVoici le code du site web :\n{{ $json.data.match(/<body[^>]*>([\\s\\S]*?)<\\/body>/)?.[1] || 'Aucun corps trouvé' }}\n\nRetournez ces éléments dans un format JSON structuré qui identifie clairement chaque composant.\n\n{\n  \"websiteData\": {\n    \"logo\": {\n      \"url\": \"https://example.com/images/logo.png\",\n      \"altText\": \"Logo de l'entreprise\"\n    },\n    \"description\": \"Le site officiel de l'Exemple Company, fournissant des solutions innovantes pour vos besoins professionnels.\",\n    \"mainProductImage\": {\n      \"url\": \"https://example.com/images/product-main.jpg\",\n      \"altText\": \"Présentation du produit\"\n    }\n  }\n}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1180,
+        -100
+      ],
+      "id": "27889d4e-6561-4954-9e29-abcea7258899",
+      "name": "Texte : OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.message.content.websiteData.mainProductImage.url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1560,
+        -100
+      ],
+      "id": "4fb3a0c4-effd-43b0-95ec-7ae91eb3a92b",
+      "name": "Requête HTTP1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Définir l'ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Définir l'ID').item.json.Instagram }}\",\n    \"content\": {\n      \"text\": \"{{ $('Texte : OpenAI1  \nTraduction : OpenAI1').item.json.content }} View here: {{ $('Sur la soumission du formulaire').item.json['Enter URL'] }}\",\n      \"mediaUrls\": [\n        \"{{ $json.url }}\"\n      ],\n      \"platform\": \"instagram\"\n    },\n    \"target\": {\n      \"targetType\": \"instagram\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4400,
+        -1020
+      ],
+      "id": "2ef5e359-e77d-4c3d-b622-df0d1cf1d582",
+      "name": "Instagram"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Définir l'ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Définir l'ID').item.json.Pinterest }}\",\n    \"content\": {\n      \"text\": \"{{ $('Texte : OpenAI1  \nTraduction : OpenAI1').item.json.content }} View here: {{ $('Sur la soumission du formulaire').item.json['Enter URL'] }}\",\n      \"mediaUrls\": [\n        \"{{ $('Airtable').item.json['Image url'] }}\"\n      ],\n      \"platform\": \"pinterest\"\n    },\n    \"target\": {\n      \"targetType\": \"pinterest\",\n      \"boardId\": \"{{ $('Définir l'ID').item.json['Pinterest-Board-id'] }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4400,
+        580
+      ],
+      "id": "1b76184c-c57c-4b7f-8064-18b2bd351b62",
+      "name": "Pinterest",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## Images only\n**You can upload only images on Pinterest and Bluesky",
+        "height": 340,
+        "width": 200,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4900,
+        560
+      ],
+      "typeVersion": 1,
+      "id": "b67d4c2c-fad1-4619-a210-63c718f8a85d",
+      "name": "Note Collante"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Définir l'ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Définir l'ID').item.json.X }}\",\n    \"content\": {\n      \"text\": \"{{ $('Texte : OpenAI1  \nTraduction : OpenAI1').item.json.content }} View here: {{ $('Sur la soumission du formulaire').item.json['Enter URL'] }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"twitter\"\n    },\n    \"target\": {\n      \"targetType\": \"twitter\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4400,
+        -820
+      ],
+      "id": "ade99cfb-d431-42af-97ce-b1744becb905",
+      "name": "Twitter",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Définir l'ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Définir l'ID').item.json.LinkedIN }}\",\n    \"content\": {\n      \"text\": \"{{ $('Texte : OpenAI1  \nTraduction : OpenAI1').item.json.content }} View here: {{ $('Sur la soumission du formulaire').item.json['Enter URL'] }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"linkedin\"\n    },\n    \"target\": {\n      \"targetType\": \"linkedin\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4400,
+        -620
+      ],
+      "id": "79b6878e-66c6-4657-9528-a5d454e05888",
+      "name": "LinkedIn",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Définir l'ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Définir l'ID').item.json.LinkedIN }}\",\n    \"content\": {\n      \"text\": \"{{ $('Texte : OpenAI1  \nTraduction : OpenAI1').item.json.content }} View here: {{ $('Sur la soumission du formulaire').item.json['Enter URL'] }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"linkedin\"\n    },\n    \"target\": {\n      \"targetType\": \"linkedin\",\n      \"pageId\": \"{{ $('Définir l'ID').item.json['LinkedIn-page-ID'] }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4400,
+        -420
+      ],
+      "id": "16dc9d72-6c96-4e73-a7d8-0f383b6ffbf6",
+      "name": "Page LinkedIn",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Définir l'ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Définir l'ID').item.json['FB-Account'] }}\",\n    \"content\": {\n      \"text\": \"{{ $('Texte : OpenAI1  \nTraduction : OpenAI1').item.json.content }} View here: {{ $('Sur la soumission du formulaire').item.json['Enter URL'] }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"facebook\"\n    },\n    \"target\": {\n        \"targetType\": \"facebook\",\n        \"pageId\": \"{{ $('Définir l'ID').item.json['FB-Page-Sumobundle'] }}\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4400,
+        -220
+      ],
+      "id": "f6ee4970-9ffe-4ea8-8648-e2987ea8f257",
+      "name": "Compte Fb",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Définir l'ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Définir l'ID').item.json.tiktok }}\",\n    \"content\": {\n      \"text\": \"{{ $('Texte : OpenAI1  \nTraduction : OpenAI1').item.json.content }} View here: {{ $('Sur la soumission du formulaire').item.json['Enter URL'] }}\",\n      \"mediaUrls\": [\n        \"{{ $('Demande HTTP2').item.json.url }}\"\n      ],\n      \"platform\": \"tiktok\"\n    },\n    \"target\": {\n      \"targetType\": \"tiktok\",\n      \"privacyLevel\": \"PUBLIC_TO_EVERYONE\",\n      \"disabledComments\": false,\n      \"disabledDuet\": false,\n      \"disabledStitch\": false,\n      \"isBrandedContent\": false,\n      \"isYourBrand\": false,\n      \"isAiGenerated\": true\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4400,
+        -20
+      ],
+      "id": "21431a13-90c7-4566-b33d-18c814d0ecb2",
+      "name": "Texte : Tiktok",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Définir l'ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Définir l'ID').item.json.Threads }}\",\n    \"content\": {\n      \"text\": \"{{ $('Texte : OpenAI1  \nTraduction : OpenAI1').item.json.content }} View here: {{ $('Sur la soumission du formulaire').item.json['Enter URL'] }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"threads\"\n    },\n    \"target\": {\n      \"targetType\": \"threads\",\n      \"replyControl\": \"everyone\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4400,
+        380
+      ],
+      "id": "7109a712-b263-4e12-9114-1dd71fad08e8",
+      "name": "Threads",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Définir l'ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"acc_12345\",\n    \"content\": {\n      \"text\": \"{{ $('Texte : OpenAI1  \nTraduction : OpenAI1').item.json.content }} View here: {{ $('Sur la soumission du formulaire').item.json['Enter URL'] }}\",\n      \"mediaUrls\": [\"{{ $json.url }}\"],\n      \"platform\": \"bluesky\"\n    },\n    \"target\": {\n      \"targetType\": \"bluesky\"\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4400,
+        780
+      ],
+      "id": "df78c73c-27f8-41f7-bff1-80bb5e338541",
+      "name": "Bluesky",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Définir l'ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"post\": {\n    \"accountId\": \"{{ $('Définir l'ID').item.json.Youtube }}\",\n    \"content\": {\n      \"text\": \"{{ $('Texte : OpenAI1  \nTraduction : OpenAI1').item.json.content }} View here: {{ $('Sur la soumission du formulaire').item.json['Enter URL'] }}\",\n      \"mediaUrls\": [\n        \"{{ $('Demande HTTP2').item.json.url }}\"\n      ],\n      \"platform\": \"youtube\"\n    },\n    \"target\": {\n      \"targetType\": \"youtube\",\n      \"title\": \"{{ $('Airtable').item.json.Title }}\",\n      \"privacyStatus\": \"private\",\n      \"shouldNotifySubscribers\": false\n    }\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        4400,
+        180
+      ],
+      "id": "0f2d759d-4318-4ebd-8a86-72b43ddec44c",
+      "name": "YouTube",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/instagram.png?v=1742473316)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4660,
+        -1040
+      ],
+      "typeVersion": 1,
+      "id": "a0ac40e5-b0ed-4af3-b2af-2b8d59c4ebfd",
+      "name": "Note Collante1"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/x.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4660,
+        -840
+      ],
+      "typeVersion": 1,
+      "id": "720fb53a-c3ee-4d68-9d47-34c8382bb6a9",
+      "name": "Note Collante2"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/linkedin.png?v=1742473318)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4660,
+        -640
+      ],
+      "typeVersion": 1,
+      "id": "725d51c8-a45a-4ce1-a5d5-27bf440bea19",
+      "name": "Note Collante3"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/linkedin.png?v=1742473318)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4660,
+        -420
+      ],
+      "typeVersion": 1,
+      "id": "21549772-10b7-43e4-b10d-665821410186",
+      "name": "Note Collante4"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/facebook.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4660,
+        -240
+      ],
+      "typeVersion": 1,
+      "id": "7bd80bac-a9de-41cb-a9a0-d6b6e50f9c97",
+      "name": "Note Collante5"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/tiktok.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4660,
+        -40
+      ],
+      "typeVersion": 1,
+      "id": "d5713d56-b92d-4652-bdda-aa8ec209a2f3",
+      "name": "Note Collante6"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/youtube.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4660,
+        160
+      ],
+      "typeVersion": 1,
+      "id": "7e1be8a9-4f8c-4002-be40-1ca2cb2173c7",
+      "name": "Note Collante7"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/threads.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4660,
+        360
+      ],
+      "typeVersion": 1,
+      "id": "d538a811-f385-4bb3-bdbb-61ac4bb79a01",
+      "name": "Note Collante8"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/pinterest.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4660,
+        560
+      ],
+      "typeVersion": 1,
+      "id": "91b28157-455e-4334-bdb4-64d1c965b155",
+      "name": "Note Collante9"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/bluesky.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        4660,
+        760
+      ],
+      "typeVersion": 1,
+      "id": "a5f452e9-cf60-411b-9c26-7b7bf8ee7e96",
+      "name": "Note Collante10"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "{\n  \"Blotato-API\": \"blt_Enter your api here\",\n  \"Instagram\": \"1238\",\n  \"Pinterest\": \"258\",\n  \"Pinterest-Board-id\": \"914864180493348767\",\n  \"X\": \"993\",\n  \"LinkedIN\": \"1180\",\n  \"LinkedIn-page-ID\": \"6399836\",\n  \"Threads\": \"404\",\n  \"FB-Account\": \"1343\",\n  \"FB-Page-Stock-Graphics\": \"1493652624208458\",\n  \"FB-Page-Bundlestorm\": \"1082239155235205\",\n  \"FB-Page-Webmaster-Deals\": \"234802546593504\",\n  \"FB-Page-Sumobundle\": \"121593267596142\",\n  \"Fb-Page-Mimozastudio\": \"103680835963722\",\n  \"Youtube\": \"486\",\n  \"tiktok\": 1529\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3520,
+        -100
+      ],
+      "id": "74ef1f1f-4e1a-4d28-8bf6-b5cc98318353",
+      "name": "Définir l'ID"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/media",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Définir l'ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "=https://drive.google.com/uc?id={{ $('Google Drive').item.json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3800,
+        -100
+      ],
+      "id": "12fc2f16-5e7f-45e1-97d5-4951b88a3c39",
+      "name": "Demande HTTP2"
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Requête HTTP1').item.json.message.content.websiteData.description.slice(0, $('Requête HTTP1').item.json.message.content.websiteData.description.indexOf('.') + 1) }}",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1vE-JvLYYbnBnVSaj8_ZQIrpOYdABE7iM",
+          "mode": "list",
+          "cachedResultName": "Chatgpt AI Image Model",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1vE-JvLYYbnBnVSaj8_ZQIrpOYdABE7iM"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2220,
+        -100
+      ],
+      "id": "79491af0-5a53-4e81-aebd-52bf3214a4b6",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "GP2Td0vsw7OxPZcD",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        2420,
+        -100
+      ],
+      "id": "272c02f6-3e0f-46bd-92d0-fcea6e572a15",
+      "name": "Google Drive1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "GP2Td0vsw7OxPZcD",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "contact@grafup.com",
+        "subject": "Should we continue ?",
+        "message": "=<div style=\"font-family: Arial, sans-serif; color: #333; line-height: 1.6;\">\n  <h2 style=\"font-size: 18px; margin-bottom: 12px;\">Can I post this on your social networks?</h2>\n\n  <p style=\"margin: 0 0 16px 0;\">\n    <img src=\"https://drive.google.com/uc?id={{ $('Google Drive').item.json.id }}\" \n         alt=\"Automation-Tribe\" \n         style=\"max-width: 100%; height: auto; border-radius: 8px; display: block;\" />\n  </p>\n\n  <p style=\"margin: 0;\">\n    You can get this automation here: \n    <a href=\"https://www.automation-tribe.com/\" target=\"_blank\" style=\"color: #ff6d5a; text-decoration: none;\">\n      automation-tribe.com\n    </a>\n  </p>\n</div>",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double"
+          }
+        },
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2420,
+        -360
+      ],
+      "id": "14c87f87-9d26-4cb8-acab-dc7a9b05c506",
+      "name": "Gmail",
+      "webhookId": "d8d7ad2a-8f05-43b5-ae21-95560e64d1fd",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "QFPxPaMpeldVrA16",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "modelId": {
+          "__rl": true,
+          "value": "chatgpt-4o-latest",
+          "mode": "list",
+          "cachedResultName": "CHATGPT-4O-LATEST"
+        },
+        "text": "You are analyzing a banner image intended for social media. Based on the image content, write a single, engaging caption that would encourage viewers to click, share, or engage. Keep it short, natural, and free of hashtags or emojis. Return only the caption with no additional text or formatting.",
+        "inputType": "base64",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        3080,
+        -100
+      ],
+      "id": "9bcae23a-fef4-4ec8-b6cb-0a107f8a1a28",
+      "name": "Texte : OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://drive.google.com/uc?id={{ $('Google Drive').item.json.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2680,
+        -100
+      ],
+      "id": "5ce7307b-9d26-4007-8c45-4c903448b8b0",
+      "name": "Télécharger la bannière"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.data.approved.toString() }}",
+                    "rightValue": "=false",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    },
+                    "id": "b56831ef-ce86-4d78-905d-cb9b585ae4d6"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Not approved"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ad7347aa-7867-4175-bf81-bfcb69c029a5",
+                    "leftValue": "={{ $json.data.approved.toString() }}",
+                    "rightValue": "=true",
+                    "operator": {
+                      "type": "string",
+                      "operation": "contains"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Approved"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        2660,
+        -360
+      ],
+      "id": "6bb43cd3-2fdd-470b-9dd7-37922345f5ea",
+      "name": "Texte : Switch"
+    },
+    {
+      "parameters": {
+        "content": "## Blotato Setup Guide\n\nTo use this automation, you'll need a Blotato account.  \n👉 [Register here](https://dub.sh/blotato)\n\nAfter registering, watch this short video to see how everything works:  \n📺 [Watch on YouTube](https://youtu.be/ZJ8I9N-JwXQ?si=ZIpyFLLgmi74HQeD)",
+        "height": 400,
+        "width": 640,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        3420,
+        -300
+      ],
+      "typeVersion": 1,
+      "id": "ca18c14c-a825-4410-b38d-1de49dd09e04",
+      "name": "Note Collante11"
+    },
+    {
+      "parameters": {
+        "content": "## What this automation does\n\nThis workflow takes a URL input and automatically:\n\n1. Generates a banner image using OpenAI Image Generation API.\n2. Saves the banner to Google Drive.\n3. Sends the banner to your email for review.\n4. Posts the banner with a caption to multiple social media platforms:\n   - Instagram\n   - X (Twitter)\n   - LinkedIn (Profile & Page)\n   - Facebook\n   - TikTok\n   - YouTube\n   - Threads\n   - Pinterest\n   - Bluesky\n   - ShareIt\n\nEverything is triggered with a single form submission, making it fully automated and optimized for social sharing.\n\n➡️ Make sure your Blotato account is connected for social publishing: [Register here](https://dub.sh/blotato)\n\n---\n\n✨ Built by **Razvan from Automation Tribe**  \n- 🌐 Website: [https://www.automation-tribe.com](https://www.automation-tribe.com)  \n- 🆓 Free Community: [https://dub.sh/free-community](https://dub.sh/free-community)  \n- 💼 Paid Community (Full Workflows): [https://dub.sh/automation-tribe](https://dub.sh/automation-tribe)",
+        "height": 660,
+        "width": 860,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        680,
+        120
+      ],
+      "typeVersion": 1,
+      "id": "b0617539-13af-4deb-abe3-a868308697c6",
+      "name": "Note Collante12"
+    },
+    {
+      "parameters": {
+        "content": "## Set Your Bearer Token  \nEnter your own OpenAI Bearer token in the `Generate Image` HTTP node.\n\nYou can get it from:  \n[https://platform.openai.com/account/api-keys](https://platform.openai.com/account/api-keys)\n\nMake sure your org is verified:  \n[https://help.openai.com/en/articles/10910291-api-organization-verification](https://help.openai.com/en/articles/10910291-api-organization-verification)",
+        "height": 520,
+        "width": 440
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1720,
+        -380
+      ],
+      "typeVersion": 1,
+      "id": "95b5d235-2a3f-4494-b0cf-eff243dc1e13",
+      "name": "Note Collante13"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Generate Image": {
+      "main": [
+        [
+          {
+            "node": "Convert to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Generate Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set ID": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "node": "Instagram",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Pinterest",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Twitter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LinkedIn",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LinkedIn Page",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fb Account",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Threads",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Bluesky",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Google Drive1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive1": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI1": {
+      "main": [
+        [
+          {
+            "node": "Set ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download banner": {
+      "main": [
+        [
+          {
+            "node": "OpenAI1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Download banner",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "84b3b91f-6178-42d0-9c3c-986f19679cbb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+  },
+  "id": "RVVuNa8Thy32KkQ6",
+  "tags": [
+    {
+      "createdAt": "2025-04-21T20:09:06.554Z",
+      "updatedAt": "2025-04-21T20:09:06.554Z",
+      "id": "3dOSqJMqC8FlNnE3",
+      "name": "Automation-Tribe"
+    },
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

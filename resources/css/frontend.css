@@ -1,0 +1,420 @@
+/* Import Bootstrap */
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+/* Couleurs personnalisées basées sur le logo */
+:root {
+    --beige-bg: #d7ceb2;
+    --pink-light: #f3d5d5;
+    --pink-medium: #e8b4b4;
+    --blue-light: #b4d8e8;
+    --blue-medium: #7a9cb5;
+    --cream: #f9f6f0;
+    --infinity-blue: #6ba3c3;
+    
+    /* Couleurs Bootstrap personnalisées */
+    --bs-primary: var(--infinity-blue);
+    --bs-secondary: var(--pink-medium);
+    --bs-success: #54b48d;
+    --bs-info: var(--blue-light);
+    --bs-warning: #e9c46a;
+    --bs-danger: #e76f51;
+    --bs-light: var(--cream);
+    --bs-dark: #495057;
+}
+
+/* Styles généraux */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--cream);
+    color: #495057;
+}
+
+/* Classes des couleurs personnalisées */
+.bg-beige {
+    background-color: var(--beige-bg);
+}
+
+.bg-pink-light {
+    background-color: var(--pink-light);
+}
+
+.bg-blue-light {
+    background-color: var(--blue-light);
+}
+
+.bg-blue-service {
+    background-color: #b4d8e8 !important;
+}
+
+.bg-pink-service {
+    background-color: #f3d5d5 !important;
+}
+
+.bg-green-service {
+    background-color: #54b48d !important;
+}
+
+.bg-danger-service {
+    background-color: #e76f51 !important;
+}
+
+.bg-warning-service {
+    background-color: #e9c46a !important;
+}
+
+.bg-blue-medium-service {
+    background-color: #7a9cb5 !important;
+}
+
+.text-infinity-blue {
+    color: var(--infinity-blue);
+}
+
+.text-pink-medium {
+    color: var(--pink-medium);
+}
+
+/* Style pour les sections de la page d'accueil */
+.hero-section {
+    background: linear-gradient(135deg, var(--cream) 0%, var(--beige-bg) 100%);
+    padding: 5rem 0;
+    border-radius: 0 0 50% 50% / 20%;
+}
+
+.service-card {
+    transition: all 0.3s ease;
+    border-radius: 1rem;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.service-card .card-header {
+    background: linear-gradient(45deg, var(--blue-light), var(--infinity-blue));
+    color: white;
+    border-bottom: none;
+    padding: 1.5rem;
+}
+
+.service-card.premium {
+    border-color: var(--pink-medium);
+}
+
+.service-card.premium .card-header {
+    background: linear-gradient(45deg, var(--pink-light), var(--pink-medium));
+}
+
+.card-header {
+    background: linear-gradient(45deg, #b4d8e8, #6ba3c3);
+    color: white;
+}
+
+.card.premium .card-header {
+    background: linear-gradient(45deg, #f3d5d5, #e8b4b4);
+}
+
+.feature-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue-light) 0%, var(--infinity-blue) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    color: white;
+    font-size: 2rem;
+    box-shadow: 0 5px 15px rgba(106, 163, 195, 0.2);
+}
+
+/* Animation douce au défilement */
+.fade-in {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Footer personnalisé */
+.footer {
+    background-color: var(--beige-bg);
+    padding: 3rem 0;
+}
+
+.social-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--infinity-blue);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    margin-right: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+    background-color: #5884a3;
+    transform: translateY(-3px);
+}
+
+/* Logo avec effet infini */
+.infinity-logo {
+    position: relative;
+    display: inline-block;
+}
+
+.infinity-logo::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 20px;
+    background: linear-gradient(90deg, var(--infinity-blue), var(--blue-light));
+    animation: pulse 2s infinite;
+    border-radius: 50%;
+    opacity: 0.3;
+}
+
+@keyframes pulse {
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.3;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+        opacity: 0.2;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.3;
+    }
+}
+
+/* Autres styles personnalisés pour les éléments */
+.btn-primary, .btn-primary:hover, .btn-primary:focus {
+    background-color: var(--infinity-blue);
+    border-color: var(--infinity-blue);
+}
+
+.btn-secondary, .btn-secondary:hover, .btn-secondary:focus {
+    background-color: var(--pink-medium);
+    border-color: var(--pink-medium);
+}
+
+.btn-outline-primary {
+    color: var(--infinity-blue);
+    border-color: var(--infinity-blue);
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:focus {
+    background-color: var(--infinity-blue);
+    color: white;
+}
+
+.rounded-pill {
+    border-radius: 50rem;
+}
+
+.rounded-4 {
+    border-radius: 1rem;
+}
+
+/* Menu de navigation amélioré */
+.navbar {
+    padding: 1.2rem 0;
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+.navbar-light .navbar-brand {
+    transition: transform 0.3s ease;
+}
+
+.navbar-light .navbar-brand:hover {
+    transform: scale(1.02);
+}
+
+.navbar-nav .nav-item {
+    position: relative;
+    margin: 0 0.5rem;
+}
+
+.navbar-nav .nav-link {
+    color: #495057;
+    font-weight: 500;
+    padding: 0.9rem 0.8rem;
+    border-radius: 1.5rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.navbar-nav .nav-link:before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 80%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 2px;
+    background: var(--infinity-blue);
+    transition: width 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: var(--infinity-blue);
+}
+
+.navbar-nav .nav-link:hover:before {
+    width: 70%;
+}
+
+.navbar-nav .nav-item.active .nav-link {
+    color: var(--infinity-blue);
+}
+
+.navbar-nav .nav-item.active .nav-link:before {
+    width: 70%;
+}
+
+/* Button styling */
+.btn-primary.rounded-pill {
+    padding: 0.6rem 1.5rem;
+    background: linear-gradient(135deg, var(--infinity-blue) 0%, #4fa1d2 100%);
+    border: none;
+    box-shadow: 0 4px 15px rgba(106, 163, 195, 0.3);
+    transition: all 0.3s ease;
+}
+
+.btn-primary.rounded-pill:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(106, 163, 195, 0.4);
+}
+
+/* Animation subtile pour le logo */
+@keyframes pulse-light {
+    0% {
+        box-shadow: 0 0 0 0 rgba(106, 163, 195, 0.1);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(106, 163, 195, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(106, 163, 195, 0);
+    }
+}
+
+.navbar-brand img {
+    animation: pulse-light 3s infinite;
+    border-radius: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+/* Animation sur scroll - menu qui rétrécit */
+.navbar.scrolled {
+    padding: 0.8rem 0;
+    background: rgba(255, 255, 255, 0.98) !important;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Menu mobile amélioré */
+@media (max-width: 767.98px) {
+    .navbar-collapse {
+        background-color: white;
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .navbar-nav .nav-item {
+        margin: 0.3rem 0;
+    }
+    
+    .navbar-nav .nav-link {
+        padding: 0.7rem 1rem;
+        border-radius: 0.5rem;
+    }
+    
+    .navbar-nav .nav-link:hover {
+        background-color: rgba(106, 163, 195, 0.1);
+    }
+    
+    .navbar-toggler {
+        border: none;
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        background-color: rgba(106, 163, 195, 0.1);
+    }
+    
+    .navbar-toggler:focus {
+        box-shadow: none;
+        outline: none;
+    }
+}
+
+.hover-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.hover-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+.card-header i {
+    transition: transform 0.3s ease;
+}
+.hover-card:hover .card-header i {
+    transform: scale(1.1);
+}
+
+.tag-badge {
+    display: inline-block;
+    margin: 0.2rem 0.2rem 0.2rem 0;
+    padding: 0.35rem 0.65rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease-in-out;
+}
+
+.tag-badge:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.tag-badge-automatisation { background-color: var(--infinity-blue); color: white; }
+.tag-badge-productivite { background-color: var(--blue-medium); color: white; }
+.tag-badge-ia { background-color: var(--blue-light); color: #333; }
+.tag-badge-efficacite { background-color: var(--bs-success); color: white; }
+.tag-badge-entrepreneur { background-color: var(--bs-warning); color: #333; }
+.tag-badge-tpe { background-color: var(--pink-medium); color: white; }
+.tag-badge-pme { background-color: var(--pink-light); color: #333; }
+.tag-badge-workflow { background-color: var(--bs-dark); color: white; }
+.tag-badge-n8n { background-color: var(--bs-danger); color: white; }
+.tag-badge-montpellier { background-color: var(--beige-bg); color: #333; }
+.tag-badge-herault { background-color: var(--bs-secondary); color: #333; }
+.tag-badge-professions-liberales { background-color: var(--bs-info); color: #333; }
+.tag-badge-viticulture { background-color: #8e4444; color: white; }
+.tag-badge-beziers { background-color: #a86b32; color: white; }
+.tag-badge-castelnau-le-lez { background-color: #5a6b9f; color: white; }
+.tag-badge-intelligence-artificielle { background-color: #9b59b6; color: white; }
+
+/* Pour les tags qui n'ont pas de classe spécifique */
+.tag-badge-default { background-color: var(--bs-secondary); color: white; }

@@ -1,0 +1,336 @@
+{
+  "name": "Remercier par email après Typeform",
+  "nodes": [
+    {
+      "parameters": {
+        "formId": "TON_FORM_ID_ICI"
+      },
+      "type": "n8n-nodes-base.typeformTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1104,
+        -304
+      ],
+      "id": "281e06ed-a728-44ad-a58f-8e3bee373838",
+      "name": "Typeform Trigger",
+      "credentials": {
+        "typeformApi": {
+          "id": "PLACEHOLDER",
+          "name": "Typeform account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Tu envoies des mails aux personnes pré-inscrites pour ma future communauté Skool en utilisant l'outil \"Gmail\"",
+        "needsFallback": true,
+        "options": {
+          "systemMessage": "=Tu es #Nom_de_ton_IA, l'assistante IA de #Ton_Nom, expert français en automatisation n8n et intelligence artificielle. \n\n## 🎯 TA MISSION\nEnvoyer un email de CONFIRMATION d'inscription à la LISTE D'ATTENTE (pas une réservation) pour le lancement de la communauté Skool qui ouvre LUNDI PROCHAIN.\n\n## ⚠️ POINT CRUCIAL À CLARIFIER\nL'inscription à cette liste d'attente NE GARANTIT PAS la place à 37€ !\nLes 50 premières places à 37€ seront attribuées aux 50 PREMIERS QUI S'INSCRIRONT LUNDI lors de l'ouverture.\nC'est du premier arrivé, premier servi !\n\n## 📊 DONNÉES DU FORMULAIRE À UTILISER\n- Prénom : {{ $json['Prénom'] }}\n- Défi principal : {{ $json['Défi'] }}\n- Heures perdues/semaine : {{ $json.Heures }}\n- Statut : {{ $json.Entreprise }}\n- Secteur : {{ $json['Secteur Activité'] }}\n- Utilisation n8n : {{ $json['Utilisation n8n'] }}\n- Budget actuel : {{ $json['Budget Mensuel'] }}\n- Priorité automation : {{ $json['Automatisation Phare'] }}\n\n## FORMAT HTML OBLIGATOIRE\n\nGénère l'email COMPLET en HTML avec cette structure :\n\n<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; line-height: 1.6; color: #333;\">\n    \n    <p>Salut {{ $json['Prénom'] }} ! 👋</p>\n    \n    <p>Parfait, tu es bien inscrit(e) sur la liste d'attente ! ✅</p>\n    \n    <p>Je suis #Nom_de_ton_IA, l'IA de #Ton_Nom, et j'ai bien reçu tes infos.</p>\n    \n    <br>\n    <h2 style=\"color: #e74c3c; margin: 30px 0 20px 0;\">⚠️ IMPORTANT - À LIRE ABSOLUMENT</h2>\n    \n    <div style=\"background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0;\">\n        <p><strong>Cette inscription te donne :</strong></p>\n        <ul style=\"color: #27ae60;\">\n            <li>✅ Une notification prioritaire dès l'ouverture LUNDI</li>\n            <li>✅ Le lien direct vers Skool avant tout le monde</li>\n            <li>✅ Les instructions exactes pour t'inscrire rapidement</li>\n        </ul>\n        \n        <p><strong>Cette inscription NE te donne PAS :</strong></p>\n        <ul style=\"color: #e74c3c;\">\n            <li>❌ Une place réservée à 37€</li>\n            <li>❌ Une garantie d'avoir le prix fondateur</li>\n            <li>❌ Une priorité sur les autres</li>\n        </ul>\n    </div>\n    \n    <p><strong>La vérité :</strong> LUNDI à 9h00, c'est la course ! 🏃‍♂️<br>\n    Les 50 PREMIERS qui s'inscriront auront le prix à 37€/mois (au lieu de 67€).<br>\n    Après le 50ème... c'est 67€. Pour toujours.</p>\n    \n    <br>\n    <h2 style=\"color: #3498db; margin: 30px 0 20px 0;\">📝 J'AI NOTÉ TES BESOINS</h2>\n    \n    <p>J'ai vu que :</p>\n    <ul>\n        <li>Tu perds <strong>{{ $json.Heures }}</strong> par semaine sur des tâches répétitives</li>\n        <li>Ton plus gros défi : \"<strong>{{ $json['Défi'] }}</strong>\"</li>\n        <li>Tu aimerais automatiser en priorité : \"<strong>{{ $json['Automatisation Phare'] }}</strong>\"</li>\n    </ul>\n    \n    <p>Super intéressant ! Greg a justement des workflows pour ça dans la communauté.<br>\n    (Mais il faut d'abord réussir à avoir ta place lundi 😅)</p>\n    \n    <br>\n    <h2 style=\"color: #e67e22; margin: 30px 0 20px 0;\">🚨 STRATÉGIE POUR LUNDI</h2>\n    \n    <p>Pour maximiser tes chances d'être dans les 50 premiers :</p>\n    \n    <div style=\"background: #fff3cd; padding: 20px; border-left: 4px solid #ffc107; margin: 20px 0;\">\n        <div style=\"margin: 10px 0;\">1️⃣ <strong>METS UNE ALARME</strong> : Lundi 8h55</div>\n        <div style=\"margin: 10px 0;\">2️⃣ <strong>PRÉPARE TA CB</strong> : Aie tes infos de paiement prêtes</div>\n        <div style=\"margin: 10px 0;\">3️⃣ <strong>CHECK TES EMAILS</strong> : Le lien arrivera à 9h00 PILE</div>\n        <div style=\"margin: 10px 0;\">4️⃣ <strong>SOIS RAPIDE</strong> : Inscris-toi immédiatement</div>\n    </div>\n    \n    <p>💡 <strong>CONSEIL DE #Nom_de_ton_IA</strong> : D'après mes calculs, avec +850 abonnés, les places partiront en moins de 15 minutes...<br>\n    Tu as environ 8-10 minutes MAX pour t'inscrire. Après, je pense que ce sera mort....</p>\n    \n    <br>\n    <h2 style=\"color: #9b59b6; margin: 30px 0 20px 0;\">📅 PROCHAINS EMAILS</h2>\n    \n    <p><strong>VENDREDI</strong> : Dernier rappel avec conseils pour être rapide<br>\n    <strong>DIMANCHE SOIR ou LUNDI 9H</strong> : EMAIL D'OUVERTURE avec le lien direct</p>\n    \n    <br>\n    <h2 style=\"color: #34495e; margin: 30px 0 20px 0;\">💭 QUESTION POUR GREG</h2>\n    \n    <p>Au fait, tu as mentionné vouloir automatiser \"<strong>{{ $json['Automatisation Phare'] }}</strong>\".<br>\n    Je transmets à Greg, il adore créer des workflows sur demande pour la communauté !<br>\n    (Si tu arrives à avoir ta place bien sûr 😉)</p>\n    \n    <br><br>\n    <p>À lundi pour la bataille ! ⚔️</p>\n    \n    <p>#Nom_de_ton_IA 🤖</p>\n    \n    <br>\n    <p style=\"font-size: 0.9em; color: #7f8c8d; font-style: italic;\">\n    PS : Sérieusement, mets cette alarme. Les 50 places vont partir en moins de 15 minutes.\n    </p>\n    \n</div>"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -688,
+        -304
+      ],
+      "id": "c96b1806-a2c5-4a81-bf38-ffe857a5fde2",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -848,
+        -48
+      ],
+      "id": "8518bc49-5f99-45b9-a921-cf6d98b879b2",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "PLACEHOLDER",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-4-20250514"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        -656,
+        -48
+      ],
+      "id": "c3ccaed8-2610-41e6-8699-c9d6643671d6",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "PLACEHOLDER",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.Mail }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          },
+          "senderName": ""
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        -448,
+        -48
+      ],
+      "id": "a1085fab-f27a-4fa1-9585-a374e11c0904",
+      "name": "Send a message in Gmail",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "PLACEHOLDER",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "html": "=Un nouveau message de ton TypeForm !\n<br><br>\nPrénom : {{ $('Google Sheet').item.json['Prénom'] }}\n<br><br>\nEmail : {{ $('Google Sheet').item.json.Mail }}\n<br><br>\nHeure : {{ $now.format(\"dd/LL/yy\") }} à {{ $now.format(\"HH\") }}h{{ $now.format(\"mm\") }}\n<br><br>\nDéfi : {{ $('Google Sheet').item.json['Défi'] }}\n<br>\nHeures Perdues : {{ $('Google Sheet').item.json.Heures }}\n<br>\nEntreprise : {{ $('Google Sheet').item.json.Entreprise }}\n<br>\nSecteur d'Activité : {{ $('Google Sheet').item.json['Secteur Activité'] }}\n<br>\nUtilisation n8n : {{ $('Google Sheet').item.json['Utilisation n8n'] }}\n<br>\nBudget Mensuel : {{ $('Google Sheet').item.json['Budget Mensuel'] }}\n<br>\nAutomatisation Phare : {{ $('Google Sheet').item.json['Automatisation Phare'] }}\n<br><br>\nBravo !",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [
+        -336,
+        -304
+      ],
+      "id": "a5186c39-cc7a-425a-baa2-cdbc10a6aea3",
+      "name": "Send email to yourself"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "ID_DE_TON_GOOGLE_SHEET",
+          "mode": "list"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Mail",
+              "displayName": "Mail",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Prénom",
+              "displayName": "Prénom",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Défi",
+              "displayName": "Défi",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Heures",
+              "displayName": "Heures",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Entreprise",
+              "displayName": "Entreprise",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Secteur Activité",
+              "displayName": "Secteur Activité",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Utilisation n8n",
+              "displayName": "Utilisation n8n",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Budget Mensuel",
+              "displayName": "Budget Mensuel",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Automatisation Phare",
+              "displayName": "Automatisation Phare",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date & Heure",
+              "displayName": "Date & Heure",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -896,
+        -304
+      ],
+      "id": "ce88bd76-5e84-4955-a716-ab2d095a7538",
+      "name": "Google Sheet"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Typeform Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send email to yourself",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Send a message in Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheet": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "",
+  "meta": {},
+  "id": "",
+  "tags": []
+}

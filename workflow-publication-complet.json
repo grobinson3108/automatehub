@@ -1,0 +1,220 @@
+{
+  "name": "Publication Multi-Plateformes AutomateHub",
+  "nodes": [
+    {
+      "parameters": {
+        "events": [
+          {
+            "name": "file:new",
+            "value": "file:new"
+          }
+        ],
+        "triggerOn": "specificFolder",
+        "folderToWatch": "/var/www/automatehub/videos",
+        "options": {
+          "includeSubfolders": false,
+          "fileExtensions": ".mp4"
+        }
+      },
+      "id": "e8f5d6c4-3b2a-1f9e-8d7c-6b5a4f3e2d1c",
+      "name": "Nouvelle Vidéo Détectée",
+      "type": "n8n-nodes-base.localFileTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "fileSelector": "={{ $json.path.replace('.mp4', '_transcription.txt') }}",
+        "options": {}
+      },
+      "id": "f9e8d7c6-4b3a-2f0e-9e8d-7c6b5a4f3d2e",
+      "name": "Lire Transcription",
+      "type": "n8n-nodes-base.readBinaryFile",
+      "typeVersion": 1,
+      "position": [450, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "resource": "chat",
+        "model": "gpt-4-turbo-preview",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Tu es un expert en marketing digital spécialisé dans la promotion de formations n8n et automatisation. Tu dois créer des posts engageants pour différentes plateformes sociales qui donnent envie de rejoindre la communauté Skool AutomateHub (https://skool.com/automatehub). Chaque post doit être adapté au ton et format de la plateforme."
+            },
+            {
+              "role": "user",
+              "content": "Crée des posts pour promouvoir cette vidéo sur l'automatisation n8n.\n\nTitre vidéo: {{ $('Nouvelle Vidéo Détectée').item.json.fileName.replace('.mp4', '') }}\nTranscription: {{ $('Lire Transcription').item.binary ? $('Lire Transcription').item.binary.data.toString() : 'Pas de transcription disponible' }}\n\nGénère un post pour chaque plateforme:\n\n1. **LinkedIn** (professionnel, 150-300 mots)\n- Ton: Professionnel mais accessible\n- Structure: Problème → Solution → Bénéfices → CTA\n- Inclure 3-5 hashtags pertinents\n\n2. **Facebook** (convivial, 100-200 mots)  \n- Ton: Amical et conversationnel\n- Utiliser des emojis pertinents\n- Question d'engagement à la fin\n\n3. **Instagram** (accrocheur, 50-150 mots)\n- Commencer par un hook fort\n- Utiliser des emojis et sauts de ligne\n- 10-15 hashtags mix populaires/niche\n\n4. **TikTok** (viral, 50-100 mots)\n- Ton jeune et dynamique\n- Format: POV ou situation relatable\n- Hashtags trends du moment\n\nChaque post doit:\n- Mettre en avant UN bénéfice concret et mesurable\n- Inclure un CTA clair vers: https://skool.com/automatehub\n- Mentionner l'accès gratuit aux 100 premiers workflows\n- Créer un sentiment d'urgence ou FOMO"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 2000
+        }
+      },
+      "id": "a1b2c3d4-5e6f-7g8h-9i0j-k1l2m3n4o5p6",
+      "name": "Générer Posts Sociaux",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "videoTitle",
+              "value": "={{ $('Nouvelle Vidéo Détectée').item.json.fileName.replace('.mp4', '') }}"
+            },
+            {
+              "name": "videoPath", 
+              "value": "={{ $('Nouvelle Vidéo Détectée').item.json.path }}"
+            },
+            {
+              "name": "posts",
+              "value": "={{ $('Générer Posts Sociaux').item.json.choices[0].message.content }}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $now.format('yyyy-MM-dd HH:mm:ss') }}"
+            }
+          ]
+        }
+      },
+      "id": "q9w8e7r6-5t4y-3u2i-1o0p-a9s8d7f6g5h4",
+      "name": "Préparer Données",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "fileName": "={{ '/var/www/automatehub/posts/' + $json.videoTitle + '_posts_' + $now.format('yyyy-MM-dd') + '.txt' }}",
+        "fileContent": "=== POSTS RÉSEAUX SOCIAUX ===\nVidéo: {{ $json.videoTitle }}\nGénéré le: {{ $json.timestamp }}\n\n{{ $json.posts }}\n\n=== FIN DES POSTS ===",
+        "options": {}
+      },
+      "id": "z1x2c3v4-5b6n-7m8k-9l0o-p1q2w3e4r5t6",
+      "name": "Sauvegarder Posts",
+      "type": "n8n-nodes-base.writeBinaryFile",
+      "typeVersion": 1,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "message",
+        "operation": "post",
+        "channelId": "social-media",
+        "text": "🎬 **Nouvelle vidéo prête à publier!**\n\n📹 Titre: {{ $('Préparer Données').item.json.videoTitle }}\n📅 Date: {{ $('Préparer Données').item.json.timestamp }}\n\n✅ Posts générés pour:\n• LinkedIn\n• Facebook  \n• Instagram\n• TikTok\n\n📄 Fichier sauvegardé dans `/posts/`\n🔗 Communauté Skool: https://skool.com/automatehub",
+        "options": {
+          "username": "AutomateHub Bot",
+          "icon_emoji": ":robot_face:"
+        }
+      },
+      "id": "m7n8b9v0-1c2x-3z4a-5s6d-7f8g9h0j1k2l",
+      "name": "Notification Slack",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2,
+      "position": [1250, 300],
+      "continueOnFail": true
+    },
+    {
+      "parameters": {
+        "content": "## 📱 Configuration Réseaux Sociaux\n\n**Formats vidéo recommandés:**\n- YouTube/LinkedIn: 16:9 (horizontal)\n- Instagram: 1:1 (carré) ou 9:16 (Reels)\n- TikTok: 9:16 (vertical)\n\n**Heures de publication optimales (heure FR):**\n- LinkedIn: 7h-9h, 12h-13h, 17h-18h\n- Facebook: 13h-16h\n- Instagram: 11h-13h, 19h-21h\n- TikTok: 6h-9h, 19h-23h\n\n**CTA Skool:**\n- \"🎯 Rejoins +500 entrepreneurs\"\n- \"🚀 100 workflows gratuits\"\n- \"💡 Formation n8n complète\"",
+        "height": 350,
+        "width": 350
+      },
+      "id": "sticky-config",
+      "name": "Config Réseaux",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [600, 50]
+    },
+    {
+      "parameters": {
+        "content": "## 🔧 Configuration du Workflow\n\n1. **Dossier surveillé**: `/var/www/automatehub/videos`\n2. **Transcription**: Fichier `.txt` avec même nom que vidéo\n3. **Posts sauvegardés**: `/var/www/automatehub/posts`\n4. **Notification**: Slack (optionnel)\n\n**Pour ajouter:**\n- Email avec posts en pièce jointe\n- Google Sheets pour tracking\n- Programmation auto sur Buffer/Hootsuite",
+        "height": 250,
+        "width": 350
+      },
+      "id": "sticky-setup",
+      "name": "Setup Instructions",
+      "type": "n8n-nodes-base.stickyNote", 
+      "typeVersion": 1,
+      "position": [250, 50]
+    }
+  ],
+  "connections": {
+    "Nouvelle Vidéo Détectée": {
+      "main": [
+        [
+          {
+            "node": "Lire Transcription",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lire Transcription": {
+      "main": [
+        [
+          {
+            "node": "Générer Posts Sociaux",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Générer Posts Sociaux": {
+      "main": [
+        [
+          {
+            "node": "Préparer Données",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Préparer Données": {
+      "main": [
+        [
+          {
+            "node": "Sauvegarder Posts",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sauvegarder Posts": {
+      "main": [
+        [
+          {
+            "node": "Notification Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "name": "social-media",
+      "createdAt": "2025-01-14T10:00:00.000Z"
+    },
+    {
+      "name": "content-automation",
+      "createdAt": "2025-01-14T10:00:00.000Z"
+    }
+  ]
+}

@@ -1,0 +1,115 @@
+{
+  "name": "1.1 - Premier Workflow : Google Sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 30
+            }
+          ]
+        }
+      },
+      "id": "f7d41b80-9c5f-4b8e-a7d3-2e6f8c9d0e1f",
+      "name": "Déclencheur - Toutes les 30 minutes",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": "VOTRE_DOCUMENT_ID",
+        "sheetName": "Sheet1",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Date": "={{ $now.format('yyyy-MM-dd HH:mm:ss') }}",
+            "Statut": "Workflow actif",
+            "Message": "Exécution automatique réussie"
+          }
+        },
+        "options": {}
+      },
+      "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+      "name": "Écrire dans Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        500,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "values": {
+          "string": [
+            {
+              "name": "resultat",
+              "value": "✅ Données ajoutées avec succès"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $now.format('yyyy-MM-dd HH:mm:ss') }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b2c3d4e5-f6g7-8901-2345-678901bcdefg",
+      "name": "Confirmation",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [
+        750,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Déclencheur - Toutes les 30 minutes": {
+      "main": [
+        [
+          {
+            "node": "Écrire dans Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Écrire dans Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Confirmation",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "1-1-premier-workflow-v1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "id": "1",
+  "tags": [
+    {
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "updatedAt": "2024-01-01T00:00:00.000Z",
+      "id": "module-1-fondamentaux",
+      "name": "Module 1 - Fondamentaux"
+    }
+  ]
+}

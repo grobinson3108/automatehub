@@ -1,0 +1,287 @@
+# 📋 Claude - Guide n8n et Automatisation
+
+## 🎯 Contexte et Accès
+
+### Environnement
+- **Serveur** : `/var/www/automatehub` 
+- **n8n installé** avec LangChain nodes
+- **Accès complet** aux workflows et dossiers
+- **Base** : n8n community nodes + n8n-nodes-langchain
+
+### Structure n8n
+```
+n8n/
+├── Personal/           # Dossier personnel utilisateur
+│   ├── MasterClass/   # Dossier formation (à créer)
+│   │   ├── Module-1-Fondamentaux/
+│   │   ├── Module-2-Integrations/
+│   │   ├── Module-3-Business/
+│   │   ├── Module-4-Avance/
+│   │   └── Module-5-Premium/
+│   └── [autres dossiers...]
+└── [autres workflows...]
+```
+
+## 🔧 Workflow n8n - Logique de Création
+
+### 1. Structure Standard d'un Workflow
+```json
+{
+  "name": "Nom du Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "uuid-unique",
+      "name": "Node Name",
+      "type": "n8n-nodes-base.nodeName",
+      "typeVersion": 1,
+      "position": [x, y]
+    }
+  ],
+  "connections": {
+    "Node1": {
+      "main": [
+        [
+          {
+            "node": "Node2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "versionId": "uuid"
+}
+```
+
+### 2. Nodes LangChain Disponibles
+- **LangChain Chat Model** : `@langchain/n8n-nodes-langchain.lmChatOpenAi`
+- **LangChain Tool** : `@langchain/n8n-nodes-langchain.toolCode`
+- **LangChain Agent** : `@langchain/n8n-nodes-langchain.agentSqlAgent`
+- **LangChain Memory** : `@langchain/n8n-nodes-langchain.memoryBufferMemory`
+- **LangChain Document** : `@langchain/n8n-nodes-langchain.documentLoader`
+- **LangChain Vector Store** : `@langchain/n8n-nodes-langchain.vectorStoreSupabase`
+
+### 3. Nodes n8n Standard Fréquents
+- **HTTP Request** : `n8n-nodes-base.httpRequest`
+- **Set** : `n8n-nodes-base.set`
+- **IF** : `n8n-nodes-base.if`
+- **Function** : `n8n-nodes-base.function`
+- **Schedule Trigger** : `n8n-nodes-base.scheduleTrigger`
+- **Webhook** : `n8n-nodes-base.webhook`
+- **Gmail** : `n8n-nodes-base.gmail`
+- **Google Sheets** : `n8n-nodes-base.googleSheets`
+- **Slack** : `n8n-nodes-base.slack`
+
+## 🏗️ Processus de Création de Workflows
+
+### Étape 1 : Planification
+1. **Identifier l'objectif** du workflow
+2. **Lister les nodes nécessaires**
+3. **Définir le flux de données**
+4. **Prévoir les connexions**
+
+### Étape 2 : Structure JSON
+1. **Créer l'objet workflow** de base
+2. **Ajouter les nodes** avec paramètres
+3. **Définir les positions** (espacement 250px)
+4. **Configurer les connexions**
+
+### Étape 3 : Positionnement
+- **Espacement horizontal** : 250px entre nodes
+- **Position de départ** : [250, 300]
+- **Flux principal** : gauche → droite
+- **Branches** : décalage vertical de 200px
+
+### Étape 4 : Paramètres Spécifiques
+
+#### LangChain Chat Model
+```json
+{
+  "parameters": {
+    "options": {
+      "temperature": 0.7,
+      "maxTokens": 1000
+    }
+  },
+  "type": "@langchain/n8n-nodes-langchain.lmChatOpenAi"
+}
+```
+
+#### HTTP Request
+```json
+{
+  "parameters": {
+    "url": "https://api.example.com",
+    "method": "POST",
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "data": "={{ $json.data }}"
+    }
+  },
+  "type": "n8n-nodes-base.httpRequest"
+}
+```
+
+## 📁 Organisation des Workflows MasterClass
+
+### Module 1 - Fondamentaux
+- `1-1-premier-workflow-google-sheets.json`
+- `1-2-webhook-slack-notification.json`
+- `1-3-manipulation-donnees-crm.json`
+- `1-4-integration-gmail-drive.json`
+
+### Module 2 - Intégrations
+- `2-1-automation-email-complete.json`
+- `2-2-sync-fichiers-cloud.json`
+- `2-3-pipeline-donnees-db.json`
+- `2-4-api-webhook-avance.json`
+
+### Module 3 - Business
+- `3-1-crm-lead-scoring.json`
+- `3-2-marketing-automation-complet.json`
+- `3-3-ecommerce-gestion-complete.json`
+- `3-4-productivite-assistant-personnel.json`
+
+### Module 4 - Avancé
+- `4-1-fonctions-javascript-avancees.json`
+- `4-2-architecture-workflow-complexe.json`
+- `4-3-ia-machine-learning-integration.json`
+- `4-4-monitoring-devops-complet.json`
+
+### Module 5 - Premium
+- `5-1-marketplace-monetisation-system.json`
+- `5-2-node-custom-developpement.json`
+- `5-3-architecture-distribuee.json`
+- `5-4-ecosysteme-analyse-complete.json`
+
+## 🔗 Bonnes Pratiques
+
+### Conventions de Nommage
+- **Workflows** : `{module}-{video}-{description-courte}.json`
+- **Nodes** : Noms descriptifs en français
+- **Variables** : camelCase pour consistance
+
+### Structure Données
+- **Input standardisé** : Toujours prévoir un exemple de données
+- **Error handling** : Inclure des branches d'erreur
+- **Documentation** : Notes dans les workflows
+
+### Performance
+- **Lazy loading** : Ne pas charger toutes les données d'un coup
+- **Batch processing** : Traiter par lots si > 100 items
+- **Cache intelligent** : Utiliser des variables pour éviter les appels répétés
+
+## 🎯 Objectifs Pédagogiques par Module
+
+### Module 1 : Familiarisation
+- Interface n8n
+- Concepts de base
+- Premiers workflows simples
+
+### Module 2 : Intégration
+- Connexions externes
+- APIs et webhooks
+- Gestion de données
+
+### Module 3 : Applications Business
+- Cas d'usage réels
+- ROI et métrics
+- Workflows production
+
+### Module 4 : Expertise Technique
+- Code avancé
+- Architecture
+- Performance
+
+### Module 5 : Mastery
+- Monétisation
+- Écosystème
+- Vision stratégique
+
+## 📝 Notes Importantes
+
+1. **Toujours tester** les workflows avant de les inclure
+2. **Documenter les prérequis** (APIs keys, permissions, etc.)
+3. **Inclure des données d'exemple** pour chaque workflow
+4. **Prévoir des versions simplifiées** pour débutants
+5. **Maintenir la cohérence** entre script vidéo et workflow réel
+
+## 🔄 Workflow de Mise à Jour
+
+1. **Modifier le script** vidéo si nécessaire
+2. **Adapter le workflow** n8n correspondant
+3. **Tester en local** 
+4. **Valider la cohérence** pédagogique
+5. **Commiter les changements**
+
+Cette documentation assure la cohérence entre les scripts de formation et les workflows n8n pratiques, garantissant une expérience d'apprentissage optimale.
+
+## MCP (Model Context Protocol) Servers disponibles
+
+Une structure centralisée de MCP servers a été mise en place dans `/var/www/MCP/` pour être partagée entre tous les projets.
+
+### MCP installés et disponibles :
+
+#### ✅ Installés et fonctionnels
+- **mcp-server-mysql** : Connexion MySQL directe (dans core/)
+- **task-master-ai** : Gestion de tâches IA avancée (dans core/claude-task-master/)
+- **exa-mcp-server** : Recherche IA puissante (dans ai/)
+- **datadog-mcp-server** : Monitoring et observabilité (dans devops/)
+- **playwright-mcp-server** : Automatisation navigateur (dans testing/)
+
+#### 🔄 En attente / Placeholders
+- **laravel-mcp** : Intégration Laravel (placeholder)
+- **laravel-loop** : Bridge Laravel pour AI (placeholder)
+- **n8n-mcp** : Déjà présent dans automation/ (déplacé depuis automatehub)
+
+### Configuration dans claude_desktop_config.json
+
+Exemple pour MySQL :
+```json
+{
+  "mcpServers": {
+    "mysql": {
+      "command": "node",
+      "args": ["/var/www/MCP/core/mcp-server-mysql/node_modules/.bin/mcp-mysql-server"],
+      "env": {
+        "DB_HOST": "localhost",
+        "DB_USER": "your_user",
+        "DB_PASSWORD": "your_password",
+        "DB_NAME": "your_database"
+      }
+    }
+  }
+}
+```
+
+Exemple pour Task Master :
+```json
+{
+  "mcpServers": {
+    "task-master": {
+      "command": "npx",
+      "args": ["task-master-ai", "mcp"],
+      "cwd": "/var/www/MCP/core/claude-task-master",
+      "env": {
+        "ANTHROPIC_API_KEY": "your_api_key"
+      }
+    }
+  }
+}
+```
+
+### MCP recommandés pour ce projet
+
+- mysql (base de données)
+- n8n-mcp (workflows)
+- task-master (gestion des tâches)
+
+---
+*MCP installés le : Sun Jul 13 12:01:15 CEST 2025*
+

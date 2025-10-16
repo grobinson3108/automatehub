@@ -1,0 +1,87 @@
+{
+  "id": "2",
+  "name": "Workflow Météo Telegram",
+  "nodes": [
+    {
+      "name": "Déclencheur Telegram",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "position": [
+        270,
+        220
+      ],
+      "parameters": {
+        "updates": [
+          "message"
+        ]
+      },
+      "credentials": {
+        "telegramApi": "Telegram"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "OpenWeatherMap",
+      "type": "n8n-nodes-base.openWeatherMap",
+      "position": [
+        480,
+        220
+      ],
+      "parameters": {
+        "cityName": "berlin,de"
+      },
+      "credentials": {
+        "openWeatherMapApi": "OpenWeatherMap"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        670,
+        220
+      ],
+      "parameters": {
+        "text": "=En ce moment, nous avons {{$node[\"OpenWeatherMap\"].json[\"weather\"][0][\"description\"]}}. La température est de {{$node[\"OpenWeatherMap\"].json[\"main\"][\"temp\"]}}°C mais on ressent vraiment {{$node[\"OpenWeatherMap\"].json[\"main\"][\"feels_like\"]}}°C 🙂",
+        "chatId": "={{$node[\"Telegram Trigger\"].json[\"message\"][\"chat\"][\"id\"]}}",
+        "additionalFields": {}
+      },
+      "credentials": {
+        "telegramApi": "Telegram"
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": true,
+  "settings": {},
+  "connections": {
+    "OpenWeatherMap": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Déclencheur Telegram": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

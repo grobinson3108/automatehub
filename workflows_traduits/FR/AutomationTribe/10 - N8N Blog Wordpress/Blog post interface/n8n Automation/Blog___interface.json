@@ -1,0 +1,1317 @@
+{
+  "name": "Blog - interface",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "d70e2726-3293-48ba-9675-bfd23cde889c",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -920,
+        -20
+      ],
+      "id": "9a8a42ea-7c3a-426b-aa59-b95eee724fc1",
+      "name": "Webhook",
+      "webhookId": "d70e2726-3293-48ba-9675-bfd23cde889c"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1260,
+        -540
+      ],
+      "id": "46ad06a3-e29c-462d-8bf2-934a9da04951",
+      "name": "Répondre au Webhook"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Générer 10 idées de billets de blog uniques basées sur le sujet suivant : {{ $json.body.prompt }}."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -220,
+        -540
+      ],
+      "id": "7a7b2ba7-6e4d-42c5-ad5f-66edd4b819d0",
+      "name": "OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "generate_ideas",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "0e5a7b1d-2cef-441d-beff-e1ad15628096"
+                  }
+                ],
+                "combinator": "et"
+              },
+              "renameOutput": true,
+              "outputKey": "Générer des idées"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "5244c20c-4be2-44a1-a368-0c37e97cc2af",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "generate_post_content",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "et"
+              },
+              "renameOutput": true,
+              "outputKey": "Générer le contenu du post"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "cee1e9d1-7c60-4805-b1a2-fc8d4eb943fb",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "generate_image_prompt",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "et"
+              },
+              "renameOutput": true,
+              "outputKey": "Générer un prompt d'image"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "a5c6e9f6-43af-4e25-afb2-9ceb397fbd4f",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "generate_image",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "et"
+              },
+              "renameOutput": true,
+              "outputKey": "Générer l'image"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "ba529a37-fc3e-4e28-aceb-ce48ee2f26c2",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "publish",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "et"
+              },
+              "renameOutput": true,
+              "outputKey": "Publish"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "afe1c9bc-23af-4e15-b20a-691a5a5f3912",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "share_multi_platform",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "et"
+              },
+              "renameOutput": true,
+              "outputKey": "Partager sur plusieurs plateformes"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -700,
+        -83
+      ],
+      "id": "7c2d2ba2-f7a4-409b-bea1-d06f476a6ae6",
+      "name": "Interrupteur"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Vous êtes un rédacteur SEO expert et un stratège de contenu chargé de générer un premier brouillon complet, bien structuré et engageant pour un article de blog, ainsi que des éléments SEO optimisés..."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -200,
+        -320
+      ],
+      "id": "b9fff50c-16eb-448a-bbab-ffff916e60b4",
+      "name": "OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "75c28640-9af9-40c5-b9ae-4b884c6850d1",
+              "name": "post_content",
+              "value": "={{ $json.message.content.post_content }}",
+              "type": "string"
+            },
+            {
+              "id": "db8b2f46-61ff-4a7d-8463-bda980b1f827",
+              "name": "message.content.meta_description",
+              "value": "={{ $json.message.content.meta_description }}",
+              "type": "string"
+            },
+            {
+              "id": "a1e073ce-3714-4436-b937-d8e7b2a6978d",
+              "name": "message.content.tags",
+              "value": "={{ $json.message.content.tags }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        820,
+        -320
+      ],
+      "id": "191dc887-f96e-4cab-a5b4-378c81f9626a",
+      "name": "Générer un prompt d'image"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=Vous êtes un assistant IA spécialisé dans la création de prompts efficaces pour la génération d'images. Analysez le contenu du blog suivant : {{ $json.body.content }} En fonction des thèmes princ..."
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -200,
+        -100
+      ],
+      "id": "89e84e18-2f69-441e-8f9f-eb0fd454a980",
+      "name": "et",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e45a856c-9ee7-40e8-af03-b1ddf8a6bd80",
+              "name": "image_prompt",
+              "value": "={{ $json.message.content.image_prompt }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        820,
+        -100
+      ],
+      "id": "138e1f57-540d-41bc-8298-cfbab55d6f06",
+      "name": "et"
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "prompt": "=Vous êtes un assistant IA spécialisé dans la création de prompts efficaces pour la génération d'images en combinant les entrées des utilisateurs avec des paramètres de style optionnels. **Prompt de base fourni par l'utilisateur :** {{ $json.body.prompt }}...",
+        "options": {
+          "size": "={{ $('Webhook').item.json.body.resolution }}",
+          "returnImageUrls": true
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        -180,
+        80
+      ],
+      "id": "73d30ca0-f180-45d4-8975-06aff5267e73",
+      "name": "et",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "={{ { \"image_url\": $json.url } }}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        820,
+        80
+      ],
+      "id": "43aad928-3008-4203-bd8a-6a808ae8263a",
+      "name": "Partager sur plusieurs plateformes"
+    },
+    {
+      "parameters": {
+        "title": "={{ $('Switch').item.json.body.data.title }}",
+        "additionalFields": {
+          "authorId": 2,
+          "content": "={{ $('Switch').item.json.body.data.content }}",
+          "status": "publish",
+          "categories": [
+            1
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.wordpress",
+      "typeVersion": 1,
+      "position": [
+        280,
+        260
+      ],
+      "id": "04d8c9b8-3d3b-421d-85a0-e3ed821e198d",
+      "name": "Vous êtes un rédacteur SEO expert et un stratège de contenu chargé de générer un premier brouillon complet, bien structuré et engageant pour un article de blog, ainsi que des éléments SEO optimisés...",
+      "credentials": {
+        "wordpressApi": {
+          "id": "n8nsFnR5bNZ96duC",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Download image').item.json.blog_url }}wp-json/wp/v2/media/{{ $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "title",
+              "value": "={{ $('Switch').item.json.body.data.title }}"
+            },
+            {
+              "name": "slug",
+              "value": "={{ $('Switch').item.json.body.data.title }}"
+            },
+            {
+              "name": "alt_text",
+              "value": "={{ $('Switch').item.json.body.data.thumbnail_prompt }}"
+            },
+            {
+              "name": "caption",
+              "value": "={{ $('Switch').item.json.body.data.description }}"
+            },
+            {
+              "name": "description",
+              "value": "={{ $('Switch').item.json.body.data.description }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        100,
+        260
+      ],
+      "id": "684dc099-6ccd-48ac-866c-bcd909f67719",
+      "name": "Vous êtes un assistant IA spécialisé dans la création de prompts efficaces pour la génération d'images. Analysez le contenu du blog suivant : {{ $json.body.content }} En fonction des thèmes princ...",
+      "credentials": {
+        "wordpressApi": {
+          "id": "n8nsFnR5bNZ96duC",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Edit Fields4').item.json.blog_url }}wp-json/wp/v2/posts/{{ $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "excerpt",
+              "value": "={{ $('Switch').item.json.body.data.description }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        260
+      ],
+      "id": "699cb506-f2af-47b0-9451-48c7b80d0a5c",
+      "name": "Vous êtes un assistant IA spécialisé dans la création de prompts efficaces pour la génération d'images en combinant les entrées des utilisateurs avec des paramètres de style optionnels. **Prompt de base fourni par l'utilisateur :** {{ $json.body.prompt }}...",
+      "credentials": {
+        "wordpressApi": {
+          "id": "n8nsFnR5bNZ96duC",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Edit Fields4').item.json.blog_url }}wp-json/wp/v2/posts/{{ $json.id }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "featured_media",
+              "value": "={{ $('Upload media on WP3').item.json.id }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        620,
+        260
+      ],
+      "id": "65504599-a1b7-47e8-9ad6-43ffd4f5d7bc",
+      "name": "{{ $json.blog_url }}wp-json/wp/v2/media",
+      "credentials": {
+        "wordpressApi": {
+          "id": "n8nsFnR5bNZ96duC",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $json.blog_url }}wp-json/wp/v2/media",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "wordpressApi",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "content-disposition",
+              "value": "=attachment; filename={{ $binary.data.fileName }}.{{ $binary.data.fileExtension }}"
+            },
+            {
+              "name": "content-type",
+              "value": "={{ $binary.data.mimeType }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "=data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -80,
+        260
+      ],
+      "id": "f930fcda-24fd-483c-827b-f6d19de544f5",
+      "name": "attachment; filename={{ $binary.data.fileName }}.{{ $binary.data.fileExtension }}",
+      "credentials": {
+        "wordpressApi": {
+          "id": "n8nsFnR5bNZ96duC",
+          "name": "Wordpress account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=$text_20",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        440
+      ],
+      "id": "c0d29c7e-4975-4f9f-9566-67ec449f9df0",
+      "name": "$text_20"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=$text_21",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        1640
+      ],
+      "id": "e7d858df-28a6-4753-b887-c623552f10ef",
+      "name": "$text_21"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=$text_22",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        640
+      ],
+      "id": "5f868c07-b4a5-49b8-ae05-e674d1a88fd4",
+      "name": "$text_22"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=$text_23",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        840
+      ],
+      "id": "c5d97a5e-bd9e-41ff-9427-0cd78b800b6a",
+      "name": "$text_23"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=$text_24",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        1040
+      ],
+      "id": "92e27a2e-1fd9-4795-a5a7-0fa8e684bf95",
+      "name": "$text_24"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=$text_25",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        1240
+      ],
+      "id": "65d0229a-a702-4068-8f41-235312e042b5",
+      "name": "$text_25"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/posts",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "=$text_26",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        1440
+      ],
+      "id": "4d9a9bd9-385b-42d5-b129-14938b18b311",
+      "name": "$text_26"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/instagram.png?v=1742473316)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1000,
+        420
+      ],
+      "typeVersion": 1,
+      "id": "a36e97df-e05b-440f-88ed-aabda21e6924",
+      "name": "$text_27"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/x.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1000,
+        620
+      ],
+      "typeVersion": 1,
+      "id": "81cd1f5d-d9cb-42e8-8394-fd45099887a1",
+      "name": "$text_28"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/linkedin.png?v=1742473318)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1000,
+        820
+      ],
+      "typeVersion": 1,
+      "id": "965b0af9-17ab-4da3-89c7-614a9d467b56",
+      "name": "$text_29"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/linkedin.png?v=1742473318)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1000,
+        1020
+      ],
+      "typeVersion": 1,
+      "id": "479c98c1-7cd1-4ab4-b57c-65ffc2742430",
+      "name": "Répondre au Webhook"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/facebook.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1000,
+        1220
+      ],
+      "typeVersion": 1,
+      "id": "a232d4ec-c2d6-4bf8-84ab-903fc54e1c72",
+      "name": "Répondre au Webhook"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/threads.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1000,
+        1420
+      ],
+      "typeVersion": 1,
+      "id": "dc68fc47-1ed4-41d6-8e81-71c08a757f29",
+      "name": "Répondre au Webhook"
+    },
+    {
+      "parameters": {
+        "content": "![Instagram](https://cdn.shopify.com/s/files/1/0755/4066/0562/files/pinterest.png?v=1742473317)",
+        "height": 140,
+        "width": 150,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1000,
+        1640
+      ],
+      "typeVersion": 1,
+      "id": "ea7d2641-b5af-4905-8ba5-f75b5d8590bc",
+      "name": "Répondre au Webhook"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "$text_27",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -420,
+        1040
+      ],
+      "id": "e7b74b35-08c5-40e7-ba77-fff41eb9d9fa",
+      "name": "Définir l'image à la une"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://backend.blotato.com/v2/media",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "blotato-api-key",
+              "value": "={{ $('Set ID').item.json['Blotato-API'] }}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $json.url }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        120,
+        1040
+      ],
+      "id": "a9cf16f2-65d8-4cc5-9b8c-9141363c5235",
+      "name": "Définir le SEO de l'image"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "$text_28",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -440,
+        260
+      ],
+      "id": "4803643a-d7da-4a02-8c24-345f37234ec9",
+      "name": "Télécharger l'image"
+    },
+    {
+      "parameters": {
+        "url": "={{ $('Switch').item.json.body.data.thumbnail_url }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -260,
+        260
+      ],
+      "id": "fac887be-980e-44f3-852f-fc30f67f1be1",
+      "name": "Téléverser des médias sur WP3"
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonOutput": "=$text_29",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        820,
+        260
+      ],
+      "id": "3b2066e6-3619-4944-ae44-bc756958ae81",
+      "name": "Répondre au Webhook"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://www.stock-graphics.com/api/convert-to-url.php",
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "url",
+              "value": "={{ $('Webhook').item.json.body.thumbnail_url }}"
+            },
+            {
+              "name": "name",
+              "value": "={{ $('Webhook').item.json.body.title }}"
+            },
+            {
+              "name": "folder",
+              "value": "converted"
+            },
+            {
+              "name": "height"
+            },
+            {
+              "name": "folder",
+              "value": "api/converted"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -180,
+        1040
+      ],
+      "id": "61e42c82-1000-4a19-8136-e481767a2ff1",
+      "name": "$text_39"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI": {
+      "main": [
+        [
+          {
+            "node": "Répondre au Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "OpenAI",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OpenAI1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OpenAI2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "OpenAI3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Répondre au Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Répondre au Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Répondre au Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wordpress": {
+      "main": [
+        [
+          {
+            "node": "Wp Excerpt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set image SEO": {
+      "main": [
+        [
+          {
+            "node": "Wordpress",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wp Excerpt": {
+      "main": [
+        [
+          {
+            "node": "Définir l'image à la une",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Featured Image": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields7",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload media on WP3": {
+      "main": [
+        [
+          {
+            "node": "Définir le SEO de l'image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Instagram": {
+      "main": [
+        []
+      ]
+    },
+    "Set ID": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request4": {
+      "main": [
+        [
+          {
+            "node": "LinkedIn",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Twitter",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "LinkedIn Page",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Fb Account",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Threads",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Pinterest",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Instagram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Télécharger l'image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download image": {
+      "main": [
+        [
+          {
+            "node": "Téléverser des médias sur WP3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields7": {
+      "main": [
+        [
+          {
+            "node": "Répondre au Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request3": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "cd63d3fa-9b85-4d33-84d7-50b2cf3497d5",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+  },
+  "id": "WKSyB8l7BwJPIV4t",
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

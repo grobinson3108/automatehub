@@ -1,0 +1,283 @@
+{
+  "meta": {
+    "instanceId": "automatehub-email-automation",
+    "description": "Automatisation email marketing avec personnalisation et analytics"
+  },
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 9 * * 1"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger-001",
+      "name": "Déclencheur Hebdomadaire",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        380,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://automatehub.fr/api/users/newsletter-subscribers",
+        "options": {}
+      },
+      "id": "fetch-subscribers-002",
+      "name": "Récupérer Abonnés",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        600,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Segmentation intelligente des utilisateurs\nconst subscribers = $json.subscribers || [];\n\n// Créer des segments basés sur l'activité et les préférences\nconst segments = {\n  new_users: [],\n  active_premium: [],\n  inactive_free: [],\n  tutorial_enthusiasts: [],\n  automation_experts: []\n};\n\nsubscribers.forEach(user => {\n  const daysSinceRegistration = Math.floor(\n    (new Date() - new Date(user.created_at)) / (1000 * 60 * 60 * 24)\n  );\n  \n  const daysSinceLastActivity = Math.floor(\n    (new Date() - new Date(user.last_activity_at)) / (1000 * 60 * 60 * 24)\n  );\n  \n  // Nouveaux utilisateurs (moins de 7 jours)\n  if (daysSinceRegistration <= 7) {\n    segments.new_users.push({\n      ...user,\n      segment: 'new_users',\n      personalization: {\n        greeting: `Bienvenue ${user.first_name} !`,\n        content_focus: 'onboarding',\n        cta: 'Découvrir nos tutoriels gratuits'\n      }\n    });\n  }\n  \n  // Utilisateurs premium actifs\n  else if (user.subscription_type === 'premium' && daysSinceLastActivity <= 7) {\n    segments.active_premium.push({\n      ...user,\n      segment: 'active_premium',\n      personalization: {\n        greeting: `Bonjour ${user.first_name} !`,\n        content_focus: 'advanced_tutorials',\n        cta: 'Voir les nouveaux workflows premium'\n      }\n    });\n  }\n  \n  // Utilisateurs gratuits inactifs\n  else if (user.subscription_type === 'free' && daysSinceLastActivity > 14) {\n    segments.inactive_free.push({\n      ...user,\n      segment: 'inactive_free',\n      personalization: {\n        greeting: `Nous vous avons manqué, ${user.first_name} !`,\n        content_focus: 'reengagement',\n        cta: 'Reprendre votre apprentissage'\n      }\n    });\n  }\n  \n  // Passionnés de tutoriels\n  else if ((user.completed_tutorials || 0) >= 5) {\n    segments.tutorial_enthusiasts.push({\n      ...user,\n      segment: 'tutorial_enthusiasts',\n      personalization: {\n        greeting: `Salut ${user.first_name}, expert en devenir !`,\n        content_focus: 'community',\n        cta: 'Rejoindre notre communauté discord'\n      }\n    });\n  }\n  \n  // Experts en automatisation\n  else if ((user.created_workflows || 0) >= 3) {\n    segments.automation_experts.push({\n      ...user,\n      segment: 'automation_experts',\n      personalization: {\n        greeting: `Hello ${user.first_name}, maître de l'automatisation !`,\n        content_focus: 'advanced_features',\n        cta: 'Découvrir les fonctionnalités pro'\n      }\n    });\n  }\n});\n\n// Statistiques de segmentation\nconst stats = {\n  total_subscribers: subscribers.length,\n  new_users: segments.new_users.length,\n  active_premium: segments.active_premium.length,\n  inactive_free: segments.inactive_free.length,\n  tutorial_enthusiasts: segments.tutorial_enthusiasts.length,\n  automation_experts: segments.automation_experts.length,\n  segmentation_date: new Date().toISOString()\n};\n\nreturn {\n  json: {\n    segments: segments,\n    stats: stats,\n    campaign_id: `newsletter_${new Date().getFullYear()}_${String(new Date().getMonth() + 1).padStart(2, '0')}_${String(new Date().getDate()).padStart(2, '0')}`\n  }\n};"
+      },
+      "id": "user-segmentation-003",
+      "name": "Segmentation Utilisateurs",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        820,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "fieldsToSplitOut": "segments.new_users,segments.active_premium,segments.inactive_free,segments.tutorial_enthusiasts,segments.automation_experts",
+        "options": {}
+      },
+      "id": "split-segments-004",
+      "name": "Diviser par Segments",
+      "type": "n8n-nodes-base.itemLists",
+      "typeVersion": 3.3,
+      "position": [
+        1040,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "segment-condition",
+              "leftValue": "={{ $json.segment }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "filter-empty-segments-005",
+      "name": "Filtrer Segments Vides",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [
+        1260,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Génération de contenu personnalisé basé sur le segment\nconst user = $json;\nconst segment = user.segment;\nconst personalization = user.personalization;\n\n// Templates de contenu par segment\nconst contentTemplates = {\n  new_users: {\n    subject: `🚀 ${personalization.greeting} Commencez votre voyage n8n`,\n    header: `Bienvenue dans la communauté AutomateHub !`,\n    content: `\n      <h2>🎉 Félicitations pour votre inscription !</h2>\n      <p>Vous venez de faire le premier pas vers la maîtrise de l'automatisation avec n8n.</p>\n      \n      <h3>🎯 Pour bien commencer :</h3>\n      <ul>\n        <li>📚 Consultez notre guide de démarrage rapide</li>\n        <li>🎥 Regardez notre série \"n8n pour les débutants\"</li>\n        <li>🛠️ Créez votre premier workflow simple</li>\n      </ul>\n      \n      <p>💡 <strong>Astuce du jour :</strong> Commencez par automatiser quelque chose de simple, comme recevoir une notification quand vous recevez un email important !</p>\n    `,\n    cta_text: personalization.cta,\n    cta_url: 'https://automatehub.fr/tutoriels/debutants'\n  },\n  \n  active_premium: {\n    subject: `⚡ Nouveautés premium : Workflows IA et intégrations avancées`,\n    header: `Découvrez nos dernières innovations !`,\n    content: `\n      <h2>🔥 Nouvelles fonctionnalités premium</h2>\n      <p>En tant qu'abonné premium actif, vous avez accès en avant-première à nos dernières créations :</p>\n      \n      <h3>🤖 Nouveaux workflows IA :</h3>\n      <ul>\n        <li>🧠 Chatbot GPT-4 avec mémoire contextuelle</li>\n        <li>📊 Analyse automatique de données avec insights IA</li>\n        <li>🎨 Génération de contenu marketing automatisée</li>\n      </ul>\n      \n      <h3>🔗 Nouvelles intégrations :</h3>\n      <ul>\n        <li>📱 WhatsApp Business API</li>\n        <li>💰 Stripe Connect avancé</li>\n        <li>📈 Google Analytics 4 complet</li>\n      </ul>\n    `,\n    cta_text: personalization.cta,\n    cta_url: 'https://automatehub.fr/premium/nouveautes'\n  },\n  \n  inactive_free: {\n    subject: `😢 ${personalization.greeting} Offre spéciale de retour !`,\n    header: `Nous avons préparé quelque chose de spécial pour vous`,\n    content: `\n      <h2>🎁 Offre de retour exclusive</h2>\n      <p>Nous avons remarqué que vous n'avez pas visité AutomateHub récemment. Nous espérons que tout va bien !</p>\n      \n      <h3>🚀 Voici ce que vous avez manqué :</h3>\n      <ul>\n        <li>📚 5 nouveaux tutoriels gratuits</li>\n        <li>🎥 Série vidéo \"Automatisation pour tous\"</li>\n        <li>🛠️ Templates de workflows prêts à utiliser</li>\n      </ul>\n      \n      <div style=\"background: #f0f9ff; padding: 20px; border-radius: 8px; margin: 20px 0;\">\n        <h3>🎯 Offre spéciale :</h3>\n        <p><strong>50% de réduction</strong> sur votre premier mois Premium</p>\n        <p>Code promo : <strong>RETOUR50</strong></p>\n        <p><em>Valable jusqu'au ${new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('fr-FR')}</em></p>\n      </div>\n    `,\n    cta_text: personalization.cta,\n    cta_url: 'https://automatehub.fr/reprendre?promo=RETOUR50'\n  },\n  \n  tutorial_enthusiasts: {\n    subject: `🏆 ${personalization.greeting} Contenu exclusif pour les passionnés`,\n    header: `Du contenu spécialement pour vous !`,\n    content: `\n      <h2>🎓 Contenu avancé pour les experts</h2>\n      <p>Avec ${user.completed_tutorials || 5}+ tutoriels complétés, vous faites partie de nos apprenants les plus actifs !</p>\n      \n      <h3>🔥 Contenu exclusif cette semaine :</h3>\n      <ul>\n        <li>🧪 Laboratoire : Testez les workflows expérimentaux</li>\n        <li>🎤 Webinar \"Techniques avancées n8n\" (réservé aux membres actifs)</li>\n        <li>📖 Guide : \"De débutant à expert n8n en 30 jours\"</li>\n      </ul>\n      \n      <h3>🌟 Opportunité spéciale :</h3>\n      <p>Devenez bêta-testeur de nos nouvelles fonctionnalités et obtenez un accès gratuit au contenu premium pendant 3 mois !</p>\n    `,\n    cta_text: personalization.cta,\n    cta_url: 'https://discord.gg/automatehub'\n  },\n  \n  automation_experts: {\n    subject: `🎯 ${personalization.greeting} Fonctionnalités pro et masterclass`,\n    header: `Contenus d'expert pour expert !`,\n    content: `\n      <h2>⚡ Niveau expert débloqué</h2>\n      <p>Avec ${user.created_workflows || 3}+ workflows créés, vous maîtrisez déjà bien n8n !</p>\n      \n      <h3>🚀 Nouvelles fonctionnalités pro :</h3>\n      <ul>\n        <li>🔄 Workflows multi-environnements (dev/staging/prod)</li>\n        <li>📊 Analytics avancés de performance</li>\n        <li>🔐 Gestion des secrets et variables sécurisées</li>\n        <li>⚡ Mode haute performance avec scaling automatique</li>\n      </ul>\n      \n      <h3>🎓 Masterclass exclusive :</h3>\n      <p>\"Architecture d'automatisation d'entreprise\" - Session live avec notre CTO</p>\n      <p>📅 Vendredi 12 juillet à 14h</p>\n    `,\n    cta_text: personalization.cta,\n    cta_url: 'https://automatehub.fr/pro/fonctionnalites'\n  }\n};\n\nconst template = contentTemplates[segment] || contentTemplates.new_users;\n\nreturn {\n  json: {\n    to: user.email,\n    firstName: user.first_name,\n    segment: segment,\n    email_content: {\n      subject: template.subject,\n      header: template.header,\n      content: template.content,\n      cta_text: template.cta_text,\n      cta_url: template.cta_url,\n      personalization: personalization\n    },\n    campaign_id: $('Segmentation Utilisateurs').first().json.campaign_id,\n    user_id: user.id,\n    send_time: new Date().toISOString()\n  }\n};"
+      },
+      "id": "content-generator-006",
+      "name": "Générateur de Contenu",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1480,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "url": "https://api.resend.com/emails",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{ $credentials.resendApiKey }}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  \"from\": \"AutomateHub <newsletter@automatehub.fr>\",\n  \"to\": [$json.to],\n  \"subject\": $json.email_content.subject,\n  \"html\": `<!DOCTYPE html>\n<html>\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <title>${$json.email_content.subject}</title>\n  <style>\n    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; margin: 0; padding: 0; background-color: #f4f4f4; }\n    .container { max-width: 600px; margin: 0 auto; background-color: white; box-shadow: 0 0 10px rgba(0,0,0,0.1); }\n    .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; }\n    .content { padding: 30px; }\n    .cta-button { display: inline-block; background: #667eea; color: white; padding: 15px 30px; text-decoration: none; border-radius: 5px; margin: 20px 0; font-weight: bold; }\n    .footer { background: #f8f9fa; padding: 20px; text-align: center; font-size: 12px; color: #666; }\n    ul { padding-left: 20px; }\n    li { margin-bottom: 8px; }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>🚀 AutomateHub</h1>\n      <p>${$json.email_content.header}</p>\n    </div>\n    <div class=\"content\">\n      ${$json.email_content.content}\n      <div style=\"text-align: center; margin: 30px 0;\">\n        <a href=\"${$json.email_content.cta_url}?utm_source=newsletter&utm_medium=email&utm_campaign=${$json.campaign_id}&utm_content=${$json.segment}\" class=\"cta-button\">\n          ${$json.email_content.cta_text}\n        </a>\n      </div>\n      <hr style=\"border: none; border-top: 1px solid #eee; margin: 30px 0;\">\n      <p><strong>💡 Astuce :</strong> Partagez vos créations avec la communauté sur notre Discord !</p>\n    </div>\n    <div class=\"footer\">\n      <p>📧 Vous recevez cet email car vous êtes abonné à notre newsletter.</p>\n      <p><a href=\"https://automatehub.fr/unsubscribe?token={{$json.user_id}}\">Se désabonner</a> | <a href=\"https://automatehub.fr/preferences\">Gérer mes préférences</a></p>\n      <p>AutomateHub - Votre plateforme d'apprentissage n8n 🚀</p>\n    </div>\n  </div>\n</body>\n</html>`,\n  \"tags\": [\n    {\n      \"name\": \"campaign\",\n      \"value\": $json.campaign_id\n    },\n    {\n      \"name\": \"segment\",\n      \"value\": $json.segment\n    }\n  ]\n} }}"
+      },
+      "id": "send-email-007",
+      "name": "Envoi Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1700,
+        400
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://automatehub.fr/api/analytics/email-campaign",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  \"campaign_id\": $json.campaign_id,\n  \"user_id\": $json.user_id,\n  \"email\": $json.to,\n  \"segment\": $json.segment,\n  \"subject\": $json.email_content.subject,\n  \"sent_at\": $json.send_time,\n  \"status\": \"sent\",\n  \"tracking_params\": {\n    \"utm_source\": \"newsletter\",\n    \"utm_medium\": \"email\",\n    \"utm_campaign\": $json.campaign_id,\n    \"utm_content\": $json.segment\n  }\n} }}"
+      },
+      "id": "track-analytics-008",
+      "name": "Suivi Analytics",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1920,
+        400
+      ]
+    }
+  ],
+  "connections": {
+    "Déclencheur Hebdomadaire": {
+      "main": [
+        [
+          {
+            "node": "Récupérer Abonnés",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Récupérer Abonnés": {
+      "main": [
+        [
+          {
+            "node": "Segmentation Utilisateurs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Segmentation Utilisateurs": {
+      "main": [
+        [
+          {
+            "node": "Diviser par Segments",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Diviser par Segments": {
+      "main": [
+        [
+          {
+            "node": "Filtrer Segments Vides",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filtrer Segments Vides": {
+      "main": [
+        [
+          {
+            "node": "Générateur de Contenu",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Générateur de Contenu": {
+      "main": [
+        [
+          {
+            "node": "Envoi Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envoi Email": {
+      "main": [
+        [
+          {
+            "node": "Suivi Analytics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "timezone": "Europe/Paris"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-07-05T10:30:00.000Z",
+      "updatedAt": "2025-07-05T10:30:00.000Z",
+      "id": "email",
+      "name": "email"
+    },
+    {
+      "createdAt": "2025-07-05T10:30:00.000Z",
+      "updatedAt": "2025-07-05T10:30:00.000Z",
+      "id": "marketing",
+      "name": "marketing"
+    },
+    {
+      "createdAt": "2025-07-05T10:30:00.000Z",
+      "updatedAt": "2025-07-05T10:30:00.000Z",
+      "id": "automation",
+      "name": "automation"
+    },
+    {
+      "createdAt": "2025-07-05T10:30:00.000Z",
+      "updatedAt": "2025-07-05T10:30:00.000Z",
+      "id": "automatehub",
+      "name": "automatehub"
+    },
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-07-05T10:30:00.000Z",
+  "versionId": "3"
+}

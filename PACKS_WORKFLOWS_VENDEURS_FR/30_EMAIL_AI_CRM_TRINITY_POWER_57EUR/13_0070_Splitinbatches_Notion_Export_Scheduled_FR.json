@@ -1,0 +1,297 @@
+{
+  "id": 115,
+  "name": "Archiver les pages vides dans la base de données Notion",
+  "nodes": [
+    {
+      "name": "Obtenir toutes les bases de données",
+      "type": "n8n-nodes-base.notion",
+      "position": [
+        240,
+        300
+      ],
+      "parameters": {
+        "resource": "database",
+        "operation": "getAll",
+        "returnAll": true
+      },
+      "credentials": {
+        "notionApi": {
+          "id": "36",
+          "name": "Notion account"
+        }
+      },
+      "typeVersion": 2
+    },
+    {
+      "name": "Obtenir toutes les pages de la base de données",
+      "type": "n8n-nodes-base.notion",
+      "position": [
+        420,
+        300
+      ],
+      "parameters": {
+        "simple": false,
+        "options": {},
+        "resource": "databasePage",
+        "operation": "getAll",
+        "returnAll": true,
+        "databaseId": "={{$json[\"id\"]}}"
+      },
+      "credentials": {
+        "notionApi": {
+          "id": "36",
+          "name": "Notion account"
+        }
+      },
+      "typeVersion": 2
+    },
+    {
+      "name": "Obtenir les blocs de la page",
+      "type": "n8n-nodes-base.notion",
+      "position": [
+        1180,
+        280
+      ],
+      "parameters": {
+        "blockId": "={{$json[\"id\"]}}",
+        "resource": "block",
+        "operation": "getAll",
+        "returnAll": true
+      },
+      "credentials": {
+        "notionApi": {
+          "id": "36",
+          "name": "Notion account"
+        }
+      },
+      "typeVersion": 2,
+      "alwaysOutputData": true
+    },
+    {
+      "name": "Traiter les blocs",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        1360,
+        280
+      ],
+      "parameters": {
+        "functionCode": "let returnData = {\n  json: {\n    toDelete: false,\n    pageID: $node[\"SplitInBatches\"].json[\"id\"],\n  }\n};\n\nif (!items[0].json.id) {\n  returnData.json.toDelete = true;\n  return [returnData];\n}\n\nfor (item of items) {\n  \n  let toDelete = false;\n\n  let type = item.json.type;\n  let data = item.json[type];\n\n  if (!toDelete) {\n    if (data.text.length == 0) {\n      toDelete = true;\n    } else {\n      returnData.json.toDelete = false;\n      break;\n    }\n  }\n\n  returnData.json.toDelete = toDelete;\n}\n\nreturn [returnData];"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Diviser en lots",
+      "type": "n8n-nodes-base.splitInBatches",
+      "position": [
+        1000,
+        280
+      ],
+      "parameters": {
+        "options": {},
+        "batchSize": 1
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Vérifier les propriétés vides",
+      "type": "n8n-nodes-base.function",
+      "position": [
+        600,
+        300
+      ],
+      "parameters": {
+        "functionCode": "for (item of items) {\n\n  let toDelete = false;\n  for (const key in item.json.properties) {\n    let type = item.json.properties[key].type;\n    let data = item.json.properties[key][type];\n    \n    if (!data || data.length == 0) {\n      toDelete = true;\n    } else {\n      toDelete = false;\n      break;\n    }\n  }\n\n  item.json.toDelete = toDelete;\n}\n\nreturn items;"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Archiver la page",
+      "type": "n8n-nodes-base.notion",
+      "position": [
+        1760,
+        260
+      ],
+      "parameters": {
+        "pageId": "={{$json[\"pageID\"]}}",
+        "operation": "archive"
+      },
+      "credentials": {
+        "notionApi": {
+          "id": "36",
+          "name": "Notion account"
+        }
+      },
+      "typeVersion": 2
+    },
+    {
+      "name": "Si à supprimer",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        1560,
+        280
+      ],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json[\"toDelete\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Si propriétés vides",
+      "type": "n8n-nodes-base.if",
+      "position": [
+        760,
+        300
+      ],
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{$json[\"toDelete\"]}}",
+              "value2": true
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Tous les jours à 2h du matin",
+      "type": "n8n-nodes-base.cron",
+      "position": [
+        80,
+        300
+      ],
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 2
+            }
+          ]
+        }
+      },
+      "typeVersion": 1
+    }
+  ],
+  "active": false,
+  "settings": {},
+  "connections": {
+    "Si à supprimer": {
+      "main": [
+        [
+          {
+            "node": "Archiver la page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Traiter les blocs": {
+      "main": [
+        [
+          {
+            "node": "Si à supprimer",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Diviser en lots",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Diviser en lots": {
+      "main": [
+        [
+          {
+            "node": "Obtenir les blocs de la page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Tous les jours à 2h du matin": {
+      "main": [
+        [
+          {
+            "node": "Obtenir toutes les bases de données",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir les blocs de la page": {
+      "main": [
+        [
+          {
+            "node": "Traiter les blocs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir toutes les bases de données": {
+      "main": [
+        [
+          {
+            "node": "Obtenir toutes les pages de la base de données",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Si propriétés vides": {
+      "main": [
+        [
+          {
+            "node": "Diviser en lots",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir toutes les pages de la base de données": {
+      "main": [
+        [
+          {
+            "node": "Vérifier les propriétés vides",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vérifier les propriétés vides": {
+      "main": [
+        [
+          {
+            "node": "Si propriétés vides",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "jsCode": "// Après avoir envoyé Force Reply, stocker en base\nconst session = {\n  userId: $json.chatId,\n  mailId: $json.mailId,\n  timestamp: new Date().toISOString(),\n  action: 'awaiting_reply'\n};\n\nreturn [{ json: session }];"
+      },
+      "id": "store-session",
+      "name": "Store Session",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1050, 700]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID",
+          "mode": "list"
+        },
+        "sheetName": "Sessions",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "userId": "={{$json.userId}}",
+            "mailId": "={{$json.mailId}}",
+            "timestamp": "={{$json.timestamp}}",
+            "action": "={{$json.action}}"
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1250, 700],
+      "id": "save-session"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.message.reply_to_message ? 'true' : 'false'}}",
+              "value2": "false"
+            }
+          ]
+        }
+      },
+      "id": "if-no-reply",
+      "name": "IF No Reply To",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [450, 1300]
+    },
+    {
+      "parameters": {
+        "operation": "lookup",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID",
+          "mode": "list"
+        },
+        "sheetName": "Sessions",
+        "lookupColumn": "userId",
+        "lookupValue": "={{$json.message.from.id}}",
+        "options": {
+          "returnAllMatches": false
+        }
+      },
+      "id": "lookup-session",
+      "name": "Lookup Last Session",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [650, 1300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Si pas de reply_to_message, utiliser la session\nconst message = $json.message;\nlet mailId = null;\n\n// D'abord vérifier reply_to_message\nif (message.reply_to_message && message.reply_to_message.text) {\n  const mailIdMatch = message.reply_to_message.text.match(/\\[([^\\]]+)\\]/);\n  mailId = mailIdMatch ? mailIdMatch[1] : null;\n} else {\n  // Sinon utiliser la session\n  mailId = $node[\"Lookup Last Session\"].json.mailId || null;\n}\n\nlet userResponse = message.text || '';\nif (message.voice) {\n  userResponse = \"[Message vocal à transcrire]\";\n}\n\nreturn [{\n  json: {\n    mailId,\n    userResponse,\n    chatId: message.chat.id,\n    userId: message.from.id,\n    userName: message.from.first_name,\n    fromSession: !message.reply_to_message\n  }\n}];"
+      },
+      "id": "extract-with-session",
+      "name": "Extract with Session",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [850, 1100]
+    }
+  ]
+}

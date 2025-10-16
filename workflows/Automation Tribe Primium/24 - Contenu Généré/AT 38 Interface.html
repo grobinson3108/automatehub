@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Character Image & Video Editing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js" defer></script>
+  <meta name="color-scheme" content="light dark" />
+  <style>
+    .drop-active { border-color: rgb(59 130 246); background-color: rgba(59,130,246,.05); }
+    .visually-hidden { position:absolute; clip:rect(0 0 0 0); width:1px; height:1px; margin:-1px; overflow:hidden; }
+    #drawingCanvas { cursor: crosshair; }
+    a.link { text-decoration: underline; text-underline-offset: 2px; }
+    .cropper-container img { display: block; max-width: 100%; }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-900 antialiased">
+  <main class="max-w-4xl mx-auto px-4 py-10">
+    <header class="mb-8 text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-50 text-amber-700 text-xs font-semibold tracking-wide uppercase">Automation Tribe</div>
+      <h1 class="mt-3 text-3xl font-semibold tracking-tight">Character Image & Video Editing</h1>
+      <p class="text-gray-600 mt-2">Create a new image, crop it, and then generate a video with custom text.</p>
+    </header>
+
+    <div id="alert" class="hidden mb-6 rounded-lg border border-red-200 bg-red-50 text-red-800 px-4 py-3 text-sm" role="alert" aria-live="polite"></div>
+
+    <section id="step1" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="inline-flex items-center justify-center size-7 rounded-full bg-blue-100 text-blue-700 text-sm font-medium">1</span>
+        <h2 class="text-xl font-semibold">Setup Your Assets</h2>
+      </div>
+      <div class="grid md:grid-cols-2 gap-8">
+        <div>
+          <p class="text-sm font-medium text-gray-700 mb-2">Character Image</p>
+          <div id="mainDropzone" class="rounded-2xl border-2 border-dashed border-gray-300 p-6 text-center cursor-pointer select-none bg-gray-50 hover:bg-gray-100 transition">
+            <input id="mainFileInput" type="file" accept=".png,.jpg,.jpeg,.webp" class="visually-hidden" />
+            <div class="flex flex-col items-center">
+              <svg class="size-8 text-gray-400 mb-2" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 16a4 4 0 118 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12 12V4m0 0l-3 3m3-3l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="3" y="14" width="18" height="7" rx="2" stroke="currentColor" stroke-width="1.5"/></svg>
+              <p class="text-sm text-gray-700"><span class="font-medium">Click to upload</span> or drag & drop</p>
+            </div>
+          </div>
+          <div id="canvasArea" class="hidden mt-4">
+            <p class="text-sm font-medium text-gray-700 mb-2">Draw Mask (with white brush)</p>
+            <div id="canvasContainer" class="relative border rounded-xl overflow-hidden bg-gray-100">
+               <canvas id="bgCanvas" class="absolute top-0 left-0 w-full h-auto"></canvas>
+              <canvas id="drawingCanvas" class="relative z-10 w-full h-auto"></canvas>
+            </div>
+            <div class="mt-3 flex items-center gap-4">
+              <label for="brushSize" class="text-sm text-gray-600">Brush:</label>
+              <input id="brushSize" type="range" min="2" max="80" value="20" class="w-full">
+              <button id="btnClearMask" class="text-sm text-gray-500 hover:text-gray-700 underline decoration-dotted">Clear</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <p class="text-sm font-medium text-gray-700 mb-2">Product Image</p>
+          <div id="productDropzone" class="rounded-2xl border-2 border-dashed border-gray-300 p-6 text-center cursor-pointer select-none bg-gray-50 hover:bg-gray-100 transition">
+            <input id="productFileInput" type="file" accept=".png,.jpg,.jpeg,.webp" class="visually-hidden" />
+            <div class="flex flex-col items-center">
+              <svg class="size-8 text-gray-400 mb-2" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 16a4 4 0 118 0" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M12 12V4m0 0l-3 3m3-3l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><rect x="3" y="14" width="18" height="7" rx="2" stroke="currentColor" stroke-width="1.5"/></svg>
+              <p class="text-sm text-gray-700"><span class="font-medium">Click to upload</span> or drag & drop</p>
+            </div>
+          </div>
+          <div id="productPreviewArea" class="hidden mt-3">
+             <div class="mt-3 border rounded-xl overflow-hidden">
+               <canvas id="productCanvas" class="w-full h-auto block"></canvas>
+             </div>
+          </div>
+        </div>
+      </div>
+      <div class="mt-8">
+        <label for="prompt" class="block text-sm font-medium text-gray-700 mb-2">Image Prompt</label>
+        <textarea id="prompt" rows="4" class="w-full resize-y rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 p-4 text-[15px]" placeholder="e.g., a cinematic shot of the character wearing sunglasses..."></textarea>
+      </div>
+    </section>
+
+    <section id="resultCard" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+      <div class="flex items-center gap-2 mb-4">
+        <span class="inline-flex items-center justify-center size-7 rounded-full bg-emerald-100 text-emerald-700 text-sm font-medium">2</span>
+        <h2 class="text-xl font-semibold">Generate & View Image</h2>
+      </div>
+      <button id="btnGenerateImage" class="inline-flex items-center gap-2 rounded-xl bg-emerald-600 text-white px-5 py-3 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-700 transition-all">
+        <svg id="spin" class="hidden animate-spin size-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 008 12H4z"></path>
+        </svg>
+        <span>Generate Image</span>
+      </button>
+
+      <div id="resultArea" class="mt-6 relative min-h-56 border border-dashed border-gray-200 rounded-xl p-4 bg-gray-50">
+        <div id="placeholder" class="text-gray-500 text-sm text-center">Your generated image will appear here.</div>
+        <canvas id="resultCanvas" class="hidden w-full h-auto rounded-lg"></canvas>
+        <div id="overlay" class="hidden absolute inset-0 bg-white/70 backdrop-blur-sm rounded-xl grid place-items-center">
+          <div class="flex items-center gap-3 text-gray-700 text-sm">
+            <svg class="animate-spin size-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 008 12H4z"></path>
+            </svg>
+            <span>Generating Image…</span>
+          </div>
+        </div>
+      </div>
+      <div id="resultActions" class="hidden mt-4 flex items-center gap-3">
+        <button id="btnDownloadImage" class="inline-flex items-center gap-2 rounded-xl bg-blue-600 text-white px-4 py-2 hover:bg-blue-700 transition-all text-sm">Download Image</button>
+        <button id="btnCropImage" class="inline-flex items-center gap-2 rounded-xl bg-gray-100 text-gray-700 px-4 py-2 hover:bg-gray-200 transition-all text-sm border border-gray-200">Crop Image</button>
+      </div>
+    </section>
+
+    <section id="videoStep" class="hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+       <div class="flex items-center gap-2 mb-4">
+        <span class="inline-flex items-center justify-center size-7 rounded-full bg-purple-100 text-purple-700 text-sm font-medium">3</span>
+        <h2 class="text-xl font-semibold">Generate Video</h2>
+      </div>
+      <div>
+        <label for="videoPrompt" class="block text-sm font-medium text-gray-700 mb-2">Video Prompt</label>
+        <textarea id="videoPrompt" rows="3" class="w-full resize-y rounded-xl border border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 p-4 text-[15px]" placeholder="e.g., a gentle zoom-in, cinematic dolly shot..."></textarea>
+        <div class="mt-3 flex flex-wrap gap-2" id="promptSuggestions">
+            <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs hover:bg-gray-200 transition">Gentle zoom-in</button>
+            <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs hover:bg-gray-200 transition">Slow pan left</button>
+            <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs hover:bg-gray-200 transition">Cinematic dolly shot</button>
+            <button class="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-xs hover:bg-gray-200 transition">3D rotating effect</button>
+        </div>
+      </div>
+      <div class="mt-6">
+        <label for="videoText" class="block text-sm font-medium text-gray-700 mb-2">What the character says (UGC)</label>
+        <textarea id="videoText" rows="3" class="w-full resize-y rounded-xl border border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 p-4 text-[15px]" placeholder="e.g., 'Hello there, follow me for more adventures!'"></textarea>
+      </div>
+      <div class="mt-6">
+        <button id="btnGenerateVideo" class="inline-flex items-center gap-2 rounded-xl bg-purple-600 text-white px-5 py-3 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-purple-700 transition-all">
+          <svg id="videoSpin" class="hidden animate-spin size-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 008 12H4z"></path>
+          </svg>
+          <span>Generate Video</span>
+        </button>
+      </div>
+    </section>
+    
+    <section id="videoResultCard" class="hidden bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center gap-2 mb-4">
+            <span class="inline-flex items-center justify-center size-7 rounded-full bg-cyan-100 text-cyan-700 text-sm font-medium">4</span>
+            <h2 class="text-xl font-semibold">Wait for the video to be processed</h2>
+        </div>
+
+        <div id="taskStatusArea" class="hidden">
+            <p class="text-sm text-gray-600 font-medium">Task ID:</p>
+            <div class="mt-1 p-3 bg-gray-100 rounded-lg text-gray-800 font-mono text-sm break-all" id="taskIdDisplay"></div>
+            <button id="btnCheckVideo" class="mt-4 inline-flex items-center gap-2 rounded-xl bg-cyan-600 text-white px-5 py-2 hover:bg-cyan-700 transition-all text-sm">
+                <svg id="checkSpin" class="hidden animate-spin size-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4A4 4 0 008 12H4z"></path>
+                </svg>
+                <span>Check Video Status</span>
+            </button>
+        </div>
+
+        <div id="videoResultArea" class="hidden mt-6 relative min-h-56 border border-dashed border-gray-200 rounded-xl p-4 bg-gray-50">
+            <div id="videoPlaceholder" class="text-gray-500 text-sm text-center">Your generated video will appear here.</div>
+            <video id="resultVideo" class="hidden w-full h-auto rounded-lg" controls></video>
+        </div>
+        <div id="videoActions" class="hidden mt-4">
+            <button id="btnDownloadVideo" class="inline-flex items-center gap-2 rounded-xl bg-blue-600 text-white px-4 py-2 hover:bg-blue-700 transition-all text-sm">Download Video</button>
+        </div>
+    </section>
+
+    <footer class="mt-10 text-center text-sm text-gray-500">
+      Made by <a href="https://www.automation-tribe.com/" target="_blank" rel="noopener" class="link">Automation Tribe</a>.
+    </footer>
+  </main>
+  
+  <div id="cropperModal" class="hidden fixed inset-0 bg-gray-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl p-6">
+      <h3 class="text-xl font-semibold mb-4">Crop Image</h3>
+      <div class="bg-gray-100 rounded-lg max-h-[60vh] overflow-hidden">
+        <img id="imageToCrop" src="" alt="Image for cropping">
+      </div>
+      <div class="mt-4 flex flex-wrap items-center gap-3">
+        <p class="text-sm font-medium text-gray-600">Aspect Ratio:</p>
+        <button data-ratio="1" data-string-ratio="1:1" class="aspect-btn px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-blue-100 hover:text-blue-700 border border-gray-200 transition">1:1</button>
+        <button data-ratio="1.7777777778" data-string-ratio="16:9" class="aspect-btn px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-blue-100 hover:text-blue-700 border border-gray-200 transition">16:9</button>
+        <button data-ratio="0.5625" data-string-ratio="9:16" class="aspect-btn px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-blue-100 hover:text-blue-700 border border-gray-200 transition">9:16</button>
+        <button data-ratio="NaN" data-string-ratio="free" class="aspect-btn px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-blue-100 hover:text-blue-700 border border-gray-200 transition">Free</button>
+      </div>
+      <div class="mt-6 flex justify-end gap-3">
+        <button id="btnCancelCrop" class="rounded-xl bg-gray-100 text-gray-700 px-5 py-2 hover:bg-gray-200 transition-all border border-gray-200">Cancel</button>
+        <button id="btnConfirmCrop" class="rounded-xl bg-blue-600 text-white px-5 py-2 hover:bg-blue-700 transition-all">Confirm Crop</button>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+    const WEBHOOK_URL = "https://sumobundle-u31317.vm.elestio.app/webhook-test/da46fe63-53e0-4e6d-b930-8ab08c73e007";
+
+    // ========= DOM Refs =========
+    const alertBox = document.getElementById("alert");
+    const promptInput = document.getElementById("prompt");
+    const mainDropzone = document.getElementById("mainDropzone");
+    const mainFileInput = document.getElementById("mainFileInput");
+    const canvasArea = document.getElementById("canvasArea");
+    const bgCanvas = document.getElementById("bgCanvas");
+    const drawingCanvas = document.getElementById("drawingCanvas");
+    const brushSize = document.getElementById("brushSize");
+    const btnClearMask = document.getElementById("btnClearMask");
+    const productDropzone = document.getElementById("productDropzone");
+    const productFileInput = document.getElementById("productFileInput");
+    const productPreviewArea = document.getElementById("productPreviewArea");
+    const productCanvas = document.getElementById("productCanvas");
+    const btnGenerateImage = document.getElementById("btnGenerateImage");
+    const spin = document.getElementById("spin");
+    const overlay = document.getElementById("overlay");
+    const placeholder = document.getElementById("placeholder");
+    const resultCanvas = document.getElementById("resultCanvas");
+    const resultActions = document.getElementById("resultActions");
+    const btnDownloadImage = document.getElementById("btnDownloadImage");
+    const btnCropImage = document.getElementById("btnCropImage");
+    const cropperModal = document.getElementById('cropperModal');
+    const imageToCrop = document.getElementById('imageToCrop');
+    const btnCancelCrop = document.getElementById('btnCancelCrop');
+    const btnConfirmCrop = document.getElementById('btnConfirmCrop');
+    const videoStep = document.getElementById('videoStep');
+    const videoPrompt = document.getElementById('videoPrompt');
+    const videoText = document.getElementById('videoText');
+    const btnGenerateVideo = document.getElementById('btnGenerateVideo');
+    const videoSpin = document.getElementById('videoSpin');
+    const promptSuggestions = document.getElementById('promptSuggestions');
+    const videoResultCard = document.getElementById('videoResultCard');
+    const taskStatusArea = document.getElementById('taskStatusArea');
+    const taskIdDisplay = document.getElementById('taskIdDisplay');
+    const btnCheckVideo = document.getElementById('btnCheckVideo');
+    const checkSpin = document.getElementById('checkSpin');
+    const videoResultArea = document.getElementById('videoResultArea');
+    const videoPlaceholder = document.getElementById('videoPlaceholder');
+    const resultVideo = document.getElementById('resultVideo');
+    const videoActions = document.getElementById('videoActions');
+    const btnDownloadVideo = document.getElementById('btnDownloadVideo');
+
+    // ========= State =========
+    let mainImageFile = null;
+    let productImageFile = null;
+    let generatedImageBlob = null;
+    let isDrawing = false;
+    let lastX = 0;
+    let lastY = 0;
+    let cropper = null;
+    let currentTaskId = null;
+    let selectedAspectRatioString = 'free';
+
+    const bgCtx = bgCanvas.getContext("2d");
+    const drawingCtx = drawingCanvas.getContext("2d");
+
+    // ========= Utils =========
+    function showAlert(msg) {
+      if (!msg) { alertBox.classList.add("hidden"); return; }
+      alertBox.textContent = msg;
+      alertBox.classList.remove("hidden");
+      setTimeout(() => alertBox.classList.add("hidden"), 5000);
+    }
+    
+    function enable(el, on = true) { el.disabled = !on; }
+
+    function updateGenerateEnabled() {
+      const isReady = mainImageFile && productImageFile && promptInput.value.trim().length > 0;
+      enable(btnGenerateImage, isReady);
+    }
+
+    async function imageBitmapFromFile(file) {
+      const blob = new Blob([await file.arrayBuffer()], { type: file.type });
+      return await createImageBitmap(blob);
+    }
+
+    function canvasToBlob(canvas, type = "image/png", quality = 0.95) {
+      return new Promise(resolve => canvas.toBlob(resolve, type, quality));
+    }
+
+    function gcd(a, b) {
+        return b === 0 ? a : gcd(b, a % b);
+    }
+
+    function getSimplifiedRatio(width, height) {
+        if (!width || !height) return "1:1";
+        const divisor = gcd(width, height);
+        return `${width / divisor}:${height / divisor}`;
+    }
+
+    // ========= File Handling =========
+    async function handleFile(file, type) {
+      const ACCEPT = ["image/png", "image/jpeg", "image/jpg", "image/webp"];
+      if (!ACCEPT.includes(file.type)) { showAlert("Unsupported file type."); return; }
+      if ((file.size / (1024 * 1024)) > 10) { showAlert(`File too large. Max is 10 MB.`); return; }
+
+      if (type === 'main') {
+        mainImageFile = file;
+        const bmp = await imageBitmapFromFile(file);
+        bgCanvas.width = drawingCanvas.width = bmp.width;
+        bgCanvas.height = drawingCanvas.height = bmp.height;
+        bgCtx.drawImage(bmp, 0, 0);
+        canvasArea.classList.remove("hidden");
+        drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+      } else if (type === 'product') {
+        productImageFile = file;
+        const bmp = await imageBitmapFromFile(file);
+        productCanvas.width = bmp.width;
+        productCanvas.height = bmp.height;
+        productCanvas.getContext("2d").drawImage(bmp, 0, 0);
+        productPreviewArea.classList.remove("hidden");
+      }
+      updateGenerateEnabled();
+    }
+
+    // ========= Event Listeners =========
+    mainDropzone.addEventListener("click", () => mainFileInput.click());
+    mainFileInput.addEventListener("change", () => handleFile(mainFileInput.files[0], 'main'));
+    mainDropzone.addEventListener("dragover", e => { e.preventDefault(); mainDropzone.classList.add("drop-active"); });
+    mainDropzone.addEventListener("dragleave", () => mainDropzone.classList.remove("drop-active"));
+    mainDropzone.addEventListener("drop", e => {
+      e.preventDefault();
+      mainDropzone.classList.remove("drop-active");
+      handleFile(e.dataTransfer.files[0], 'main');
+    });
+
+    productDropzone.addEventListener("click", () => productFileInput.click());
+    productFileInput.addEventListener("change", () => handleFile(productFileInput.files[0], 'product'));
+    productDropzone.addEventListener("dragover", e => { e.preventDefault(); productDropzone.classList.add("drop-active"); });
+    productDropzone.addEventListener("dragleave", () => productDropzone.classList.remove("drop-active"));
+    productDropzone.addEventListener("drop", e => {
+      e.preventDefault();
+      productDropzone.classList.remove("drop-active");
+      handleFile(e.dataTransfer.files[0], 'product');
+    });
+    
+    promptInput.addEventListener("input", updateGenerateEnabled);
+
+    // ========= Mask Drawing Logic =========
+    function getMousePos(canvas, evt) {
+        const rect = canvas.getBoundingClientRect();
+        const touch = evt.touches ? evt.touches[0] : evt;
+        return {
+            x: (touch.clientX - rect.left) / rect.width * canvas.width,
+            y: (touch.clientY - rect.top) / rect.height * canvas.height
+        };
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      e.preventDefault();
+      const { x, y } = getMousePos(drawingCanvas, e);
+      drawingCtx.strokeStyle = 'white';
+      drawingCtx.lineWidth = brushSize.value;
+      drawingCtx.lineCap = 'round';
+      drawingCtx.lineJoin = 'round';
+      drawingCtx.beginPath();
+      drawingCtx.moveTo(lastX, lastY);
+      drawingCtx.lineTo(x, y);
+      drawingCtx.stroke();
+      [lastX, lastY] = [x, y];
+    }
+    
+    function startDrawing(e) {
+        isDrawing = true;
+        const { x, y } = getMousePos(drawingCanvas, e);
+        [lastX, lastY] = [x, y];
+    }
+    
+    drawingCanvas.addEventListener('mousedown', startDrawing);
+    drawingCanvas.addEventListener('mousemove', draw);
+    drawingCanvas.addEventListener('mouseup', () => isDrawing = false);
+    drawingCanvas.addEventListener('mouseleave', () => isDrawing = false);
+    drawingCanvas.addEventListener('touchstart', startDrawing);
+    drawingCanvas.addEventListener('touchmove', draw);
+    drawingCanvas.addEventListener('touchend', () => isDrawing = false);
+
+    btnClearMask.addEventListener("click", () => {
+        drawingCtx.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height);
+    });
+
+    // ========= Image Generation Logic =========
+    btnGenerateImage.addEventListener("click", async () => {
+      if (!mainImageFile || !productImageFile || !promptInput.value.trim()) {
+        showAlert("Please provide a character image, reference image, and a prompt.");
+        return;
+      }
+      
+      overlay.classList.remove("hidden");
+      spin.classList.remove("hidden");
+      enable(btnGenerateImage, false);
+      
+      try {
+        const maskExportCanvas = document.createElement('canvas');
+        maskExportCanvas.width = drawingCanvas.width;
+        maskExportCanvas.height = drawingCanvas.height;
+        const maskCtx = maskExportCanvas.getContext('2d');
+        maskCtx.fillStyle = 'black';
+        maskCtx.fillRect(0, 0, maskExportCanvas.width, maskExportCanvas.height);
+        maskCtx.drawImage(drawingCanvas, 0, 0);
+        const maskBlob = await canvasToBlob(maskExportCanvas, 'image/jpeg', 0.95);
+
+        const form = new FormData();
+        form.append("action", "generate_image");
+        form.append("main_image", mainImageFile);
+        form.append("mask_image", maskBlob, "mask.jpeg");
+        form.append("reference_image", productImageFile);
+        form.append("prompt", promptInput.value.trim());
+        form.append("aspect_ratio", getSimplifiedRatio(drawingCanvas.width, drawingCanvas.height));
+
+        const res = await fetch(WEBHOOK_URL, { method: "POST", body: form });
+
+        if (!res.ok) {
+          const errorText = await res.text();
+          throw new Error(`HTTP ${res.status}: ${errorText.slice(0, 200)}`);
+        }
+
+        const responseBlob = await res.blob();
+        generatedImageBlob = responseBlob;
+        const objUrl = URL.createObjectURL(responseBlob);
+        
+        const img = new Image();
+        img.onload = () => {
+          resultCanvas.width = img.width;
+          resultCanvas.height = img.height;
+          resultCanvas.getContext('2d').drawImage(img, 0, 0);
+          placeholder.classList.add("hidden");
+          resultCanvas.classList.remove("hidden");
+          resultActions.classList.remove('hidden');
+          videoStep.classList.remove('hidden');
+          URL.revokeObjectURL(objUrl);
+        };
+        img.src = objUrl;
+
+      } catch (err) {
+        showAlert("Error generating image: " + err.message);
+      } finally {
+        overlay.classList.add("hidden");
+        spin.classList.add("hidden");
+        enable(btnGenerateImage, true);
+      }
+    });
+
+    // ========= Image Actions (Download, Crop) =========
+    btnDownloadImage.addEventListener('click', () => {
+        const link = document.createElement('a');
+        link.download = `generated-image-${Date.now()}.png`;
+        link.href = resultCanvas.toDataURL('image/png');
+        link.click();
+    });
+
+    btnCropImage.addEventListener('click', () => {
+        selectedAspectRatioString = 'free';
+        imageToCrop.src = resultCanvas.toDataURL();
+        cropperModal.classList.remove('hidden');
+        if (cropper) cropper.destroy();
+        cropper = new Cropper(imageToCrop, {
+            viewMode: 1,
+            background: false,
+        });
+    });
+
+    btnCancelCrop.addEventListener('click', () => {
+        cropperModal.classList.add('hidden');
+        if (cropper) cropper.destroy();
+        cropper = null;
+    });
+
+    btnConfirmCrop.addEventListener('click', async () => {
+        if (!cropper) return;
+        const croppedCanvas = cropper.getCroppedCanvas();
+        resultCanvas.width = croppedCanvas.width;
+        resultCanvas.height = croppedCanvas.height;
+        resultCanvas.getContext('2d').drawImage(croppedCanvas, 0, 0);
+        
+        generatedImageBlob = await canvasToBlob(croppedCanvas, 'image/png');
+        
+        cropperModal.classList.add('hidden');
+        cropper.destroy();
+        cropper = null;
+    });
+
+    document.querySelectorAll('.aspect-btn').forEach(button => {
+        button.addEventListener('click', () => {
+            if (cropper) {
+                const ratio = parseFloat(button.dataset.ratio);
+                selectedAspectRatioString = button.dataset.stringRatio;
+                cropper.setAspectRatio(ratio);
+            }
+        });
+    });
+
+    // ========= Video Generation Logic (Async) =========
+    promptSuggestions.addEventListener('click', (e) => {
+        if(e.target.tagName === 'BUTTON') {
+            videoPrompt.value = e.target.textContent;
+        }
+    });
+
+    btnGenerateVideo.addEventListener('click', async () => {
+        if (!generatedImageBlob) {
+            showAlert("Please generate an image first.");
+            return;
+        }
+        if (!videoPrompt.value.trim()) {
+            showAlert("Please enter a video prompt.");
+            return;
+        }
+
+        videoResultCard.classList.remove('hidden');
+        videoSpin.classList.remove('hidden');
+        enable(btnGenerateVideo, false);
+        
+        taskStatusArea.classList.add('hidden');
+        videoResultArea.classList.add('hidden');
+        videoActions.classList.add('hidden');
+
+        try {
+            const form = new FormData();
+            form.append("action", "generate_video");
+            form.append("image", generatedImageBlob, "source-image.png");
+            form.append("video_prompt", videoPrompt.value.trim()); 
+            form.append("text_overlay", videoText.value.trim());
+
+            let finalAspectRatio;
+            if (selectedAspectRatioString !== 'free') {
+                finalAspectRatio = selectedAspectRatioString;
+            } else {
+                finalAspectRatio = getSimplifiedRatio(resultCanvas.width, resultCanvas.height);
+            }
+            form.append("aspect_ratio", finalAspectRatio); 
+
+            const res = await fetch(WEBHOOK_URL, { method: "POST", body: form });
+
+            if (!res.ok) {
+                const errorText = await res.text();
+                throw new Error(`HTTP ${res.status}: ${errorText.slice(0, 200)}`);
+            }
+            
+            const data = await res.json();
+            if (data.taskId) {
+                currentTaskId = data.taskId;
+                taskIdDisplay.textContent = currentTaskId;
+                taskStatusArea.classList.remove('hidden');
+                videoResultArea.classList.add('hidden');
+            } else {
+                throw new Error("Did not receive a valid Task ID from the server.");
+            }
+
+        } catch (err) {
+            showAlert("Error starting video generation: " + err.message);
+        } finally {
+            videoSpin.classList.add("hidden");
+            enable(btnGenerateVideo, true);
+        }
+    });
+
+    // ========= Check Video Status Logic =========
+    btnCheckVideo.addEventListener('click', async () => {
+        if (!currentTaskId) {
+            showAlert("No Task ID found to check.");
+            return;
+        }
+
+        checkSpin.classList.remove('hidden');
+        enable(btnCheckVideo, false);
+
+        try {
+            const form = new FormData();
+            form.append("action", "check_video");
+            form.append("taskId", currentTaskId);
+
+            const res = await fetch(WEBHOOK_URL, { method: "POST", body: form });
+
+            if (!res.ok) {
+                const errorText = await res.text();
+                throw new Error(`HTTP ${res.status}: ${errorText.slice(0, 200)}`);
+            }
+            
+            const contentType = res.headers.get("content-type");
+            if (contentType && contentType.includes("application/json")) {
+                const data = await res.json();
+                if (data.status === 'processing') {
+                    showAlert("Your video is still processing. Please try again in a moment.");
+                } else {
+                    showAlert("Received an unknown status: " + (data.status || 'No status found'));
+                }
+            } else {
+                const responseBlob = await res.blob();
+                const objUrl = URL.createObjectURL(responseBlob);
+
+                resultVideo.src = objUrl;
+                videoPlaceholder.classList.add("hidden");
+                videoResultArea.classList.remove('hidden');
+                resultVideo.classList.remove("hidden");
+                videoActions.classList.remove("hidden");
+                
+                taskStatusArea.classList.add('hidden');
+            }
+
+        } catch (err) {
+            showAlert("Error checking video status: " + err.message);
+        } finally {
+            checkSpin.classList.add('hidden');
+            enable(btnCheckVideo, true);
+        }
+    });
+
+    btnDownloadVideo.addEventListener('click', () => {
+        if (!resultVideo.src) return;
+        const link = document.createElement('a');
+        link.download = `generated-video-${Date.now()}.mp4`;
+        link.href = resultVideo.src;
+        link.click();
+    });
+  </script>
+</body>
+</html>

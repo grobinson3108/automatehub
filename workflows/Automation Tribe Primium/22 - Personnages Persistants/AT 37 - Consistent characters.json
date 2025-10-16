@@ -1,0 +1,375 @@
+{
+  "name": "AT 37 - Consistent characters",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "7608c48f-8d0c-4583-b010-cbf28a82a7f5",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -416,
+        64
+      ],
+      "id": "fee14ef8-4ce3-4cb5-aac2-e47857a3bf60",
+      "name": "Webhook",
+      "webhookId": "7608c48f-8d0c-4583-b010-cbf28a82a7f5"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-5-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "=You are a JSON API that only speaks in valid JSON format. Your sole purpose is to generate data based on a user's request and format it according to a strict schema.\n\nTask: Based on the user's concept below, generate 5 distinct, creative, and detailed prompts for an AI image generator.\n\nUser's Concept:\n{{ $json.body.initial_prompt }}\n\nOutput Instructions:\nYour entire response MUST be a single, raw JSON object and nothing else. Do not include any explanations, apologies, or markdown code fences like ```json.\n\nRequired JSON Structure:\n\nJSON\n\n{\n  \"content\": {\n    \"prompts\": [\n      {\n        \"id\": 1,\n        \"title\": \"A short, catchy title\",\n        \"text\": \"The full, detailed prompt text...\"\n      },\n      {\n        \"id\": 2,\n        \"title\": \"Another short, catchy title\",\n        \"text\": \"The second full, detailed prompt text...\"\n      }\n    ]\n  }\n}"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        32,
+        -32
+      ],
+      "id": "fe02b395-1983-44ac-8e91-029901558406",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "wMKWK2pxtmnFBWY4",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        432,
+        -32
+      ],
+      "id": "ab9217f4-795e-40c7-977a-66fc305394ee",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "generate_prompts",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "43380ca6-fca5-47b3-93f8-563ed5f26c84"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Generate prompts"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "f8148b22-5783-4903-a81c-13a1f92ca000",
+                    "leftValue": "={{ $json.body.action }}",
+                    "rightValue": "generate_images",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Generate images"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -192,
+        64
+      ],
+      "id": "3b2d128e-c33e-40f7-b08c-e16322ea35df",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "inputDataFieldName": "=data",
+        "driveId": {
+          "__rl": true,
+          "mode": "list",
+          "value": "My Drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1dNYLkkDImUd5JapyY2XR9qvtfcrwEc0u",
+          "mode": "list",
+          "cachedResultName": "AUTOMATIONS",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1dNYLkkDImUd5JapyY2XR9qvtfcrwEc0u"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        120,
+        160
+      ],
+      "id": "3a8b18ca-6890-439c-adc7-8e72cc1263c0",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "GP2Td0vsw7OxPZcD",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $json.id }}",
+          "mode": "id"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        432,
+        160
+      ],
+      "id": "ef543c0b-6dd6-4e35-aa36-2144ba96f815",
+      "name": "Share file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "GP2Td0vsw7OxPZcD",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://fal.run/fal-ai/ideogram/character",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Key 24900378-15ad-45bf-9cb2-0938cfaee262:cc10d4d9db35e1d48ed9affcd8540ace"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"prompt\": \"{{ $('Webhook').item.json.body.final_prompt }}\",\n  \"reference_image_urls\": [\n    \"{{ $('Upload file').item.json.webContentLink }}\"\n  ],\n  \"image_size\": \"{{ $('Webhook').item.json.body.size }}\",\n  \"rendering_speed\": \"BALANCED\",\n  \"style\": \"AUTO\",\n  \"expand_prompt\": true,\n  \"num_images\": 1,\n  \"sync_mode\": true\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        656,
+        160
+      ],
+      "id": "5554a83e-a680-4779-a99f-3ba217df1cd5",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "amount": 2
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1104,
+        160
+      ],
+      "id": "4a0ad4ee-4afa-4d3f-9a10-72c7a22d0679",
+      "name": "Wait",
+      "webhookId": "d5b64a59-b513-4b85-bab4-ae881570c70a"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Input: items[0].json.images[0].url is a data URL: data:image/png;base64,AAA...\n// Output: items[0].binary.image (binary) with correct mime and filename\n\nconst item = items[0];\nconst img = item.json?.images?.[0];\n\nif (!img?.url) {\n  throw new Error('No image URL found in response.');\n}\n\nconst m = img.url.match(/^data:(.*?);base64,(.*)$/);\nif (!m) {\n  // If sometimes the API returns a real https URL, keep it for a download step\n  item.json.image_url = img.url;\n  return items;\n}\n\nconst mime = m[1] || 'image/png';\nconst b64  = m[2];\n\nitem.binary = item.binary || {};\nitem.binary.image = {\n  data: b64,\n  mimeType: mime,\n  fileName: img.file_name || `image_${Date.now()}.png`,\n};\n\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        160
+      ],
+      "id": "1750d12e-248f-4b0c-8d49-0d329cfa4b98",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        1328,
+        160
+      ],
+      "id": "9ce00fa8-6c63-418e-a537-41e786677473",
+      "name": "Respond to Webhook1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload file": {
+      "main": [
+        [
+          {
+            "node": "Share file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share file": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "22b1974b-1484-41b4-ad6d-a2f283df55a9",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bd95e83f261cee4e80d731cb58d1c4799127663205327ab783b076c62312dcdf"
+  },
+  "id": "K9jNkOWR7vsoJgY1",
+  "tags": []
+}

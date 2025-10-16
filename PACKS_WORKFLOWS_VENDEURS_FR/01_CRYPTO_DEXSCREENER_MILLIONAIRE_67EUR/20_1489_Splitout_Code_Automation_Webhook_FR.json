@@ -1,0 +1,750 @@
+{
+  "id": "0JsHmmyeHw5Ffz5m",
+  "meta": {
+    "instanceId": "d4d7965840e96e50a3e02959a8487c692901dfa8d5cc294134442c67ce1622d3",
+    "templateCredsSetupCompleted": true
+  },
+  "name": "HN Qui recrute Scrape",
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "f7cdb3ee-9bb0-4006-829a-d4ce797191d5",
+      "name": "Lors du clic sur ‘Tester le workflow’",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -20,
+        -220
+      ],
+      "parameters": {},
+      "typeVersion": 1
+    },
+    {
+      "id": "0475e25d-9bf4-450d-abd3-a04608a438a4",
+      "name": "Note adhésive",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        60,
+        -620
+      ],
+      "parameters": {
+        "width": 460,
+        "height": 340,
+        "content": "## Aller sur https://hn.algolia.com\n- filtrer par \"Ask HN: Who is hiring?\" (important avec les guillemets pour une correspondance exacte)\n- trier par date\n- Onglet Réseau de Chrome > trouver l'appel API > cliquer sur \"Copier en tant que cURL\"\n- nœud HTTP n8n -> importer cURL et coller \n- J'ai configuré la clé API en Authentification Header donc vous devrez faire ce qui précède vous-même pour que cela fonctionne"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "a686852b-ff84-430b-92bb-ce02a6808e19",
+      "name": "Séparer",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        400,
+        -220
+      ],
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "hits"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "cdaaa738-d561-4fa0-b2c7-8ea9e6778eb1",
+      "name": "Note adhésive1",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1260,
+        -620
+      ],
+      "parameters": {
+        "width": 500,
+        "height": 340,
+        "content": "## Aller sur l'API HN \nhttps://github.com/HackerNews/API\n\nNous aurons besoin des points de terminaison suivants : \n- Par exemple, une histoire : https://hacker-news.firebaseio.com/v0/item/8863.json?print=pretty\n- commentaire : https://hacker-news.firebaseio.com/v0/item/2921983.json?print=pretty\n\n"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "4f353598-9e32-4be4-9e7b-c89cc05305fd",
+      "name": "Modèle de chat OpenAI",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "position": [
+        2680,
+        -20
+      ],
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "Fbb2ueT0XP5xMRme",
+          "name": "OpenAi account 2"
+        }
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "5bd0d7cc-497a-497c-aa4c-589d9ceeca14",
+      "name": "Analyseur de sortie structurée",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "position": [
+        2840,
+        -20
+      ],
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n \"type\": \"object\",\n \"properties\": {\n \"company\": {\n \"type\": [\n \"string\",\n null\n ],\n \"description\": \"Name of the hiring company\"\n },\n \"title\": {\n \"type\": [\n \"string\",\n null\n ],\n \"description\": \"Job title/role being advertised\"\n },\n \"location\": {\n \"type\": [\n \"string\",\n null\n ],\n \"description\": \"Work location including remote/hybrid status\"\n },\n \"type\": {\n \"type\": [\n \"string\",\n null\n ],\n \"enum\": [\n \"FULL_TIME\",\n \"PART_TIME\",\n \"CONTRACT\",\n \"INTERNSHIP\",\n \"FREELANCE\",\n null\n ],\n \"description\": \"Employment type (Full-time, Contract, etc)\"\n },\n \"work_location\": {\n \"type\": [\n \"string\",\n null\n ],\n \"enum\": [\n \"REMOTE\",\n \"HYBRID\",\n \"ON_SITE\",\n null\n ],\n \"description\": \"Work arrangement type\"\n },\n \"salary\": {\n \"type\": [\n \"string\",\n null\n ],\n \"description\": \"Compensation details if provided\"\n },\n \"description\": {\n \"type\": [\n \"string\",\n null\n ],\n \"description\": \"Main job description text including requirements and team info\"\n },\n \"apply_url\": {\n \"type\": [\n \"string\",\n null\n ],\n \"description\": \"Direct application/job posting URL\"\n },\n \"company_url\": {\n \"type\": [\n \"string\",\n null\n ],\n \"description\": \"Company website or careers page\"\n }\n }\n}\n"
+      },
+      "typeVersion": 1.2
+    },
+    {
+      "id": "b84ca004-6f3b-4577-8910-61b8584b161d",
+      "name": "Rechercher les posts Qui recrute",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        200,
+        -220
+      ],
+      "parameters": {
+        "url": "https://uj5wyc0l7x-dsn.algolia.net/1/indexes/Item_dev_sort_date/query",
+        "method": "POST",
+        "options": {},
+        "jsonBody": "{\n \"query\": \"\\\"Ask HN: Who is hiring\\\"\",\n \"analyticsTags\": [\n \"web\"\n ],\n \"page\": 0,\n \"hitsPerPage\": 30,\n \"minWordSizefor1Typo\": 4,\n \"minWordSizefor2Typos\": 8,\n \"advancedSyntax\": true,\n \"ignorePlurals\": false,\n \"clickAnalytics\": true,\n \"minProximity\": 7,\n \"numericFilters\": [],\n \"tagFilters\": [\n [\n \"story\"\n ],\n []\n ],\n \"typoTolerance\": \"min\",\n \"queryType\": \"prefixNone\",\n \"restrictSearchableAttributes\": [\n \"title\",\n \"comment_text\",\n \"url\",\n \"story_text\",\n \"author\"\n ],\n \"getRankingInfo\": true\n}",
+        "sendBody": true,
+        "sendQuery": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "x-algolia-agent",
+              "value": "Algolia for JavaScript (4.13.1); Browser (lite)"
+            },
+            {
+              "name": "x-algolia-application-id",
+              "value": "UJ5WYC0L7X"
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "*/*"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en-GB,en-US;q=0.9,en;q=0.8"
+            },
+            {
+              "name": "Connection",
+              "value": "keep-alive"
+            },
+            {
+              "name": "DNT",
+              "value": "1"
+            },
+            {
+              "name": "Origin",
+              "value": "https://hn.algolia.com"
+            },
+            {
+              "name": "Referer",
+              "value": "https://hn.algolia.com/"
+            },
+            {
+              "name": "Sec-Fetch-Dest",
+              "value": "empty"
+            },
+            {
+              "name": "Sec-Fetch-Mode",
+              "value": "cors"
+            },
+            {
+              "name": "Sec-Fetch-Site",
+              "value": "cross-site"
+            },
+            {
+              "name": "User-Agent",
+              "value": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/133.0.0.0 Safari/537.36"
+            },
+            {
+              "name": "sec-ch-ua",
+              "value": "\"Chromium\";v=\"133\", \"Not(A:Brand\";v=\"99\""
+            },
+            {
+              "name": "sec-ch-ua-mobile",
+              "value": "?0"
+            },
+            {
+              "name": "sec-ch-ua-platform",
+              "value": "\"macOS\""
+            }
+          ]
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "oVEXp2ZbYCXypMVz",
+          "name": "Algolia Auth"
+        }
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "205e66f6-cd6b-4cfd-a6ec-2226c35ddaac",
+      "name": "Obtenir les données pertinentes",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        700,
+        -220
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "73dd2325-faa7-4650-bd78-5fc97cc202de",
+              "name": "title",
+              "type": "string",
+              "value": "={{ $json.title }}"
+            },
+            {
+              "id": "44918eac-4510-440e-9ac0-bf14d2b2f3af",
+              "name": "createdAt",
+              "type": "string",
+              "value": "={{ $json.created_at }}"
+            },
+            {
+              "id": "00eb6f09-2c22-411c-949c-886b2d95b6eb",
+              "name": "updatedAt",
+              "type": "string",
+              "value": "={{ $json.updated_at }}"
+            },
+            {
+              "id": "2b4f9da6-f60e-46e0-ba9d-3242fa955a55",
+              "name": "storyId",
+              "type": "string",
+              "value": "={{ $json.story_id }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "16bc5628-8a29-4eac-8be9-b4e9da802e1e",
+      "name": "Obtenir le dernier post",
+      "type": "n8n-nodes-base.filter",
+      "position": [
+        900,
+        -220
+      ],
+      "parameters": {
+        "options": {},
+        "conditions": {
+          "options": {
+            "version": 2,
+            "leftValue": "",
+            "caseSensitive": true,
+            "typeValidation": "strict"
+          },
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "d7dd7175-2a50-45aa-bd3e-4c248c9193c4",
+              "operator": {
+                "type": "dateTime",
+                "operation": "after"
+              },
+              "leftValue": "={{ $json.createdAt }}",
+              "rightValue": "={{$now.minus({days: 30})}} "
+            }
+          ]
+        }
+      },
+      "typeVersion": 2.2
+    },
+    {
+      "id": "92e1ef74-5ae1-4195-840b-115184db464f",
+      "name": "Séparer les enfants (emplois)",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        1460,
+        -220
+      ],
+      "parameters": {
+        "options": {},
+        "fieldToSplitOut": "kids"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "d0836aae-b98a-497f-a6f7-0ad563c262a0",
+      "name": "Transformer en données structurées",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "position": [
+        2600,
+        -220
+      ],
+      "parameters": {
+        "text": "={{ $json.cleaned_text }}",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "Extraire les données JSON"
+            }
+          ]
+        },
+        "promptType": "define",
+        "hasOutputParser": true
+      },
+      "typeVersion": 1.5
+    },
+    {
+      "id": "fd818a93-627c-435d-91ba-5d759d5a9004",
+      "name": "Note adhésive2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        2600,
+        -620
+      ],
+      "parameters": {
+        "width": 840,
+        "height": 340,
+        "content": "## Structure des données\n\nNous utilisons Openai GPT-4o-mini pour transformer les données brutes en une structure de données unifiée. N’hésitez pas à modifier ceci.\n\n```json\n{\n \"company\": \"Nom de l'entreprise recrutant\",\n \"title\": \"Intitulé du poste/rôle proposé\",\n \"location\": \"Lieu de travail incluant le statut télétravail/hybride\",\n \"type\": \"Type d'emploi (Temps plein, Contrat, etc)\",\n \"salary\": \"Détails de la rémunération si fournis\",\n \"description\": \"Texte principal de la description du poste incluant les exigences et les informations sur l'équipe\",\n \"apply_url\": \"URL directe de candidature/annonce d'emploi\",\n \"company_url\": \"Site web de l'entreprise ou page carrières\"\n}\n```"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "b70c5578-5b81-467a-8ac2-65374e4e52f3",
+      "name": "Extraire le texte",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        1860,
+        -220
+      ],
+      "parameters": {
+        "options": {},
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6affa370-56ce-4ad8-8534-8f753fdf07fc",
+              "name": "text",
+              "type": "string",
+              "value": "={{ $json.text }}"
+            }
+          ]
+        }
+      },
+      "typeVersion": 3.4
+    },
+    {
+      "id": "acb68d88-9417-42e9-9bcc-7c2fa95c4afd",
+      "name": "Nettoyer le texte",
+      "type": "n8n-nodes-base.code",
+      "position": [
+        2060,
+        -220
+      ],
+      "parameters": {
+        "jsCode": "// In a Function node in n8n\nconst inputData = $input.all();\n\nfunction cleanAllPosts(data) {\n return data.map(item => {\n try {\n // Check if item exists and has the expected structure\n if (!item || typeof item !== 'object') {\n return { cleaned_text: '', error: 'Invalid item structure' };\n }\n\n // Get the text, with multiple fallbacks\n let text = '';\n if (typeof item === 'string') {\n text = item;\n } else if (item.json && item.json.text) {\n text = item.json.text;\n } else if (typeof item.json === 'string') {\n text = item.json;\n } else {\n text = JSON.stringify(item);\n }\n\n // Make sure text is a string\n text = String(text);\n \n // Perform the cleaning operations\n try {\n text = text.replace(/&#x2F;/g, '/');\n text = text.replace(/&#x27;/g, \"'\");\n text = text.replace(/&\\w+;/g, ' ');\n text = text.replace(/<[^>]*>/g, '');\n text = text.replace(/\\|\\s*/g, '| ');\n text = text.replace(/\\s+/g, ' ');\n text = text.replace(/\\s*(https?:\\/\\/[^\\s]+)\\s*/g, '\\n$1\\n');\n text = text.replace(/\\n{3,}/g, '\\n\\n');\n text = text.trim();\n } catch (cleaningError) {\n console.log('Error during text cleaning:', cleaningError);\n // Return original text if cleaning fails\n return { cleaned_text: text, warning: 'Partial cleaning applied' };\n }\n\n return { cleaned_text: text };\n \n } catch (error) {\n console.log('Error processing item:', error);\n return { \n cleaned_text: '', \n error: `Processing error: ${error.message}`,\n original: item\n };\n }\n }).filter(result => result.cleaned_text || result.error); \n}\n\ntry {\n return cleanAllPosts(inputData);\n} catch (error) {\n console.log('Fatal error:', error);\n return [{ \n cleaned_text: '', \n error: `Fatal error: ${error.message}`,\n input: inputData \n }];\n}\n"
+      },
+      "typeVersion": 2
+    },
+    {
+      "id": "a0727b55-565d-47c0-9ab5-0f001f4b9941",
+      "name": "Limite pour test (optionnel)",
+      "type": "n8n-nodes-base.limit",
+      "position": [
+        2280,
+        -220
+      ],
+      "parameters": {
+        "maxItems": 5
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "650baf5e-c2ac-443d-8a2b-6df89717186f",
+      "name": "Note adhésive3",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        580,
+        -620
+      ],
+      "parameters": {
+        "width": 540,
+        "height": 340,
+        "content": "## Nettoyer le résultat \n\n```json\n{\n\"title\": \"Ask HN : Qui recrute ? (février 2025)\",\n\"createdAt\": \"2025-02-03T16:00:43Z\",\n\"updatedAt\": \"2025-02-17T08:35:44Z\",\n\"storyId\": \"42919502\"\n},\n{\n\"title\": \"Ask HN : Qui recrute ? (janvier 2025)\",\n\"createdAt\": \"2025-01-02T16:00:09Z\",\n\"updatedAt\": \"2025-02-13T00:03:24Z\",\n\"storyId\": \"42575537\"\n},\n```"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "1ca5c39f-f21d-455a-b63a-702e7e3ba02b",
+      "name": "Écrire les résultats dans airtable",
+      "type": "n8n-nodes-base.airtable",
+      "position": [
+        3040,
+        -220
+      ],
+      "parameters": {
+        "base": {
+          "__rl": true,
+          "mode": "list",
+          "value": "appM2JWvA5AstsGdn",
+          "cachedResultUrl": "https://airtable.com/appM2JWvA5AstsGdn",
+          "cachedResultName": "HN Who is hiring?"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "tblGvcOjqbliwM7AS",
+          "cachedResultUrl": "https://airtable.com/appM2JWvA5AstsGdn/tblGvcOjqbliwM7AS",
+          "cachedResultName": "Table 1"
+        },
+        "columns": {
+          "value": {
+            "type": "={{ $json.output.type }}",
+            "title": "={{ $json.output.title }}",
+            "salary": "={{ $json.output.salary }}",
+            "company": "={{ $json.output.company }}",
+            "location": "={{ $json.output.location }}",
+            "apply_url": "={{ $json.output.apply_url }}",
+            "company_url": "={{ $json.output.company_url }}",
+            "description": "={{ $json.output.description }}"
+          },
+          "schema": [
+            {
+              "id": "title",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "title",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "company",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "company",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "location",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "location",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "type",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "type",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "salary",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "salary",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "description",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "description",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "apply_url",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "apply_url",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "company_url",
+              "type": "string",
+              "display": true,
+              "removed": false,
+              "readOnly": false,
+              "required": false,
+              "displayName": "company_url",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "posted_date",
+              "type": "string",
+              "display": true,
+              "removed": true,
+              "readOnly": false,
+              "required": false,
+              "displayName": "posted_date",
+              "defaultMatch": false,
+              "canBeUsedToMatch": true
+            }
+          ],
+          "mappingMode": "defineBelow",
+          "matchingColumns": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {},
+        "operation": "create"
+      },
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "IudXLNj7CDuc5M5a",
+          "name": "Airtable Personal Access Token account"
+        }
+      },
+      "typeVersion": 2.1
+    },
+    {
+      "id": "d71fa024-86a0-4f74-b033-1f755574080c",
+      "name": "Note adhésive4",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -520,
+        -300
+      ],
+      "parameters": {
+        "width": 380,
+        "height": 500,
+        "content": "## Hacker News - Extraction de la rubrique Qui recrute\n\nDans ce modèle, nous configurons un scraper pour le post mensuel HN Qui recrute. De cette façon, nous pouvons extraire les données et les transformer en une structure de données commune.\n\nTout d'abord, nous utilisons la [recherche Algolia](https://hn.algolia.com/) fournie par Hacker News pour affiner les résultats.\n\nNous pouvons utiliser l'[API officielle Hacker News](https://github.com/HackerNews/API) pour obtenir les données du post ainsi que toutes les réponses !\n\nCela fonctionnera évidemment pour tout type de post sur Hacker News ! Soyez créatif 😃\n\nTout ce dont vous avez besoin est un compte Openai pour structurer les données textuelles et un compte Airtable (ou similaire) pour écrire les résultats dans une liste.\n\nCopiez ma base https://airtable.com/appM2JWvA5AstsGdn/shrAuo78cJt5C2laR"
+      },
+      "typeVersion": 1
+    },
+    {
+      "id": "7466fb0c-9f0c-4adf-a6de-b2cf09032719",
+      "name": "API HI : Obtenir le post d'offre d'emploi individuel",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1660,
+        -220
+      ],
+      "parameters": {
+        "url": "=https://hacker-news.firebaseio.com/v0/item/{{ $json.kids }}.json?print=pretty",
+        "options": {}
+      },
+      "typeVersion": 4.2
+    },
+    {
+      "id": "184abccf-5838-49bf-9922-e0300c6b145e",
+      "name": "API HN : Obtenir le post principal",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        1260,
+        -220
+      ],
+      "parameters": {
+        "url": "=https://hacker-news.firebaseio.com/v0/item/{{ $json.storyId }}.json?print=pretty",
+        "options": {}
+      },
+      "typeVersion": 4.2
+    }
+  ],
+  "active": false,
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "387f7084-58fa-4643-9351-73c870d3f028",
+  "connections": {
+    "Séparer": {
+      "main": [
+        [
+          {
+            "node": "Obtenir les données pertinentes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Nettoyer le texte": {
+      "main": [
+        [
+          {
+            "node": "Limite pour test (optionnel)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extraire le texte": {
+      "main": [
+        [
+          {
+            "node": "Nettoyer le texte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir le dernier post": {
+      "main": [
+        [
+          {
+            "node": "API HN : Obtenir le post principal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Obtenir les données pertinentes": {
+      "main": [
+        [
+          {
+            "node": "Obtenir le dernier post",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modèle de chat OpenAI": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Transformer en données structurées",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API HN : Obtenir le post principal": {
+      "main": [
+        [
+          {
+            "node": "Séparer les enfants (emplois)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyseur de sortie structurée": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Transformer en données structurées",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Séparer les enfants (emplois)": {
+      "main": [
+        [
+          {
+            "node": "API HI : Obtenir le post d'offre d'emploi individuel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transformer en données structurées": {
+      "main": [
+        [
+          {
+            "node": "Écrire les résultats dans airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limite pour test (optionnel)": {
+      "main": [
+        [
+          {
+            "node": "Transformer en données structurées",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rechercher les posts Qui recrute": {
+      "main": [
+        [
+          {
+            "node": "Séparer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lors du clic sur ‘Tester le workflow’": {
+      "main": [
+        [
+          {
+            "node": "Rechercher les posts Qui recrute",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "API HI : Obtenir le post d'offre d'emploi individuel": {
+      "main": [
+        [
+          {
+            "node": "Extraire le texte",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

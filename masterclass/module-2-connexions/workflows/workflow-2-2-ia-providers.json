@@ -1,0 +1,199 @@
+{
+  "name": "Module 2.2 - Connexion IA (OpenAI, Claude, DeepSeek)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "trigger-ia",
+      "name": "When clicking \"Test workflow\"",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "text-001",
+              "name": "texte_a_analyser",
+              "value": "n8n est une plateforme d'automatisation no-code qui permet de créer des workflows complexes sans programmer. Elle offre plus de 350 intégrations et une interface visuelle intuitive.",
+              "type": "string"
+            },
+            {
+              "id": "question-001",
+              "name": "question",
+              "value": "Quel est le principal avantage de n8n mentionné dans ce texte ?",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "prepare-data",
+      "name": "Préparer données test",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Tu es un assistant expert en analyse de texte. Réponds de manière concise et précise."
+            },
+            {
+              "role": "user", 
+              "content": "=Texte: {{ $json.texte_a_analyser }}\n\nQuestion: {{ $json.question }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.7,
+          "maxTokens": 150
+        }
+      },
+      "id": "openai-chat",
+      "name": "OpenAI GPT-4",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.2,
+      "position": [650, 200],
+      "credentials": {
+        "openAiApi": {
+          "id": "1",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "model": {
+          "__rl": true,
+          "value": "claude-3-opus-20240229",
+          "mode": "list"
+        },
+        "messages": {
+          "values": [
+            {
+              "role": "user",
+              "content": "=Résume en 3 points clés ce texte:\n\n{{ $json.texte_a_analyser }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "anthropic-claude",
+      "name": "Claude 3",
+      "type": "@n8n/n8n-nodes-anthropic.anthropic",
+      "typeVersion": 1.2,
+      "position": [650, 350],
+      "credentials": {
+        "anthropicApi": {
+          "id": "1",
+          "name": "Anthropic account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.deepseek.com/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "model",
+              "value": "deepseek-chat"
+            },
+            {
+              "name": "messages",
+              "value": "=[{\"role\": \"system\", \"content\": \"Tu es un assistant utile.\"}, {\"role\": \"user\", \"content\": \"Traduis en anglais: {{ $json.texte_a_analyser }}\"}]"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "deepseek-api",
+      "name": "DeepSeek API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [650, 500],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "DeepSeek API Key"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combinationMode": "multiplex",
+        "options": {}
+      },
+      "id": "merge-results",
+      "name": "Combiner résultats",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [850, 350]
+    },
+    {
+      "parameters": {
+        "content": "## 🤖 Comparaison des réponses IA\n\n### OpenAI GPT-4:\n{{ $item(0).$node[\"OpenAI GPT-4\"].json.choices[0].message.content }}\n\n### Claude 3:\n{{ $item(1).$node[\"Claude 3\"].json.content[0].text }}\n\n### DeepSeek:\n{{ $item(2).$node[\"DeepSeek API\"].json.choices[0].message.content }}",
+        "contentType": "markdown"
+      },
+      "id": "display-comparison",
+      "name": "Afficher comparaison",
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [1050, 350]
+    }
+  ],
+  "connections": {
+    "When clicking \"Test workflow\"": {
+      "main": [[{"node": "Préparer données test", "type": "main", "index": 0}]]
+    },
+    "Préparer données test": {
+      "main": [[
+        {"node": "OpenAI GPT-4", "type": "main", "index": 0},
+        {"node": "Claude 3", "type": "main", "index": 0},
+        {"node": "DeepSeek API", "type": "main", "index": 0}
+      ]]
+    },
+    "OpenAI GPT-4": {
+      "main": [[{"node": "Combiner résultats", "type": "main", "index": 0}]]
+    },
+    "Claude 3": {
+      "main": [[{"node": "Combiner résultats", "type": "main", "index": 1}]]
+    },
+    "DeepSeek API": {
+      "main": [[{"node": "Combiner résultats", "type": "main", "index": 2}]]
+    },
+    "Combiner résultats": {
+      "main": [[{"node": "Afficher comparaison", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "Compare les réponses de différents modèles d'IA (OpenAI, Claude, DeepSeek) sur la même tâche."
+  },
+  "versionId": "1.0.0"
+}

@@ -1,0 +1,86 @@
+{
+  "id": 1,
+  "name": "Rappel du journal quotidien",
+  "nodes": [
+    {
+      "name": "Rappel du matin",
+      "type": "n8n-nodes-base.cron",
+      "notes": "Déclencheur très tôt le matin",
+      "position": [
+        220,
+        60
+      ],
+      "parameters": {
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 6
+            }
+          ]
+        }
+      },
+      "notesInFlow": true,
+      "typeVersion": 1,
+      "alwaysOutputData": true
+    },
+    {
+      "name": "formater le rappel",
+      "type": "n8n-nodes-base.functionItem",
+      "position": [
+        460,
+        60
+      ],
+      "parameters": {
+        "functionCode": "\n// Creates message with todays date\nconst today = new Date()\nconst yesterday = new Date(today)\n\nyesterday.setDate(yesterday.getDate() - 1)\nconst message = `What did you do: ${yesterday.toISOString().split('T')[0]}`\n\nreturn {message};"
+      },
+      "typeVersion": 1
+    },
+    {
+      "name": "Envoyer le rappel du journal",
+      "type": "n8n-nodes-base.telegram",
+      "position": [
+        700,
+        60
+      ],
+      "parameters": {
+        "text": "={{$node[\"formater le rappel\"].json[\"message\"]}}",
+        "chatId": "666884239",
+        "additionalFields": {}
+      },
+      "credentials": {},
+      "typeVersion": 1
+    }
+  ],
+  "active": true,
+  "settings": {},
+  "connections": {
+    "formater le rappel": {
+      "main": [
+        [
+          {
+            "node": "Envoyer le rappel du journal",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rappel du matin": {
+      "main": [
+        [
+          {
+            "node": "formater le rappel",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "tags": [
+    {
+      "id": "1",
+      "name": "Audelalia"
+    }
+  ]
+}

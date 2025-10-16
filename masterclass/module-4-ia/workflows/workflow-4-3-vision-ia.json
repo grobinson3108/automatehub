@@ -1,0 +1,335 @@
+{
+  "name": "Module 4.3 - Vision IA et Analyse d'Images",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "analyze-image",
+        "responseMode": "responseNode",
+        "options": {
+          "binaryData": true
+        }
+      },
+      "id": "webhook-image",
+      "name": "Webhook Image",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300],
+      "webhookId": "vision-webhook"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Extraire les métadonnées de l'image\nconst binary = $input.item.binary.data;\n\nif (!binary) {\n  throw new Error('Aucune image reçue');\n}\n\n// Informations de base\nconst fileInfo = {\n  mimeType: binary.mimeType,\n  fileName: binary.fileName || 'image_uploaded',\n  fileSize: binary.fileSize,\n  fileSizeFormatted: (binary.fileSize / 1024).toFixed(2) + ' KB',\n  uploadTime: new Date().toISOString()\n};\n\n// Vérifier le type de fichier\nconst allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];\nif (!allowedTypes.includes(fileInfo.mimeType)) {\n  throw new Error(`Type de fichier non supporté: ${fileInfo.mimeType}`);\n}\n\n// Préparer le contexte\nconst context = $input.item.json.body || {};\n\nreturn {\n  fileInfo: fileInfo,\n  context: {\n    user_id: context.user_id || 'anonymous',\n    purpose: context.purpose || 'general',\n    language: context.language || 'fr',\n    analysis_type: context.analysis_type || 'complete'\n  },\n  binary: binary\n};"
+      },
+      "id": "validate-image",
+      "name": "Valider image",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "resource": "image",
+        "operation": "analyze",
+        "model": {
+          "__rl": true,
+          "value": "gpt-4-vision-preview",
+          "mode": "list"
+        },
+        "text": "=Analyse cette image en détail. Fournis une réponse structurée en JSON avec:\n1. description: Description générale de l'image\n2. objets: Liste des objets/éléments principaux\n3. texte: Tout texte visible dans l'image\n4. couleurs: Couleurs dominantes\n5. contexte: Contexte probable (business, personnel, etc.)\n6. suggestions: Suggestions d'utilisation ou d'amélioration\n\nRéponds en {{ $json.context.language }}.",
+        "options": {
+          "maxTokens": 1000,
+          "detail": "high"
+        }
+      },
+      "id": "vision-openai",
+      "name": "Analyse Vision OpenAI",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.2,
+      "position": [650, 200],
+      "credentials": {
+        "openAiApi": {
+          "id": "1",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "check-type",
+              "leftValue": "={{ $json.context.analysis_type }}",
+              "rightValue": "ocr",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or",
+          "conditions": [
+            {
+              "id": "check-purpose",
+              "leftValue": "={{ $json.context.purpose }}",
+              "rightValue": "document",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "need-ocr",
+      "name": "Besoin OCR ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [650, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.ocr.space/parse/image",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "language",
+              "value": "={{ $json.context.language === 'fr' ? 'fre' : 'eng' }}"
+            },
+            {
+              "name": "isOverlayRequired",
+              "value": "true"
+            },
+            {
+              "name": "detectOrientation",
+              "value": "true"
+            },
+            {
+              "name": "scale",
+              "value": "true"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ocr-extraction",
+      "name": "Extraction OCR",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [850, 400],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "1",
+          "name": "OCR.space API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Parser et enrichir les résultats\nconst visionResult = JSON.parse($input.item.json.choices[0].message.content);\nconst ocrResult = $node[\"Extraction OCR\"]?.json || null;\nconst originalData = $input.item.json;\n\n// Analyse supplémentaire\nlet analysisEnriched = {\n  ...visionResult,\n  metadata: originalData.fileInfo,\n  context: originalData.context\n};\n\n// Si OCR disponible, enrichir\nif (ocrResult && ocrResult.ParsedResults) {\n  const ocrText = ocrResult.ParsedResults.map(r => r.ParsedText).join('\\n');\n  analysisEnriched.ocr = {\n    texte_extrait: ocrText,\n    confiance: ocrResult.ParsedResults[0]?.FileParseExitCode === 1,\n    orientation: ocrResult.ParsedResults[0]?.TextOrientation || 'unknown'\n  };\n}\n\n// Détection de cas d'usage spécifiques\nconst useCases = [];\n\n// Carte de visite\nif (visionResult.texte && \n    (visionResult.texte.match(/@|email|tel|phone/i) || \n     visionResult.contexte?.includes('business'))) {\n  useCases.push('carte_visite');\n}\n\n// Document\nif (visionResult.texte && visionResult.texte.length > 100) {\n  useCases.push('document');\n}\n\n// Produit\nif (visionResult.objets?.some(obj => \n    ['produit', 'article', 'objet', 'product'].some(term => \n      obj.toLowerCase().includes(term)))) {\n  useCases.push('catalogue_produit');\n}\n\n// Graphique/Chart\nif (visionResult.objets?.some(obj => \n    ['graphique', 'chart', 'graph', 'diagramme'].some(term => \n      obj.toLowerCase().includes(term)))) {\n  useCases.push('analyse_donnees');\n}\n\n// Actions suggérées basées sur l'analyse\nconst suggestedActions = [];\n\nif (useCases.includes('carte_visite')) {\n  suggestedActions.push({\n    action: 'extract_contact',\n    description: 'Extraire informations de contact',\n    workflow: 'workflow-extract-business-card'\n  });\n}\n\nif (useCases.includes('document')) {\n  suggestedActions.push({\n    action: 'summarize',\n    description: 'Résumer le document',\n    workflow: 'workflow-document-summary'\n  });\n}\n\nif (useCases.includes('catalogue_produit')) {\n  suggestedActions.push({\n    action: 'catalog_entry',\n    description: 'Créer fiche produit',\n    workflow: 'workflow-product-catalog'\n  });\n}\n\n// Score de qualité\nlet qualityScore = 0;\nif (visionResult.description) qualityScore += 30;\nif (visionResult.objets?.length > 0) qualityScore += 20;\nif (visionResult.texte) qualityScore += 20;\nif (visionResult.couleurs?.length > 0) qualityScore += 15;\nif (visionResult.contexte) qualityScore += 15;\n\nreturn {\n  analysis_id: Date.now().toString(),\n  timestamp: new Date().toISOString(),\n  \n  // Résultats Vision\n  vision: visionResult,\n  \n  // OCR si disponible\n  ocr: analysisEnriched.ocr || null,\n  \n  // Métadonnées\n  file: originalData.fileInfo,\n  context: originalData.context,\n  \n  // Enrichissements\n  use_cases: useCases,\n  suggested_actions: suggestedActions,\n  quality_score: qualityScore,\n  \n  // Résumé exécutif\n  executive_summary: {\n    main_content: visionResult.description,\n    key_elements: visionResult.objets?.slice(0, 3) || [],\n    primary_use_case: useCases[0] || 'general',\n    confidence: qualityScore > 70 ? 'high' : qualityScore > 40 ? 'medium' : 'low'\n  }\n};"
+      },
+      "id": "process-results",
+      "name": "Traiter résultats",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "upload",
+        "name": "={{ $json.file.fileName }}_{{ $json.analysis_id }}",
+        "parents": {
+          "values": [
+            {
+              "id": "YOUR_VISION_FOLDER_ID"
+            }
+          ]
+        },
+        "binaryPropertyName": "data",
+        "options": {
+          "appProperties": {
+            "property": [
+              {
+                "key": "analysis_id",
+                "value": "={{ $json.analysis_id }}"
+              },
+              {
+                "key": "quality_score",
+                "value": "={{ $json.quality_score }}"
+              },
+              {
+                "key": "use_case",
+                "value": "={{ $json.use_cases[0] || 'general' }}"
+              }
+            ]
+          }
+        }
+      },
+      "id": "save-to-drive",
+      "name": "Sauvegarder Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [1250, 200],
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "1",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "check-card",
+              "leftValue": "={{ $json.use_cases }}",
+              "rightValue": "carte_visite",
+              "operator": {
+                "type": "array",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "is-business-card",
+      "name": "Est carte visite ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.1,
+      "position": [1250, 400]
+    },
+    {
+      "parameters": {
+        "model": "gpt-3.5-turbo",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Extrait les informations de contact de ce texte et retourne un JSON structuré avec: nom, prenom, entreprise, poste, email, telephone, adresse, site_web, linkedin"
+            },
+            {
+              "role": "user",
+              "content": "={{ $json.vision.texte + '\\n\\n' + ($json.ocr?.texte_extrait || '') }}"
+            }
+          ]
+        },
+        "options": {
+          "temperature": 0.1,
+          "responseFormat": {
+            "type": "json_object"
+          }
+        }
+      },
+      "id": "extract-contact",
+      "name": "Extraire contact",
+      "type": "n8n-nodes-base.openAi",
+      "typeVersion": 1.2,
+      "position": [1450, 400],
+      "credentials": {
+        "openAiApi": {
+          "id": "1",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  \"success\": true,\n  \"analysis_id\": $json.analysis_id,\n  \"summary\": $json.executive_summary,\n  \"details\": {\n    \"description\": $json.vision.description,\n    \"objects_detected\": $json.vision.objets,\n    \"text_found\": $json.vision.texte || $json.ocr?.texte_extrait || \"Aucun texte détecté\",\n    \"colors\": $json.vision.couleurs,\n    \"context\": $json.vision.contexte\n  },\n  \"use_cases\": $json.use_cases,\n  \"suggested_actions\": $json.suggested_actions,\n  \"quality_score\": $json.quality_score,\n  \"metadata\": {\n    \"file_name\": $json.file.fileName,\n    \"file_size\": $json.file.fileSizeFormatted,\n    \"mime_type\": $json.file.mimeType,\n    \"processing_time\": new Date() - new Date($json.timestamp) + \"ms\"\n  },\n  \"extracted_contact\": $node[\"Extraire contact\"]?.json ? JSON.parse($node[\"Extraire contact\"].json.choices[0].message.content) : null,\n  \"storage\": {\n    \"google_drive_link\": $node[\"Sauvegarder Drive\"]?.json?.webViewLink || null\n  }\n} }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          }
+        }
+      },
+      "id": "response-webhook",
+      "name": "Réponse API",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1650, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Image": {
+      "main": [[{"node": "Valider image", "type": "main", "index": 0}]]
+    },
+    "Valider image": {
+      "main": [[
+        {"node": "Analyse Vision OpenAI", "type": "main", "index": 0},
+        {"node": "Besoin OCR ?", "type": "main", "index": 0}
+      ]]
+    },
+    "Analyse Vision OpenAI": {
+      "main": [[{"node": "Traiter résultats", "type": "main", "index": 0}]]
+    },
+    "Besoin OCR ?": {
+      "main": [
+        [{"node": "Extraction OCR", "type": "main", "index": 0}],
+        []
+      ]
+    },
+    "Extraction OCR": {
+      "main": [[{"node": "Traiter résultats", "type": "main", "index": 0}]]
+    },
+    "Traiter résultats": {
+      "main": [[
+        {"node": "Sauvegarder Drive", "type": "main", "index": 0},
+        {"node": "Est carte visite ?", "type": "main", "index": 0}
+      ]]
+    },
+    "Est carte visite ?": {
+      "main": [
+        [{"node": "Extraire contact", "type": "main", "index": 0}],
+        [{"node": "Réponse API", "type": "main", "index": 0}]
+      ]
+    },
+    "Extraire contact": {
+      "main": [[{"node": "Réponse API", "type": "main", "index": 0}]]
+    },
+    "Sauvegarder Drive": {
+      "main": [[{"node": "Réponse API", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "description": "API de vision IA complète : analyse d'images, OCR, extraction de cartes de visite, détection d'objets et suggestions contextuelles."
+  },
+  "versionId": "1.0.0"
+}
