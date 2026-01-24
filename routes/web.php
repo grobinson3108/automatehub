@@ -43,19 +43,6 @@ Route::get('/tutorials', function () {
     return view('tutorials');
 })->name('tutorials');
 
-// Workflows routes (using Inertia)
-Route::get('/workflows', [App\Http\Controllers\WorkflowController::class, 'index'])->name('workflows.index');
-
-Route::prefix('workflows')->name('workflows.')->group(function () {
-    Route::get('/{workflow}', [App\Http\Controllers\WorkflowController::class, 'show'])->name('show');
-
-    Route::middleware(['auth'])->group(function () {
-        Route::get('/{workflow}/download', [App\Http\Controllers\WorkflowController::class, 'download'])->name('download');
-        Route::get('/{workflow}/import-url', [App\Http\Controllers\WorkflowController::class, 'getImportUrl'])->name('import-url');
-        Route::get('/{workflow}/preview', [App\Http\Controllers\WorkflowController::class, 'preview'])->name('preview');
-    });
-});
-
 // Public tutorials - Removed duplicate route, using Inertia version above
 
 // Blog routes
@@ -97,10 +84,18 @@ Route::get('/pricing', function () {
     return view('pricing');
 })->name('pricing');
 
-// Pack routes
-Route::get('/packs', [App\Http\Controllers\PackController::class, 'index'])->name('packs.index');
-Route::get('/packs/{slug}', [App\Http\Controllers\PackController::class, 'show'])->name('packs.show');
-Route::post('/packs/{slug}/checkout', [App\Http\Controllers\PackController::class, 'checkout'])->name('packs.checkout');
+// Stripe Checkout routes
+Route::prefix('checkout')->name('checkout.')->group(function () {
+    // TODO V2: Ajouter route pour apps checkout
+    // Route::post('/apps/{app}/session', [App\Http\Controllers\CheckoutController::class, 'createSession'])->name('create-session');
+    Route::get('/success', [App\Http\Controllers\CheckoutController::class, 'success'])->name('success');
+    Route::get('/cancel', [App\Http\Controllers\CheckoutController::class, 'cancel'])->name('cancel');
+    Route::get('/my-orders', [App\Http\Controllers\CheckoutController::class, 'myOrders'])->name('my-orders');
+    Route::get('/download/{sessionId}', [App\Http\Controllers\CheckoutController::class, 'download'])->name('download');
+});
+
+// Stripe Webhook (no CSRF protection)
+Route::post('/webhook/stripe', [App\Http\Controllers\CheckoutController::class, 'webhook'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 
 // Dashboard redirect
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -146,5 +141,5 @@ Route::prefix('api')->name('api.')->group(function () {
 require __DIR__.'/auth.php';
 require __DIR__.'/admin.php';
 require __DIR__.'/user.php';
-require __DIR__.'/n8n.php';
+// require __DIR__.'/n8n.php'; // REMOVED - Legacy n8n routes
 require __DIR__.'/api-marketplace.php';

@@ -3,7 +3,7 @@
 > **IMPORTANT**: Ce fichier contient les patterns réutilisables pour les workflows n8n. Claude doit le consulter avant de créer un nouveau workflow et le mettre à jour quand un nouveau pattern est créé.
 
 ## 📅 Dernière mise à jour
-**Date**: 2025-10-16
+**Date**: 2025-11-13
 
 ---
 
@@ -137,6 +137,40 @@
 - Respecter les règles RGPD
 - Sécuriser les données médicales
 - Permettre opt-out facile
+
+---
+
+### Pattern 9: Email Processing with Deduplication
+**Usage**: Traiter des emails sans les marquer comme lus, avec déduplication via Google Sheets
+**Structure**:
+```
+[Email Trigger] → [Get Processed IDs from Sheet] → [Filter New Only] → [Loop Over Items] → [Process] → [Log to Sheet]
+```
+**Cas d'usage**:
+- Client ne veut pas marquer les emails comme lus
+- Traitement d'un volume important de mails
+- Besoin de traçabilité des mails traités
+
+**Implémentation**:
+```javascript
+// Function Node: Filter New Emails
+const emails = $input.item.json;
+const processedIds = $('Get row(s) in sheet').all().map(item => item.json.emailId);
+const newEmails = emails.filter(email => !processedIds.includes(email.id));
+return newEmails.map(email => ({ json: email }));
+```
+
+**Best Practices**:
+- Utiliser l'ID unique du mail (messageId) comme clé
+- Logger la date de traitement dans le Sheet
+- Ajouter un nœud IF pour vérifier s'il y a de nouveaux mails avant le loop
+- Utiliser "Loop Over Items" avec batch size = 1 pour traitement séquentiel
+- Considérer un TTL dans le Sheet (nettoyer les vieux mails après X jours)
+
+**Sheet Structure**:
+```
+| emailId | subject | receivedDate | processedDate | status |
+```
 
 ---
 

@@ -46,4 +46,11 @@ return [
         'url' => env('N8N_URL', 'https://n8n.automatehub.fr'),
     ],
 
+    'stripe' => [
+        'key' => env('STRIPE_KEY'),
+        'secret' => env('STRIPE_SECRET'),
+        'webhook_secret' => env('STRIPE_WEBHOOK_SECRET'),
+        'usd_rate' => env('STRIPE_CURRENCY_USD_RATE', 1.10),
+    ],
+
 ];

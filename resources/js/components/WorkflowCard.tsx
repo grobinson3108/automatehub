@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Download, Zap, Lock } from "lucide-react";
+import { Download, Zap, Lock, ArrowRight } from "lucide-react";
 
 interface WorkflowCardProps {
   workflow: {
@@ -17,10 +17,10 @@ interface WorkflowCardProps {
 
 export const WorkflowCard = ({ workflow }: WorkflowCardProps) => {
   return (
-    <Card className="h-full hover:shadow-lg transition-shadow border-border">
-      <CardHeader>
-        <div className="flex items-start justify-between mb-2">
-          <Badge variant={workflow.is_premium ? "default" : "secondary"} className="mb-2">
+    <Card className={`h-full glass-card border-animated hover-lift transition-smooth ${workflow.is_premium ? 'shadow-glow' : ''}`}>
+      <CardHeader className="space-y-4">
+        <div className="flex items-start justify-between gap-3">
+          <Badge className={workflow.is_premium ? "bg-gradient-premium text-black" : "bg-accent/20 text-accent border border-accent/30"}>
             {workflow.is_premium ? (
               <>
                 <Lock className="size-3 mr-1" />
@@ -35,30 +35,33 @@ export const WorkflowCard = ({ workflow }: WorkflowCardProps) => {
           </Badge>
           {workflow.downloads_count && workflow.downloads_count > 0 && (
             <span className="text-sm text-muted-foreground flex items-center">
-              <Download className="size-3 mr-1" />
+              <Download className="size-3 mr-1 text-green-400" />
               {workflow.downloads_count}
             </span>
           )}
         </div>
-        <CardTitle className="text-xl">{workflow.name}</CardTitle>
+        <CardTitle className="text-xl group-hover:text-primary transition-smooth">
+          {workflow.name}
+        </CardTitle>
       </CardHeader>
 
-      <CardContent>
-        <p className="text-muted-foreground mb-4 line-clamp-3">
+      <CardContent className="space-y-4">
+        <p className="text-muted-foreground line-clamp-3 text-sm">
           {workflow.description}
         </p>
 
-        <div className="flex items-center justify-between">
-          <Badge variant="outline" className="text-xs">
+        <div className="flex items-center justify-between pt-2">
+          <Badge className="glass px-2 py-1 text-xs border border-accent/20">
             {workflow.category}
           </Badge>
 
           <Button
             size="sm"
-            variant={workflow.is_premium ? "default" : "secondary"}
+            className={workflow.is_premium ? "btn-gradient" : "glass-strong hover-lift"}
             onClick={() => window.location.href = `/workflows/${workflow.slug}`}
           >
             {workflow.is_premium ? "Voir détails" : "Télécharger"}
+            <ArrowRight className="size-3 ml-1" />
           </Button>
         </div>
       </CardContent>

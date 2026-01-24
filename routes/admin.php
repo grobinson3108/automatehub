@@ -112,16 +112,9 @@ Route::middleware(['auth', 'verified', 'isAdmin'])->prefix('admin')->name('admin
         Route::delete('/{contact}', [UserManagementController::class, 'deleteContact'])->name('destroy');
     });
     
-    // n8n MasterClass
-    Route::prefix('masterclass')->name('masterclass.')->group(function () {
-        Route::get('/', [DashboardController::class, 'masterclass'])->name('index');
-        Route::get('/module/{module}', [DashboardController::class, 'masterclassModule'])->name('module');
-        Route::get('/workflows', [DashboardController::class, 'masterclassWorkflows'])->name('workflows');
-        Route::get('/scripts', [DashboardController::class, 'masterclassScripts'])->name('scripts');
-        Route::get('/progress', [DashboardController::class, 'masterclassProgress'])->name('progress');
-        Route::get('/quiz', [DashboardController::class, 'masterclassQuiz'])->name('quiz');
-    });
-    
+    // REMOVED: n8n MasterClass (legacy)
+
+
     // Gestion du Contenu Vidéo
     Route::prefix('video-content')->name('video-content.')->group(function () {
         Route::get('/', [VideoContentController::class, 'index'])->name('index');
@@ -134,7 +127,7 @@ Route::middleware(['auth', 'verified', 'isAdmin'])->prefix('admin')->name('admin
         Route::post('/{videoContentPlan}/mark-as-done', [VideoContentController::class, 'markAsDone'])->name('mark-as-done');
         Route::post('/{videoContentPlan}/mark-as-in-progress', [VideoContentController::class, 'markAsInProgress'])->name('mark-as-in-progress');
         Route::post('/update-priority', [VideoContentController::class, 'updatePriority'])->name('update-priority');
-        Route::post('/generate-from-workflows', [VideoContentController::class, 'generateFromWorkflows'])->name('generate-from-workflows');
+        // REMOVED: generateFromWorkflows (legacy n8n)
     });
 
     // Gestion des Idées Vidéos
@@ -180,11 +173,7 @@ Route::middleware(['auth', 'verified', 'isAdmin'])->prefix('admin')->name('admin
 
     // Outils d'Administration
     Route::prefix('tools')->name('tools.')->group(function () {
-        Route::get('/workflow-translation', [\App\Http\Controllers\Admin\WorkflowTranslationController::class, 'index'])->name('workflow-translation');
-        Route::get('/workflow-translation-test', function() { return view('admin.tools.workflow-translation-test'); })->name('workflow-translation-test');
-        Route::post('/workflow-translation/translate', [\App\Http\Controllers\Admin\WorkflowTranslationController::class, 'translate'])->name('workflow-translation.translate');
-        Route::post('/workflow-translation/download', [\App\Http\Controllers\Admin\WorkflowTranslationController::class, 'download'])->name('workflow-translation.download');
-        Route::get('/workflow-translation/status', [\App\Http\Controllers\Admin\WorkflowTranslationController::class, 'getStatus'])->name('workflow-translation.status');
+        // TODO V2: Ajouter outils admin pour mini-apps
     });
 
     // Paramètres Système

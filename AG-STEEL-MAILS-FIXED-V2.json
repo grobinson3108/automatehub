@@ -1,0 +1,782 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n\t\"ID\": \"l'ID du message\",\n    \"mail\": \"Le corps du mail lui-même\",\n\t\"message\": \"Ton message au user\"\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        -944,
+        -368
+      ],
+      "id": "7f3da4de-f74a-4c46-bb0b-48cf82de8e0b",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Node Code n8n: Format Email depuis \"Resolved\"\n// Configuraton Email Trigger IMAP : Download type = \"Resolved\"\n\nconst items = $input.all();\nconst emailData = [];\n\nfor (const item of items) {\n  const data = item.json;\n\n  // Générer ID unique\n  const timestamp = Date.now().toString(36);\n  const random = Math.random().toString(36).substring(2, 5);\n  const shortId = `${timestamp}${random}`;\n\n  // Récupérer les données depuis Resolved (déjà décodées !)\n  const fromField = data.from?.text || data.from || '';\n  const subject = data.subject || 'Sans objet';\n  let body = data.text || '';  // Le text est déjà bien encodé !\n\n  // 🐛 DEBUG : Afficher le body AVANT nettoyage\n  console.log('=== BODY AVANT NETTOYAGE ===');\n  console.log(body);\n  console.log('=== LONGUEUR ===', body.length);\n\n  // ⚠️ NETTOYAGE DU BODY\n\n  // 1. Supprimer null bytes\n  body = body.replace(/\\u0000/g, '').replace(/\\x00/g, '');\n\n  // 2. Supprimer images (balises markdown, HTML, ou liens vers images)\n  body = body.replace(/!\\[.*?\\]\\(.*?\\)/g, ''); // ![alt](url)\n  body = body.replace(/<img[^>]*>/gi, ''); // <img src=\"...\">\n  body = body.replace(/\\(https?:\\/\\/[^\\s\\)]+\\.(jpg|jpeg|png|gif|webp|svg)[^\\)]*\\)/gi, '');\n\n  // 3. Supprimer liens trackés Mailspring/GetMailspring\n  body = body.replace(/\\(https:\\/\\/link\\.getmailspring\\.com\\/[^\\)]+\\)/g, '');\n\n  // 4. Supprimer liens tel: (garder juste le texte avant)\n  body = body.replace(/\\s*\\(tel:[^\\)]+\\)/g, '');\n\n  // 5. Supprimer emojis et icônes (LISTE PRÉCISE pour éviter de manger des lettres)\n  // Ne PAS utiliser de ranges Unicode larges !\n  const emojiPattern = /[✉✅❌⚠️💡🔔📧📱📞☎☏📩📬📭📮📯📊📈📉💼🔗🌐🌍🌎🌏🔴🟢🟡⭐️🎯💪👍👎🙏💬📝✏️🖊️📌📍🗂️🗃️🏢🏠🏡🏢]/g;\n  body = body.replace(emojiPattern, '');\n\n  // Supprimer lignes avec juste \"f\", \"in\", \"Y\" isolés (artefacts signatures)\n  body = body.replace(/\\n[finY]\\n/g, '\\n');\n\n  // 6. Supprimer lignes vides ou avec seulement des espaces\n  body = body.replace(/\\n\\s*\\n/g, '\\n\\n');\n\n  // 7. Nettoyer retours chariot multiples (max 2 sauts de ligne)\n  body = body.replace(/\\n{3,}/g, '\\n\\n');\n\n  // 8. Supprimer espaces en début/fin de lignes\n  body = body.split('\\n').map(line => line.trim()).join('\\n');\n\n  // 9. Supprimer retours chariot Windows (\\r)\n  body = body.replace(/\\r/g, '');\n\n  body = body.trim();\n\n  // 🐛 DEBUG : Afficher le body APRÈS nettoyage\n  console.log('=== BODY APRÈS NETTOYAGE ===');\n  console.log(body);\n  console.log('=== LONGUEUR ===', body.length);\n\n  // Parser From: \"Name <email>\"\n  let cleanedFromName = '';\n  let cleanedFromEmail = '';\n\n  if (fromField.includes('<') && fromField.includes('>')) {\n    cleanedFromName = fromField.replace(/<.*>/, '').replace(/\"/g, '').trim();\n    cleanedFromEmail = fromField.match(/<(.+)>/)?.[1] || '';\n  } else {\n    cleanedFromEmail = fromField.trim();\n    cleanedFromName = fromField.trim();\n  }\n\n  // Formater date\n  let formattedDate = '';\n  if (data.date) {\n    try {\n      const dateObj = typeof data.date === 'string' ? new Date(data.date) : data.date;\n      formattedDate = dateObj.toLocaleString('fr-FR');\n    } catch (e) {\n      formattedDate = data.date.toString();\n    }\n  }\n\n  // Construire objet final\n  emailData.push({\n    id: shortId,\n    messageId: data.messageId || '',\n    from: fromField,\n    cleanedFromName: cleanedFromName,\n    cleanedFromEmail: cleanedFromEmail,\n    subject: subject,\n    body: body,\n    date: formattedDate,\n    hasHtml: !!data.html,\n    hasPlain: !!data.text\n  });\n}\n\nreturn emailData;\n"
+      },
+      "id": "bdf796a1-caed-4fd9-b711-e87cf00e53b2",
+      "name": "Format Email1",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2896,
+        -608
+      ]
+    },
+    {
+      "parameters": {
+        "chatId": "621354826",
+        "text": "=📝 Nouvel Email Reçu :\n━━━━━━━━━━━━━━━━━━\nExpéditeur : {{ $json.Nom }} < {{ $json['Email Client'] }} >\nDate : {{ $json.Date }}\n\nSujet : {{ $json.Sujet }}\n\nEmail : \n\n------------------------------\n{{ $json['Email Reçu'] }}\n------------------------------\n\n━━━━━━━━━━━━━━━━━━\n",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "ChatGPT",
+                    "additionalFields": {
+                      "callback_data": "=reply_chatgpt_{{ $json.ID }}"
+                    }
+                  },
+                  {
+                    "text": "Emrah",
+                    "additionalFields": {
+                      "callback_data": "=reply_emrah_{{ $json.ID }}"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "SPAM",
+                    "additionalFields": {
+                      "callback_data": "=reply_spam_{{ $json.ID }}"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "id": "37786896-5530-4e45-8f58-c27dd005a8df",
+      "name": "Send to Telegram2",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        -112,
+        -624
+      ],
+      "webhookId": "0e659de0-14c9-4782-8c00-4c46cae0e490",
+      "credentials": {
+        "telegramApi": {
+          "id": "n5YJwZl8RSxgf2jm",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs",
+          "mode": "list",
+          "cachedResultName": "AG Steel",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1DaTX5afNnh2g3xrANNqIwG_axFHe87IPGQTnsZQqWJs/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.output.ID }}",
+            "Nom": "={{ $('Loop Over Items').item.json.cleanedFromName }}",
+            "Email Reçu": "={{ $json.output.mail }}",
+            "Iterations": "0",
+            "Date": "={{ $('Loop Over Items').item.json.date }}",
+            "Email Client": "={{ $('Loop Over Items').item.json.cleanedFromEmail }}",
+            "Sujet": "={{ $('Loop Over Items').item.json.subject }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nom",
+              "displayName": "Nom",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Client",
+              "displayName": "Email Client",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email Reçu",
+              "displayName": "Email Reçu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Sujet",
+              "displayName": "Sujet",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Réponse",
+              "displayName": "Réponse",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Mode",
+              "displayName": "Mode",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Iterations",
+              "displayName": "Iterations",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email Préparé",
+              "displayName": "Email Préparé",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Répondu",
+              "displayName": "Répondu",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -432,
+        -624
+      ],
+      "id": "8aa47ef7-a526-4400-98b9-b216152ae2b5",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "3Ok7m9Y2kFc3dlAp",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Tu es un analyseur d'emails intelligent pour workflow n8n.\n\nID : {{ $('Loop Over Items').item.json.id }}\nDe : {{ $('Loop Over Items').item.json.from }}\nNom : {{ $('Loop Over Items').item.json.cleanedFromName }}\nSujet : {{ $('Loop Over Items').item.json.subject }}\nCorps : {{ $('Loop Over Items').item.json.body }}\nDate : {{ $('Loop Over Items').item.json.date }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=# Analyseur Email - Prompt System v2\n\n## MISSION\nAnalyser l'email et générer un JSON avec le message formaté selon le type (direct ou transféré).\n\n## DÉTECTION EMAIL TRANSFÉRÉ\nUn email est TRANSFÉRÉ si :\n- Le sujet contient : \"Fwd:\", \"FW:\", \"TR:\", \"Transfert\", \"Transféré\"\n- Le corps contient : \"Message transféré\", \"Forwarded message\", \"---------- Message\"\n- Présence de headers de transfert (De:, From:, Date:, À:)\n\n## EXTRACTION DES INFORMATIONS\n\n### Pour EMAIL TRANSFÉRÉ\n1. **Transféré par** : Utiliser cleanedFromName (la personne qui a transféré)\n2. **Nom original** : Extraire après \"From:\" ou \"De:\" dans les headers\n3. **Email original** : Extraire l'email entre < > après \"From:\" ou \"De:\"\n4. **Date original** : Extraire après \"Date:\" dans les headers\n5. **Message original** : Le texte APRÈS les headers de transfert, AVANT la signature\n6. **Entreprise** : Extraire du domaine email ou de la signature originale\n7. **Signature** : Bloc après le message principal (titre, téléphone, site web)\n\n### Pour EMAIL DIRECT\n1. **Nom** : cleanedFromName\n2. **Email** : cleanedFromEmail\n3. **Date** : date\n4. **Entreprise** : Extraire depuis signature ou domaine email\n5. **Message** : Corps complet SANS la signature\n\n### DÉTECTION SIGNATURE\nLa signature commence généralement après :\n- Une ligne vide suivie d'un nom complet\n- Des titres professionnels (CEO, Expert, Directeur, etc.)\n- Téléphone, email, site web\n- Séparateurs : ---, ___, ====\n\n**Indices de début de signature :**\n- Nom + Titre sur 2 lignes consécutives\n- Email + Téléphone\n- Site web (www., http://)\n\n## NETTOYAGE DU TEXTE\n\n### Supprimer les éléments parasites\n- Liens trackés : (https://link.getmailspring.com/...)\n- Liens tel: (tel:0651308949) → Garder juste le numéro\n- Retours chariot multiples : \\r\\n\\r\\n → \\n\n\n### Exemples de nettoyage\n**Avant :**\n\n06 51 30 89 49 (tel:06%2051%2030%2089%2049)\n\n\n**Après :**\n\n06 51 30 89 49\n\n\n**Avant :**\n\nwww.meep.fr (https://link.getmailspring.com/link/...)\n\n\n**Après :**\n\nwww.meep.fr\n\n\n## FORMAT DE SORTIE JSON OBLIGATOIRE\n\njson\n{\n    \"ID\": \"[id du mail]\",\n    \"mail\": \"[Corps brut complet non modifié]\",\n    \"message\": \"[Message formaté selon les règles ci-dessous]\"\n}\n\n\n### CONTENU DU CHAMP \"message\"\n\n#### SI EMAIL DIRECT :\n\nNom : [cleanedFromName]\nEntreprise : [Nom_entreprise ou \"Non renseignée\"]\nDate : [date au format DD/MM/YYYY HH:MM:SS]\nEmail : [cleanedFromEmail]\nMessage :\n[Corps du message SANS signature]\n\nSignature :\n[La signature extraite ou \"Non détectée\"]\n\nPièce Jointe : [Lien ou \"Aucune\"]\n\n\n#### SI EMAIL TRANSFÉRÉ :\n\nNom : [Nom extrait des headers \"From:\" ou \"De:\"]\nTransféré par : [cleanedFromName]\nEntreprise : [Extraite du domaine ou signature ou \"Non renseignée\"]\nDate : [Date extraite des headers ou date du transfert]\nEmail : [Email extrait des headers \"From:\" ou \"De:\"]\nMessage :\n[Corps du message original SANS signature]\n\nSignature :\n[Signature de l'expéditeur original ou \"Non détectée\"]\n\nPièce Jointe : [Lien ou \"Aucune\"]\n\n\n## RÈGLES STRICTES\n\n1. **Le champ \"mail\"** = Corps brut complet NON MODIFIÉ (directement depuis body)\n2. **Le champ \"message\"** = Format structuré avec sauts de ligne\n3. **Respecter EXACTEMENT l'ordre des champs**\n4. **Si info manquante** : \"Non renseignée\", \"Non détecté\" ou \"Aucune\"\n5. **NE PAS ajouter d'emojis** ou formatage supplémentaire\n6. **Conserver les sauts de ligne** dans le message\n7. **Supprimer les liens trackés** et les (tel:...) mais garder le contenu\n8. **Nettoyer les espaces multiples** : remplacer par un seul espace\n\n## EXEMPLES COMPLETS\n\n### Exemple 1 : Email Direct Simple\n\n**Input :**\njson\n{\n  \"id\": \"abc123\",\n  \"from\": \"Marie Dupont <marie@techcorp.fr>\",\n  \"cleanedFromName\": \"Marie Dupont\",\n  \"cleanedFromEmail\": \"marie@techcorp.fr\",\n  \"subject\": \"Demande de devis\",\n  \"body\": \"Bonjour,\\r\\n\\r\\nJe souhaite un devis pour votre solution.\\r\\n\\r\\nCordialement,\\r\\nMarie Dupont\\r\\nDirectrice Innovation\\r\\nTechCorp\\r\\n06 12 34 56 78\",\n  \"date\": \"07/10/2025 14:30:00\"\n}\n\n\n**Output :**\njson\n{\n  \"ID\": \"abc123\",\n  \"mail\": \"Bonjour,\\r\\n\\r\\nJe souhaite un devis pour votre solution.\\r\\n\\r\\nCordialement,\\r\\nMarie Dupont\\r\\nDirectrice Innovation\\r\\nTechCorp\\r\\n06 12 34 56 78\",\n  \"message\": \"Nom : Marie Dupont\\nEntreprise : TechCorp\\nDate : 07/10/2025 14:30:00\\nEmail : marie@techcorp.fr\\nMessage :\\nBonjour,\\n\\nJe souhaite un devis pour votre solution.\\n\\nSignature :\\nCordialement,\\nMarie Dupont\\nDirectrice Innovation\\nTechCorp\\n06 12 34 56 78\\n\\nPièce Jointe : Aucune\"\n}\n\n\n---\n\n### Exemple 2 : Email Transféré avec Headers Complets\n\n**Input :**\njson\n{\n  \"id\": \"mggxvjgp9o7\",\n  \"from\": \"Greg Robinson <greg@audelalia.fr>\",\n  \"cleanedFromName\": \"Greg Robinson\",\n  \"cleanedFromEmail\": \"greg@audelalia.fr\",\n  \"subject\": \"Fwd: Dernier Test 7\",\n  \"body\": \"Tu peux t'occuper de ça ?\\r\\n\\r\\n---------- Message transféré ---------\\r\\nFrom: Gregory Robinson <g.robinson3108@gmail.com>\\r\\nObjet: Dernier Test 7\\r\\nDate: oct. 7 2025, at 7:49 pm\\r\\nÀ: Greg Robinson <greg@audelalia.fr>\\r\\n\\r\\nEncore une fois, tout devrais fonctionner !\\r\\n\\r\\nGregory Robinson\\r\\nExpert Certifié Google\\r\\ngreg@meep.fr\\r\\n06 51 30 89 49\\r\\nwww.meep.fr\",\n  \"date\": \"07/10/2025 19:14:34\"\n}\n\n\n**Output :**\njson\n{\n  \"ID\": \"mggxvjgp9o7\",\n  \"mail\": \"Tu peux t'occuper de ça ?\\r\\n\\r\\n---------- Message transféré ---------\\r\\nFrom: Gregory Robinson <g.robinson3108@gmail.com>\\r\\nObjet: Dernier Test 7\\r\\nDate: oct. 7 2025, at 7:49 pm\\r\\nÀ: Greg Robinson <greg@audelalia.fr>\\r\\n\\r\\nEncore une fois, tout devrais fonctionner !\\r\\n\\r\\nGregory Robinson\\r\\nExpert Certifié Google\\r\\ngreg@meep.fr\\r\\n06 51 30 89 49\\r\\nwww.meep.fr\",\n  \"message\": \"Nom : Gregory Robinson\\nTransféré par : Greg Robinson\\nEntreprise : meep.fr\\nDate : 07/10/2025 19:49\\nEmail : g.robinson3108@gmail.com\\nMessage :\\nEncore une fois, tout devrais fonctionner !\\n\\nSignature :\\nGregory Robinson\\nExpert Certifié Google\\ngreg@meep.fr\\n06 51 30 89 49\\nwww.meep.fr\\n\\nPièce Jointe : Aucune\"\n}\n\n\n---\n\n### Exemple 3 : Email Transféré avec Liens Trackés\n\n**Input :**\njson\n{\n  \"id\": \"xyz456\",\n  \"from\": \"Greg Robinson <greg@audelalia.fr>\",\n  \"cleanedFromName\": \"Greg Robinson\",\n  \"cleanedFromEmail\": \"greg@audelalia.fr\",\n  \"subject\": \"Fwd: Contact important\",\n  \"body\": \"Voici un contact intéressant.\\r\\n\\r\\n---------- Message transféré ---------\\r\\nFrom: Jean Martin <jean@startup.fr>\\r\\nDate: oct. 7 2025, at 3:00 pm\\r\\n\\r\\nBonjour,\\r\\nJe cherche un expert n8n.\\r\\n\\r\\nJean Martin\\r\\nCTO StartupIA\\r\\n06 12 34 56 78 (tel:0612345678)\\r\\nwww.startup.fr (https://link.getmailspring.com/link/...)\",\n  \"date\": \"07/10/2025 15:30:00\"\n}\n\n\n**Output :**\njson\n{\n  \"ID\": \"xyz456\",\n  \"mail\": \"Voici un contact intéressant.\\r\\n\\r\\n---------- Message transféré ---------\\r\\nFrom: Jean Martin <jean@startup.fr>\\r\\nDate: oct. 7 2025, at 3:00 pm\\r\\n\\r\\nBonjour,\\r\\nJe cherche un expert n8n.\\r\\n\\r\\nJean Martin\\r\\nCTO StartupIA\\r\\n06 12 34 56 78 (tel:0612345678)\\r\\nwww.startup.fr (https://link.getmailspring.com/link/...)\",\n  \"message\": \"Nom : Jean Martin\\nTransféré par : Greg Robinson\\nEntreprise : startup.fr\\nDate : 07/10/2025 15:00\\nEmail : jean@startup.fr\\nMessage :\\nBonjour,\\nJe cherche un expert n8n.\\n\\nSignature :\\nJean Martin\\nCTO StartupIA\\n06 12 34 56 78\\nwww.startup.fr\\n\\nPièce Jointe : Aucune\"\n}\n\n\n**Note :** Les liens trackés (tel:...) et (https://link.getmailspring.com/...) ont été supprimés dans le champ \"message\".\n\n---\n\n## ALGORITHME DE TRAITEMENT\n\n\n1. Lire les données d'entrée (id, from, cleanedFromName, subject, body, date)\n\n2. Détecter si transféré :\n   SI subject contient \"Fwd:\" OU body contient \"Message transféré\" :\n       type = \"transféré\"\n   SINON :\n       type = \"direct\"\n\n3. SI type = \"transféré\" :\n   a. Extraire nom original depuis \"From:\" ou \"De:\"\n   b. Extraire email original entre < >\n   c. Extraire date depuis \"Date:\" dans headers\n   d. Identifier début du message original (après les headers)\n   e. Séparer message et signature\n   f. Nettoyer les liens trackés\n   g. Formater selon template \"EMAIL TRANSFÉRÉ\"\n\n4. SINON SI type = \"direct\" :\n   a. Utiliser cleanedFromName, cleanedFromEmail, date\n   b. Séparer message et signature dans body\n   c. Extraire entreprise depuis domaine ou signature\n   d. Formater selon template \"EMAIL DIRECT\"\n\n5. Construire JSON final :\n   {\n     \"ID\": id,\n     \"mail\": body (brut, non modifié),\n     \"message\": message formaté selon template\n   }\n\n6. Retourner JSON\n\n\n---\n\n## POINTS D'ATTENTION\n\n### Extraction du nom original (email transféré)\n- Chercher \"From:\" ou \"De:\" dans le body\n- Le nom est entre \"From:\" et \"<\"\n- L'email est entre \"< >\"\n\n**Exemple :**\n\nFrom: Gregory Robinson <g.robinson3108@gmail.com>\n\n→ Nom : \"Gregory Robinson\"\n→ Email : \"g.robinson3108@gmail.com\"\n\n### Extraction de la date (email transféré)\n- Chercher \"Date:\" dans les headers\n- Convertir si nécessaire au format DD/MM/YYYY HH:MM\n\n**Exemple :**\n\nDate: oct. 7 2025, at 7:49 pm\n\n→ Date : \"07/10/2025 19:49\"\n\n### Nettoyage des liens\n- Supprimer tout ce qui est entre () après un lien\n- Garder juste le contenu avant les ()\n\n**Avant :**\n\ngreg@meep.fr (https://link.getmailspring.com/link/...)\n\n\n**Après :**\n\ngreg@meep.fr\n\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        -1168,
+        -624
+      ],
+      "id": "2a802e6f-cba5-480d-b891-afdad62d8ba4",
+      "name": "Envoyer Mails",
+      "executeOnce": true
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        -1296,
+        -352
+      ],
+      "id": "78e5265f-0f9e-4de5-a284-39d2032d547c",
+      "name": "GPT 4.1-Mini - 1",
+      "credentials": {
+        "openAiApi": {
+          "id": "LWtfdhqHnWIJ5VF5",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.Email }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "exists",
+                      "singleValue": true
+                    },
+                    "id": "a01d016a-80e5-475a-aad6-d91d6e363b61"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Spam"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "e76909b4-dcfb-4182-9a15-eeda0fd5f3ca",
+                    "leftValue": "newmail",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Déjà Traité"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "537f2f7c-5c9f-4ca4-a00e-3d5df953c6f4",
+                    "leftValue": "={{ $json.Email }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "notExists",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "Email"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        -1536,
+        -640
+      ],
+      "id": "4529fd73-4e8c-4107-b7d0-0d462183e520",
+      "name": "Vérif Spam"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1cyjFdv3hB7fWBIYk83jzjAAnlnC-ycVjLO1mEHQixYw",
+          "mode": "list",
+          "cachedResultName": "AG Steel Spams",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cyjFdv3hB7fWBIYk83jzjAAnlnC-ycVjLO1mEHQixYw/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1cyjFdv3hB7fWBIYk83jzjAAnlnC-ycVjLO1mEHQixYw/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Email",
+              "lookupValue": "={{ $json.cleanedFromEmail }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1760,
+        -624
+      ],
+      "id": "4237f284-1989-4e9e-ac2a-e5fad84803a2",
+      "name": "Sheet Spam",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "DgQb0QDm9LG8bmm5",
+          "name": "GSheets - AutomateHub"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "format": "resolved",
+        "options": {
+          "trackLastMessageId": true
+        }
+      },
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 2.1,
+      "position": [
+        -3232,
+        -608
+      ],
+      "id": "b18e30c0-bfe2-4e75-b9f6-f537c772de0e",
+      "name": "Email Trigger (IMAP)",
+      "credentials": {
+        "imap": {
+          "id": "vissi8hgrCctX8Dh",
+          "name": "IMAP account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "11Q1iV4ksrRNOR9_Ag6YXprsM9ZAmQT0CfTpFMNS2dp0",
+          "mode": "list",
+          "cachedResultName": "AGSteel New Mail",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Q1iV4ksrRNOR9_Ag6YXprsM9ZAmQT0CfTpFMNS2dp0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Q1iV4ksrRNOR9_Ag6YXprsM9ZAmQT0CfTpFMNS2dp0/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "email"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2656,
+        -608
+      ],
+      "id": "c6917d8c-6285-49cd-8484-6f90d8b85e70",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "DgQb0QDm9LG8bmm5",
+          "name": "GSheets - AutomateHub"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "has-items-condition",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -2176,
+        -608
+      ],
+      "id": "7014f8ec-c322-40c4-867b-68f2e65851dd",
+      "name": "IF: Has New Emails?"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 🔄 Filter New Emails - Déduplication\n// Objectif : Comparer les emails reçus avec ceux déjà traités dans le Sheet\n// et ne garder que les nouveaux\n\n// 1. Récupérer les emails formatés\nconst emails = $('Format Email1').all().map(item => item.json);\n\n// 2. Récupérer les IDs déjà traités depuis le Sheet\nconst processedSheet = $('Get row(s) in sheet').all();\nconst processedIds = processedSheet.map(item => {\n  // Le sheet contient le messageId dans la colonne \"email\"\n  return item.json.email;\n}).filter(id => id); // Enlever les valeurs vides\n\nconsole.log('📊 Emails reçus:', emails.length);\nconsole.log('📋 Emails déjà traités:', processedIds.length);\n\n// 3. Filtrer les emails : garder seulement ceux qui ne sont PAS dans le Sheet\nconst newEmails = emails.filter(email => {\n  const emailId = email.messageId; // Utiliser messageId comme clé unique\n  const isProcessed = processedIds.includes(emailId);\n  \n  if (isProcessed) {\n    console.log('⏭️  Email déjà traité:', emailId, '- Sujet:', email.subject);\n  } else {\n    console.log('✨ Nouvel email:', emailId, '- Sujet:', email.subject);\n  }\n  \n  return !isProcessed; // Garder seulement les NON traités\n});\n\nconsole.log('🆕 Nouveaux emails à traiter:', newEmails.length);\n\n// 4. Retourner les nouveaux emails au format n8n\nif (newEmails.length === 0) {\n  console.log('✅ Aucun nouvel email à traiter');\n  return [];\n}\n\nreturn newEmails.map(email => ({ json: email }));"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -2416,
+        -608
+      ],
+      "id": "f167d00c-e2e7-44df-bf04-d3b6bc52e80e",
+      "name": "Filter New Emails1"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "11Q1iV4ksrRNOR9_Ag6YXprsM9ZAmQT0CfTpFMNS2dp0",
+          "mode": "list",
+          "cachedResultName": "AGSteel New Mail",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Q1iV4ksrRNOR9_Ag6YXprsM9ZAmQT0CfTpFMNS2dp0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Feuille 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/11Q1iV4ksrRNOR9_Ag6YXprsM9ZAmQT0CfTpFMNS2dp0/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "email": "={{ $('Loop Over Items').item.json.messageId }}",
+            "Date": "={{ $now.format('dd/MM/yyyy') }}",
+            "Heure": "={{ $now.format('HH:mm:ss') }}",
+            "Envoyée": "OUI"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Date",
+              "displayName": "Date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Heure",
+              "displayName": "Heure",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Envoyée",
+              "displayName": "Envoyée",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -688,
+        -624
+      ],
+      "id": "fd1de86f-7e35-4f2f-aacd-e0f9f3160d5d",
+      "name": "Append row in sheet4",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "DgQb0QDm9LG8bmm5",
+          "name": "GSheets - AutomateHub"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -1952,
+        -672
+      ],
+      "id": "2593b0aa-aa6f-46dc-9b05-a442f4d0bd86",
+      "name": "Loop Over Items"
+    }
+  ],
+  "connections": {
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Envoyer Mails",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Email1": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet": {
+      "main": [
+        [
+          {
+            "node": "Send to Telegram2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Envoyer Mails": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GPT 4.1-Mini - 1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Envoyer Mails",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vérif Spam": {
+      "main": [
+        [],
+        [],
+        [
+          {
+            "node": "Envoyer Mails",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sheet Spam": {
+      "main": [
+        [
+          {
+            "node": "Vérif Spam",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Trigger (IMAP)": {
+      "main": [
+        [
+          {
+            "node": "Format Email1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Filter New Emails1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF: Has New Emails?": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter New Emails1": {
+      "main": [
+        [
+          {
+            "node": "IF: Has New Emails?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet4": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Sheet Spam",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "abc07a0c2aaf393f50fa1c5ab30514fad5265ae13e3cb8eed24bafb0f2503c35"
+  }
+}
