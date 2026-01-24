@@ -127,14 +127,6 @@ class User extends Authenticatable
     }
     
     /**
-     * Get the purchases made by this user.
-     */
-    public function purchases(): HasMany
-    {
-        return $this->hasMany(Purchase::class);
-    }
-
-    /**
      * Get the blog posts created by this user.
      */
     public function blogPosts(): HasMany
@@ -165,54 +157,110 @@ class User extends Authenticatable
     {
         return $this->is_professional;
     }
-    
+
+    // ========== V2 APP SUBSCRIPTIONS ==========
+
     /**
-     * Get the API subscriptions for this user.
+     * Get the app subscriptions for this user (V2)
      */
-    public function apiSubscriptions(): HasMany
+    public function appSubscriptions(): HasMany
     {
-        return $this->hasMany(UserApiSubscription::class);
+        return $this->hasMany(UserAppSubscription::class);
     }
-    
+
     /**
-     * Get the credit purchases made by this user.
+     * Get the app credentials for this user (V2)
      */
-    public function creditPurchases(): HasMany
+    public function appCredentials(): HasMany
     {
-        return $this->hasMany(CreditPurchase::class);
+        return $this->hasMany(UserAppCredential::class);
     }
-    
+
     /**
-     * Get the external memberships for this user.
+     * Get the app usage logs for this user (V2)
      */
-    public function externalMemberships(): HasMany
+    public function appUsageLogs(): HasMany
     {
-        return $this->hasMany(ExternalMembership::class);
+        return $this->hasMany(AppUsageLog::class);
     }
-    
+
     /**
-     * Check if user has an active subscription for an API.
+     * Get the app reviews by this user (V2)
      */
-    public function hasApiAccess(string $apiSlug): bool
+    public function appReviews(): HasMany
     {
-        return $this->apiSubscriptions()
-            ->whereHas('apiService', function ($query) use ($apiSlug) {
-                $query->where('slug', $apiSlug);
+        return $this->hasMany(AppReview::class);
+    }
+
+    /**
+     * Check if user has an active subscription for an app (V2)
+     */
+    public function hasAppAccess(string $appSlug): bool
+    {
+        return $this->appSubscriptions()
+            ->whereHas('app', function ($query) use ($appSlug) {
+                $query->where('slug', $appSlug);
             })
-            ->where('status', 'active')
+            ->where(function ($query) {
+                $query->where('status', 'active')
+                      ->orWhere(function ($q) {
+                          $q->where('status', 'trial')
+                            ->where('trial_ends_at', '>', now());
+                      });
+            })
             ->exists();
     }
-    
+
     /**
-     * Get user's subscription for a specific API.
+     * Get user's subscription for a specific app (V2)
      */
-    public function getApiSubscription(string $apiSlug)
+    public function getAppSubscription(string $appSlug): ?UserAppSubscription
     {
-        return $this->apiSubscriptions()
-            ->whereHas('apiService', function ($query) use ($apiSlug) {
-                $query->where('slug', $apiSlug);
+        return $this->appSubscriptions()
+            ->whereHas('app', function ($query) use ($appSlug) {
+                $query->where('slug', $appSlug);
             })
-            ->where('status', 'active')
+            ->where(function ($query) {
+                $query->where('status', 'active')
+                      ->orWhere(function ($q) {
+                          $q->where('status', 'trial')
+                            ->where('trial_ends_at', '>', now());
+                      });
+            })
             ->first();
+    }
+
+    /**
+     * Get credentials for a specific app and service (V2)
+     */
+    public function getAppCredential(string $appSlug, string $service): ?UserAppCredential
+    {
+        return $this->appCredentials()
+            ->where('app_slug', $appSlug)
+            ->where('service', $service)
+            ->where('is_active', true)
+            ->first();
+    }
+
+    /**
+     * Check if user has configured credentials for an app (V2)
+     */
+    public function hasAppCredentials(string $appSlug): bool
+    {
+        // Récupérer l'app pour voir ses required_integrations
+        $app = \App\Models\App::where('slug', $appSlug)->first();
+
+        if (!$app || empty($app->required_integrations)) {
+            return true; // No credentials required
+        }
+
+        // Vérifier que tous les credentials requis sont présents
+        foreach ($app->required_integrations as $service) {
+            if (!$this->getAppCredential($appSlug, $service)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
