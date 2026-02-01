@@ -37,7 +37,13 @@
                     
                     <form action="{{ route('contact.submit') }}" method="POST" class="needs-validation" novalidate>
                         @csrf
-                        
+
+                        <!-- Anti-spam honeypot (invisible) -->
+                        <div style="position: absolute; left: -9999px;" aria-hidden="true">
+                            <input type="text" name="website" tabindex="-1" autocomplete="off">
+                        </div>
+                        <input type="hidden" name="_timestamp" value="{{ time() }}">
+
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="name" class="form-label">Nom complet <span class="text-danger">*</span></label>

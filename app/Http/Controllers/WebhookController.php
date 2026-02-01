@@ -13,8 +13,25 @@ class WebhookController extends Controller
 {
     public function handleStripe(Request $request)
     {
+        // Vérifier la signature Stripe AVANT tout traitement
+        $signature = $request->header('Stripe-Signature');
+        $webhookSecret = config('services.stripe.webhook_secret');
+
+        if ($webhookSecret && $signature) {
+            try {
+                $payload = $request->getContent();
+                \Stripe\Webhook::constructEvent($payload, $signature, $webhookSecret);
+            } catch (\Stripe\Exception\SignatureVerificationException $e) {
+                Log::warning('Stripe webhook signature verification failed', [
+                    'ip' => $request->ip(),
+                    'error' => $e->getMessage()
+                ]);
+                return response()->json(['error' => 'Invalid signature'], 401);
+            }
+        }
+
         $payload = $request->all();
-        
+
         // Logger le webhook
         $webhookLog = ApiWebhookLog::create([
             'source' => 'stripe',
@@ -22,10 +39,8 @@ class WebhookController extends Controller
             'payload' => $payload,
             'status' => 'pending'
         ]);
-        
+
         try {
-            // Vérifier la signature Stripe (TODO: implémenter)
-            // $this->verifyStripeSignature($request);
             
             switch ($payload['type']) {
                 case 'checkout.session.completed':
@@ -76,8 +91,22 @@ class WebhookController extends Controller
     
     public function handleSkool(Request $request)
     {
+        // Vérifier la signature Skool AVANT tout traitement
+        $signature = $request->header('X-Skool-Signature');
+        $webhookSecret = config('services.skool.webhook_secret');
+
+        if ($webhookSecret) {
+            $expectedSignature = hash_hmac('sha256', $request->getContent(), $webhookSecret);
+            if (!$signature || !hash_equals($expectedSignature, $signature)) {
+                Log::warning('Skool webhook signature verification failed', [
+                    'ip' => $request->ip()
+                ]);
+                return response()->json(['error' => 'Invalid signature'], 401);
+            }
+        }
+
         $payload = $request->all();
-        
+
         // Logger le webhook
         $webhookLog = ApiWebhookLog::create([
             'source' => 'skool',
@@ -85,7 +114,7 @@ class WebhookController extends Controller
             'payload' => $payload,
             'status' => 'pending'
         ]);
-        
+
         try {
             $email = $payload['email'] ?? null;
             $event = $payload['event'] ?? null;
