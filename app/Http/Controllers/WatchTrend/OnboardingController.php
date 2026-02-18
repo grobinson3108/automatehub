@@ -23,7 +23,7 @@ class OnboardingController extends Controller
     {
         // hn = h-news aggregator (built dynamically to avoid hook false-positives)
         $hn = implode('', ['h', 'a', 'c', 'k', 'e', 'r', 'n', 'e', 'w', 's']);
-        return ['youtube', 'reddit', 'rss', $hn, 'github', 'twitter'];
+        return ['youtube', 'reddit', 'rss', $hn, 'github', 'twitter', 'linkedin', 'producthunt', 'stackoverflow'];
     }
 
     public function __construct(private CalibrationService $calibrationService) {}

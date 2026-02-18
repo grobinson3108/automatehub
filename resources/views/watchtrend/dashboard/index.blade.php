@@ -92,6 +92,10 @@
     <div class="block block-rounded mb-4">
         <div class="block-content py-3">
             <form method="GET" action="{{ route('watchtrend.dashboard') }}" id="filters-form">
+                {{-- Hidden input to preserve favorites_only when other filters change --}}
+                @if(request()->boolean('favorites_only'))
+                    <input type="hidden" name="favorites_only" value="1">
+                @endif
 
                 <div class="row g-2 align-items-end">
 
@@ -143,14 +147,33 @@
                         </div>
                     </div>
 
-                    {{-- Reset --}}
-                    <div class="col-12 col-md-2 d-flex align-items-end">
-                        @if(request()->hasAny(['watch_id', 'period', 'sort', 'search', 'category', 'source_type']))
+                    {{-- Favorites + Reset + Export --}}
+                    <div class="col-12 col-md-2 d-flex align-items-end gap-1 flex-wrap">
+
+                        {{-- Favorites toggle --}}
+                        @php $favOnly = request()->boolean('favorites_only'); @endphp
+                        <a href="{{ request()->fullUrlWithQuery(['favorites_only' => $favOnly ? null : '1', 'page' => null]) }}"
+                            class="btn btn-sm {{ $favOnly ? 'btn-warning' : 'btn-alt-secondary' }}"
+                            title="{{ $favOnly ? 'Voir tout' : 'Favoris uniquement' }}">
+                            <i class="{{ $favOnly ? 'fas' : 'far' }} fa-heart me-1"></i>
+                            {{ $favOnly ? 'Favoris' : 'Favoris' }}
+                        </a>
+
+                        {{-- Export CSV --}}
+                        <a href="{{ route('watchtrend.export', array_filter(request()->only(['watch_id','source_type','category','period','search','sort','show_low_relevance','favorites_only']))) }}"
+                            class="btn btn-sm btn-alt-success"
+                            title="Exporter CSV (max 1000 lignes)">
+                            <i class="fa fa-download me-1"></i>CSV
+                        </a>
+
+                        {{-- Reset --}}
+                        @if(request()->hasAny(['watch_id', 'period', 'sort', 'search', 'category', 'source_type', 'favorites_only']))
                             <a href="{{ route('watchtrend.dashboard') }}"
-                                class="btn btn-sm btn-alt-secondary w-100">
-                                <i class="fa fa-times me-1"></i>Réinitialiser
+                                class="btn btn-sm btn-alt-secondary">
+                                <i class="fa fa-times me-1"></i>Reset
                             </a>
                         @endif
+
                     </div>
 
                 </div>
@@ -189,7 +212,10 @@
                             ['type' => 'rss',     'label' => 'RSS',     'icon' => 'fa fa-rss'],
                             ['type' => $hn,       'label' => 'YC / HN', 'icon' => 'fab fa-y-combinator'],
                             ['type' => 'github',  'label' => 'GitHub',  'icon' => 'fab fa-github'],
-                            ['type' => 'twitter', 'label' => 'Twitter', 'icon' => 'fab fa-twitter'],
+                            ['type' => 'twitter',       'label' => 'Twitter',       'icon' => 'fab fa-twitter'],
+                            ['type' => 'linkedin',      'label' => 'LinkedIn',      'icon' => 'fab fa-linkedin'],
+                            ['type' => 'producthunt',   'label' => 'Product Hunt',  'icon' => 'fab fa-product-hunt'],
+                            ['type' => 'stackoverflow', 'label' => 'Stack Overflow','icon' => 'fab fa-stack-overflow'],
                         ];
                     @endphp
                     @foreach($sourceFilters as $srcFilter)
@@ -234,12 +260,15 @@
 
                 $hnKey = implode('', ['h','a','c','k','e','r','n','e','w','s']);
                 $sourceIconMap = [
-                    'youtube' => 'fab fa-youtube text-danger',
-                    'reddit'  => 'fab fa-reddit text-warning',
-                    'rss'     => 'fa fa-rss text-warning',
-                    $hnKey    => 'fab fa-y-combinator text-warning',
-                    'github'  => 'fab fa-github text-dark',
-                    'twitter' => 'fab fa-twitter text-info',
+                    'youtube'       => 'fab fa-youtube text-danger',
+                    'reddit'        => 'fab fa-reddit text-warning',
+                    'rss'           => 'fa fa-rss text-warning',
+                    $hnKey          => 'fab fa-y-combinator text-warning',
+                    'github'        => 'fab fa-github text-dark',
+                    'twitter'       => 'fab fa-twitter text-info',
+                    'linkedin'      => 'fab fa-linkedin text-primary',
+                    'producthunt'   => 'fab fa-product-hunt text-warning',
+                    'stackoverflow' => 'fab fa-stack-overflow text-warning',
                 ];
                 $sourceIcon = $sourceIconMap[$source->type ?? ''] ?? 'fa fa-globe text-muted';
 
@@ -259,7 +288,7 @@
 
             <div class="block block-rounded mb-0 border-start border-3 {{ $catCfg['border'] }}"
                 id="analysis-{{ $analysis->id }}"
-                x-data="analysisCard({{ $analysis->id }}, {{ $rating }}, {{ $item->is_read ? 'true' : 'false' }})">
+                x-data="analysisCard({{ $analysis->id }}, {{ $rating }}, {{ $item->is_read ? 'true' : 'false' }}, {{ $analysis->is_favorite ? 'true' : 'false' }}, {{ $item->id }})">
 
                 <div class="block-content pt-3 pb-2">
 
@@ -356,7 +385,7 @@
                             </span>
                         </div>
 
-                        {{-- Right: mark-read + stars --}}
+                        {{-- Right: mark-read + favorite + stars --}}
                         <div class="d-flex align-items-center gap-3">
 
                             {{-- Mark as read --}}
@@ -365,6 +394,15 @@
                                 x-cloak
                                 @click="markAsRead({{ $item->id }})">
                                 <i class="fa fa-check me-1"></i>Marquer lu
+                            </button>
+
+                            {{-- Favorite toggle --}}
+                            <button class="btn btn-sm"
+                                :class="isFavorite ? 'btn-warning' : 'btn-alt-secondary'"
+                                @click="toggleFavorite()"
+                                :disabled="savingFavorite"
+                                :title="isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris'">
+                                <i class="fa fa-heart" :class="isFavorite ? 'text-white' : 'text-muted'"></i>
                             </button>
 
                             {{-- Star rating --}}
@@ -443,13 +481,16 @@ function dashboardManager() {
     };
 }
 
-function analysisCard(analysisId, initialRating, initialIsRead) {
+function analysisCard(analysisId, initialRating, initialIsRead, initialIsFavorite, itemId) {
     return {
         analysisId:    analysisId,
+        itemId:        itemId,
         currentRating: initialRating,
         hoverRating:   0,
         savingFeedback: false,
         isRead:        initialIsRead,
+        isFavorite:    initialIsFavorite,
+        savingFavorite: false,
 
         async submitFeedback(id, rating) {
             if (this.savingFeedback) return;
@@ -492,6 +533,31 @@ function analysisCard(analysisId, initialRating, initialIsRead) {
                 }
             } catch (e) {
                 // Silently fail — non-critical
+            }
+        },
+
+        async toggleFavorite() {
+            if (this.savingFavorite) return;
+            this.savingFavorite = true;
+            try {
+                const res = await fetch(`/watchtrend/suggestions/${this.itemId}/favorite`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    this.isFavorite = data.is_favorite;
+                    WTModal.toast('success', data.is_favorite ? 'Ajouté aux favoris' : 'Retiré des favoris');
+                } else {
+                    WTModal.toast('error', 'Erreur lors de la mise à jour');
+                }
+            } catch (e) {
+                WTModal.toast('error', 'Erreur de connexion');
+            } finally {
+                this.savingFavorite = false;
             }
         }
     };

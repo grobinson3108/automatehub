@@ -4,10 +4,15 @@ namespace App\Http\Controllers\WatchTrend;
 
 use App\Http\Controllers\Controller;
 use App\Models\WatchtrendAnalysis;
+use App\Models\WatchtrendFeedback;
+use App\Models\WatchtrendSource;
 use App\Models\WatchtrendUserSetting;
 use App\Models\WatchtrendWatch;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class DashboardController extends Controller
 {
@@ -29,13 +34,14 @@ class DashboardController extends Controller
 
         // Read filter query params
         $filters = [
-            'watch_id'          => $request->query('watch_id'),
-            'source_type'       => $request->query('source_type'),
-            'category'          => $request->query('category'),
-            'period'            => $request->query('period', 'week'),
-            'search'            => $request->query('search'),
-            'sort'              => $request->query('sort', 'relevance'),
+            'watch_id'           => $request->query('watch_id'),
+            'source_type'        => $request->query('source_type'),
+            'category'           => $request->query('category'),
+            'period'             => $request->query('period', 'week'),
+            'search'             => $request->query('search'),
+            'sort'               => $request->query('sort', 'relevance'),
             'show_low_relevance' => $request->boolean('show_low_relevance', false),
+            'favorites_only'     => $request->boolean('favorites_only', false),
         ];
 
         // Build analyses query scoped to user's watches
@@ -92,6 +98,11 @@ class DashboardController extends Controller
         // Hide low relevance by default (score < 20)
         if (!$filters['show_low_relevance']) {
             $query->where('relevance_score', '>=', 20);
+        }
+
+        // Filter: favorites only
+        if ($filters['favorites_only']) {
+            $query->where('is_favorite', true);
         }
 
         // Sorting
@@ -249,5 +260,238 @@ class DashboardController extends Controller
             'filters',
             'unreadCount'
         ));
+    }
+
+    public function analytics(Request $request)
+    {
+        $userId = Auth::id();
+
+        $watches = WatchtrendWatch::where('user_id', $userId)
+            ->orderBy('sort_order')
+            ->get();
+
+        $watchIds = $watches->pluck('id');
+
+        // Optional filters
+        $selectedWatchId = $request->query('watch_id');
+        $period          = $request->query('period', '30');
+
+        // Scope watch IDs to the selected watch if provided
+        if ($selectedWatchId && $watchIds->contains((int) $selectedWatchId)) {
+            $scopedWatchIds = collect([(int) $selectedWatchId]);
+        } else {
+            $scopedWatchIds = $watchIds;
+        }
+
+        // Period start date
+        $since = match ($period) {
+            '90'  => now()->subDays(90)->startOfDay(),
+            'all' => null,
+            default => now()->subDays(30)->startOfDay(),
+        };
+
+        // Base query builder helper
+        $baseAnalyses = fn () => WatchtrendAnalysis::whereIn('watch_id', $scopedWatchIds)
+            ->when($since, fn ($q) => $q->where('created_at', '>=', $since));
+
+        // --- Analyses over time (line chart) ---
+        $analysesOverTime = ($baseAnalyses)()
+            ->select(DB::raw('DATE(created_at) as date'), DB::raw('COUNT(*) as count'))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get()
+            ->map(fn ($row) => ['date' => $row->date, 'count' => (int) $row->count]);
+
+        // --- Category distribution (pie chart) ---
+        $categoryDistribution = ($baseAnalyses)()
+            ->select('category', DB::raw('COUNT(*) as count'))
+            ->whereNotNull('category')
+            ->groupBy('category')
+            ->get()
+            ->map(fn ($row) => ['category' => $row->category, 'count' => (int) $row->count]);
+
+        // --- Source distribution (doughnut chart) ---
+        $sourceDistribution = WatchtrendSource::whereIn('watch_id', $scopedWatchIds)
+            ->select('type', DB::raw('COUNT(*) as count'))
+            ->groupBy('type')
+            ->get()
+            ->map(fn ($row) => ['type' => $row->type, 'count' => (int) $row->count]);
+
+        // --- Score distribution (bar chart) ---
+        $scoreDistribution = collect([
+            ['range' => '0-20',   'count' => 0],
+            ['range' => '20-40',  'count' => 0],
+            ['range' => '40-60',  'count' => 0],
+            ['range' => '60-80',  'count' => 0],
+            ['range' => '80-100', 'count' => 0],
+        ]);
+        $scoreCounts = ($baseAnalyses)()
+            ->select(
+                DB::raw('FLOOR(relevance_score / 20) as bucket'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->groupBy('bucket')
+            ->get();
+        foreach ($scoreCounts as $row) {
+            $idx = min((int) $row->bucket, 4);
+            $scoreDistribution[$idx] = [
+                'range' => $scoreDistribution[$idx]['range'],
+                'count' => (int) $row->count,
+            ];
+        }
+
+        // --- Feedback stats (bar chart) ---
+        $feedbackStats = WatchtrendFeedback::whereIn('watch_id', $scopedWatchIds)
+            ->select('rating', DB::raw('COUNT(*) as count'))
+            ->groupBy('rating')
+            ->orderBy('rating')
+            ->get()
+            ->map(fn ($row) => ['rating' => (int) $row->rating, 'count' => (int) $row->count]);
+
+        // Fill missing ratings 1-5
+        $feedbackByRating = [];
+        foreach (range(1, 5) as $r) {
+            $feedbackByRating[] = [
+                'rating' => $r,
+                'count'  => $feedbackStats->firstWhere('rating', $r)['count'] ?? 0,
+            ];
+        }
+
+        // --- Top 5 sources ---
+        $topSources = WatchtrendSource::whereIn('watch_id', $scopedWatchIds)
+            ->orderBy('items_collected_total', 'desc')
+            ->limit(5)
+            ->get(['name', 'type', 'items_collected_total', 'last_collected_at']);
+
+        // --- Global stats ---
+        $globalStats = [
+            'total_analyses'  => ($baseAnalyses)()->count(),
+            'avg_score'       => round((float) ($baseAnalyses)()->avg('relevance_score') ?? 0, 1),
+            'total_sources'   => WatchtrendSource::whereIn('watch_id', $scopedWatchIds)->count(),
+            'total_items'     => WatchtrendSource::whereIn('watch_id', $scopedWatchIds)->sum('items_collected_total'),
+            'total_feedbacks' => WatchtrendFeedback::whereIn('watch_id', $scopedWatchIds)->count(),
+        ];
+
+        return view('watchtrend.analytics.index', compact(
+            'watches',
+            'selectedWatchId',
+            'period',
+            'analysesOverTime',
+            'categoryDistribution',
+            'sourceDistribution',
+            'scoreDistribution',
+            'feedbackByRating',
+            'topSources',
+            'globalStats'
+        ));
+    }
+
+    public function export(Request $request): StreamedResponse
+    {
+        $userId = Auth::id();
+
+        $watches = WatchtrendWatch::where('user_id', $userId)
+            ->where('status', 'active')
+            ->pluck('id');
+
+        $filters = [
+            'watch_id'           => $request->query('watch_id'),
+            'source_type'        => $request->query('source_type'),
+            'category'           => $request->query('category'),
+            'period'             => $request->query('period', 'week'),
+            'search'             => $request->query('search'),
+            'sort'               => $request->query('sort', 'relevance'),
+            'show_low_relevance' => $request->boolean('show_low_relevance', false),
+            'favorites_only'     => $request->boolean('favorites_only', false),
+        ];
+
+        $query = WatchtrendAnalysis::with(['collectedItem.source'])
+            ->whereIn('watch_id', $watches);
+
+        if ($filters['watch_id']) {
+            $query->where('watch_id', (int) $filters['watch_id']);
+        }
+
+        if ($filters['source_type']) {
+            $query->whereHas('collectedItem.source', function ($q) use ($filters) {
+                $q->where('type', $filters['source_type']);
+            });
+        }
+
+        if ($filters['category']) {
+            $query->where('category', $filters['category']);
+        }
+
+        if ($filters['period'] && $filters['period'] !== 'all') {
+            $since = match ($filters['period']) {
+                'today' => now()->startOfDay(),
+                'week'  => now()->subWeek()->startOfDay(),
+                'month' => now()->subMonth()->startOfDay(),
+                default => null,
+            };
+
+            if ($since) {
+                $query->whereHas('collectedItem', function ($q) use ($since) {
+                    $q->where('published_at', '>=', $since);
+                });
+            }
+        }
+
+        if ($filters['search']) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                $q->where('summary_fr', 'like', "%{$search}%")
+                  ->orWhereHas('collectedItem', function ($q2) use ($search) {
+                      $q2->where('title', 'like', "%{$search}%");
+                  });
+            });
+        }
+
+        if (!$filters['show_low_relevance']) {
+            $query->where('relevance_score', '>=', 20);
+        }
+
+        if ($filters['favorites_only']) {
+            $query->where('is_favorite', true);
+        }
+
+        $query = match ($filters['sort']) {
+            'date'  => $query->latest('created_at'),
+            default => $query->orderBy('relevance_score', 'desc'),
+        };
+
+        $analyses = $query->limit(1000)->get();
+
+        $filename = 'watchtrend-export-' . now()->format('Y-m-d') . '.csv';
+
+        return response()->stream(function () use ($analyses) {
+            $handle = fopen('php://output', 'w');
+
+            // UTF-8 BOM for Excel compatibility
+            fwrite($handle, "\xEF\xBB\xBF");
+
+            fputcsv($handle, ['Titre', 'URL', 'Catégorie', 'Score', 'Résumé', 'Insight', 'Source', 'Date', 'Favori'], ';');
+
+            foreach ($analyses as $analysis) {
+                $item = $analysis->collectedItem;
+                fputcsv($handle, [
+                    $item->title ?? '',
+                    $item->url ?? '',
+                    $analysis->category ?? '',
+                    (int) $analysis->relevance_score,
+                    $analysis->summary_fr ?? '',
+                    $analysis->actionable_insight ?? '',
+                    $item->source->name ?? '',
+                    $item->published_at ? $item->published_at->format('d/m/Y') : '',
+                    $analysis->is_favorite ? 'Oui' : 'Non',
+                ], ';');
+            }
+
+            fclose($handle);
+        }, 200, [
+            'Content-Type'        => 'text/csv; charset=UTF-8',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+            'Cache-Control'       => 'no-store, no-cache',
+        ]);
     }
 }

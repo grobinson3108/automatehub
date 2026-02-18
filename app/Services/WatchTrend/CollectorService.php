@@ -76,13 +76,16 @@ class CollectorService
     public static function getCollector(string $type): Collectors\BaseCollector
     {
         return match ($type) {
-            'youtube'    => new Collectors\YouTubeCollector(),
-            'reddit'     => new Collectors\RedditCollector(),
-            'rss'        => new Collectors\RssCollector(),
-            'hackernews' => new Collectors\HackerNewsCollector(),
-            'github'     => new Collectors\GitHubCollector(),
-            'twitter'    => new Collectors\TwitterCollector(),
-            default      => throw new \InvalidArgumentException("Unknown collector type: {$type}"),
+            'youtube'       => new Collectors\YouTubeCollector(),
+            'reddit'        => new Collectors\RedditCollector(),
+            'rss'           => new Collectors\RssCollector(),
+            'hackernews'    => new Collectors\HackerNewsCollector(),
+            'github'        => new Collectors\GitHubCollector(),
+            'twitter'       => new Collectors\TwitterCollector(),
+            'linkedin'      => new Collectors\LinkedInCollector(),
+            'producthunt'   => new Collectors\ProductHuntCollector(),
+            'stackoverflow' => new Collectors\StackOverflowCollector(),
+            default         => throw new \InvalidArgumentException("Unknown collector type: {$type}"),
         };
     }
 }

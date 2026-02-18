@@ -23,6 +23,10 @@ Route::middleware(['auth'])->prefix('watchtrend')->name('watchtrend.')->group(fu
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/suggestions', [DashboardController::class, 'suggestions'])->name('suggestions');
+    Route::get('/export', [DashboardController::class, 'export'])->name('export');
+
+    // Analytics
+    Route::get('/analytics', [DashboardController::class, 'analytics'])->name('analytics');
 
     // Watches CRUD
     Route::prefix('watches')->name('watches.')->group(function () {

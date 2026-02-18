@@ -35,6 +35,9 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 
+  <!-- Alpine.js x-cloak: hide elements before Alpine initializes -->
+  <style>[x-cloak] { display: none !important; }</style>
+
   <!-- Load and set dark mode preference -->
   <script src="{{ asset('js/setTheme.js') }}"></script>
   <script src="{{ asset('js/force-light-theme.js') }}"></script>
@@ -110,6 +113,13 @@
             </li>
 
             <li class="nav-main-heading text-uppercase text-muted fs-xs mt-3">Analyse</li>
+
+            <li class="nav-main-item">
+              <a class="nav-main-link{{ request()->routeIs('watchtrend.analytics') ? ' active' : '' }}" href="{{ route('watchtrend.analytics') }}">
+                <i class="nav-main-link-icon fa fa-chart-bar"></i>
+                <span class="nav-main-link-name">Analytics</span>
+              </a>
+            </li>
 
             <li class="nav-main-item">
               <a class="nav-main-link{{ request()->routeIs('watchtrend.pain-points.*') ? ' active' : '' }}" href="{{ route('watchtrend.pain-points.index') }}">

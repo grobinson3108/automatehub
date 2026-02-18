@@ -51,9 +51,17 @@ class SuggestionController extends Controller
 
     public function toggleFavorite($item)
     {
+        $collectedItem = WatchtrendCollectedItem::with('watch')->findOrFail((int) $item);
+
+        abort_if($collectedItem->watch->user_id !== Auth::id(), 403);
+
+        $analysis = WatchtrendAnalysis::where('collected_item_id', $collectedItem->id)->firstOrFail();
+
+        $analysis->update(['is_favorite' => !$analysis->is_favorite]);
+
         return response()->json([
-            'success' => true,
-            'message' => 'Favoris disponible prochainement.',
+            'success'     => true,
+            'is_favorite' => $analysis->is_favorite,
         ]);
     }
 }

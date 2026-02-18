@@ -23,26 +23,32 @@ class SourceController extends Controller
     private function configRules(string $type): array
     {
         return match ($type) {
-            'youtube'    => ['config.channel_id' => 'required|string'],
-            'reddit'     => ['config.subreddit'  => 'required|string'],
-            'rss'        => ['config.feed_url'   => 'required|url'],
-            'hackernews' => ['config.query'      => 'required|string'],
-            'github'     => ['config.repo'       => 'required|string'],
-            'twitter'    => ['config.username'   => 'required|string'],
-            default      => [],
+            'youtube'       => ['config.channel_id'  => 'required|string'],
+            'reddit'        => ['config.subreddit'   => 'required|string'],
+            'rss'           => ['config.feed_url'    => 'required|url'],
+            'hackernews'    => ['config.query'       => 'required|string'],
+            'github'        => ['config.repo'        => 'required|string'],
+            'twitter'       => ['config.username'    => 'required|string'],
+            'linkedin'      => ['config.profile_url' => 'required|url'],
+            'producthunt'   => ['config.topic'       => 'nullable|string'],
+            'stackoverflow' => ['config.tag'         => 'required|string'],
+            default         => [],
         };
     }
 
     private function generateName(string $type, array $config): string
     {
         return match ($type) {
-            'youtube'    => 'YouTube - ' . ($config['channel_id'] ?? ''),
-            'reddit'     => 'Reddit - r/' . ($config['subreddit'] ?? ''),
-            'rss'        => 'RSS - ' . ($config['feed_url'] ?? ''),
-            'hackernews' => 'HackerNews - ' . ($config['query'] ?? ''),
-            'github'     => 'GitHub - ' . ($config['repo'] ?? ''),
-            'twitter'    => 'Twitter - @' . ($config['username'] ?? ''),
-            default      => $type,
+            'youtube'       => 'YouTube - ' . ($config['channel_id'] ?? ''),
+            'reddit'        => 'Reddit - r/' . ($config['subreddit'] ?? ''),
+            'rss'           => 'RSS - ' . ($config['feed_url'] ?? ''),
+            'hackernews'    => 'HackerNews - ' . ($config['query'] ?? ''),
+            'github'        => 'GitHub - ' . ($config['repo'] ?? ''),
+            'twitter'       => 'Twitter - @' . ($config['username'] ?? ''),
+            'linkedin'      => 'LinkedIn - ' . ($config['profile_url'] ?? ''),
+            'producthunt'   => 'Product Hunt' . (isset($config['topic']) ? ' - ' . $config['topic'] : ''),
+            'stackoverflow' => 'StackOverflow - ' . ($config['tag'] ?? ''),
+            default         => $type,
         };
     }
 
@@ -68,7 +74,7 @@ class SourceController extends Controller
     {
         $base = $request->validate([
             'watch_id' => 'required|integer',
-            'type'     => 'required|in:youtube,reddit,rss,hackernews,github,twitter',
+            'type'     => 'required|in:youtube,reddit,rss,hackernews,github,twitter,linkedin,producthunt,stackoverflow',
             'name'     => 'nullable|string|max:255',
             'config'   => 'nullable|array',
         ]);
@@ -99,7 +105,7 @@ class SourceController extends Controller
 
         $base = $request->validate([
             'watch_id' => 'required|integer',
-            'type'     => 'required|in:youtube,reddit,rss,hackernews,github,twitter',
+            'type'     => 'required|in:youtube,reddit,rss,hackernews,github,twitter,linkedin,producthunt,stackoverflow',
             'name'     => 'nullable|string|max:255',
             'config'   => 'nullable|array',
         ]);
@@ -155,7 +161,7 @@ class SourceController extends Controller
     {
         $base = $request->validate([
             'watch_id' => 'required|integer',
-            'type'     => 'required|in:youtube,reddit,rss,hackernews,github,twitter',
+            'type'     => 'required|in:youtube,reddit,rss,hackernews,github,twitter,linkedin,producthunt,stackoverflow',
             'config'   => 'nullable|array',
         ]);
 
