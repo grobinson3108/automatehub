@@ -9,6 +9,7 @@ use App\Http\Controllers\WatchTrend\SuggestionController;
 use App\Http\Controllers\WatchTrend\PainPointController;
 use App\Http\Controllers\WatchTrend\SettingsController;
 use App\Http\Controllers\WatchTrend\OnboardingController;
+use App\Http\Controllers\WatchTrend\TelegramController;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,4 +91,13 @@ Route::middleware(['auth'])->prefix('watchtrend')->name('watchtrend.')->group(fu
         Route::post('/frequency', [OnboardingController::class, 'saveFrequency'])->name('save-frequency');
         Route::post('/complete', [OnboardingController::class, 'complete'])->name('complete');
     });
+
+    // Telegram
+    Route::prefix('telegram')->name('telegram.')->group(function () {
+        Route::post('/setup', [TelegramController::class, 'setup'])->name('setup');
+        Route::post('/test', [TelegramController::class, 'test'])->name('test');
+    });
 });
+
+// Telegram Webhook (public, pas d'auth)
+Route::post('/watchtrend/telegram/webhook', [TelegramController::class, 'webhook'])->name('watchtrend.telegram.webhook');
