@@ -177,7 +177,101 @@
                 </div>
             </div>
 
-            {{-- Block 5: Zone de danger --}}
+            {{-- Block 5: Notifications Slack --}}
+            <div class="block block-rounded mb-4" x-data="slackWebhookManager()">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">
+                        <i class="fab fa-slack me-2 text-success"></i>Notifications Slack
+                    </h3>
+                </div>
+                <div class="block-content">
+                    <p class="text-muted small mb-3">
+                        Recevez vos suggestions WatchTrend directement dans un canal Slack.
+                        Créez un <strong>Incoming Webhook</strong> dans votre espace Slack et collez l'URL ci-dessous.
+                    </p>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">URL du webhook Slack</label>
+                        <div class="input-group">
+                            <input type="url"
+                                class="form-control"
+                                x-model="slackUrl"
+                                placeholder="https://hooks.slack.com/services/...">
+                            <button class="btn btn-alt-secondary" type="button"
+                                @click="testSlack()"
+                                :disabled="testing || !slackUrl.trim()"
+                                title="Tester la connexion">
+                                <span x-show="testing" class="spinner-border spinner-border-sm" role="status"></span>
+                                <i x-show="!testing" class="fa fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        <div class="form-text">
+                            <i class="fa fa-info-circle me-1 text-info"></i>
+                            Format : <span class="font-monospace small">https://hooks.slack.com/services/T.../B.../...</span>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" @click="saveSlack()" :disabled="saving || !slackUrl.trim()">
+                        <span x-show="saving" class="spinner-border spinner-border-sm me-1" role="status"></span>
+                        <i x-show="!saving" class="fab fa-slack me-1"></i>
+                        <span x-text="saving ? 'Enregistrement...' : 'Sauvegarder'"></span>
+                    </button>
+                    <template x-if="settings.slack_webhook_url">
+                        <button class="btn btn-alt-danger ms-2" @click="clearSlack()">
+                            <i class="fa fa-times me-1"></i>Supprimer
+                        </button>
+                    </template>
+                </div>
+            </div>
+
+            {{-- Block 6: Notifications Discord --}}
+            <div class="block block-rounded mb-4" x-data="discordWebhookManager()">
+                <div class="block-header block-header-default">
+                    <h3 class="block-title">
+                        <i class="fab fa-discord me-2 text-primary"></i>Notifications Discord
+                    </h3>
+                </div>
+                <div class="block-content">
+                    <p class="text-muted small mb-3">
+                        Recevez vos suggestions WatchTrend dans un canal Discord.
+                        Dans votre serveur Discord, allez dans <strong>Paramètres du canal → Intégrations → Webhooks</strong>.
+                    </p>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">URL du webhook Discord</label>
+                        <div class="input-group">
+                            <input type="url"
+                                class="form-control"
+                                x-model="discordUrl"
+                                placeholder="https://discord.com/api/webhooks/...">
+                            <button class="btn btn-alt-secondary" type="button"
+                                @click="testDiscord()"
+                                :disabled="testing || !discordUrl.trim()"
+                                title="Tester la connexion">
+                                <span x-show="testing" class="spinner-border spinner-border-sm" role="status"></span>
+                                <i x-show="!testing" class="fa fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        <div class="form-text">
+                            <i class="fa fa-info-circle me-1 text-info"></i>
+                            Format : <span class="font-monospace small">https://discord.com/api/webhooks/ID/TOKEN</span>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" @click="saveDiscord()" :disabled="saving || !discordUrl.trim()">
+                        <span x-show="saving" class="spinner-border spinner-border-sm me-1" role="status"></span>
+                        <i x-show="!saving" class="fab fa-discord me-1"></i>
+                        <span x-text="saving ? 'Enregistrement...' : 'Sauvegarder'"></span>
+                    </button>
+                    <template x-if="settings.discord_webhook_url">
+                        <button class="btn btn-alt-danger ms-2" @click="clearDiscord()">
+                            <i class="fa fa-times me-1"></i>Supprimer
+                        </button>
+                    </template>
+                </div>
+            </div>
+
+            {{-- Block 7: Zone de danger --}}
             <div class="block block-rounded border-danger">
                 <div class="block-header block-header-default bg-danger-subtle">
                     <h3 class="block-title text-danger">
@@ -358,6 +452,140 @@ function settingsManager() {
                 WTModal.toast('error', 'Erreur de connexion');
             } finally {
                 this.savingApiKey = false;
+            }
+        }
+    }
+}
+
+function slackWebhookManager() {
+    return {
+        settings: @json($settings),
+        slackUrl: '{{ $settings->slack_webhook_url ?? '' }}',
+        saving: false,
+        testing: false,
+
+        async saveSlack() {
+            this.saving = true;
+            try {
+                const res = await fetch('/watchtrend/settings/preferences', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ slack_webhook_url: this.slackUrl })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    this.settings.slack_webhook_url = this.slackUrl;
+                    WTModal.toast('success', 'Webhook Slack sauvegardé !');
+                } else {
+                    WTModal.toast('error', data.message || 'Erreur lors de la sauvegarde');
+                }
+            } catch (e) {
+                WTModal.toast('error', 'Erreur de connexion');
+            } finally {
+                this.saving = false;
+            }
+        },
+
+        async clearSlack() {
+            this.slackUrl = '';
+            this.settings.slack_webhook_url = null;
+            await this.saveSlack();
+        },
+
+        async testSlack() {
+            if (!this.slackUrl.trim()) return;
+            this.testing = true;
+            try {
+                const res = await fetch('/watchtrend/settings/test-slack', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ webhook_url: this.slackUrl })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    WTModal.toast('success', data.message || 'Message de test envoyé !');
+                } else {
+                    WTModal.toast('error', data.message || 'Webhook invalide ou inaccessible');
+                }
+            } catch (e) {
+                WTModal.toast('error', 'Erreur de connexion');
+            } finally {
+                this.testing = false;
+            }
+        }
+    }
+}
+
+function discordWebhookManager() {
+    return {
+        settings: @json($settings),
+        discordUrl: '{{ $settings->discord_webhook_url ?? '' }}',
+        saving: false,
+        testing: false,
+
+        async saveDiscord() {
+            this.saving = true;
+            try {
+                const res = await fetch('/watchtrend/settings/preferences', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ discord_webhook_url: this.discordUrl })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    this.settings.discord_webhook_url = this.discordUrl;
+                    WTModal.toast('success', 'Webhook Discord sauvegardé !');
+                } else {
+                    WTModal.toast('error', data.message || 'Erreur lors de la sauvegarde');
+                }
+            } catch (e) {
+                WTModal.toast('error', 'Erreur de connexion');
+            } finally {
+                this.saving = false;
+            }
+        },
+
+        async clearDiscord() {
+            this.discordUrl = '';
+            this.settings.discord_webhook_url = null;
+            await this.saveDiscord();
+        },
+
+        async testDiscord() {
+            if (!this.discordUrl.trim()) return;
+            this.testing = true;
+            try {
+                const res = await fetch('/watchtrend/settings/test-discord', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({ webhook_url: this.discordUrl })
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    WTModal.toast('success', data.message || 'Message de test envoyé !');
+                } else {
+                    WTModal.toast('error', data.message || 'Webhook invalide ou inaccessible');
+                }
+            } catch (e) {
+                WTModal.toast('error', 'Erreur de connexion');
+            } finally {
+                this.testing = false;
             }
         }
     }

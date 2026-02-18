@@ -16,6 +16,8 @@ class WatchtrendUserSetting extends Model
         'telegram_bot_token',
         'telegram_chat_id',
         'telegram_paused',
+        'slack_webhook_url',
+        'discord_webhook_url',
         'onboarding_completed',
         'summary_language',
         'items_per_page',

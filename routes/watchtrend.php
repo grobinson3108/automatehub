@@ -10,6 +10,7 @@ use App\Http\Controllers\WatchTrend\PainPointController;
 use App\Http\Controllers\WatchTrend\SettingsController;
 use App\Http\Controllers\WatchTrend\OnboardingController;
 use App\Http\Controllers\WatchTrend\TelegramController;
+use App\Http\Controllers\WatchTrend\ShareController;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,6 +84,8 @@ Route::middleware(['auth'])->prefix('watchtrend')->name('watchtrend.')->group(fu
         Route::post('/preferences', [SettingsController::class, 'updatePreferences'])->name('update-preferences');
         Route::post('/api-key', [SettingsController::class, 'updateApiKey'])->name('update-api-key');
         Route::delete('/api-key', [SettingsController::class, 'deleteApiKey'])->name('delete-api-key');
+        Route::post('/test-slack', [SettingsController::class, 'testSlackWebhook'])->name('test-slack');
+        Route::post('/test-discord', [SettingsController::class, 'testDiscordWebhook'])->name('test-discord');
     });
 
     // Onboarding
@@ -96,12 +99,29 @@ Route::middleware(['auth'])->prefix('watchtrend')->name('watchtrend.')->group(fu
         Route::post('/complete', [OnboardingController::class, 'complete'])->name('complete');
     });
 
+    // PWA Offline
+    Route::get('/offline', fn() => view('watchtrend.offline'))->name('offline');
+
     // Telegram
     Route::prefix('telegram')->name('telegram.')->group(function () {
         Route::post('/setup', [TelegramController::class, 'setup'])->name('setup');
         Route::post('/test', [TelegramController::class, 'test'])->name('test');
     });
+
+    // Shares
+    Route::prefix('watches/{watch}/shares')->name('shares.')->group(function () {
+        Route::get('/', [ShareController::class, 'index'])->name('index');
+        Route::post('/invite', [ShareController::class, 'invite'])->name('invite');
+        Route::put('/{share}/permission', [ShareController::class, 'updatePermission'])->name('update-permission');
+        Route::delete('/{share}', [ShareController::class, 'revoke'])->name('revoke');
+        Route::post('/leave', [ShareController::class, 'leave'])->name('leave');
+    });
 });
+
+// Share accept (token-based, auth required)
+Route::get('/watchtrend/share/accept/{token}', [ShareController::class, 'accept'])
+    ->name('watchtrend.shares.accept')
+    ->middleware('auth');
 
 // Telegram Webhook (public, pas d'auth)
 Route::post('/watchtrend/telegram/webhook', [TelegramController::class, 'webhook'])->name('watchtrend.telegram.webhook');

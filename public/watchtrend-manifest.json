@@ -1,0 +1,15 @@
+{
+  "name": "WatchTrend - Veille Intelligente",
+  "short_name": "WatchTrend",
+  "description": "Veille intelligente multi-sources par IA",
+  "start_url": "/watchtrend",
+  "scope": "/watchtrend",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4A90A4",
+  "orientation": "any",
+  "icons": [
+    { "src": "/images/watchtrend/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/images/watchtrend/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

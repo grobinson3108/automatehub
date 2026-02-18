@@ -8,6 +8,7 @@ use App\Models\WatchtrendFeedback;
 use App\Models\WatchtrendSource;
 use App\Models\WatchtrendUserSetting;
 use App\Models\WatchtrendWatch;
+use App\Models\WatchtrendWatchShare;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -20,12 +21,22 @@ class DashboardController extends Controller
     {
         $userId = Auth::id();
 
-        // Load all user's active watches for sidebar/filter
-        $watches = WatchtrendWatch::where('user_id', $userId)
+        // Load all user's own active watches for sidebar/filter
+        $ownWatches = WatchtrendWatch::where('user_id', $userId)
             ->where('status', 'active')
             ->orderBy('sort_order')
-            ->get();
+            ->get()
+            ->each(fn ($w) => $w->is_shared = false);
 
+        // Load watches shared with the user (accepted)
+        $sharedWatches = WatchtrendWatch::whereHas('shares', function ($q) use ($userId) {
+            $q->where('shared_with_user_id', $userId)->whereNotNull('accepted_at');
+        })
+            ->where('status', 'active')
+            ->get()
+            ->each(fn ($w) => $w->is_shared = true);
+
+        $watches  = $ownWatches->merge($sharedWatches);
         $watchIds = $watches->pluck('id');
 
         // Retrieve user's items_per_page preference

@@ -10,6 +10,8 @@
 
 @section('content')
 
+<div x-data="sharesManager({{ $watch->id }})">
+
     {{-- Watch Info Card --}}
     <div class="block block-rounded mb-4">
         <div class="block-header block-header-default">
@@ -28,6 +30,9 @@
                     @else Archivé
                     @endif
                 </span>
+                <button type="button" class="btn btn-sm btn-alt-primary" @click="openModal()">
+                    <i class="fa fa-share-nodes me-1"></i>Partager
+                </button>
                 <a href="{{ route('watchtrend.watches.index') }}" class="btn btn-sm btn-alt-secondary">
                     <i class="fa fa-arrow-left me-1"></i>Retour
                 </a>
@@ -216,4 +221,231 @@
         </div>
     </div>
 
+    {{-- Share Modal --}}
+    <div class="modal fade" id="shareModal" tabindex="-1" aria-labelledby="shareModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="shareModalLabel">
+                        <i class="fa fa-share-nodes me-2 text-primary"></i>Partager la veille
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+
+                    {{-- Invite Form --}}
+                    <div class="mb-4">
+                        <h6 class="fw-semibold mb-3">Inviter un collaborateur</h6>
+                        <div class="row g-2 align-items-end">
+                            <div class="col-md-6">
+                                <label class="form-label small text-muted mb-1">Adresse email</label>
+                                <input type="email" class="form-control" x-model="inviteEmail"
+                                    placeholder="collaborateur@exemple.com"
+                                    @keydown.enter.prevent="sendInvite()">
+                                <template x-if="inviteError">
+                                    <div class="text-danger small mt-1" x-text="inviteError"></div>
+                                </template>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small text-muted mb-1">Permission</label>
+                                <select class="form-select" x-model="invitePermission">
+                                    <option value="view">Voir</option>
+                                    <option value="edit">Modifier</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <button type="button" class="btn btn-primary w-100"
+                                    @click="sendInvite()"
+                                    :disabled="inviting">
+                                    <template x-if="inviting">
+                                        <span class="spinner-border spinner-border-sm me-1"></span>
+                                    </template>
+                                    <i class="fa fa-paper-plane me-1" x-show="!inviting"></i>
+                                    Inviter
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    {{-- Shares List --}}
+                    <div>
+                        <h6 class="fw-semibold mb-3">
+                            Partages actifs
+                            <template x-if="loading">
+                                <span class="spinner-border spinner-border-sm ms-2 text-muted"></span>
+                            </template>
+                        </h6>
+
+                        <template x-if="!loading && shares.length === 0">
+                            <div class="text-center text-muted py-3">
+                                <i class="fa fa-users fa-2x mb-2 opacity-40"></i>
+                                <p class="mb-0 small">Aucun partage pour le moment.</p>
+                            </div>
+                        </template>
+
+                        <ul class="list-group list-group-flush" x-show="shares.length > 0">
+                            <template x-for="share in shares" :key="share.id">
+                                <li class="list-group-item d-flex align-items-center justify-content-between px-0 py-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="fa fa-user-circle text-muted fa-lg"></i>
+                                        <div>
+                                            <div class="fw-medium small" x-text="share.user_name || share.shared_with_email"></div>
+                                            <div class="text-muted" style="font-size:.75rem" x-show="share.user_name" x-text="share.shared_with_email"></div>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="badge"
+                                            :class="share.accepted_at ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'"
+                                            x-text="share.accepted_at ? 'Accepté' : 'En attente'">
+                                        </span>
+                                        <select class="form-select form-select-sm" style="width:auto"
+                                            x-model="share.permission"
+                                            @change="updatePermission(share)">
+                                            <option value="view">Voir</option>
+                                            <option value="edit">Modifier</option>
+                                        </select>
+                                        <button type="button" class="btn btn-sm btn-alt-danger"
+                                            @click="revoke(share)"
+                                            title="Révoquer">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </li>
+                            </template>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-alt-secondary" data-bs-dismiss="modal">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>{{-- end x-data --}}
+
 @endsection
+
+@push('scripts')
+<script>
+function sharesManager(watchId) {
+    return {
+        watchId: watchId,
+        shares: [],
+        loading: false,
+        inviteEmail: '',
+        invitePermission: 'view',
+        inviting: false,
+        inviteError: null,
+        modalInstance: null,
+
+        init() {
+            const el = document.getElementById('shareModal');
+            this.modalInstance = new bootstrap.Modal(el);
+            el.addEventListener('show.bs.modal', () => this.loadShares());
+        },
+
+        openModal() {
+            this.inviteEmail = '';
+            this.inviteError = null;
+            this.modalInstance.show();
+        },
+
+        async loadShares() {
+            this.loading = true;
+            try {
+                const res = await fetch(`/watchtrend/watches/${this.watchId}/shares`, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                });
+                const data = await res.json();
+                if (data.success) {
+                    this.shares = data.shares;
+                }
+            } catch (e) {
+                WTModal.toast('error', 'Impossible de charger les partages.');
+            } finally {
+                this.loading = false;
+            }
+        },
+
+        async sendInvite() {
+            this.inviteError = null;
+            if (!this.inviteEmail) {
+                this.inviteError = 'Veuillez saisir une adresse email.';
+                return;
+            }
+            this.inviting = true;
+            try {
+                const res = await fetch(`/watchtrend/watches/${this.watchId}/shares/invite`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: JSON.stringify({ email: this.inviteEmail, permission: this.invitePermission }),
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    this.inviteError = data.message || 'Erreur lors de l\'invitation.';
+                    return;
+                }
+                this.shares.unshift(data.share);
+                this.inviteEmail = '';
+                WTModal.toast('success', 'Invitation envoyée !');
+            } catch (e) {
+                WTModal.toast('error', 'Erreur de connexion.');
+            } finally {
+                this.inviting = false;
+            }
+        },
+
+        async updatePermission(share) {
+            try {
+                const res = await fetch(`/watchtrend/watches/${this.watchId}/shares/${share.id}/permission`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: JSON.stringify({ permission: share.permission }),
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    WTModal.toast('error', data.message || 'Erreur lors de la mise à jour.');
+                    return;
+                }
+                WTModal.toast('success', 'Permission mise à jour.');
+            } catch (e) {
+                WTModal.toast('error', 'Erreur de connexion.');
+            }
+        },
+
+        async revoke(share) {
+            if (!confirm('Révoquer ce partage ?')) return;
+            try {
+                const res = await fetch(`/watchtrend/watches/${this.watchId}/shares/${share.id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    this.shares = this.shares.filter(s => s.id !== share.id);
+                    WTModal.toast('success', 'Partage révoqué.');
+                } else {
+                    WTModal.toast('error', data.message || 'Erreur lors de la révocation.');
+                }
+            } catch (e) {
+                WTModal.toast('error', 'Erreur de connexion.');
+            }
+        },
+    };
+}
+</script>
+@endpush

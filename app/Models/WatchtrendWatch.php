@@ -74,6 +74,11 @@ class WatchtrendWatch extends Model
         return $this->hasMany(WatchtrendPainPoint::class, 'watch_id');
     }
 
+    public function shares(): HasMany
+    {
+        return $this->hasMany(WatchtrendWatchShare::class, 'watch_id');
+    }
+
     public function scopeActive($query)
     {
         return $query->where('status', 'active');

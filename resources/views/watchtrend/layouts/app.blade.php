@@ -17,6 +17,13 @@
   <link rel="icon" sizes="192x192" type="image/png" href="{{ asset('favicon.svg') }}">
   <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
 
+  <!-- PWA -->
+  <link rel="manifest" href="/watchtrend-manifest.json">
+  <meta name="theme-color" content="#4A90A4">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="/images/watchtrend/icon-192.png">
+
   <!-- Modules -->
   @yield('css')
 
@@ -336,6 +343,58 @@
   </script>
 
   @stack('scripts')
+
+  <!-- PWA Install Banner -->
+  <div x-data="pwaInstall()" x-show="showBanner" x-cloak
+       class="fixed-bottom bg-white border-top shadow-sm p-3 d-flex align-items-center justify-content-between"
+       style="z-index: 1050;">
+    <div class="d-flex align-items-center gap-2">
+      <i class="fa fa-mobile-alt text-primary fs-4"></i>
+      <div>
+        <strong>Installer WatchTrend</strong>
+        <div class="text-muted small">Accédez plus rapidement à votre veille</div>
+      </div>
+    </div>
+    <div class="d-flex gap-2">
+      <button @click="dismiss()" class="btn btn-sm btn-alt-secondary">Plus tard</button>
+      <button @click="install()" class="btn btn-sm btn-primary">Installer</button>
+    </div>
+  </div>
+
+  <script>
+    function pwaInstall() {
+      return {
+        showBanner: false,
+        deferredPrompt: null,
+        init() {
+          if (localStorage.getItem('wt-pwa-dismissed')) return;
+          window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            this.deferredPrompt = e;
+            this.showBanner = true;
+          });
+        },
+        async install() {
+          if (!this.deferredPrompt) return;
+          this.deferredPrompt.prompt();
+          const { outcome } = await this.deferredPrompt.userChoice;
+          this.deferredPrompt = null;
+          this.showBanner = false;
+          if (outcome === 'accepted') localStorage.setItem('wt-pwa-dismissed', '1');
+        },
+        dismiss() {
+          this.showBanner = false;
+          localStorage.setItem('wt-pwa-dismissed', '1');
+        }
+      };
+    }
+
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/watchtrend-sw.js', { scope: '/watchtrend' })
+        .then(reg => console.info('WatchTrend SW registered'))
+        .catch(err => console.warn('WatchTrend SW registration failed', err));
+    }
+  </script>
 </body>
 
 </html>
