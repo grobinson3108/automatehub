@@ -34,17 +34,36 @@
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
 
+  <!-- Global spacing for content blocks -->
+  <style>
+    /* Bottom padding inside all OneUI block-content within page .content */
+    .content .block > .block-content:last-child {
+      padding-bottom: 1.5rem;
+    }
+    /* Breathing room at the bottom of every page */
+    .content {
+      padding-bottom: 2rem;
+    }
+    /* Equal height blocks in rows: stretch columns + blocks + block-content */
+    .content .row > [class*="col-"] {
+      display: flex;
+      flex-direction: column;
+    }
+    .content .row > [class*="col-"] > .block {
+      flex: 1 1 auto;
+      display: flex;
+      flex-direction: column;
+    }
+    .content .row > [class*="col-"] > .block > .block-content:last-child {
+      flex: 1 1 auto;
+    }
+  </style>
+
   <!-- Load and set dark mode preference (blocking script to prevent flashing) -->
   <script src="{{ asset('js/setTheme.js') }}"></script>
 
   <!-- Force Light Theme - Override any dark mode settings -->
   <script src="{{ asset('js/force-light-theme.js') }}"></script>
-  
-  <!-- Bootstrap Bundle with Popper -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-  
-  <!-- Custom Bootstrap initialization -->
-  <script src="{{ asset('js/bootstrap-init.js') }}"></script>
   
   @yield('js')
 </head>
@@ -179,108 +198,86 @@
               </a>
             </li>
             
-            <!-- Section Apprentissage -->
-            <li class="nav-main-heading">Apprentissage</li>
-            <li class="nav-main-item{{ request()->routeIs('user.tutorials.*') ? ' open' : '' }}">
-              <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="{{ request()->routeIs('user.tutorials.*') ? 'true' : 'false' }}" href="#">
-                <i class="nav-main-link-icon si si-graduation"></i>
-                <span class="nav-main-link-name">Mes tutoriels</span>
-              </a>
-              <ul class="nav-main-submenu">
-                <li class="nav-main-item">
-                  <a class="nav-main-link{{ request()->routeIs('user.tutorials.index') ? ' active' : '' }}" href="{{ route('user.tutorials.index') }}">
-                    <span class="nav-main-link-name">Tous les tutoriels</span>
-                  </a>
-                </li>
-                <li class="nav-main-item">
-                  <a class="nav-main-link{{ request()->routeIs('user.tutorials.free') ? ' active' : '' }}" href="{{ route('user.tutorials.free') }}">
-                    <span class="nav-main-link-name">Gratuits</span>
-                  </a>
-                </li>
-                <li class="nav-main-item">
-                  <a class="nav-main-link{{ request()->routeIs('user.tutorials.premium') ? ' active' : '' }}" href="{{ route('user.tutorials.premium') }}">
-                    <span class="nav-main-link-name">Premium</span>
-                  </a>
-                </li>
-                <li class="nav-main-item">
-                  <a class="nav-main-link{{ request()->routeIs('user.tutorials.pro') ? ' active' : '' }}" href="{{ route('user.tutorials.pro') }}">
-                    <span class="nav-main-link-name">Pro</span>
-                  </a>
-                </li>
-                <li class="nav-main-item">
-                  <a class="nav-main-link{{ request()->routeIs('user.tutorials.favorites') ? ' active' : '' }}" href="{{ route('user.tutorials.favorites') }}">
-                    <span class="nav-main-link-name">Mes favoris</span>
-                  </a>
-                </li>
-                <li class="nav-main-item">
-                  <a class="nav-main-link{{ request()->routeIs('user.tutorials.history') ? ' active' : '' }}" href="{{ route('user.tutorials.history') }}">
-                    <span class="nav-main-link-name">Historique</span>
-                  </a>
-                </li>
-              </ul>
-            </li>
-            
+            <!-- Section Mini-Apps -->
+            <li class="nav-main-heading">Mini-Apps</li>
+
+            {{-- Marketplace --}}
             <li class="nav-main-item">
-              <a class="nav-main-link{{ request()->routeIs('user.downloads.*') ? ' active' : '' }}" href="{{ route('user.downloads.index') }}">
-                <i class="nav-main-link-icon si si-cloud-download"></i>
-                <span class="nav-main-link-name">Mes téléchargements</span>
+              <a class="nav-main-link{{ request()->routeIs('apps.index') ? ' active' : '' }}" href="{{ route('apps.index') }}">
+                <i class="nav-main-link-icon fas fa-th-large"></i>
+                <span class="nav-main-link-name">Toutes les Apps</span>
+              </a>
+            </li>
+            <li class="nav-main-item">
+              <a class="nav-main-link{{ request()->routeIs('my-apps.index') ? ' active' : '' }}" href="{{ route('my-apps.index') }}">
+                <i class="nav-main-link-icon fas fa-rocket"></i>
+                <span class="nav-main-link-name">Mes Apps</span>
+              </a>
+            </li>
+
+            {{-- Mes Apps Actives (conditionnel) --}}
+            @auth
+            @php
+              $sidebarActiveSubscriptions = auth()->user()
+                ->appSubscriptions()
+                ->with('app')
+                ->whereIn('status', ['active', 'trial'])
+                ->get()
+                ->filter(fn($sub) => $sub->hasAccess() && $sub->app !== null);
+
+              $appDashboardRoutes = [
+                'videoplan'  => 'videoplan.projects.index',
+                'watchtrend' => 'watchtrend.dashboard',
+                'orderflow'  => 'orderflow.dashboard.index',
+              ];
+
+              $appIcons = [
+                'videoplan'  => 'fas fa-video',
+                'watchtrend' => 'fas fa-binoculars',
+                'orderflow'  => 'fas fa-shopping-cart',
+                'postmaid'   => 'fas fa-paper-plane',
+                'vocamail'   => 'fas fa-microphone',
+              ];
+            @endphp
+            @if($sidebarActiveSubscriptions->isNotEmpty())
+              <li class="nav-main-heading">Mes Apps Actives</li>
+              @foreach($sidebarActiveSubscriptions as $sidebarSub)
                 @php
-                  $downloadsCount = Auth::user()->downloads()->count();
+                  $appSlug = $sidebarSub->app->slug;
+                  $appName = $sidebarSub->app->name;
+                  $appIcon = $appIcons[$appSlug] ?? 'fas fa-puzzle-piece';
+                  $hasDedicatedRoute = isset($appDashboardRoutes[$appSlug]);
                 @endphp
-                @if($downloadsCount > 0)
-                  <span class="nav-main-link-badge badge rounded-pill bg-primary">{{ $downloadsCount }}</span>
-                @endif
-              </a>
-            </li>
-            
-            <!-- Section Niveau & Badges -->
-            <li class="nav-main-heading">Niveau & Badges</li>
-            <li class="nav-main-item">
-              <a class="nav-main-link{{ request()->routeIs('user.badges.*') ? ' active' : '' }}" href="{{ route('user.badges.index') }}">
-                <i class="nav-main-link-icon si si-trophy"></i>
-                <span class="nav-main-link-name">Mes badges</span>
-                @php
-                  $badgesCount = Auth::user()->badges()->count();
-                @endphp
-                @if($badgesCount > 0)
-                  <span class="nav-main-link-badge badge rounded-pill bg-success">{{ $badgesCount }}</span>
-                @endif
-              </a>
-            </li>
-            <li class="nav-main-item">
-              <a class="nav-main-link{{ request()->routeIs('user.level.*') ? ' active' : '' }}" href="{{ route('user.level.index') }}">
-                <i class="nav-main-link-icon si si-graph"></i>
-                <span class="nav-main-link-name">Mon niveau n8n</span>
-                @if(Auth::user()->level_n8n)
-                  <span class="nav-main-link-badge badge rounded-pill bg-info">{{ ucfirst(Auth::user()->level_n8n) }}</span>
-                @endif
-              </a>
-            </li>
-            
-            <!-- Section Compte -->
-            <li class="nav-main-heading">Compte</li>
-            <li class="nav-main-item">
-              <a class="nav-main-link{{ request()->routeIs('user.profile.*') ? ' active' : '' }}" href="{{ route('user.profile.index') }}">
-                <i class="nav-main-link-icon si si-user"></i>
-                <span class="nav-main-link-name">Mon profil</span>
-              </a>
-            </li>
-            <li class="nav-main-item">
-              <a class="nav-main-link{{ request()->routeIs('user.subscription.*') ? ' active' : '' }}" href="{{ route('user.subscription.index') }}">
-                <i class="nav-main-link-icon si si-credit-card"></i>
-                <span class="nav-main-link-name">Abonnement</span>
-                <span class="nav-main-link-badge badge rounded-pill bg-{{ Auth::user()->subscription_type === 'free' ? 'secondary' : 'success' }}">
-                  {{ ucfirst(Auth::user()->subscription_type) }}
-                </span>
-              </a>
-            </li>
-            <li class="nav-main-item">
-              <a class="nav-main-link{{ request()->routeIs('user.notifications.*') ? ' active' : '' }}" href="{{ route('user.notifications.index') }}">
-                <i class="nav-main-link-icon si si-bell"></i>
-                <span class="nav-main-link-name">Notifications</span>
-              </a>
-            </li>
-            
+                <li class="nav-main-item">
+                  @if($hasDedicatedRoute)
+                    @php
+                      try {
+                        $appDashboardUrl = route($appDashboardRoutes[$appSlug]);
+                      } catch (\Exception $e) {
+                        $appDashboardUrl = route('my-apps.dashboard', $appSlug);
+                      }
+                    @endphp
+                    <a class="nav-main-link" href="{{ $appDashboardUrl }}">
+                      <i class="nav-main-link-icon {{ $appIcon }}"></i>
+                      <span class="nav-main-link-name">{{ $appName }}</span>
+                      @if($sidebarSub->onTrial())
+                        <span class="nav-main-link-badge badge rounded-pill bg-warning">Essai</span>
+                      @endif
+                    </a>
+                  @else
+                    <a class="nav-main-link" href="{{ route('my-apps.dashboard', $appSlug) }}">
+                      <i class="nav-main-link-icon {{ $appIcon }}"></i>
+                      <span class="nav-main-link-name">{{ $appName }}</span>
+                      @if($sidebarSub->onTrial())
+                        <span class="nav-main-link-badge badge rounded-pill bg-warning">Essai</span>
+                      @endif
+                    </a>
+                  @endif
+                </li>
+              @endforeach
+            @endif
+            @endauth
+
             <!-- Section Administration (visible seulement pour les admins) -->
             @if(Auth::user()->is_admin)
             <li class="nav-main-heading">Administration</li>
@@ -311,45 +308,14 @@
                     <span class="nav-main-link-name">Activités</span>
                   </a>
                 </li>
-                <li class="nav-main-item">
-                  <a class="nav-main-link{{ request()->routeIs('admin.users.levels') ? ' active' : '' }}" href="{{ route('admin.users.levels') }}">
-                    <span class="nav-main-link-name">Niveaux n8n</span>
-                  </a>
-                </li>
               </ul>
             </li>
-            <li class="nav-main-item{{ request()->routeIs('admin.tutorials.*') ? ' open' : '' }}">
-              <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="{{ request()->routeIs('admin.tutorials.*') ? 'true' : 'false' }}" href="#">
-                <i class="nav-main-link-icon si si-graduation"></i>
-                <span class="nav-main-link-name">Gestion Contenu</span>
+            {{-- Mini-Apps Management --}}
+            <li class="nav-main-item">
+              <a class="nav-main-link{{ request()->routeIs('admin.apps.*') ? ' active' : '' }}" href="{{ route('admin.dashboard') }}">
+                <i class="nav-main-link-icon fas fa-th-large"></i>
+                <span class="nav-main-link-name">Gestion Apps</span>
               </a>
-              <ul class="nav-main-submenu">
-                <li class="nav-main-item">
-                  <a class="nav-main-link{{ request()->routeIs('admin.tutorials.index') ? ' active' : '' }}" href="{{ route('admin.tutorials.index') }}">
-                    <span class="nav-main-link-name">Tutoriels</span>
-                  </a>
-                </li>
-                <li class="nav-main-item">
-                  <a class="nav-main-link{{ request()->routeIs('admin.blog.*') ? ' active' : '' }}" href="{{ route('admin.blog.index') }}">
-                    <span class="nav-main-link-name">Articles Blog</span>
-                  </a>
-                </li>
-                <li class="nav-main-item">
-                  <a class="nav-main-link{{ request()->routeIs('admin.tutorials.categories') ? ' active' : '' }}" href="{{ route('admin.tutorials.categories') }}">
-                    <span class="nav-main-link-name">Catégories</span>
-                  </a>
-                </li>
-                <li class="nav-main-item">
-                  <a class="nav-main-link{{ request()->routeIs('admin.tutorials.tags') ? ' active' : '' }}" href="{{ route('admin.tutorials.tags') }}">
-                    <span class="nav-main-link-name">Tags</span>
-                  </a>
-                </li>
-                <li class="nav-main-item">
-                  <a class="nav-main-link{{ request()->routeIs('admin.tutorials.files') ? ' active' : '' }}" href="{{ route('admin.tutorials.files') }}">
-                    <span class="nav-main-link-name">Fichiers</span>
-                  </a>
-                </li>
-              </ul>
             </li>
             <li class="nav-main-item">
               <a class="nav-main-link{{ request()->routeIs('admin.analytics.*') ? ' active' : '' }}" href="{{ route('admin.analytics.dashboard') }}">
@@ -369,13 +335,7 @@
                 <span class="nav-main-link-name">Messages Contact</span>
               </a>
             </li>
-            <li class="nav-main-item">
-              <a class="nav-main-link{{ request()->routeIs('admin.masterclass.*') ? ' active' : '' }}" href="{{ route('admin.masterclass.index') }}">
-                <i class="nav-main-link-icon fa fa-graduation-cap"></i>
-                <span class="nav-main-link-name">n8n MasterClass</span>
-                <span class="nav-main-link-badge badge rounded-pill bg-success">Nouveau</span>
-              </a>
-            </li>
+            {{-- Masterclass link disabled (route not defined) --}}
             <li class="nav-main-item{{ request()->routeIs('admin.video-content.*') || request()->routeIs('admin.publication-calendar.*') ? ' open' : '' }}">
               <a class="nav-main-link nav-main-link-submenu" data-toggle="submenu" aria-haspopup="true" aria-expanded="{{ request()->routeIs('admin.video-content.*') || request()->routeIs('admin.publication-calendar.*') ? 'true' : 'false' }}" href="#">
                 <i class="nav-main-link-icon fa fa-video"></i>
@@ -401,13 +361,7 @@
               </ul>
             </li>
 
-            <li class="nav-main-item">
-              <a class="nav-main-link{{ request()->routeIs('admin.tools.*') ? ' active' : '' }}" href="{{ route('admin.tools.workflow-translation') }}">
-                <i class="nav-main-link-icon fa fa-language"></i>
-                <span class="nav-main-link-name">Traduction Workflows</span>
-                <span class="nav-main-link-badge badge rounded-pill bg-info">Outil</span>
-              </a>
-            </li>
+            {{-- Workflow translation link disabled (route not defined) --}}
             <li class="nav-main-item">
               <a class="nav-main-link{{ request()->routeIs('admin.settings.*') ? ' active' : '' }}" href="{{ route('admin.settings.index') }}">
                 <i class="nav-main-link-icon si si-settings"></i>
@@ -416,6 +370,30 @@
             </li>
             @endif
             
+            <!-- Section Compte -->
+            <li class="nav-main-heading">Compte</li>
+            <li class="nav-main-item">
+              <a class="nav-main-link{{ request()->routeIs('user.profile.*') ? ' active' : '' }}" href="{{ route('user.profile.index') }}">
+                <i class="nav-main-link-icon si si-user"></i>
+                <span class="nav-main-link-name">Mon profil</span>
+              </a>
+            </li>
+            <li class="nav-main-item">
+              <a class="nav-main-link{{ request()->routeIs('user.subscription.*') ? ' active' : '' }}" href="{{ route('user.subscription.index') }}">
+                <i class="nav-main-link-icon si si-credit-card"></i>
+                <span class="nav-main-link-name">Abonnement</span>
+                <span class="nav-main-link-badge badge rounded-pill bg-{{ Auth::user()->subscription_type === 'free' ? 'secondary' : 'success' }}">
+                  {{ ucfirst(Auth::user()->subscription_type) }}
+                </span>
+              </a>
+            </li>
+            <li class="nav-main-item">
+              <a class="nav-main-link{{ request()->routeIs('user.notifications.*') ? ' active' : '' }}" href="{{ route('user.notifications.index') }}">
+                <i class="nav-main-link-icon si si-bell"></i>
+                <span class="nav-main-link-name">Notifications</span>
+              </a>
+            </li>
+
             <!-- Section Exploration -->
             <li class="nav-main-heading">Exploration</li>
             <li class="nav-main-item">
@@ -459,9 +437,9 @@
           <!-- END Open Search Section -->
 
           <!-- Search Form (visible on larger screens) -->
-          <form class="d-none d-md-inline-block" action="{{ route('user.tutorials.search') }}" method="GET">
+          <form class="d-none d-md-inline-block" action="{{ route('apps.index') }}" method="GET">
             <div class="input-group input-group-sm">
-              <input type="text" class="form-control form-control-alt" placeholder="Rechercher des tutoriels..." id="page-header-search-input2" name="q">
+              <input type="text" class="form-control form-control-alt" placeholder="Rechercher une app..." id="page-header-search-input2" name="q">
               <span class="input-group-text border-0">
                 <i class="fa fa-fw fa-search"></i>
               </span>
@@ -489,23 +467,43 @@
                 </div>
                 <p class="mt-2 mb-0 fw-medium">{{ Auth::user()->first_name }} {{ Auth::user()->last_name }}</p>
                 <p class="mb-0 text-muted fs-sm fw-medium">{{ Auth::user()->email }}</p>
-                @if(Auth::user()->level_n8n)
-                  <span class="badge bg-primary mt-1">Niveau {{ ucfirst(Auth::user()->level_n8n) }}</span>
-                @endif
                 @if(Auth::user()->is_admin)
                   <span class="badge bg-danger mt-1">Administrateur</span>
                 @endif
+                @php
+                  $headerActiveApps = Auth::user()->appSubscriptions()
+                    ->whereIn('status', ['active', 'trial'])
+                    ->count();
+                @endphp
+                @if($headerActiveApps > 0)
+                  <span class="badge bg-primary mt-1">{{ $headerActiveApps }} app{{ $headerActiveApps > 1 ? 's' : '' }} active{{ $headerActiveApps > 1 ? 's' : '' }}</span>
+                @endif
               </div>
+              <div class="p-2">
+                <a class="dropdown-item d-flex align-items-center justify-content-between" href="{{ route('user.dashboard') }}">
+                  <span class="fs-sm fw-medium"><i class="si si-speedometer me-2"></i>Tableau de bord</span>
+                </a>
+                <a class="dropdown-item d-flex align-items-center justify-content-between" href="{{ route('my-apps.index') }}">
+                  <span class="fs-sm fw-medium"><i class="fas fa-rocket me-2"></i>Mes Apps</span>
+                  @if($headerActiveApps > 0)
+                    <span class="badge bg-primary">{{ $headerActiveApps }}</span>
+                  @endif
+                </a>
+                <a class="dropdown-item d-flex align-items-center justify-content-between" href="{{ route('apps.index') }}">
+                  <span class="fs-sm fw-medium"><i class="fas fa-store me-2"></i>Marketplace</span>
+                </a>
+              </div>
+              <div role="separator" class="dropdown-divider m-0"></div>
               <div class="p-2">
                 <a class="dropdown-item d-flex align-items-center justify-content-between" href="{{ route('user.profile.index') }}">
                   <span class="fs-sm fw-medium"><i class="si si-user me-2"></i>Mon profil</span>
                 </a>
-                <a class="dropdown-item d-flex align-items-center justify-content-between" href="{{ route('user.profile.preferences') }}">
-                  <span class="fs-sm fw-medium"><i class="si si-settings me-2"></i>Paramètres</span>
-                </a>
                 <a class="dropdown-item d-flex align-items-center justify-content-between" href="{{ route('user.subscription.index') }}">
                   <span class="fs-sm fw-medium"><i class="si si-credit-card me-2"></i>Abonnement</span>
                   <span class="badge bg-{{ Auth::user()->subscription_type === 'free' ? 'secondary' : 'success' }}">{{ ucfirst(Auth::user()->subscription_type) }}</span>
+                </a>
+                <a class="dropdown-item d-flex align-items-center justify-content-between" href="{{ route('user.notifications.index') }}">
+                  <span class="fs-sm fw-medium"><i class="si si-bell me-2"></i>Notifications</span>
                 </a>
               </div>
               <div role="separator" class="dropdown-divider m-0"></div>
@@ -533,31 +531,19 @@
               </div>
               <ul class="nav-items mb-0">
                 <li>
-                  <a class="text-dark d-flex py-2" href="javascript:void(0)">
+                  <a class="text-dark d-flex py-2" href="{{ route('apps.index') }}">
                     <div class="flex-shrink-0 me-2 ms-3">
-                      <i class="fa fa-fw fa-graduation-cap text-success"></i>
+                      <i class="fa fa-fw fa-rocket text-primary"></i>
                     </div>
                     <div class="flex-grow-1 pe-2">
-                      <div class="fw-semibold">Nouveau tutoriel disponible</div>
-                      <span class="fw-medium text-muted">Il y a 15 min</span>
-                    </div>
-                  </a>
-                </li>
-                <li>
-                  <a class="text-dark d-flex py-2" href="javascript:void(0)">
-                    <div class="flex-shrink-0 me-2 ms
--3">
-                      <i class="fa fa-fw fa-info-circle text-info"></i>
-                    </div>
-                    <div class="flex-grow-1 pe-2">
-                      <div class="fw-semibold">Mise à jour système</div>
-                      <span class="fw-medium text-muted">Il y a 2 heures</span>
+                      <div class="fw-semibold">Bienvenue sur AutomateHub</div>
+                      <span class="fw-medium text-muted">Explorez nos mini-apps IA</span>
                     </div>
                   </a>
                 </li>
               </ul>
               <div class="p-2 border-top">
-                <a class="btn btn-sm btn-light d-block text-center" href="#">
+                <a class="btn btn-sm btn-light d-block text-center" href="{{ route('user.notifications.index') }}">
                   <i class="fa fa-fw fa-arrow-down me-1"></i> Voir toutes les notifications
                 </a>
               </div>

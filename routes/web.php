@@ -144,3 +144,6 @@ require __DIR__.'/user.php';
 // require __DIR__.'/n8n.php'; // REMOVED - Legacy n8n routes
 require __DIR__.'/api-marketplace.php';
 require __DIR__.'/apps.php'; // V2 Apps Marketplace
+require __DIR__.'/videoplan.php';
+require __DIR__.'/orderflow.php';
+require __DIR__.'/watchtrend.php';
